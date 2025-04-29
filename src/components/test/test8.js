@@ -16,7 +16,7 @@ class Test8 extends Component {
         <p>A state 'name' was added in a Class Component and changes with the button: {this.state.name}</p>
       </div>
     );
- ñ }
+  }
 }
 
 export default Test8;
