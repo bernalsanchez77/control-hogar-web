@@ -11,7 +11,7 @@ class Top extends Component {
     this.init();
   }
   async init() {
-    fetch('/api/proxy')
+    fetch('/api/getVariables')
     .then(res => res.json())
     .then(data => console.log(data))
     .catch(err => console.log('Error:'));
@@ -20,17 +20,19 @@ class Top extends Component {
     this.setState({
       resetLabel: 'Reset done'
     });
-    const url = "https://maker.ifttt.com/trigger/LamparaComedorOn/with/key/i4M0yNSEdCF7dQdEMs5e_XhA1BnQypmCTWIrlPVidUG?value1=" + this.state.deviceStates;
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        return;
-      }
-      const json = await response.json();
-      console.log(json);
-    } catch (error) {
-      console.error(error.message);
-    }
+    fetch('/api/saveVariables', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        mensaje: 'Actualización desde el frontend',
+        id: 42
+      })
+    })
+      .then(res => res.json())
+      .then(data => console.log('Respuesta PUT:', data))
+      .catch(err => console.error('Error:', err));
   }
   async changeRoku() {
     this.setState({
