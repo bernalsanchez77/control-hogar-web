@@ -11,7 +11,7 @@ class Top extends Component {
     this.init();
   }
   async init() {
-    fetch('/api')
+    fetch('/api/proxy')
     .then(res => res.json())
     .then(data => console.log(data))
     .catch(err => console.log('Error:'));
