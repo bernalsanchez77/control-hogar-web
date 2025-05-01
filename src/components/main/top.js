@@ -53,7 +53,7 @@ class Top extends Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(this.state.deviceStates)
+      body: JSON.stringify({este: 'va', oro: 'vv'})
     })
       .then(res => res.json())
       .then(data => console.log('Respuesta PUT:', data))
@@ -81,7 +81,7 @@ class Top extends Component {
         <button onClick={() => this.resetDevices()}>{this.state.resetLabel}</button>
         <button onClick={() => this.changeRoku()}>{this.state.rokuLabel}</button>
         <div>
-        <span>Lampara Comedors: {this.state.deviceStates.LamparaComedor}</span>
+        <span>Lampara Comedor: {this.state.deviceStates.LamparaComedor}</span>
         </div>
       </div>
     );
