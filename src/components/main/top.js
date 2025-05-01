@@ -6,13 +6,27 @@ class Top extends Component {
     this.state = {
       resetLabel: 'Reset',
       rokuLabel: 'Cable8',
-      deviceStates: '{"LamparaComedor":"Off","LamparaSala":"Off","LamparaTurca":"Off","LamparaLava":"Off","LamparaRotatoria":"Off","Chimenea":"Off","LamparasAbajo":"Off","ParlantesSala":"Off","CalentadorNegro":"Off","CalentadorBlanco":"Off","ProyectorMute":"Off","SalaMute":"Off","CuartoMute":"off","Hdmi":"roku"}'
+      deviceStates: {
+        LamparaComedor:"Off",
+        LamparaSala:"Off",
+        LamparaTurca:"Off",
+        LamparaLava:"Off",
+        LamparaRotatoria:"Off",
+        Chimenea:"Off",
+        LamparasAbajo:"Off",
+        ParlantesSala:"Off",
+        CalentadorNegro:"Off",
+        CalentadorBlanco:"Off",
+        ProyectorMute:"Off",
+        SalaMute:"Off",
+        CuartoMute:"off",
+        Hdmi:"roku"}
     };
     this.init();
   }
   async init() {
     fetch('/api/getVariables')
-    .then(res => {res.slice(2); res.json();})
+    .then(res => res.json())
     .then(data => console.log(data))
     .catch(err => console.log('Error:'));
   }
