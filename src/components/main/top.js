@@ -4,31 +4,52 @@ class Top extends Component {
   constructor() {
     super();
     this.state = {
-      name: 'Cable'
+      resetLabel: 'Reset',
+      rokuLabel: 'Cable',
+      deviceStates: '{"LamparaComedor":"Off","LamparaSala":"Off","LamparaTurca":"Off","LamparaLava":"Off","LamparaRotatoria":"Off","Chimenea":"Off","LamparasAbajo":"Off","ParlantesSala":"Off","CalentadorNegro":"Off","CalentadorBlanco":"Off","ProyectorMute":"Off","SalaMute":"Off","CuartoMute":"off","Hdmi":"roku"}'
     };
+    this.init();
   }
-  changeMessage() {
+  init() {
+    alert('va');
+  }
+  async resetDevices() {
     this.setState({
-      name: 'Roku'
+      resetLabel: 'Reset done'
     });
-    fetch('https://ifttt.massmedia.stream/api/v1/bersanesp/data', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: 'este',
-    })
-      .then(response => {
-        if (!response.ok) {
-          alert('ok')
-        }
-        // return response.json();
-      }).then().catch(error => console.error('Error:', error));
+    const url = "https://maker.ifttt.com/trigger/LamparaComedorOn/with/key/i4M0yNSEdCF7dQdEMs5e_XhA1BnQypmCTWIrlPVidUG?value1=" + this.state.deviceStates;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        return;
+      }
+      const json = await response.json();
+      console.log(json);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+  async changeRoku() {
+    this.setState({
+      resetLabel: 'Roku'
+    });
+    const url = "https://maker.ifttt.com/trigger/LamparaComedorOn/with/key/i4M0yNSEdCF7dQdEMs5e_XhA1BnQypmCTWIrlPVidUG?value1=" + this.state.deviceStates;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        return;
+      }
+      const json = await response.json();
+      console.log(json);
+    } catch (error) {
+      console.error(error.message);
+    }
   }
   render() {
     return (
       <div>
-        <button onClick={() => this.changeMessage()}>{this.state.name}</button>
+        <button onClick={() => this.resetDevices()}>{this.state.resetLabel}</button>
+        <button onClick={() => this.changeRoku()}>{this.state.rokuLabel}</button>
       </div>
     );
   }
