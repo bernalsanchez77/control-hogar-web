@@ -26,9 +26,11 @@ class Top extends Component {
   }
   async init() {
     fetch('/api/getVariables').then(res => res.json()).then(data => {
-      setInterval(function () {
-        console.log(data);
-      }, 1000);
+      setInterval(() => {
+        this.setState({
+          deviceStates: data
+        });
+      }, 5000);
     })
     .catch(err => console.log('Error: ', err));
   }
@@ -68,6 +70,9 @@ class Top extends Component {
       <div>
         <button onClick={() => this.resetDevices()}>{this.state.resetLabel}</button>
         <button onClick={() => this.changeRoku()}>{this.state.rokuLabel}</button>
+        <div>
+        <span>Lampara Comedor: {this.state.deviceStates.LamparaComedor}</span>
+        </div>
       </div>
     );
   }
