@@ -21,12 +21,20 @@ class Top extends Component {
     this.state = {
       resetLabel: 'Reset',
       rokuLabel: 'Cable8',
+      states: states,
       deviceStates: states
     };
     this.init();
   }
   async init() {
-    setInterval(() => {    
+    fetch('/api/getVariables').then(res => res.json()).then(data => {
+      this.setState({
+        deviceStates: data
+      });
+  })
+  .catch(err => console.log('Error: ', err));
+
+    setInterval(() => {
       fetch('/api/getVariables').then(res => res.json()).then(data => {
           this.setState({
             deviceStates: data
@@ -44,7 +52,7 @@ class Top extends Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(states)
+      body: JSON.stringify(this.state.states)
     })
       .then(res => res.json())
       .then(data => console.log('Respuesta PUT:', data))
