@@ -53,7 +53,7 @@ class Top extends Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({este: 'va', oro: 'vv'})
+      body: JSON.stringify(this.state.deviceStates)
     })
       .then(res => res.json())
       .then(data => console.log('Respuesta PUT:', data))
