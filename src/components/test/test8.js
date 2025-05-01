@@ -7,6 +7,11 @@ class Test8 extends Component {
       name: 'Bernal'
     };
   }
+  changeMessage() {
+    this.setState({
+      name: 'Amanda'
+    })
+  }
   render() {
     return (
       <div>
@@ -14,6 +19,7 @@ class Test8 extends Component {
         <p>Class component</p>
         <p>Exports Default</p>
         <p>A state 'name' was added in a Class Component and changes with the button: {this.state.name}</p>
+        <button onClick={() => this.changeMessage()}>Subscribe</button>
       </div>
     );
   }
