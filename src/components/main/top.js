@@ -47,7 +47,7 @@ class Top extends Component {
     this.setState({
       resetLabel: 'Reset done'
     });
-    console.log(this.state.states);
+    console.log(JSON.stringify(this.state.states));
     fetch('/api/saveVariables', {
       method: 'PUT',
       headers: {
