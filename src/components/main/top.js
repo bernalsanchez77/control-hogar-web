@@ -14,7 +14,7 @@ class Top extends Component {
     fetch('/api')
     .then(res => res.json())
     .then(data => console.log(data))
-    .catch(err => console.error('Error:'));
+    .catch(err => console.log('Error:'));
   }
   async resetDevices() {
     this.setState({
