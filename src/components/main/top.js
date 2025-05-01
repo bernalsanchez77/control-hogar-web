@@ -3,24 +3,25 @@ import React, { Component } from 'react';
 class Top extends Component {
   constructor() {
     super();
+    const states = {
+      LamparaComedor:"Off",
+      LamparaSala:"Off",
+      LamparaTurca:"Off",
+      LamparaLava:"Off",
+      LamparaRotatoria:"Off",
+      Chimenea:"Off",
+      LamparasAbajo:"Off",
+      ParlantesSala:"Off",
+      CalentadorNegro:"Off",
+      CalentadorBlanco:"Off",
+      ProyectorMute:"Off",
+      SalaMute:"Off",
+      CuartoMute:"off",
+      Hdmi:"roku"};
     this.state = {
       resetLabel: 'Reset',
       rokuLabel: 'Cable8',
-      deviceStates: {
-        LamparaComedor:"Off",
-        LamparaSala:"Off",
-        LamparaTurca:"Off",
-        LamparaLava:"Off",
-        LamparaRotatoria:"Off",
-        Chimenea:"Off",
-        LamparasAbajo:"Off",
-        ParlantesSala:"Off",
-        CalentadorNegro:"Off",
-        CalentadorBlanco:"Off",
-        ProyectorMute:"Off",
-        SalaMute:"Off",
-        CuartoMute:"off",
-        Hdmi:"roku"}
+      deviceStates: states
     };
     this.init();
   }
@@ -43,7 +44,7 @@ class Top extends Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(this.state.deviceStates)
+      body: JSON.stringify(states)
     })
       .then(res => res.json())
       .then(data => console.log('Respuesta PUT:', data))
