@@ -25,10 +25,12 @@ class Top extends Component {
     this.init();
   }
   async init() {
-    fetch('/api/getVariables')
-    .then(res => res.json())
-    .then(data => console.log(data))
-    .catch(err => console.log('Error:'));
+    fetch('/api/getVariables').then(res => res.json()).then(data => {
+      setInterval(function () {
+        console.log(data);
+      }, 1000);
+    })
+    .catch(err => console.log('Error: ', err));
   }
   async resetDevices() {
     this.setState({
