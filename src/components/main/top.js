@@ -81,7 +81,7 @@ class Top extends Component {
         <button onClick={() => this.resetDevices()}>{this.state.resetLabel}</button>
         <button onClick={() => this.changeRoku()}>{this.state.rokuLabel}</button>
         <div>
-        <span>Lampara Comedor: {this.state.deviceStates.LamparaComedor}</span>
+        <span>Lampara Comedors: {this.state.deviceStates.LamparaComedor}</span>
         </div>
       </div>
     );
