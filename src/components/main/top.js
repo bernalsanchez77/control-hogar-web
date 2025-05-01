@@ -5,7 +5,7 @@ class Top extends Component {
     super();
     this.state = {
       resetLabel: 'Reset',
-      rokuLabel: 'Cable4',
+      rokuLabel: 'Cable5',
       deviceStates: '{"LamparaComedor":"Off","LamparaSala":"Off","LamparaTurca":"Off","LamparaLava":"Off","LamparaRotatoria":"Off","Chimenea":"Off","LamparasAbajo":"Off","ParlantesSala":"Off","CalentadorNegro":"Off","CalentadorBlanco":"Off","ProyectorMute":"Off","SalaMute":"Off","CuartoMute":"off","Hdmi":"roku"}'
     };
     this.init();
