@@ -12,7 +12,7 @@ class Top extends Component {
   }
   async init() {
     fetch('/api/getVariables')
-    .then(res => res.json())
+    .then(res => {res.slice(2); res.json();})
     .then(data => console.log(data))
     .catch(err => console.log('Error:'));
   }
@@ -25,10 +25,7 @@ class Top extends Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        mensaje: 'Actualización desde el frontend',
-        id: 42
-      })
+      body: JSON.stringify(this.state.deviceStates)
     })
       .then(res => res.json())
       .then(data => console.log('Respuesta PUT:', data))
