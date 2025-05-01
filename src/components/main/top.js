@@ -10,8 +10,11 @@ class Top extends Component {
     };
     this.init();
   }
-  init() {
-    alert('va');
+  async init() {
+    fetch('/api')
+    .then(res => res.json())
+    .then(data => console.log(data))
+    .catch(err => console.error('Error:', err));
   }
   async resetDevices() {
     this.setState({
