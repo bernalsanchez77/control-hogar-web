@@ -47,13 +47,13 @@ class Top extends Component {
     this.setState({
       resetLabel: 'Reset done'
     });
-    console.log(JSON.stringify(this.state.states));
+    const otro = this.state.states;
     fetch('/api/saveVariables', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({este: 'va', oro: 'vv'})
+      body: JSON.stringify(otro)
     })
       .then(res => res.json())
       .then(data => console.log('Respuesta PUT:', data))
