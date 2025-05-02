@@ -57,10 +57,10 @@ class Main extends Component {
     return (
       <div>
         <div>
-        <button onClick={() => this.triggerDevice('LamparaComedor')}>Lampara Comedor: {this.state.deviceStates.LamparaComedor}</button>
+        <button onClick={() => this.triggerDevice('LamparaComedor')}>Lampara Comedor: {this.state.deviceStates.LamparaComedor.label}</button>
         </div>
         <div>
-        <button onClick={() => this.triggerDevice('LamparaTurca')}>Lampara Turca: {this.state.deviceStates.LamparaTurca}</button>
+        <button onClick={() => this.triggerDevice('LamparaTurca')}>Lampara Turca: {this.state.deviceStates.LamparaTurca.label}</button>
         </div>
       </div>
     );
