@@ -4,8 +4,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Error' });
   }
   try {
+    const key = process.env.REACT_APP_STATES_KEY;
     const body = req.body;
-    const response = await fetch('https://ifttt.massmedia.stream/api/v1/bersanesp/data2', {
+    const response = await fetch(key, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

@@ -10,6 +10,7 @@ import { Test6 } from './components/test/test6';
 import Test7 from './components/test/test7';
 import Test8 from './components/test/test8';
 import Main from './components/main/main';
+import Screen from './components/main/screen';
 
 // function App() {
 //   return (
@@ -22,6 +23,7 @@ class App extends Component {
   render() {
     return (
     <div className="App">
+      <Screen></Screen>
       <Main></Main>
       {/* <img src={logo} className="App-logo" alt="logo" />
       <Test1></Test1>
