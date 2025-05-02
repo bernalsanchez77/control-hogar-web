@@ -61,26 +61,12 @@ class Top extends Component {
   }
   async changeDevice(device, state) {
     this.setState(prevState => ({
-      deviceStates: {
-        ...prevState.deviceStates,
-        device: state,
-      }
+      deviceStates: {...prevState.deviceStates, device: state}
     }));
     const deviceStates = this.state.deviceStates;
     fetch('/api/saveVariables', {method: 'PUT',headers: {'Content-Type': 'application/json',},body: JSON.stringify(deviceStates)});
   }
   async changeRoku() {
-    const url = "https://maker.ifttt.com/trigger/LamparaComedorOn/with/key/i4M0yNSEdCF7dQdEMs5e_XhA1BnQypmCTWIrlPVidUG?value1=" + this.state.deviceStates;
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        return;
-      }
-      const json = await response.json();
-      console.log(json);
-    } catch (error) {
-      console.error(error.message);
-    }
   }
   async changeLamparaComedor() {
     if (this.state.deviceStates.LamparaComedor === 'On') {
