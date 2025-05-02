@@ -19,19 +19,19 @@ class Main extends Component {
       CuartoMute: {status: 'Off', label: 'Cuarto Mute', id: 'CuartoMute'},
       Hdmi: {status: 'roku', label: 'Hdmi', id: 'Hdmi'},
     };
-    this.state = {states: states,deviceStates: states};
+    this.state = {states: states, deviceStates: states};
     this.init();
   }
   async init() {
-    this.getStates();
-    setInterval(() => {this.getStates();}, 5000);
+    this.getStatus();
+    setInterval(() => {this.getStatus();}, 5000);
   }
-  async getStates() {
+  async getStatus() {
     fetch('/api/getDeviceStatus').then(res => res.json()).then(
-      deviceStates => {this.setState({deviceStates: this.getUpdatedDeviceStates(deviceStates)})}
+      deviceStates => {this.setState({deviceStates: this.getUpdatedDeviceStatus(deviceStates)})}
     ).catch(err => {});
   }
-  getUpdatedDeviceStates(deviceStates) {
+  getUpdatedDeviceStatus(deviceStates) {
     const updatedDeviceStates = {};
     for (let device in this.state.deviceStates) {
       updatedDeviceStates[device] = {...this.state.deviceStates[device], status: deviceStates[device]};
