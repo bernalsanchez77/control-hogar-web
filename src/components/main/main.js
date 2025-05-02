@@ -43,7 +43,7 @@ class Main extends Component {
   }
   async changeDevice(device, state) {
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
-    this.setState(prev => ({deviceStates: {...prev.deviceStates, [device]: this.getUpdateDevice(device, state)  }}), () => {
+    this.setState(prev => ({deviceStates: {...prev.deviceStates, [device]: this.getUpdatedDevice(device, state)  }}), () => {
       const deviceStates = this.state.deviceStates;
       fetch('/api/setDeviceStates', {method: 'PUT',headers: {'Content-Type': 'application/json',},body: JSON.stringify(deviceStates)}).then(res => res.json()).then(data => {}).catch(err => {});
     });
