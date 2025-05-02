@@ -39,7 +39,7 @@ class Main extends Component {
     return updatedDeviceStates;
   }
   async changeDevice(device, state) {
-    fetch('/api/sendIfttt?device=' + device + '&state=' + state);
+    // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
     this.setState(prev => ({deviceStates: {...prev.deviceStates, [device.state]: state}}), () => {
       const deviceStates = this.state.deviceStates;
       fetch('/api/setDeviceStates', {method: 'PUT',headers: {'Content-Type': 'application/json',},body: JSON.stringify(deviceStates)}).then(res => res.json()).then(data => {}).catch(err => {});
@@ -56,10 +56,10 @@ class Main extends Component {
     return (
       <div>
         <div>
-        <button onClick={() => this.triggerDevice('LamparaComedor')}>{this.state.deviceStates.LamparaComedor.label}: {this.state.deviceStates.LamparaComedor.state}</button>
+        <button onClick={() => this.triggerDevice(this.state.deviceStates.LamparaComedor.id)}>{this.state.deviceStates.LamparaComedor.label}: {this.state.deviceStates.LamparaComedor.state}</button>
         </div>
         <div>
-        <button onClick={() => this.triggerDevice('LamparaTurca')}>{this.state.deviceStates.LamparaTurca.label}: {this.state.deviceStates.LamparaTurca.state}</button>
+        <button onClick={() => this.triggerDevice(this.state.deviceStates.LamparaTurca.id)}>{this.state.deviceStates.LamparaTurca.label}: {this.state.deviceStates.LamparaTurca.state}</button>
         </div>
       </div>
     );
