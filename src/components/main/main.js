@@ -17,14 +17,14 @@ class Main extends Component {
       ProyectorMute: {state: 'Off', label: 'Proyector Mute', id: 'ProyectorMute'},
       SalaMute: {state: 'Off', label: 'Sala Mute', id: 'SalaMute'},
       CuartoMute: {state: 'Off', label: 'Cuarto Mute', id: 'CuartoMute'},
-      Hdmi: {state: 'roku', label: 'Hdmi', id: 'Hdmi'},
+      Hdmi: {state: 'roku', label: 'Hdmi', id: 'Hdmi'}
     };
     this.state = {deviceStates: devices};
-    this.init();
+    // this.init();
   }
   async init() {
     this.getStates();
-    setInterval(() => {this.getStates();}, 5000);
+    // setInterval(() => {this.getStates();}, 5000);
   }
   async getStates() {
     fetch('/api/getDeviceStates').then(res => res.json()).then(
