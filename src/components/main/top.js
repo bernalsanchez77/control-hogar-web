@@ -81,10 +81,10 @@ class Top extends Component {
   async changeLamparaComedor() {
     if (this.state.deviceStates.LamparaComedor === 'On') {
       fetch('/api/saveIfttt?device=LamparaComedor&state=Off');
-      this.changeDevice('LamparaComedor', 'On');
+      this.changeDevice('LamparaComedor', 'Off');
     } else {
       fetch('/api/saveIfttt?device=LamparaComedor&state=On');
-      this.changeDevice('LamparaComedor', 'Off');
+      this.changeDevice('LamparaComedor', 'On');
     }
   }
   render() {
