@@ -82,7 +82,7 @@ class Top extends Component {
     } else {
       url = "https://maker.ifttt.com/trigger/LamparaComedorOff/with/key/i4M0yNSEdCF7dQdEMs5e_XhA1BnQypmCTWIrlPVidUG";
     }
-    const response = await fetch(url);
+    await fetch(url);
   }
   render() {
     return (
