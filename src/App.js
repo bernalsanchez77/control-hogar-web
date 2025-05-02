@@ -10,35 +10,30 @@ import { Test6 } from './components/test/test6';
 import Test7 from './components/test/test7';
 import Test8 from './components/test/test8';
 import Main from './components/main/main';
-import Screen from './components/main/screen';
 
-// function App() {
-//   return (
+ function App() {
+   return <Main></Main>;
+ }
+
+// class App extends Component {
+//   render() {
+//     return (
 //     <div className="App">
+//       <Main></Main>
+//       {/* <img src={logo} className="App-logo" alt="logo" />
+//       <Test1></Test1>
+//       <Test2></Test2>
+//       <Test3></Test3>
+//       <Test4></Test4>
+//       <Test5 name="Bernal"></Test5>
+//       <Test6>
+//         <span>children in span</span>
+//       </Test6>
+//       <Test7 name="Bernal"></Test7>
+//       <Test8></Test8> */}
 //     </div>
-//   );
+//     );
+//   }
 // }
-
-class App extends Component {
-  render() {
-    return (
-    <div className="App">
-      <Screen></Screen>
-      <Main></Main>
-      {/* <img src={logo} className="App-logo" alt="logo" />
-      <Test1></Test1>
-      <Test2></Test2>
-      <Test3></Test3>
-      <Test4></Test4>
-      <Test5 name="Bernal"></Test5>
-      <Test6>
-        <span>children in span</span>
-      </Test6>
-      <Test7 name="Bernal"></Test7>
-      <Test8></Test8> */}
-    </div>
-    );
-  }
-}
 
 export default App;

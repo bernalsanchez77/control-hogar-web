@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Screen from './screen';
+import { devices } from '../../global/devices';
 
 class Main extends Component {
   constructor() {
