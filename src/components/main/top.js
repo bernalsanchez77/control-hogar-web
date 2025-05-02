@@ -55,11 +55,11 @@ class Top extends Component {
       body: JSON.stringify(state)
     }).then(res => res.json()).then(data => {}).catch(err => {});
   }
-  async changeDevice(device, state) {
+  async changeDevice(key, value) {
     this.setState(prevState => ({
       deviceStates: {
         ...prevState.deviceStates,
-        [device]: state,
+        [key]: value,
       }
     }));
     console.log(this.state.deviceStates);
