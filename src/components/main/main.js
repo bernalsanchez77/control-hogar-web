@@ -38,9 +38,6 @@ class Main extends Component {
     }
     return updatedDevices;
   }
-  getUpdatedDevice(device, state) {
-    return {...this.state.devices[device], state: state};
-  }
   async changeDevice(device, state) {
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
     this.setState(prev => ({devices: {...prev.devices, [device]: {...this.state.devices[device], state: state}}}), () => {
@@ -62,10 +59,10 @@ class Main extends Component {
     return (
       <div>
         <div>
-        <button onClick={() => this.triggerDevice(this.state.devices.lamparaComedor.id)}>{this.state.devices.lamparaComedor.label} {this.state.devices.lamparaComedor.id}</button>
+        <button onClick={() => this.triggerDevice(this.state.devices.lamparaComedor.id)}>{this.state.devices.lamparaComedor.label} {this.state.devices.lamparaComedor.state}</button>
         </div>
         <div>
-        <button onClick={() => this.triggerDevice(this.state.devices.lamparaTurca.id)}>{this.state.devices.lamparaTurca.label} {this.state.devices.lamparaTurca.id}</button>
+        <button onClick={() => this.triggerDevice(this.state.devices.lamparaTurca.id)}>{this.state.devices.lamparaTurca.label} {this.state.devices.lamparaTurca.state}</button>
         </div>
         <div>
         <button onClick={() => this.resetDevices()}>Reset</button>
