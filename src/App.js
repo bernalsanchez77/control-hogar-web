@@ -23,7 +23,7 @@ class App extends Component {
     return (
     <div className="App">
       <Top></Top>
-      <img src={logo} className="App-logo" alt="logo" />
+      {/* <img src={logo} className="App-logo" alt="logo" />
       <Test1></Test1>
       <Test2></Test2>
       <Test3></Test3>
@@ -33,7 +33,7 @@ class App extends Component {
         <span>children in span</span>
       </Test6>
       <Test7 name="Bernal"></Test7>
-      <Test8></Test8>
+      <Test8></Test8> */}
     </div>
     );
   }

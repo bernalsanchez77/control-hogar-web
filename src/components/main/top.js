@@ -20,7 +20,7 @@ class Top extends Component {
       Hdmi:"roku"};
     this.state = {
       resetLabel: 'Reset',
-      rokuLabel: 'Cable8',
+      rokuLabel: 'Cable',
       states: states,
       deviceStates: states
     };
@@ -78,8 +78,12 @@ class Top extends Component {
   render() {
     return (
       <div>
+        <div>
         <button onClick={() => this.resetDevices()}>{this.state.resetLabel}</button>
+        </div>
+        <div>
         <button onClick={() => this.changeRoku()}>{this.state.rokuLabel}</button>
+        </div>
         <div>
         <span>Lampara Comedor: {this.state.deviceStates.LamparaComedor}</span>
         </div>
