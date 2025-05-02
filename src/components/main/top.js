@@ -60,10 +60,11 @@ class Top extends Component {
       .catch(err => console.error('Error:', err));
   }
   async changeDevice(device, state) {
+    const dev = device;
     this.setState(prevState => ({
       deviceStates: {
         ...prevState.deviceStates,
-        device: state,
+        LamparaComedor: state,
       }
     }));
     console.log(this.state.deviceStates);
