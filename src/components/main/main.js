@@ -20,7 +20,7 @@ class Main extends Component {
       Hdmi: {state: 'roku', label: 'Hdmi', id: 'Hdmi'}
     };
     this.state = {deviceStates: devices};
-    this.init();
+    // this.init();
   }
   async init() {
     this.getStates();
