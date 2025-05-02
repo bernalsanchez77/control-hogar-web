@@ -66,7 +66,6 @@ class Top extends Component {
         device: state,
       }
     }));
-    console.log(this.state.deviceStates);
     const deviceStates = this.state.deviceStates;
     fetch('/api/saveVariables', {method: 'PUT',headers: {'Content-Type': 'application/json',},body: JSON.stringify(deviceStates)});
   }
