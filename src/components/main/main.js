@@ -28,26 +28,25 @@ class Main extends Component {
   }
   async getStates() {
     fetch('/api/getDeviceStates').then(res => res.json()).then(
-      deviceStates => {this.setState({deviceStates: this.replaceState(deviceStates)})}
+      deviceStates => {this.setState({deviceStates: this.getUpdatedDeviceStates(deviceStates)})}
     ).catch(err => {});
   }
-  replaceState(deviceStates) {
-    const newStates = {};
+  getUpdatedDeviceStates(deviceStates) {
+    const updatedDeviceStates = {};
     for (let device in this.state.deviceStates) {
-      newStates[device] = {...this.state.deviceStates[device], state: deviceStates[device]};
+      updatedDeviceStates[device] = {...this.state.deviceStates[device], state: deviceStates[device]};
     }
-    console.log(newStates);
-    return newStates;
+    return updatedDeviceStates;
   }
   async changeDevice(device, state) {
     fetch('/api/sendIfttt?device=' + device + '&state=' + state);
-    this.setState(prev => ({deviceStates: {...prev.deviceStates,[device]: state}}), () => {
+    this.setState(prev => ({deviceStates: {...prev.deviceStates, [device.state]: state}}), () => {
       const deviceStates = this.state.deviceStates;
       fetch('/api/setDeviceStates', {method: 'PUT',headers: {'Content-Type': 'application/json',},body: JSON.stringify(deviceStates)}).then(res => res.json()).then(data => {}).catch(err => {});
     });
   }
   async triggerDevice(device) {
-    if (this.state.deviceStates[device] === 'On') {
+    if (this.state.deviceStates[device].state === 'On') {
       this.changeDevice(device, 'Off');
     } else {
       this.changeDevice(device, 'On');
