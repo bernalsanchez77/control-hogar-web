@@ -25,30 +25,27 @@ class Top extends Component {
     this.init();
   }
   async init() {
-    this.getVariables();
+    this.getStates();
     setInterval(() => {
-      this.getVariables();
+      this.getStates();
     }, 5000);
   }
-  async getVariables() {
-    fetch('/api/getVariables').then(res => res.json()).then(data => {
-      this.setState({
-        deviceStates: data
-      });
-    }).catch(err => {});
+  async getStates() {
+    fetch('/api/getDeviceStates').then(res => res.json()).then(
+      deviceStates => {this.setState({deviceStates: deviceStates})}
+    ).catch(err => {});
   }
-  async changeDevice(key, value) {
-    this.setState(prev => ({deviceStates: {...prev.deviceStates,[key]: value}}), () => {
+  async changeDevice(device, state) {
+    fetch('/api/sendIfttt?device=' + device + '&state=' + state);
+    this.setState(prev => ({deviceStates: {...prev.deviceStates,[device]: state}}), () => {
       const deviceStates = this.state.deviceStates;
-      fetch('/api/saveVariables', {method: 'PUT',headers: {'Content-Type': 'application/json',},body: JSON.stringify(deviceStates)}).then(res => res.json()).then(data => {}).catch(err => {});
+      fetch('/api/setDeviceStates', {method: 'PUT',headers: {'Content-Type': 'application/json',},body: JSON.stringify(deviceStates)}).then(res => res.json()).then(data => {}).catch(err => {});
     });
   }
   async triggerDevice(device) {
     if (this.state.deviceStates[device] === 'On') {
-      fetch('/api/saveIfttt?device=' + device + '&state=Off');
       this.changeDevice(device, 'Off');
     } else {
-      fetch('/api/saveIfttt?device=' + device + '&state=On');
       this.changeDevice(device, 'On');
     }
   }
