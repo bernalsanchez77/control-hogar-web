@@ -4,20 +4,20 @@ class Main extends Component {
   constructor() {
     super();
     const devices = {
-      LamparaComedor: {state: 'Off', label: 'Lampara Comedor', id: 'LamparaComedor'},
-      LamparaSala: {state: 'Off', label: 'Lampara Sala', id: 'LamparaSala'},
-      LamparaTurca: {state: 'Off', label: 'Lampara Turca', id: 'LamparaTurca'},
-      LamparaLava: {state: 'Off', label: 'Lampara Lava', id: 'LamparaLava'},
-      LamparaRotatoria: {state: 'Off', label: 'Lampara Rotatoria', id: 'LamparaRotatoria'},
-      Chimenea: {state: 'Off', label: 'Chimenea', id: 'Chimenea'},
-      LamparasAbajo: {state: 'Off', label: 'Lamparas Abajo', id: 'LamparasAbajo'},
-      ParlantesSala: {state: 'Off', label: 'Parlantes Sala', id: 'ParlantesSala'},
-      CalentadorNegro: {state: 'Off', label: 'Calentador Lizzie', id: 'CalentadorNegro'},
-      CalentadorBlanco: {state: 'Off', label: 'Calentador Amy', id: 'CalentadorBlanco'},
-      ProyectorMute: {state: 'Off', label: 'Proyector Mute', id: 'ProyectorMute'},
-      SalaMute: {state: 'Off', label: 'Sala Mute', id: 'SalaMute'},
-      CuartoMute: {state: 'Off', label: 'Cuarto Mute', id: 'CuartoMute'},
-      Hdmi: {state: 'roku', label: 'Hdmi', id: 'Hdmi'}
+      LamparaComedor: {state: 'off', label: 'Lampara Comedor', id: 'lamparaComedor'},
+      LamparaSala: {state: 'off', label: 'Lampara Sala', id: 'lamparaSala'},
+      LamparaTurca: {state: 'off', label: 'Lampara Turca', id: 'lamparaTurca'},
+      LamparaLava: {state: 'off', label: 'Lampara Lava', id: 'lamparaLava'},
+      LamparaRotatoria: {state: 'off', label: 'Lampara Rotatoria', id: 'lamparaRotatoria'},
+      Chimenea: {state: 'off', label: 'Chimenea', id: 'chimenea'},
+      LamparasAbajo: {state: 'off', label: 'Lamparas Abajo', id: 'lamparasAbajo'},
+      ParlantesSala: {state: 'off', label: 'Parlantes Sala', id: 'parlantesSala'},
+      CalentadorNegro: {state: 'off', label: 'Calentador Lizzie', id: 'calentadorNegro'},
+      CalentadorBlanco: {state: 'off', label: 'Calentador Amy', id: 'calentadorBlanco'},
+      ProyectorMute: {state: 'off', label: 'Proyector Mute', id: 'proyectorMute'},
+      SalaMute: {state: 'off', label: 'Sala Mute', id: 'salaMute'},
+      CuartoMute: {state: 'off', label: 'Cuarto Mute', id: 'cuartoMute'},
+      Hdmi: {state: 'roku', label: 'Roku', id: 'hdmi'}
     };
     this.state = {devices: devices};
     this.init();
@@ -43,7 +43,7 @@ class Main extends Component {
   }
   async changeDevice(device, state) {
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
-    this.setState(prev => ({devices: {...prev.devices, [device]: this.getUpdatedDevice(device, state)}}), () => {
+    this.setState(prev => ({devices: {...prev.devices, [device]: {...this.state.devices[device], state: state}}}), () => {
       const devices = this.state.devices;
       fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
     });
