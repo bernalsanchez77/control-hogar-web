@@ -34,7 +34,7 @@ class Main extends Component {
   replaceState(deviceStates) {
     const newStates = {};
     for (let device in this.state.deviceStates) {
-      newStates[device] = {...this.state.deviceStates[device], state: deviceStates[device].state};
+      newStates[device] = {...this.state.deviceStates[device], state: deviceStates[device]};
     }
     console.log(newStates);
     return newStates;
