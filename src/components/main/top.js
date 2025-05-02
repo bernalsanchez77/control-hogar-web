@@ -56,15 +56,11 @@ class Top extends Component {
     }).then(res => res.json()).then(data => {}).catch(err => {});
   }
   async changeDevice(key, value) {
-    this.setState(prevState => ({
-      deviceStates: {
-        ...prevState.deviceStates,
-        [key]: value,
-      }
-    }));
-    console.log(this.state.deviceStates);
-    const deviceStates = this.state.deviceStates;
-    fetch('/api/saveVariables', {method: 'PUT',headers: {'Content-Type': 'application/json',},body: JSON.stringify(deviceStates)});
+    this.setState(prev => ({deviceStates: {...prev.deviceStates,[key]: value}})), () => {
+      console.log(this.state.deviceStates);
+      const deviceStates = this.state.deviceStates;
+      fetch('/api/saveVariables', {method: 'PUT',headers: {'Content-Type': 'application/json',},body: JSON.stringify(deviceStates)});
+    };
   }
   async changeRoku() {
   }
