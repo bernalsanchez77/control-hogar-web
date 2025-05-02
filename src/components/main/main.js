@@ -19,53 +19,53 @@ class Main extends Component {
       CuartoMute: {state: 'Off', label: 'Cuarto Mute', id: 'CuartoMute'},
       Hdmi: {state: 'roku', label: 'Hdmi', id: 'Hdmi'}
     };
-    this.state = {deviceStates: devices};
-    // this.init();
+    this.state = {devices: devices};
+    this.init();
   }
   async init() {
     this.getStates();
     setInterval(() => {this.getStates();}, 5000);
   }
   async getStates() {
-    fetch('/api/getDeviceStates').then(res => res.json()).then(
-      deviceStates => {this.setState({deviceStates: this.getUpdatedDeviceStates(deviceStates)})}
+    fetch('/api/getDevices').then(res => res.json()).then(
+      devices => {this.setState({devices: this.getUpdatedDevices(devices)})}
     ).catch(err => {});
   }
-  getUpdatedDeviceStates(deviceStates) {
-    const updatedDeviceStates = {};
-    for (let device in this.state.deviceStates) {
-      updatedDeviceStates[device] = {...this.state.deviceStates[device], state: deviceStates[device].state};
+  getUpdatedDevices(devices) {
+    const updatedDevices = {};
+    for (let device in this.state.devices) {
+      updatedDevices[device] = {...this.state.devices[device], state: devices[device].state};
     }
-    return updatedDeviceStates;
+    return updatedDevices;
   }
   getUpdatedDevice(device, state) {
-    return {...this.state.deviceStates[device], state: state};
+    return {...this.state.devices[device], state: state};
   }
   async changeDevice(device, state) {
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
-    this.setState(prev => ({deviceStates: {...prev.deviceStates, [device]: this.getUpdatedDevice(device, state)}}), () => {
-      const deviceStates = this.state.deviceStates;
-      fetch('/api/setDeviceStates', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(deviceStates)}).then(res => res.json()).then(data => {}).catch(err => {});
+    this.setState(prev => ({devices: {...prev.devices, [device]: this.getUpdatedDevice(device, state)}}), () => {
+      const devices = this.state.devices;
+      fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
     });
   }
   async triggerDevice(device) {
-    if (this.state.deviceStates[device].state === 'On') {
+    if (this.state.devices[device].state === 'On') {
       this.changeDevice(device, 'Off');
     } else {
       this.changeDevice(device, 'On');
     }
   }
   resetDevices() {
-    fetch('/api/setDeviceStates', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(this.state.deviceStates)});
+    fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(this.state.devices)});
   }
   render() {
     return (
       <div>
         <div>
-        <button onClick={() => this.triggerDevice(this.state.deviceStates.LamparaComedor.id)}>{this.state.deviceStates.LamparaComedor.label} {this.state.deviceStates.LamparaComedor.id}</button>
+        <button onClick={() => this.triggerDevice(this.state.devices.LamparaComedor.id)}>{this.state.devices.LamparaComedor.label} {this.state.devices.LamparaComedor.id}</button>
         </div>
         <div>
-        <button onClick={() => this.triggerDevice(this.state.deviceStates.LamparaTurca.id)}>{this.state.deviceStates.LamparaTurca.label} {this.state.deviceStates.LamparaTurca.id}</button>
+        <button onClick={() => this.triggerDevice(this.state.devices.LamparaTurca.id)}>{this.state.devices.LamparaTurca.label} {this.state.devices.LamparaTurca.id}</button>
         </div>
         <div>
         <button onClick={() => this.resetDevices()}>Reset</button>
