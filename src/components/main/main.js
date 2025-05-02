@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class Main extends Component {
   constructor() {
     super();
-    const states = {
+    const devices = {
       LamparaComedor: {state: 'Off', label: 'Lampara Comedor', id: 'LamparaComedor'},
       LamparaSala: {state: 'Off', label: 'Lampara Sala', id: 'LamparaSala'},
       LamparaTurca: {state: 'Off', label: 'Lampara Turca', id: 'LamparaTurca'},
@@ -19,7 +19,7 @@ class Main extends Component {
       CuartoMute: {state: 'Off', label: 'Cuarto Mute', id: 'CuartoMute'},
       Hdmi: {state: 'roku', label: 'Hdmi', id: 'Hdmi'},
     };
-    this.state = {states: states,deviceStates: states};
+    this.state = {deviceStates: devices};
     this.init();
   }
   async init() {
@@ -43,9 +43,9 @@ class Main extends Component {
   }
   async changeDevice(device, state) {
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
-    this.setState(prev => ({deviceStates: {...prev.deviceStates, [device]: this.getUpdatedDevice(device, state)  }}), () => {
+    this.setState(prev => ({deviceStates: {...prev.deviceStates, [device]: this.getUpdatedDevice(device, state)}}), () => {
       const deviceStates = this.state.deviceStates;
-      fetch('/api/setDeviceStates', {method: 'PUT',headers: {'Content-Type': 'application/json',},body: JSON.stringify(deviceStates)}).then(res => res.json()).then(data => {}).catch(err => {});
+      fetch('/api/setDeviceStates', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(deviceStates)}).then(res => res.json()).then(data => {}).catch(err => {});
     });
   }
   async triggerDevice(device) {
@@ -55,6 +55,9 @@ class Main extends Component {
       this.changeDevice(device, 'On');
     }
   }
+  resetDevices() {
+    fetch('/api/setDeviceStates', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(this.state.deviceStates)});
+  }
   render() {
     return (
       <div>
@@ -63,6 +66,9 @@ class Main extends Component {
         </div>
         <div>
         <button onClick={() => this.triggerDevice(this.state.deviceStates.LamparaTurca.id)}>{this.state.deviceStates.LamparaTurca.label} {this.state.deviceStates.LamparaTurca.id}</button>
+        </div>
+        <div>
+        <button onClick={() => this.resetDevices()}>Reset</button>
         </div>
       </div>
     );
