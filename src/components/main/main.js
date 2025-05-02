@@ -1,12 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Screen from './screen';
 import { devices } from '../../global/devices';
 
 function Main() {
+
+  const [devicess, setDevicess] = useState(devices);
+  
+  const getUpdatedDevices = useCallback((devices) => {
+    const updatedDevices = {};
+    for (let device in devicess) {
+      updatedDevices[device] = {...devices[device], state: devices[device].state};
+    }
+    return updatedDevices;
+  }, [devicess]);
+
+  const getStates = useCallback(() => {
+    fetch('/api/getDevices').then(res => res.json()).then(
+      devices => {
+        setDevicess(getUpdatedDevices(devices))
+      }
+    ).catch(err => {});
+  }, [getUpdatedDevices]);
+
+  const init = useCallback(() => {
+    getStates();
+    setInterval(() => {getStates();}, 5000);
+  }, [getStates]);
+
+  useEffect(() => {
+    init();
+  }, [init]);
+
   const resetDevices = () => {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)});
   }
-
   return (
     <div>
       <Screen></Screen>
