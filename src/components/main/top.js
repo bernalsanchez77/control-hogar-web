@@ -60,9 +60,6 @@ class Top extends Component {
       .catch(err => console.error('Error:', err));
   }
   async changeRoku() {
-    this.setState({
-      resetLabel: 'Roku'
-    });
     const url = "https://maker.ifttt.com/trigger/LamparaComedorOn/with/key/i4M0yNSEdCF7dQdEMs5e_XhA1BnQypmCTWIrlPVidUG?value1=" + this.state.deviceStates;
     try {
       const response = await fetch(url);
@@ -75,6 +72,18 @@ class Top extends Component {
       console.error(error.message);
     }
   }
+  async changeLamparaComedor() {
+    let url = '';
+    if (this.state.LamparaComedor === 'Off') {
+      url = "https://maker.ifttt.com/trigger/LamparaComedorOn/with/key/i4M0yNSEdCF7dQdEMs5e_XhA1BnQypmCTWIrlPVidUG";
+      // this.setState({
+      //   resetLabel: 'Roku'
+      // });
+    } else {
+      url = "https://maker.ifttt.com/trigger/LamparaComedorOff/with/key/i4M0yNSEdCF7dQdEMs5e_XhA1BnQypmCTWIrlPVidUG";
+    }
+    const response = await fetch(url);
+  }
   render() {
     return (
       <div>
@@ -85,7 +94,7 @@ class Top extends Component {
         <button onClick={() => this.changeRoku()}>{this.state.rokuLabel}</button>
         </div>
         <div>
-        <span>Lampara Comedor: {this.state.deviceStates.LamparaComedor}</span>
+        <button onClick={() => this.changeLamparaComedor()}>{this.state.deviceStates.LamparaComedor}</button>
         </div>
       </div>
     );
