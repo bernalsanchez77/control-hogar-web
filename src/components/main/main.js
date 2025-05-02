@@ -20,11 +20,11 @@ class Main extends Component {
       Hdmi: {state: 'roku', label: 'Hdmi', id: 'Hdmi'}
     };
     this.state = {deviceStates: devices};
-    // this.init();
+    this.init();
   }
   async init() {
     this.getStates();
-    // setInterval(() => {this.getStates();}, 5000);
+    setInterval(() => {this.getStates();}, 5000);
   }
   async getStates() {
     fetch('/api/getDeviceStates').then(res => res.json()).then(
@@ -34,7 +34,7 @@ class Main extends Component {
   getUpdatedDeviceStates(deviceStates) {
     const updatedDeviceStates = {};
     for (let device in this.state.deviceStates) {
-      updatedDeviceStates[device] = {...this.state.deviceStates[device], state: deviceStates[device]};
+      updatedDeviceStates[device] = {...this.state.deviceStates[device], state: deviceStates[device].state};
     }
     return updatedDeviceStates;
   }
