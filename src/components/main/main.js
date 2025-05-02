@@ -59,10 +59,10 @@ class Main extends Component {
     return (
       <div>
         <div>
-        <button onClick={() => this.triggerDevice(this.state.deviceStates.LamparaComedor.id)}>{this.state.deviceStates.LamparaComedor.label} {this.state.deviceStates.LamparaComedor.status}</button>
+        <button onClick={() => this.triggerDevice(this.state.deviceStates.LamparaComedor.id)}>{this.state.deviceStates.LamparaComedor.label} {this.state.deviceStates.LamparaComedor.label}</button>
         </div>
         <div>
-        <button onClick={() => this.triggerDevice(this.state.deviceStates.LamparaTurca.id)}>{this.state.deviceStates.LamparaTurca.label} {this.state.deviceStates.LamparaTurca.status}</button>
+        <button onClick={() => this.triggerDevice(this.state.deviceStates.LamparaTurca.id)}>{this.state.deviceStates.LamparaTurca.label} {this.state.deviceStates.LamparaTurca.label}</button>
         </div>
       </div>
     );
