@@ -73,16 +73,8 @@ class Top extends Component {
     }
   }
   async changeLamparaComedor() {
-    let url = '';
-    if (this.state.deviceStates.LamparaComedor === 'Off') {
-      url = "https://maker.ifttt.com/trigger/LamparaComedorOn/with/key/i4M0yNSEdCF7dQdEMs5e_XhA1BnQypmCTWIrlPVidUG";
-      // this.setState({
-      //   resetLabel: 'Roku'
-      // });
-    } else {
-      url = "https://maker.ifttt.com/trigger/LamparaComedorOff/with/key/i4M0yNSEdCF7dQdEMs5e_XhA1BnQypmCTWIrlPVidUG";
-    }
-    await fetch(url);
+    fetch('/api/saveIfttt').then(res => res.json()).then(data => {
+    }).catch(err => console.log('Error: ', err));
   }
   render() {
     return (
