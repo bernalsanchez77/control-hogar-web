@@ -39,8 +39,7 @@ class Top extends Component {
           this.setState({
             deviceStates: data
           });
-      })
-      .catch(err => console.log('Error: ', err));
+      }).catch(err => console.log('Error: ', err));
     }, 5000);
   }
   async resetDevices() {
@@ -54,10 +53,7 @@ class Top extends Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(state)
-    })
-      .then(res => res.json())
-      .then(data => console.log('Respuesta PUT:', data))
-      .catch(err => console.error('Error:', err));
+    }).then(res => res.json()).then(data => {}).catch(err => {});
   }
   async changeDevice(device, state) {
     this.setState(prevState => ({
@@ -66,6 +62,7 @@ class Top extends Component {
         [device]: state,
       }
     }));
+    console.log(this.state.deviceStates);
     const deviceStates = this.state.deviceStates;
     fetch('/api/saveVariables', {method: 'PUT',headers: {'Content-Type': 'application/json',},body: JSON.stringify(deviceStates)});
   }
