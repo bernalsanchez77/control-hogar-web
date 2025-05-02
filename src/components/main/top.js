@@ -74,7 +74,7 @@ class Top extends Component {
   }
   async changeLamparaComedor() {
     let url = '';
-    if (this.state.LamparaComedor === 'Off') {
+    if (this.state.deviceStates.LamparaComedor === 'Off') {
       url = "https://maker.ifttt.com/trigger/LamparaComedorOn/with/key/i4M0yNSEdCF7dQdEMs5e_XhA1BnQypmCTWIrlPVidUG";
       // this.setState({
       //   resetLabel: 'Roku'
