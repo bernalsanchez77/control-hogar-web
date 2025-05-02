@@ -1,34 +1,15 @@
 import React, { Component } from 'react';
 
-class Top extends Component {
+class Main extends Component {
   constructor() {
     super();
-    const states = {
-      LamparaComedor:"Off",
-      LamparaSala:"Off",
-      LamparaTurca:"Off",
-      LamparaLava:"Off",
-      LamparaRotatoria:"Off",
-      Chimenea:"Off",
-      LamparasAbajo:"Off",
-      ParlantesSala:"Off",
-      CalentadorNegro:"Off",
-      CalentadorBlanco:"Off",
-      ProyectorMute:"Off",
-      SalaMute:"Off",
-      CuartoMute:"off",
-      Hdmi:"roku"};
-    this.state = {
-      states: states,
-      deviceStates: states
-    };
+    const states = {LamparaComedor:"Off",LamparaSala:"Off",LamparaTurca:"Off",LamparaLava:"Off",LamparaRotatoria:"Off",Chimenea:"Off",LamparasAbajo:"Off",ParlantesSala:"Off",CalentadorNegro:"Off",CalentadorBlanco:"Off",ProyectorMute:"Off",SalaMute:"Off",CuartoMute:"off",Hdmi:"roku"};
+    this.state = {states: states,deviceStates: states};
     this.init();
   }
   async init() {
     this.getStates();
-    setInterval(() => {
-      this.getStates();
-    }, 5000);
+    setInterval(() => {this.getStates();}, 5000);
   }
   async getStates() {
     fetch('/api/getDeviceStates').then(res => res.json()).then(
@@ -55,9 +36,12 @@ class Top extends Component {
         <div>
         <button onClick={() => this.triggerDevice('LamparaComedor')}>Lampara Comedor: {this.state.deviceStates.LamparaComedor}</button>
         </div>
+        <div>
+        <button onClick={() => this.triggerDevice('LamparaTurca')}>Lampara Turca: {this.state.deviceStates.Turca}</button>
+        </div>
       </div>
     );
   }
 }
 
-export default Top;
+export default Main;
