@@ -17,7 +17,7 @@ function Main() {
   const changeDevice = (device, state) => {
     debugger;
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
-    setDevicess(prev => ({...prev, [device]: {label: devicess[device].label, id: devicess[device].label, state: state}}));
+    setDevicess(prev => ({...prev, [device]: {label: devicess[device].label, id: devicess[device].label, state: 'on'}}));
     setTimeout(() => {
       fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicess)}).then(res => res.json()).then(data => {}).catch(err => {});
     }, 500);
