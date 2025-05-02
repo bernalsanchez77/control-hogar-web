@@ -3,7 +3,22 @@ import React, { Component } from 'react';
 class Main extends Component {
   constructor() {
     super();
-    const states = {LamparaComedor:"Off",LamparaSala:"Off",LamparaTurca:"Off",LamparaLava:"Off",LamparaRotatoria:"Off",Chimenea:"Off",LamparasAbajo:"Off",ParlantesSala:"Off",CalentadorNegro:"Off",CalentadorBlanco:"Off",ProyectorMute:"Off",SalaMute:"Off",CuartoMute:"off",Hdmi:"roku"};
+    const states = {
+      LamparaComedor: {state: 'Off', label: 'Lampara Comedor', id: 'LamparaComedor'},
+      LamparaSala: {state: 'Off', label: 'Lampara Sala', id: 'LamparaSala'},
+      LamparaTurca: {state: 'Off', label: 'Lampara Turca', id: 'LamparaTurca'},
+      LamparaLava: {state: 'Off', label: 'Lampara Lava', id: 'LamparaLava'},
+      LamparaRotatoria: {state: 'Off', label: 'Lampara Rotatoria', id: 'LamparaRotatoria'},
+      Chimenea: {state: 'Off', label: 'Chimenea', id: 'Chimenea'},
+      LamparasAbajo: {state: 'Off', label: 'Lamparas Abajo', id: 'LamparasAbajo'},
+      ParlantesSala: {state: 'Off', label: 'Parlantes Sala', id: 'ParlantesSala'},
+      CalentadorNegro: {state: 'Off', label: 'Calentador Lizzie', id: 'CalentadorNegro'},
+      CalentadorBlanco: {state: 'Off', label: 'Calentador Amy', id: 'CalentadorBlanco'},
+      ProyectorMute: {state: 'Off', label: 'Proyector Mute', id: 'ProyectorMute'},
+      SalaMute: {state: 'Off', label: 'Sala Mute', id: 'SalaMute'},
+      CuartoMute: {state: 'Off', label: 'Cuarto Mute', id: 'CuartoMute'},
+      Hdmi: {state: 'roku', label: 'Hdmi', id: 'Hdmi'},
+    };
     this.state = {states: states,deviceStates: states};
     this.init();
   }
@@ -13,8 +28,16 @@ class Main extends Component {
   }
   async getStates() {
     fetch('/api/getDeviceStates').then(res => res.json()).then(
-      deviceStates => {this.setState({deviceStates: deviceStates})}
+      deviceStates => {this.setState({deviceStates: this.replaceState(deviceStates)})}
     ).catch(err => {});
+  }
+  replaceState(deviceStates) {
+    const newStates = {};
+    for (let device in this.state.deviceStates) {
+      newStates[device] = {...this.state.deviceStates[device], state: deviceStates[device].state};
+    }
+    console.log(newStates);
+    return newStates;
   }
   async changeDevice(device, state) {
     fetch('/api/sendIfttt?device=' + device + '&state=' + state);
@@ -37,7 +60,7 @@ class Main extends Component {
         <button onClick={() => this.triggerDevice('LamparaComedor')}>Lampara Comedor: {this.state.deviceStates.LamparaComedor}</button>
         </div>
         <div>
-        <button onClick={() => this.triggerDevice('LamparaTurca')}>Lampara Turca: {this.state.deviceStates.Turca}</button>
+        <button onClick={() => this.triggerDevice('LamparaTurca')}>Lampara Turca: {this.state.deviceStates.LamparaTurca}</button>
         </div>
       </div>
     );
