@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   }
   try {
     const body = req.body;
-    const response = await fetch('https://ifttt.massmedia.stream/api/v1/bersanesp/data', {
+    const response = await fetch('https://ifttt.massmedia.stream/api/v1/bersanesp/data2', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
