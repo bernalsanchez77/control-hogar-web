@@ -90,7 +90,7 @@ class Top extends Component {
         <button onClick={() => this.changeRoku()}>{this.state.rokuLabel}</button>
         </div>
         <div>
-        <button onClick={() => this.changeLamparaComedor()}>{this.state.deviceStates.LamparaComedor}</button>
+        <button onClick={() => this.changeLamparaComedor()}>Lampara Comedor: {this.state.deviceStates.LamparaComedor}</button>
         </div>
       </div>
     );
