@@ -47,17 +47,22 @@ class Top extends Component {
     this.setState({
       resetLabel: 'Reset done'
     });
-    const otro = this.state.states;
+    const state = this.state.states;
     fetch('/api/saveVariables', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(otro)
+      body: JSON.stringify(state)
     })
       .then(res => res.json())
       .then(data => console.log('Respuesta PUT:', data))
       .catch(err => console.error('Error:', err));
+  }
+  async changeDevice(device, state) {
+    this.state.deviceStates[device] = state;
+    const deviceStates = this.state.deviceStates;
+    fetch('/api/saveVariables', {method: 'PUT',headers: {'Content-Type': 'application/json',},body: JSON.stringify(deviceStates)});
   }
   async changeRoku() {
     const url = "https://maker.ifttt.com/trigger/LamparaComedorOn/with/key/i4M0yNSEdCF7dQdEMs5e_XhA1BnQypmCTWIrlPVidUG?value1=" + this.state.deviceStates;
@@ -73,8 +78,15 @@ class Top extends Component {
     }
   }
   async changeLamparaComedor() {
-    fetch('/api/saveIfttt?device=LamparaComedor&state=On').then(res => res.json()).then(data => {
-    }).catch(err => console.log('Error: ', err));
+    if (this.state.deviceStates.LamparaComedor === 'On') {
+      fetch('/api/saveIfttt?device=LamparaComedor&state=On').then(res => res.json()).then(data => {
+      }).catch(err => console.log('Error: ', err));
+      this.changeDevice('LamparaComedor', 'On');
+    } else {
+      fetch('/api/saveIfttt?device=LamparaComedor&state=Off').then(res => res.json()).then(data => {
+      }).catch(err => console.log('Error: ', err));
+      this.changeDevice('LamparaComedor', 'Off');
+    }
   }
   render() {
     return (
