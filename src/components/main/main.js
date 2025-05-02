@@ -5,7 +5,7 @@ import { devices } from '../../global/devices';
 function Main() {
 
   const [devicess, setDevicess] = useState(devices);
-  
+
   const getUpdatedDevices = useCallback((devices) => {
     const updatedDevices = {};
     for (let device in devicess) {
@@ -13,6 +13,22 @@ function Main() {
     }
     return updatedDevices;
   }, [devicess]);
+
+  const changeDevice = (device, state) => {
+    debugger;
+    // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
+    this.setDevicess(prev => ({devicess: {...prev.devicess, [device]: {...devicess[device], state: state}}}), () => {
+      const devices = devicess;
+      fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
+    });
+  }
+  const triggerDevice = (device) => {
+    if (devicess[device].state === 'on') {
+      changeDevice(device, 'off');
+    } else {
+      changeDevice(device, 'on');
+    }
+  }
 
   const getStates = useCallback(() => {
     fetch('/api/getDevices').then(res => res.json()).then(
@@ -37,12 +53,12 @@ function Main() {
   return (
     <div>
       <Screen></Screen>
-      {/* <div>
-      <button onClick={() => this.triggerDevice(this.state.devices.lamparaComedor.id)}>{this.state.devices.lamparaComedor.label} {this.state.devices.lamparaComedor.state}</button>
+      <div>
+      <button onClick={() => triggerDevice(devicess.lamparaComedor.id)}>{devicess.lamparaComedor.label} {devicess.lamparaComedor.state}</button>
       </div>
       <div>
-      <button onClick={() => this.triggerDevice(this.state.devices.lamparaTurca.id)}>{this.state.devices.lamparaTurca.label} {this.state.devices.lamparaTurca.state}</button>
-      </div> */}
+      <button onClick={() => triggerDevice(devicess.lamparaTurca.id)}>{devicess.lamparaTurca.label} {devicess.lamparaTurca.state}</button>
+      </div>
       <div>
       <button onClick={resetDevices}>Reset</button>
       </div>
