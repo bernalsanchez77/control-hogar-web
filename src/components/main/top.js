@@ -60,7 +60,12 @@ class Top extends Component {
       .catch(err => console.error('Error:', err));
   }
   async changeDevice(device, state) {
-    this.state.deviceStates[device] = state;
+    this.setState(prevState => ({
+      deviceStates: {
+        ...prevState.deviceStates,
+        device: state,
+      }
+    }));
     console.log(this.state.deviceStates);
     const deviceStates = this.state.deviceStates;
     fetch('/api/saveVariables', {method: 'PUT',headers: {'Content-Type': 'application/json',},body: JSON.stringify(deviceStates)});
