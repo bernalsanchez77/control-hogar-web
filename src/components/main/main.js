@@ -17,8 +17,8 @@ function Main() {
   const changeDevice = (device, state) => {
     debugger;
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
-    const devices = devicess;
-    devices[device] = {label: devices[device].label, id: devices[device].label, state: state};
+    const devices = {...devicess};
+    devices[device] = {state: state, label: devices[device].label, id: devices[device].id};
     setDevicess(devices);
     setTimeout(() => {
       console.log(devices);
