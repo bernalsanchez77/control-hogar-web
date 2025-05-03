@@ -36,7 +36,7 @@ function Main() {
     // loadingDevices = true;
     fetch('/api/getDevices').then(res => res.json()).then(
       devices => {
-        setDevicesState(getUpdatedDevices(devices));
+        setDevicesState(devices);
         // loadingDevices = false;
       }
     ).catch(err => {});
