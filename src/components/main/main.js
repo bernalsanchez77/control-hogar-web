@@ -32,14 +32,14 @@ function Main() {
   }
 
   const getStates = useCallback(() => {
-    console.log('mucho2');
+    console.log('mucho3');
     // loadingDevices = true;
-    // fetch('/api/getDevices').then(res => res.json()).then(
-    //   devices => {
-    //     setDevicesState(getUpdatedDevices(devices));
-    //     loadingDevices = false;
-    //   }
-    // ).catch(err => {});
+    fetch('/api/getDevices').then(res => res.json()).then(
+      devices => {
+        // setDevicesState(getUpdatedDevices(devices));
+        // loadingDevices = false;
+      }
+    ).catch(err => {});
   }, [getUpdatedDevices]);
 
   const init = useCallback(() => {
