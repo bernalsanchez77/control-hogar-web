@@ -13,15 +13,21 @@ function Main() {
     setDevicesState(devices);
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
   }
-  const triggerDevice = (device) => {
+  const triggerDevice = (device, state) => {
+    if (!state) {
+      state = devicesState[device].state;
+    }
     if (!loadingDevices.current) {
-      if (devicesState[device].state === 'on') {
+      if (state === 'on') {
         changeDevice(device, 'off');
       } else {
         changeDevice(device, 'on');
       }
     } else {
-      console.log('cayo');
+      console.log('cayo', state);
+      setTimeout(() => {
+        triggerDevice(device, state);
+      }, 1000);
     }
   }
 
