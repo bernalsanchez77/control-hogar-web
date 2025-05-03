@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Screen from './screen';
 import { devicesOriginal } from '../../global/devices';
 
 function Main() {
-  let loadingDevices = false;
+  const loadingDevices = useRef(false);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
 
   const getUpdatedDevices = useCallback((devices) => {
-    console.log('mucho6');
     const updatedDevices = {};
     for (let device in devicesState) {
       updatedDevices[device] = {...devices[device], state: devices[device].state};
@@ -23,7 +22,7 @@ function Main() {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
   }
   const triggerDevice = (device) => {
-    if (!loadingDevices) {
+    if (!loadingDevices.current) {
     if (devicesState[device].state === 'on') {
       changeDevice(device, 'off');
     } else {
@@ -33,11 +32,11 @@ function Main() {
   }
 
   const getStates = useCallback(() => {
-    // loadingDevices = true;
+    loadingDevices.current = true;
     fetch('/api/getDevices').then(res => res.json()).then(
       devices => {
         setDevicesState(getUpdatedDevices(devices));
-        // loadingDevices = false;
+        loadingDevices.current = false;
       }
     ).catch(err => {});
   }, [getUpdatedDevices]);
@@ -45,7 +44,6 @@ function Main() {
   const init = useCallback(() => {
     getStates();
     const intervalo = setInterval(() => {
-      console.log('va');
       getStates();
     }, 5000);
   }, [getStates]);
