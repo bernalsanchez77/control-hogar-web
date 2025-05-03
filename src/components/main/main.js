@@ -43,11 +43,11 @@ function Main() {
 
   const init = useCallback(() => {
     getStates();
-    const intervalo = setInterval(() => {
-      console.log('va');
-      // getStates();
-    }, 5000);
-    return () => clearInterval(intervalo);
+    // const intervalo = setInterval(() => {
+    //   console.log('va');
+    //   // getStates();
+    // }, 5000);
+    // return () => clearInterval(intervalo);
   }, [getStates]);
 
   useEffect(() => {
