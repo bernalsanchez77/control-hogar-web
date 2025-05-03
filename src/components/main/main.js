@@ -44,7 +44,8 @@ function Main() {
   const init = useCallback(() => {
     getStates();
     const intervalo = setInterval(() => {
-      getStates();
+      console.log('va');
+      // getStates();
     }, 5000);
     return () => clearInterval(intervalo);
   }, [getStates]);
