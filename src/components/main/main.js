@@ -3,7 +3,7 @@ import Screen from './screen';
 import { devicesOriginal } from '../../global/devices';
 
 function Main() {
-  const loadingDevices = false;
+  let loadingDevices = false;
   const [devicesState, setDevicesState] = useState(devicesOriginal);
 
   const getUpdatedDevices = useCallback((devices) => {
