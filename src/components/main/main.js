@@ -32,18 +32,18 @@ function Main() {
   }
 
   const getStates = useCallback(() => {
-    loadingDevices = true;
-    fetch('/api/getDevices').then(res => res.json()).then(
-      devices => {
-        setDevicesState(getUpdatedDevices(devices));
-        loadingDevices = false;
-      }
-    ).catch(err => {});
+    console.log('mucho2');
+    // loadingDevices = true;
+    // fetch('/api/getDevices').then(res => res.json()).then(
+    //   devices => {
+    //     setDevicesState(getUpdatedDevices(devices));
+    //     loadingDevices = false;
+    //   }
+    // ).catch(err => {});
   }, [getUpdatedDevices]);
 
   const init = useCallback(() => {
-    console.log('mucho');
-    // getStates();
+    getStates();
     // const intervalo = setInterval(() => {
     //   console.log('va');
     //   // getStates();
