@@ -51,7 +51,8 @@ function Main() {
   }, [getStates]);
 
   useEffect(() => {
-    init();
+    console.log('mucho');
+    // init();
   }, [init]);
 
   const resetDevices = () => {
