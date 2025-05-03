@@ -16,7 +16,7 @@ function Main() {
   const changeDevice = (device, state) => {
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
     const devices = {...devicesState};
-    devices[device] = {state: state, label: devices[device].label, id: devices[device].id};
+    devices[device] = {...devices[device], state: state};
     setDevicesState(devices);
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
   }
