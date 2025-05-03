@@ -7,6 +7,7 @@ function Main() {
   const [devicesState, setDevicesState] = useState(devicesOriginal);
 
   const getUpdatedDevices = useCallback((devices) => {
+    console.log('mucho6');
     const updatedDevices = {};
     for (let device in devicesState) {
       updatedDevices[device] = {...devices[device], state: devices[device].state};
@@ -32,11 +33,10 @@ function Main() {
   }
 
   const getStates = useCallback(() => {
-    console.log('mucho3');
     // loadingDevices = true;
     fetch('/api/getDevices').then(res => res.json()).then(
       devices => {
-        // setDevicesState(getUpdatedDevices(devices));
+        setDevicesState(getUpdatedDevices(devices));
         // loadingDevices = false;
       }
     ).catch(err => {});
