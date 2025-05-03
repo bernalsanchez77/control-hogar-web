@@ -8,11 +8,11 @@ function Main() {
 
   const getUpdatedDevices = useCallback((devices) => {
     console.log('mucho6');
-    // const updatedDevices = {};
-    // for (let device in devicesState) {
-    //   updatedDevices[device] = {...devices[device], state: devices[device].state};
-    // }
-    // return updatedDevices;
+    const updatedDevices = {};
+    for (let device in devicesState) {
+      updatedDevices[device] = {...devices[device], state: devices[device].state};
+    }
+    return updatedDevices;
   }, []);
 
   const changeDevice = (device, state) => {
