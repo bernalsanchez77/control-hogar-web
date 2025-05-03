@@ -15,12 +15,14 @@ function Main() {
   }
   const triggerDevice = (device) => {
     if (!loadingDevices.current) {
-    if (devicesState[device].state === 'on') {
-      changeDevice(device, 'off');
+      if (devicesState[device].state === 'on') {
+        changeDevice(device, 'off');
+      } else {
+        changeDevice(device, 'on');
+      }
     } else {
-      changeDevice(device, 'on');
+      console.log('cayo');
     }
-  }
   }
 
   const getStates = useCallback(() => {
@@ -35,9 +37,7 @@ function Main() {
 
   const init = useCallback(() => {
     getStates();
-    setInterval(() => {
-      getStates();
-    }, 5000);
+    setInterval(() => {getStates();}, 5000);
   }, [getStates]);
 
   useEffect(() => {
