@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Screen from './screen';
 import { devicesOriginal } from '../../global/devices';
+import './main.css';
 
 function Main() {
   const loadingDevices = useRef(false);
@@ -54,7 +55,7 @@ function Main() {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
   }
   return (
-    <div>
+    <div className="main">
       <Screen></Screen>
       <div>
       <button onClick={() => triggerDevice(devicesState.lamparaComedor.id)}>{devicesState.lamparaComedor.label} {devicesState.lamparaComedor.state}</button>
