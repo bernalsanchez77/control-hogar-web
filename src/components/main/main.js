@@ -17,14 +17,13 @@ function Main() {
   const changeDevice = (device, state) => {
     debugger;
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
-    setDevicess(prev => ({...prev, [device]: {label: devicess[device].label, id: devicess[device].label, state: 'on'}}));
+    const devices = devicess;
+    devices.device = {label: devices[device].label, id: devices[device].label, state: state};
+    setDevicess(devices);
     setTimeout(() => {
-      console.log(devicess);
-      // fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicess)}).then(res => res.json()).then(data => {}).catch(err => {});
+      console.log(devices);
+      fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
     }, 500);
-    //setDevicess(prev => ({devicess: {...prev.devicess, [device]: {...devicess[device], state: state}}}), () => {
-      // const devices = devicess;
-      // fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
   }
   const triggerDevice = (device) => {
     if (devicess[device].state === 'on') {
