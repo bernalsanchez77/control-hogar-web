@@ -13,7 +13,7 @@ function Main() {
     //   updatedDevices[device] = {...devices[device], state: devices[device].state};
     // }
     // return updatedDevices;
-  }, [devicesState]);
+  }, []);
 
   const changeDevice = (device, state) => {
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
@@ -36,7 +36,7 @@ function Main() {
     // loadingDevices = true;
     fetch('/api/getDevices').then(res => res.json()).then(
       devices => {
-        setDevicesState(devices);
+        setDevicesState(getUpdatedDevices(devices));
         // loadingDevices = false;
       }
     ).catch(err => {});
