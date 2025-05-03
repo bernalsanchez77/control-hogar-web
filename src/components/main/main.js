@@ -16,14 +16,11 @@ function Main() {
 
   const changeDevice = (device, state) => {
     debugger;
-    // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
+    fetch('/api/sendIfttt?device=' + device + '&state=' + state);
     const devices = {...devicess};
     devices[device] = {state: state, label: devices[device].label, id: devices[device].id};
     setDevicess(devices);
-    setTimeout(() => {
-      console.log(devices);
-      fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
-    }, 500);
+    fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
   }
   const triggerDevice = (device) => {
     if (devicess[device].state === 'on') {
@@ -47,7 +44,7 @@ function Main() {
   }, [getStates]);
 
   useEffect(() => {
-    // init();
+    init();
   }, [init]);
 
   const resetDevices = () => {
