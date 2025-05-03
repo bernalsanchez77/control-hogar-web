@@ -42,7 +42,8 @@ function Main() {
   }, [getUpdatedDevices]);
 
   const init = useCallback(() => {
-    getStates();
+    console.log('mucho');
+    // getStates();
     // const intervalo = setInterval(() => {
     //   console.log('va');
     //   // getStates();
@@ -51,8 +52,7 @@ function Main() {
   }, [getStates]);
 
   useEffect(() => {
-    console.log('mucho');
-    // init();
+    init();
   }, [init]);
 
   const resetDevices = () => {
