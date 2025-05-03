@@ -1,4 +1,4 @@
-export const devices = {
+export const devicesOriginal = {
     lamparaComedor: {state: 'off', label: 'Lampara Comedor', id: 'lamparaComedor'},
     lamparaSala: {state: 'off', label: 'Lampara Sala', id: 'lamparaSala'},
     lamparaTurca: {state: 'off', label: 'Lampara Turca', id: 'lamparaTurca'},

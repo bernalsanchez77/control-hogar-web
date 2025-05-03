@@ -1,29 +1,27 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Screen from './screen';
-import { devices } from '../../global/devices';
+import { devicesOriginal } from '../../global/devices';
 
 function Main() {
-
-  const [devicess, setDevicess] = useState(devices);
+  const [devicesState, setDevicesState] = useState(devicesOriginal);
 
   const getUpdatedDevices = useCallback((devices) => {
     const updatedDevices = {};
-    for (let device in devicess) {
+    for (let device in devicesState) {
       updatedDevices[device] = {...devices[device], state: devices[device].state};
     }
     return updatedDevices;
-  }, [devicess]);
+  }, [devicesState]);
 
   const changeDevice = (device, state) => {
-    debugger;
-    fetch('/api/sendIfttt?device=' + device + '&state=' + state);
-    const devices = {...devicess};
+    // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
+    const devices = {...devicesState};
     devices[device] = {state: state, label: devices[device].label, id: devices[device].id};
-    setDevicess(devices);
+    setDevicesState(devices);
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
   }
   const triggerDevice = (device) => {
-    if (devicess[device].state === 'on') {
+    if (devicesState[device].state === 'on') {
       changeDevice(device, 'off');
     } else {
       changeDevice(device, 'on');
@@ -33,7 +31,7 @@ function Main() {
   const getStates = useCallback(() => {
     fetch('/api/getDevices').then(res => res.json()).then(
       devices => {
-        setDevicess(getUpdatedDevices(devices))
+        setDevicesState(getUpdatedDevices(devices))
       }
     ).catch(err => {});
   }, [getUpdatedDevices]);
@@ -48,16 +46,16 @@ function Main() {
   }, [init]);
 
   const resetDevices = () => {
-    fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)});
+    fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
   }
   return (
     <div>
       <Screen></Screen>
       <div>
-      <button onClick={() => triggerDevice(devicess.lamparaComedor.id)}>{devicess.lamparaComedor.label} {devicess.lamparaComedor.state}</button>
+      <button onClick={() => triggerDevice(devicesState.lamparaComedor.id)}>{devicesState.lamparaComedor.label} {devicesState.lamparaComedor.state}</button>
       </div>
       <div>
-      <button onClick={() => triggerDevice(devicess.lamparaTurca.id)}>{devicess.lamparaTurca.label} {devicess.lamparaTurca.state}</button>
+      <button onClick={() => triggerDevice(devicesState.lamparaTurca.id)}>{devicesState.lamparaTurca.label} {devicesState.lamparaTurca.state}</button>
       </div>
       <div>
       <button onClick={resetDevices}>Reset</button>
