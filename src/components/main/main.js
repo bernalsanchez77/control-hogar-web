@@ -6,14 +6,6 @@ function Main() {
   const loadingDevices = useRef(false);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
 
-  const getUpdatedDevices = useCallback((devices) => {
-    const updatedDevices = {};
-    for (let device in devicesState) {
-      updatedDevices[device] = {...devices[device], state: devices[device].state};
-    }
-    return updatedDevices;
-  }, []);
-
   const changeDevice = (device, state) => {
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
     const devices = {...devicesState};
@@ -35,15 +27,15 @@ function Main() {
     loadingDevices.current = true;
     fetch('/api/getDevices').then(res => res.json()).then(
       devices => {
-        setDevicesState(getUpdatedDevices(devices));
+        setDevicesState(devices);
         loadingDevices.current = false;
       }
     ).catch(err => {});
-  }, [getUpdatedDevices]);
+  }, []);
 
   const init = useCallback(() => {
     getStates();
-    const intervalo = setInterval(() => {
+    setInterval(() => {
       getStates();
     }, 5000);
   }, [getStates]);
