@@ -3,6 +3,7 @@ import Screen from './screen';
 import { devicesOriginal } from '../../global/devices';
 
 function Main() {
+  const loadingDevices = false;
   const [devicesState, setDevicesState] = useState(devicesOriginal);
 
   const getUpdatedDevices = useCallback((devices) => {
@@ -21,17 +22,21 @@ function Main() {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
   }
   const triggerDevice = (device) => {
+    if (!loadingDevices) {
     if (devicesState[device].state === 'on') {
       changeDevice(device, 'off');
     } else {
       changeDevice(device, 'on');
     }
   }
+  }
 
   const getStates = useCallback(() => {
+    loadingDevices = true;
     fetch('/api/getDevices').then(res => res.json()).then(
       devices => {
-        setDevicesState(getUpdatedDevices(devices))
+        setDevicesState(getUpdatedDevices(devices));
+        loadingDevices = false;
       }
     ).catch(err => {});
   }, [getUpdatedDevices]);
