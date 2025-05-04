@@ -35,7 +35,7 @@ function Main() {
   const isHome = (lat, lon) => {
     const latCentro = 9.9622781;
     const lonCentro = -84.0783371;
-    const tolerancia = 0.02; // Aproximadamente 5-6 km de margen
+    const tolerancia = 0.05; // Aproximadamente 5-6 km de margen
   
     return (
       lat >= latCentro - tolerancia &&
