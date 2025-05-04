@@ -7,6 +7,7 @@ import './main.css';
 function Main() {
   const loadingDevices = useRef(false);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
+  const [permitido, setPermitido] = useState(false);
 
   const changeDevice = (device, state) => {
     fetch('/api/sendIfttt?device=' + device + '&state=' + state);
@@ -31,7 +32,36 @@ function Main() {
     setInterval(() => {getStates();}, 5000);
   }, [getStates]);
 
+  const estaEnZonaPermitida = (lat, lon) => {
+    // Ejemplo: dentro de Bogotá (latitud y longitud aproximadas)
+    // lat: 9.9622781
+    // lon: -84.0783371
+    return lat > 8 && lat < 11 && lon > -80 && lon < -85;
+  };
+
   useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+
+        // Verifica si está dentro del área deseada
+        if (estaEnZonaPermitida(latitude, longitude)) {
+          setPermitido(true);
+        } else {
+          setPermitido(false);
+        }
+      },
+      (error) => {
+        console.error('Error al obtener ubicación:', error);
+        setPermitido(false); // Denegado o error = no permitido
+      }
+    );
+    if (permitido) {
+      alert('permitido');
+    } else {
+      alert ('no permitido');
+    }
+
     init();
   }, [init]);
 
