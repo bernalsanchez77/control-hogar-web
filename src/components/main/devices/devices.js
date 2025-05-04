@@ -9,10 +9,10 @@ function Devices({devices, triggerDeviceParent}) {
   return (
     <div className="devices">
       <div>
-      <button onClick={() => triggerDevice(devices.lamparaComedor.id)}>{devices.lamparaComedor.label} {devices.lamparaComedor.state}</button>
+      <button className='devices-button' onClick={() => triggerDevice(devices.lamparaComedor.id)}>{devices.lamparaComedor.label} {devices.lamparaComedor.state}</button>
       </div>
       <div>
-      <button onClick={() => triggerDevice(devices.lamparaTurca.id)}>{devices.lamparaTurca.label} {devices.lamparaTurca.state}</button>
+      <button className='devices-button' onClick={() => triggerDevice(devices.lamparaTurca.id)}>{devices.lamparaTurca.label} {devices.lamparaTurca.state}</button>
       </div>
     </div>
   );
