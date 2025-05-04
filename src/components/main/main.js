@@ -49,7 +49,6 @@ function Main() {
   }, [getStates]);
 
   useEffect(() => {
-    alert('va');
     init();
   }, [init]);
 
@@ -63,7 +62,7 @@ function Main() {
   return (
     <div className="main">
       <Screen></Screen>
-      
+      <Devices devices={devicesState} onCambiarNombre={actualizarNombre}></Devices>
       <div>
       <button onClick={() => triggerDevice(devicesState.lamparaComedor.id)}>{devicesState.lamparaComedor.label} {devicesState.lamparaComedor.state}</button>
       </div>
