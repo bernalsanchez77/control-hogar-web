@@ -43,6 +43,8 @@ function Main() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
+        console.log('lat: ', latitude);
+        console.log('lon: ', longitude);
 
         // Verifica si está dentro del área deseada
         if (estaEnZonaPermitida(latitude, longitude)) {
