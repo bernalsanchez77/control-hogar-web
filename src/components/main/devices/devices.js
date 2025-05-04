@@ -15,7 +15,7 @@ function Devices({devicesState, loadingDevices, changeDeviceParent}) {
           changeDeviceParent(device, 'on');
         }
         if (state === 'roku') {
-          changeDeviceParent(device, 'roku');
+          changeDeviceParent(device, 'cable');
         }
         if (state === 'cable') {
           changeDeviceParent(device, 'roku');
