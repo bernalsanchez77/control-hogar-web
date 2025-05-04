@@ -32,25 +32,31 @@ function Main() {
     setInterval(() => {getStates();}, 5000);
   }, [getStates]);
 
-  const estaEnZonaPermitida = (lat, lon) => {
-    // Ejemplo: dentro de Bogotá (latitud y longitud aproximadas)
-    // lat: 9.9622781
-    // lon: -84.0783371
-    return lat > 7 && lat < 11 && lon > -86 && lon < -82;
+  const estaEnSanJose = (lat, lon) => {
+    const latCentro = 9.9622781;
+    const lonCentro = -84.0783371;
+    const tolerancia = 0.05; // Aproximadamente 5-6 km de margen
+  
+    return (
+      lat >= latCentro - tolerancia &&
+      lat <= latCentro + tolerancia &&
+      lon >= lonCentro - tolerancia &&
+      lon <= lonCentro + tolerancia
+    );
   };
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        console.log('lat: ', latitude);
-        console.log('lon: ', longitude);
 
         // Verifica si está dentro del área deseada
-        if (estaEnZonaPermitida(latitude, longitude)) {
+        if (estaEnSanJose(latitude, longitude)) {
           setPermitido(true);
+          console.log('permitido');
         } else {
           setPermitido(false);
+          console.log('no permitido');
         }
       },
       (error) => {
