@@ -7,7 +7,7 @@ function Devices({devices, triggerDeviceParent}) {
   }
 
   return (
-    <div className="main">
+    <div className="devices">
       <div>
       <button onClick={() => triggerDevice(devices.lamparaComedor.id)}>{devices.lamparaComedor.label} {devices.lamparaComedor.state}</button>
       </div>
