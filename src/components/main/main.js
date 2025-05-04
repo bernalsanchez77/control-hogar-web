@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import Screen from './screen';
+import Screen from './screen/screen';
+import Devices from './devices/devices';
 import { devicesOriginal } from '../../global/devices';
 import './main.css';
 
@@ -51,12 +52,17 @@ function Main() {
     init();
   }, [init]);
 
+  const actualizarNombre = () => {
+    console.log('cambio');
+  }
+
   const resetDevices = () => {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
   }
   return (
     <div className="main">
       <Screen></Screen>
+      <Devices devices={devicesState} onCambiarNombre={actualizarNombre}></Devices>
       <div>
       <button onClick={() => triggerDevice(devicesState.lamparaComedor.id)}>{devicesState.lamparaComedor.label} {devicesState.lamparaComedor.state}</button>
       </div>
