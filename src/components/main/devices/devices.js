@@ -1,8 +1,8 @@
 import React from 'react';
 import './devices.css';
 
-function Devices({devicesState, loadingDevices, changeDeviceParent}) {
-  const triggerDevice = (inRange, device, state) => {
+function Devices({inRange, devicesState, loadingDevices, changeDeviceParent}) {
+  const triggerDevice = (device, state) => {
 
     if (inRange) { 
         if (!state) {
