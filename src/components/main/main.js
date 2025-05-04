@@ -7,7 +7,7 @@ import './main.css';
 function Main() {
   const loadingDevices = useRef(false);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
-  const [permitido, setPermitido] = useState(false);
+  const [inRange, setInRange] = useState(false);
 
   const changeDevice = (device, state) => {
     fetch('/api/sendIfttt?device=' + device + '&state=' + state);
@@ -32,10 +32,10 @@ function Main() {
     setInterval(() => {getStates();}, 5000);
   }, [getStates]);
 
-  const estaEnSanJose = (lat, lon) => {
+  const isHome = (lat, lon) => {
     const latCentro = 9.9622781;
     const lonCentro = -84.0783371;
-    const tolerancia = 0.05; // Aproximadamente 5-6 km de margen
+    const tolerancia = 0.01; // Aproximadamente 5-6 km de margen
   
     return (
       lat >= latCentro - tolerancia &&
@@ -49,26 +49,19 @@ function Main() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-
-        // Verifica si está dentro del área deseada
-        if (estaEnSanJose(latitude, longitude)) {
-          setPermitido(true);
-          console.log('permitido');
+        if (isHome(latitude, longitude)) {
+          setInRange(true);
+          console.log('in range');
         } else {
-          setPermitido(false);
-          console.log('no permitido');
+          setInRange(false);
+          console.log('not in range');
         }
       },
       (error) => {
         console.error('Error al obtener ubicación:', error);
-        setPermitido(false); // Denegado o error = no permitido
+        setInRange(false);
       }
     );
-    if (permitido) {
-      alert('permitido');
-    } else {
-      alert ('no permitido');
-    }
 
     init();
   }, [init]);
@@ -79,7 +72,7 @@ function Main() {
   return (
     <div className="main">
       <Screen></Screen>
-      <Devices devicesState={devicesState} loadingDevices={loadingDevices} changeDeviceParent={changeDevice}></Devices>
+      <Devices inRange={inRange} devicesState={devicesState} loadingDevices={loadingDevices} changeDeviceParent={changeDevice}></Devices>
       <div>
       <button onClick={resetDevices}>Reset</button>
       </div>

@@ -2,31 +2,33 @@ import React from 'react';
 import './devices.css';
 
 function Devices({devicesState, loadingDevices, changeDeviceParent}) {
-  const triggerDevice = (device, state) => {
+  const triggerDevice = (inRange, device, state) => {
 
-    if (!state) {
-        state = devicesState[device].state;
-      }
-      if (!loadingDevices.current) {
-        if (state === 'on') {
-          changeDeviceParent(device, 'off');
+    if (inRange) { 
+        if (!state) {
+            state = devicesState[device].state;
         }
-        if (state === 'off') {
-          changeDeviceParent(device, 'on');
+        if (!loadingDevices.current) {
+            if (state === 'on') {
+                changeDeviceParent(device, 'off');
+            }
+            if (state === 'off') {
+                changeDeviceParent(device, 'on');
+            }
+            if (state === 'roku') {
+                changeDeviceParent(device, 'cable');
+            }
+            if (state === 'cable') {
+                changeDeviceParent(device, 'roku');
+            }
+        } else {
+            setTimeout(() => {
+                triggerDevice(device, state);
+            }, 1000);
         }
-        if (state === 'roku') {
-          changeDeviceParent(device, 'cable');
-        }
-        if (state === 'cable') {
-          changeDeviceParent(device, 'roku');
-        }
-      } else {
-        console.log('cayo', state);
-        setTimeout(() => {
-          triggerDevice(device, state);
-        }, 1000);
-      }
-
+    } else {
+        alert('fuera del area permitida');
+    }
   }
 
   return (
