@@ -9,28 +9,11 @@ function Main() {
   const [devicesState, setDevicesState] = useState(devicesOriginal);
 
   const changeDevice = (device, state) => {
-    // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
+    fetch('/api/sendIfttt?device=' + device + '&state=' + state);
     const devices = {...devicesState};
     devices[device] = {...devices[device], state: state};
     setDevicesState(devices);
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
-  }
-  const triggerDevice = (device, state) => {
-    if (!state) {
-      state = devicesState[device].state;
-    }
-    if (!loadingDevices.current) {
-      if (state === 'on') {
-        changeDevice(device, 'off');
-      } else {
-        changeDevice(device, 'on');
-      }
-    } else {
-      console.log('cayo', state);
-      setTimeout(() => {
-        triggerDevice(device, state);
-      }, 1000);
-    }
   }
 
   const getStates = useCallback(() => {
@@ -58,7 +41,7 @@ function Main() {
   return (
     <div className="main">
       <Screen></Screen>
-      <Devices devices={devicesState} triggerDeviceParent={triggerDevice}></Devices>
+      <Devices devicesState={devicesState} loadingDevices={loadingDevices} changeDeviceParent={changeDevice}></Devices>
       <div>
       <button onClick={resetDevices}>Reset</button>
       </div>
