@@ -52,17 +52,13 @@ function Main() {
     init();
   }, [init]);
 
-  const actualizarNombre = () => {
-    console.log('cambio');
-  }
-
   const resetDevices = () => {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
   }
   return (
     <div className="main">
       <Screen></Screen>
-      <Devices devices={devicesState} onCambiarNombre={actualizarNombre}></Devices>
+      <Devices devices={devicesState} onCambiarNombre={triggerDevice}></Devices>
       <div>
       <button onClick={() => triggerDevice(devicesState.lamparaComedor.id)}>{devicesState.lamparaComedor.label} {devicesState.lamparaComedor.state}</button>
       </div>
