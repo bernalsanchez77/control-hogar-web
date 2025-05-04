@@ -58,13 +58,7 @@ function Main() {
   return (
     <div className="main">
       <Screen></Screen>
-      <Devices devices={devicesState} onCambiarNombre={triggerDevice}></Devices>
-      <div>
-      <button onClick={() => triggerDevice(devicesState.lamparaComedor.id)}>{devicesState.lamparaComedor.label} {devicesState.lamparaComedor.state}</button>
-      </div>
-      <div>
-      <button onClick={() => triggerDevice(devicesState.lamparaTurca.id)}>{devicesState.lamparaTurca.label} {devicesState.lamparaTurca.state}</button>
-      </div>
+      <Devices devices={devicesState} triggerDeviceParent={triggerDevice}></Devices>
       <div>
       <button onClick={resetDevices}>Reset</button>
       </div>

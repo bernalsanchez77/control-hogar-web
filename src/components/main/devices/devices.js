@@ -1,9 +1,9 @@
 import React from 'react';
 import './devices.css';
 
-function Devices({ devices, onCambiarNombre }) {
+function Devices({devices, triggerDeviceParent}) {
   const triggerDevice = (device) => {
-    onCambiarNombre(device);
+    triggerDeviceParent(device);
   }
 
   return (
