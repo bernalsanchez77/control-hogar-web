@@ -36,7 +36,7 @@ function Main() {
     // Ejemplo: dentro de Bogotá (latitud y longitud aproximadas)
     // lat: 9.9622781
     // lon: -84.0783371
-    return lat > 8 && lat < 11 && lon > -80 && lon < -85;
+    return lat > 7 && lat < 11 && lon > -86 && lon < -82;
   };
 
   useEffect(() => {
