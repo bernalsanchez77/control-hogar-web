@@ -36,6 +36,8 @@ function Main() {
       localStorage.setItem('controlhogar', 'yes');
       alert('salvando: ', item);
     }
+    console.log(navigator.userAgent);
+    alert(navigator.userAgent);
     const utils = new Utils();
     const inRange = await utils.getGeolocationPosition();
     setInRange(inRange);
