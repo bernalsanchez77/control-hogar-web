@@ -31,7 +31,8 @@ function Main() {
   const init = useCallback(() => {
     localStorage.setItem('controlhogar', 'yes');
     const utils = new Utils();
-    setInRange(utils.getGeolocationPosition());
+    const inRange = utils.getGeolocationPosition();
+    setInRange(inRange);
     getStates();
     setInterval(() => {getStates();}, 5000);
   }, [getStates]);
