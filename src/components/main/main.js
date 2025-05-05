@@ -29,7 +29,13 @@ function Main() {
   }, []);
 
   const init = useCallback(async () => {
-    localStorage.setItem('controlhogar', 'yes');
+    const item = localStorage.getItem('controlhogar');
+    if (item) {
+      alert('guardado: ', item);
+    } else {
+      localStorage.setItem('controlhogar', 'yes');
+      alert('salvando: ', item);
+    }
     const utils = new Utils();
     const inRange = await utils.getGeolocationPosition();
     setInRange(inRange);
