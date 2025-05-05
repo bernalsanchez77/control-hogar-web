@@ -11,9 +11,9 @@ class Utils {
         lon <= lonCentro + tolerancia
         );
     };
-    async getGeolocationPosition() {
+    getGeolocationPosition() {
         let inRange = false;
-        await navigator.geolocation.getCurrentPosition(
+        navigator.geolocation.getCurrentPosition(
             (position) => {
                 const { latitude, longitude } = position.coords;
                 if (this.isHome(latitude, longitude)) {
@@ -23,13 +23,14 @@ class Utils {
                     inRange = false;
                     console.log('not in range');
                 }
+                return inRange;
             },
             (error) => {
             console.error('Error al obtener ubicación:', error);
             inRange =false;
+            return inRange;
             }
         );
-        return inRange;
     }
 }
 export default Utils;
