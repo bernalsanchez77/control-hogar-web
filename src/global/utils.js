@@ -11,9 +11,9 @@ class Utils {
         lon <= lonCentro + tolerancia
         );
     };
-    getGeolocationPosition() {
+    async getGeolocationPosition() {
         let inRange = false;
-        navigator.geolocation.getCurrentPosition(
+        await navigator.geolocation.getCurrentPosition(
             (position) => {
                 const { latitude, longitude } = position.coords;
                 if (this.isHome(latitude, longitude)) {

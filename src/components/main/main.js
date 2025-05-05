@@ -28,10 +28,10 @@ function Main() {
     ).catch(err => {});
   }, []);
 
-  const init = useCallback(() => {
+  const init = useCallback(async () => {
     localStorage.setItem('controlhogar', 'yes');
     const utils = new Utils();
-    const inRange = utils.getGeolocationPosition();
+    const inRange = await utils.getGeolocationPosition();
     setInRange(inRange);
     getStates();
     setInterval(() => {getStates();}, 5000);
