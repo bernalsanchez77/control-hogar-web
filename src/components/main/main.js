@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Screen from './screen/screen';
 import Devices from './devices/devices';
+import Credentials from './credentials/credentials';
 import { devicesOriginal } from '../../global/devices';
 import Utils from '../../global/utils';
 import './main.css';
@@ -9,13 +10,20 @@ function Main() {
   const loadingDevices = useRef(false);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const [inRange, setInRange] = useState(false);
+  const [credential, setCredential] = useState(false);
 
   const changeDevice = (device, state) => {
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
     const devices = {...devicesState};
     devices[device] = {...devices[device], state: state};
-    setDevicesState(devices);
-    fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
+    setDevicesState(devices, () => {
+      fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesState)}).then(res => res.json()).then(data => {}).catch(err => {});
+    });
+  }
+
+  const setCredentials = (credential) => {
+    localStorage.setItem('controlhogar', credential);
+    setCredential(credential);
   }
 
   const getStates = useCallback(() => {
@@ -29,15 +37,9 @@ function Main() {
   }, []);
 
   const init = useCallback(async () => {
-    const item = localStorage.getItem('controlhogar');
-    if (item) {
-      alert('guardado: ', item);
-    } else {
-      localStorage.setItem('controlhogar', 'yes');
-      alert('salvando: ', item);
-    }
-    console.log(navigator.userAgent);
-    alert(navigator.userAgent);
+    const credential = localStorage.getItem('controlhogar');
+    setCredential(credential);
+    // localStorage.setItem('controlhogar', 'yes');
     const utils = new Utils();
     const inRange = await utils.getGeolocationPosition();
     setInRange(inRange);
@@ -54,6 +56,7 @@ function Main() {
   }
   return (
     <div className="main">
+      <Credentials credential={credential} setCredentialsParent={setCredentials}></Credentials>
       <Screen></Screen>
       <Devices inRange={inRange} devicesState={devicesState} loadingDevices={loadingDevices} changeDeviceParent={changeDevice}></Devices>
       <div>
