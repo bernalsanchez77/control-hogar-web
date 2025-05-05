@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Screen from './screen/screen';
 import Devices from './devices/devices';
 import { devicesOriginal } from '../../global/devices';
+import utils from '../../global/utils';
 import './main.css';
 
 function Main() {
@@ -28,41 +29,12 @@ function Main() {
   }, []);
 
   const init = useCallback(() => {
+    setInRange(utils.getGeolocationPosition());
     getStates();
     setInterval(() => {getStates();}, 5000);
   }, [getStates]);
 
-  const isHome = (lat, lon) => {
-    const latCentro = 9.9622781;
-    const lonCentro = -84.0783371;
-    const tolerancia = 0.05; // Aproximadamente 5-6 km de margen
-  
-    return (
-      lat >= latCentro - tolerancia &&
-      lat <= latCentro + tolerancia &&
-      lon >= lonCentro - tolerancia &&
-      lon <= lonCentro + tolerancia
-    );
-  };
-
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        if (isHome(latitude, longitude)) {
-          setInRange(true);
-          console.log('in range');
-        } else {
-          setInRange(false);
-          console.log('not in range');
-        }
-      },
-      (error) => {
-        console.error('Error al obtener ubicación:', error);
-        setInRange(false);
-      }
-    );
-
     init();
   }, [init]);
 
