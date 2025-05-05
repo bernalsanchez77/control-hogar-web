@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Screen from './screen/screen';
 import Devices from './devices/devices';
 import { devicesOriginal } from '../../global/devices';
-import utils from '../../global/utils';
+import Utils from '../../global/utils';
 import './main.css';
 
 function Main() {
@@ -29,6 +29,8 @@ function Main() {
   }, []);
 
   const init = useCallback(() => {
+    localStorage.setItem('controlhogar', 'yes');
+    const utils = new Utils();
     setInRange(utils.getGeolocationPosition());
     getStates();
     setInterval(() => {getStates();}, 5000);
