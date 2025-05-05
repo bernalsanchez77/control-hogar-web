@@ -11,7 +11,7 @@ function Main() {
   const [inRange, setInRange] = useState(false);
 
   const changeDevice = (device, state) => {
-    fetch('/api/sendIfttt?device=' + device + '&state=' + state);
+    // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
     const devices = {...devicesState};
     devices[device] = {...devices[device], state: state};
     setDevicesState(devices);
