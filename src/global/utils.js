@@ -11,26 +11,30 @@ class Utils {
         lon <= lonCentro + tolerancia
         );
     };
+    getPosition() {
+        return new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(
+            (position) => resolve(position),
+            (error) => reject(error)
+            );
+        });
+    }
     async getGeolocationPosition() {
         let inRange = false;
-        await navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const { latitude, longitude } = position.coords;
-                if (this.isHome(latitude, longitude)) {
-                    inRange = true;
-                    console.log('in range');
-                } else {
-                    inRange = false;
-                    console.log('not in range');
-                }
-                return inRange;
-            },
-            (error) => {
-            console.error('Error al obtener ubicación:', error);
-            inRange =false;
-            return inRange;
+        const position = await this.getPosition();
+        if (position) {
+            const { latitude, longitude } = position.coords;
+            if (this.isHome(latitude, longitude)) {
+                inRange = true;
+                console.log('in range');
+            } else {
+                inRange = false;
+                console.log('not in range');
             }
-        );
+            return inRange;
+        };
+        inRange =false;
+        return inRange;
     }
 }
 export default Utils;
