@@ -9,6 +9,8 @@
 }
 .devices-button {
   padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 .devices-button--on {
   border: green 2px solid;
