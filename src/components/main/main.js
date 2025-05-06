@@ -28,7 +28,7 @@ function Main() {
       localStorage.setItem('controlhogar', credential);
       setCredential(credential);
     } else {
-      const res = await fetch("/api/credentials", {
+      const res = await fetch("/api/validateCredentials", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({key: credential}),
@@ -70,12 +70,28 @@ function Main() {
   }
   return (
     <div className="main">
-      <Credentials credential={credential} guestCredential={guestCredential} setCredentialsParent={setCredentials}></Credentials>
-      <Screen></Screen>
-      <Devices inRange={inRange} devicesState={devicesState} loadingDevices={loadingDevices} changeDeviceParent={changeDevice}></Devices>
-      <div>
-      <button onClick={resetDevices}>Reset</button>
-      </div>
+      <Credentials
+        credential={credential}
+        guestCredential={guestCredential}
+        setCredentialsParent={setCredentials}>
+      </Credentials>
+      {credential &&
+        <div>
+          <Screen>
+          </Screen>
+          <Devices
+            inRange={inRange}
+            devicesState={devicesState}
+            loadingDevices={loadingDevices}
+            changeDeviceParent={changeDevice}>
+          </Devices>
+          <div>
+            <button onClick={resetDevices}>
+              Reset
+            </button>
+          </div>
+        </div>
+      }
     </div>
   );
 }
