@@ -7,7 +7,9 @@ import Utils from '../../global/utils';
 import './main.css';
 
 function Main() {
+  const utils = useRef({});
   const loadingDevices = useRef(false);
+  const gettingInRange = useRef(false);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const [inRange, setInRange] = useState(false);
   const [credential, setCredential] = useState('');
@@ -41,20 +43,24 @@ function Main() {
     }
   }
 
-  const getStates = useCallback(() => {
+  const getStates = useCallback(async () => {
     loadingDevices.current = true;
+    gettingInRange.current = true;
     fetch('/api/getDevices').then(res => res.json()).then(
       devices => {
         setDevicesState(devices);
         loadingDevices.current = false;
       }
     ).catch(err => {});
+    const inRange = await utils.getGeolocationPosition();
+    setInRange(inRange);
+    gettingInRange.current = false;
   }, []);
 
   const init = useCallback(async () => {
     const credential = localStorage.getItem('controlhogar');
     setCredential(credential);
-    const utils = new Utils();
+    utils.current = new Utils();
     const inRange = await utils.getGeolocationPosition();
     setInRange(inRange);
     getStates();
@@ -77,19 +83,26 @@ function Main() {
       </Credentials>
       {credential &&
         <div>
-          <Screen>
-          </Screen>
-          <Devices
-            inRange={inRange}
-            devicesState={devicesState}
-            loadingDevices={loadingDevices}
-            changeDeviceParent={changeDevice}>
-          </Devices>
+          {inRange ?
           <div>
-            <button onClick={resetDevices}>
-              Reset
-            </button>
+            <Screen>
+            </Screen>
+            <Devices
+              inRange={inRange}
+              devicesState={devicesState}
+              loadingDevices={loadingDevices}
+              changeDeviceParent={changeDevice}>
+            </Devices>
+            <div>
+              <button onClick={resetDevices}>
+                Reset
+              </button>
+            </div>
+          </div> :
+          <div>
+            Fuera del Area Permitida
           </div>
+          }
         </div>
       }
     </div>
