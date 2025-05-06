@@ -30,25 +30,27 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
 
   return (
     <div className="devices">
-      <div>
-        <LamparaComedor
-          devicesState={devicesState}
-          triggerDeviceParent={triggerDevice}>
-        </LamparaComedor>
+      <div className='devices-row'>
+        <div className='devices-element'>
+          <LamparaComedor
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </LamparaComedor>
+        </div>
+        <div className='devices-element'>
+          <button className='devices-button' onClick={() => triggerDevice(devicesState.lamparaTurca.id)}>{devicesState.lamparaTurca.label} {devicesState.lamparaTurca.state}</button>
+        </div>
+        <div className='devices-element'>
+          <button className='devices-button' onClick={() => triggerDevice(devicesState.lamparaSala.id)}>{devicesState.lamparaSala.label} {devicesState.lamparaSala.state}</button>
+        </div>
+        <div className='devices-element'>
+          <button className='devices-button' onClick={() => triggerDevice(devicesState.chimenea.id)}>{devicesState.chimenea.label} {devicesState.chimenea.state}</button>
+        </div>
+        <div className='devices-element'>
+          <button className='devices-button' onClick={() => triggerDevice(devicesState.parlantesSala.id)}>{devicesState.parlantesSala.label} {devicesState.parlantesSala.state}</button>
+        </div>
       </div>
-      <div>
-        <button className='devices-button' onClick={() => triggerDevice(devicesState.lamparaTurca.id)}>{devicesState.lamparaTurca.label} {devicesState.lamparaTurca.state}</button>
-      </div>
-      <div>
-        <button className='devices-button' onClick={() => triggerDevice(devicesState.lamparaSala.id)}>{devicesState.lamparaSala.label} {devicesState.lamparaSala.state}</button>
-      </div>
-      <div>
-        <button className='devices-button' onClick={() => triggerDevice(devicesState.chimenea.id)}>{devicesState.chimenea.label} {devicesState.chimenea.state}</button>
-      </div>
-      <div>
-        <button className='devices-button' onClick={() => triggerDevice(devicesState.parlantesSala.id)}>{devicesState.parlantesSala.label} {devicesState.parlantesSala.state}</button>
-      </div>
-      <div>
+      <div className='devices-element'>
         <button className='devices-button' onClick={() => triggerDevice(devicesState.hdmi.id)}>{devicesState.hdmi.label} {devicesState.hdmi.state}</button>
       </div>
     </div>
