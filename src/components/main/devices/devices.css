@@ -10,7 +10,6 @@
 .devices-button {
   padding: 10px;
   width: 100%;
-  box-sizing: border-box;
   border: green 2px solid;
 }
 .devices-button--on {
