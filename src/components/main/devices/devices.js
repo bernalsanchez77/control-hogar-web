@@ -2,33 +2,32 @@ import React from 'react';
 import LamparaComedor from './lamparaComedor/lamparaComedor';
 import './devices.css';
 
-function Devices({inRange, devicesState, loadingDevices, changeDeviceParent}) {
+function Devices({credential, ownerCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
   const triggerDevice = (device, state) => {
 
-    if (inRange) { 
-        if (!state) {
-            state = devicesState[device].state;
-        }
-        if (!loadingDevices.current) {
-            if (state === 'on') {
-                changeDeviceParent(device, 'off');
-            }
-            if (state === 'off') {
-                changeDeviceParent(device, 'on');
-            }
-            if (state === 'roku') {
-                changeDeviceParent(device, 'cable');
-            }
-            if (state === 'cable') {
-                changeDeviceParent(device, 'roku');
-            }
-        } else {
-            setTimeout(() => {
-                triggerDevice(device, state);
-            }, 1000);
-        }
-    } else {
-        alert('fuera del area permitida');
+    if (inRange || (credential === ownerCredential)) {
+      if (!state) {
+          state = devicesState[device].state;
+      }
+      if (!loadingDevices.current) {
+        changeDeviceParent(device, state);
+          // if (state === 'on') {
+          //     changeDeviceParent(device, 'off');
+          // }
+          // if (state === 'off') {
+          //     changeDeviceParent(device, 'on');
+          // }
+          // if (state === 'roku') {
+          //     changeDeviceParent(device, 'cable');
+          // }
+          // if (state === 'cable') {
+          //     changeDeviceParent(device, 'roku');
+          // }
+      } else {
+        setTimeout(() => {
+            triggerDevice(device, state);
+        }, 1000);
+      }
     }
   }
 

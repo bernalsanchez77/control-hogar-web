@@ -3,7 +3,12 @@ import './lamparaComedor.css';
 
 function LamparaComedor({devicesState, triggerDeviceParent}) {
   const triggerDevice = (device, state) => {
-    triggerDeviceParent(device, state);
+    if (state === 'on') {
+      triggerDeviceParent(device, 'off');
+    }
+    if (state === 'off') {
+      triggerDeviceParent(device, 'on');
+    }
   }
 
   return (

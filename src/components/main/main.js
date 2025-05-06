@@ -88,6 +88,8 @@ function Main() {
             <Screen>
             </Screen>
             <Devices
+              credential={credential}
+              guestCredential={ownerCredential}
               inRange={inRange}
               devicesState={devicesState}
               loadingDevices={loadingDevices}
