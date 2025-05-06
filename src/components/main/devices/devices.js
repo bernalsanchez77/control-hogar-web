@@ -37,9 +37,6 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
         </LamparaComedor>
       </div>
       <div>
-        <button className='devices-button' onClick={() => triggerDevice(devicesState.lamparaComedor.id)}>{devicesState.lamparaComedor.label} {devicesState.lamparaComedor.state}</button>
-      </div>
-      <div>
         <button className='devices-button' onClick={() => triggerDevice(devicesState.lamparaTurca.id)}>{devicesState.lamparaTurca.label} {devicesState.lamparaTurca.state}</button>
       </div>
       <div>

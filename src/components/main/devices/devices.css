@@ -4,4 +4,7 @@
 .devices-button {
   margin: 10px
 }
+.devices-button--on {
+  border: green 2px solid;
+}
   
