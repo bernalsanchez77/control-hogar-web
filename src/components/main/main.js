@@ -10,7 +10,7 @@ function Main() {
   const loadingDevices = useRef(false);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const [inRange, setInRange] = useState(false);
-  const [credential, setCredential] = useState(false);
+  const [credential, setCredential] = useState('');
   const ownerCredential = 'owner';
   const guestCredential = 'guest';
 
