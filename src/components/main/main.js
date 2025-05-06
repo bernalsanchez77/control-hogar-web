@@ -83,7 +83,7 @@ function Main() {
       </Credentials>
       {credential &&
         <div>
-          {inRange ?
+          {inRange || credential == ownerCredential?
           <div>
             <Screen>
             </Screen>
