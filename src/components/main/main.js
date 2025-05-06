@@ -52,7 +52,7 @@ function Main() {
         loadingDevices.current = false;
       }
     ).catch(err => {});
-    const inRange = await utils.getGeolocationPosition();
+    const inRange = await utils.current.getGeolocationPosition();
     setInRange(inRange);
     gettingInRange.current = false;
   }, []);
@@ -61,7 +61,7 @@ function Main() {
     const credential = localStorage.getItem('controlhogar');
     setCredential(credential);
     utils.current = new Utils();
-    const inRange = await utils.getGeolocationPosition();
+    const inRange = await utils.current.getGeolocationPosition();
     setInRange(inRange);
     getStates();
     setInterval(() => {getStates();}, 5000);
@@ -100,7 +100,7 @@ function Main() {
             </div>
           </div> :
           <div>
-            Fuera del Area Permitida
+            <span style={{color: "white"}}>Fuera del Area Permitida</span>
           </div>
           }
         </div>

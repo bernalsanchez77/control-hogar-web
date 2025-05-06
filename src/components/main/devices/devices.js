@@ -1,4 +1,5 @@
 import React from 'react';
+import LamparaComedor from './lamparaComedor/lamparaComedor';
 import './devices.css';
 
 function Devices({inRange, devicesState, loadingDevices, changeDeviceParent}) {
@@ -33,6 +34,12 @@ function Devices({inRange, devicesState, loadingDevices, changeDeviceParent}) {
 
   return (
     <div className="devices">
+      <div>
+        <LamparaComedor
+          devicesState={devicesState}
+          triggerDeviceParent={triggerDevice}>
+        </LamparaComedor>
+      </div>
       <div>
         <button className='devices-button' onClick={() => triggerDevice(devicesState.lamparaComedor.id)}>{devicesState.lamparaComedor.label} {devicesState.lamparaComedor.state}</button>
       </div>

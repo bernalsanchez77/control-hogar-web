@@ -1,28 +1,9 @@
 import React from 'react';
 import './lamparaComedor.css';
 
-function LamparaComedor({inRange, devicesState, loadingDevices, changeDeviceParent}) {
+function LamparaComedor({devicesState, triggerDeviceParent}) {
   const triggerDevice = (device, state) => {
-
-    if (inRange) { 
-        if (!state) {
-            state = devicesState[device].state;
-        }
-        if (!loadingDevices.current) {
-            if (state === 'on') {
-                changeDeviceParent(device, 'off');
-            }
-            if (state === 'off') {
-                changeDeviceParent(device, 'on');
-            }
-        } else {
-            setTimeout(() => {
-                triggerDevice(device, state);
-            }, 1000);
-        }
-    } else {
-        alert('fuera del area permitida');
-    }
+    triggerDeviceParent(device, state);
   }
 
   return (
