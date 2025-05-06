@@ -67,7 +67,7 @@ function Main() {
   }
   return (
     <div className="main">
-      <Credentials credential={credential} ownerCredential={ownerCredential}  setCredentialsParent={setCredentials}></Credentials>
+      <Credentials credential={credential} setCredentialsParent={setCredentials}></Credentials>
       <Screen></Screen>
       <Devices inRange={inRange} devicesState={devicesState} loadingDevices={loadingDevices} changeDeviceParent={changeDevice}></Devices>
       <div>

@@ -1,16 +1,14 @@
 import React, {useState} from 'react';
 import './credentials.css';
 
-function Credentials({credential, ownerCredential, setCredentialsParent}) {
+function Credentials({credential, setCredentialsParent}) {
   const [credentialValue, setCredentialValue] = useState('');
   const setGuestCredential = () => {
     setCredentialsParent('guest');
   }
   const setOwnerCredential = (e) => {
     setCredentialValue(e.target.value);
-    if (e.target.value === ownerCredential) {
-      setCredentialsParent(e.target.value);
-    }
+    setCredentialsParent(e.target.value);
   }
   return (
     <div className="credentials">
