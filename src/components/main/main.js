@@ -12,6 +12,7 @@ function Main() {
   const [inRange, setInRange] = useState(false);
   const [credential, setCredential] = useState(false);
   const ownerCredential = 'owner';
+  const guestCredential = 'guest';
 
   const changeDevice = (device, state) => {
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
@@ -23,14 +24,14 @@ function Main() {
   }
 
   const setCredentials = async (credential) => {
-    if (credential === 'guest') {
+    if (credential === guestCredential) {
       localStorage.setItem('controlhogar', credential);
       setCredential(credential);
     } else {
-      const res = await fetch("/api/const", {
+      const res = await fetch("/api/credentials", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: credential }),
+        body: JSON.stringify({key: credential}),
       });
       const data = await res.json();
       if (data.success) {
@@ -69,7 +70,7 @@ function Main() {
   }
   return (
     <div className="main">
-      <Credentials credential={credential} ownerCredential={ownerCredential} setCredentialsParent={setCredentials}></Credentials>
+      <Credentials credential={credential} guestCredential={guestCredential} setCredentialsParent={setCredentials}></Credentials>
       <Screen></Screen>
       <Devices inRange={inRange} devicesState={devicesState} loadingDevices={loadingDevices} changeDeviceParent={changeDevice}></Devices>
       <div>
