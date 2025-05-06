@@ -50,8 +50,10 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
           <button className='devices-button' onClick={() => triggerDevice(devicesState.parlantesSala.id)}>{devicesState.parlantesSala.label} {devicesState.parlantesSala.state}</button>
         </div>
       </div>
-      <div className='devices-element'>
-        <button className='devices-button' onClick={() => triggerDevice(devicesState.hdmi.id)}>{devicesState.hdmi.label} {devicesState.hdmi.state}</button>
+      <div className='devices-row'>
+        <div className='devices-element'>
+          <button className='devices-button' onClick={() => triggerDevice(devicesState.hdmi.id)}>{devicesState.hdmi.label} {devicesState.hdmi.state}</button>
+        </div>
       </div>
     </div>
   );

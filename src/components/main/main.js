@@ -95,11 +95,11 @@ function Main() {
               loadingDevices={loadingDevices}
               changeDeviceParent={changeDevice}>
             </Devices>
-            <div>
+            {/* <div>
               <button onClick={resetDevices}>
                 Reset
               </button>
-            </div>
+            </div> */}
           </div> :
           <div>
             <span style={{color: "white"}}>Fuera del Area Permitida</span>
