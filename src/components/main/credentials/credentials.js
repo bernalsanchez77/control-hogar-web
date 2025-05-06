@@ -1,24 +1,37 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './credentials.css';
 
-function Credentials({credential, credentialValue, setCredentialsParent}) {
-  const setCredentials = (e) => {
-    setCredentialsParent(e.target.value);
+function Credentials({credential, ownerCredential, setCredentialsParent}) {
+  const [credentialValue, setCredentialValue] = useState('');
+  const setGuestCredential = () => {
+    setCredentialsParent('guest');
+  }
+  const setOwnerCredential = (e) => {
+    setCredentialValue(e.target.value);
+    if (e.target.value === ownerCredential) {
+      setCredentialsParent(e.target.value);
+    }
   }
   return (
     <div className="credentials">
       {credential ?
       <div>
-        <span>Bienvenido</span>
       </div> :
       <div>
-        <label>Credential: </label>
-        <input
-          type="text"
-          onChange={setCredentials}
-          placeholder="Escribe tu nombre">
-        </input>
-      </div>}
+        <div>
+          <input
+            type="text"
+            placeholder='Clave'
+            onChange={setOwnerCredential}
+            value={credentialValue}>
+          </input>
+        </div>
+        <div>o</div>
+        <div>
+          <button onClick={setGuestCredential}>Invitado</button>
+        </div>
+      </div>
+      }
     </div>
   );
 }
