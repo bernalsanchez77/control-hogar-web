@@ -11,7 +11,7 @@ function Main() {
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const [inRange, setInRange] = useState(false);
   const [credential, setCredential] = useState(false);
-  const ownerCredential = '123';
+  const ownerCredential = 'owner';
 
   const changeDevice = (device, state) => {
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
@@ -23,19 +23,21 @@ function Main() {
   }
 
   const setCredentials = async (credential) => {
-    const res = await fetch("/api/const", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ key: credential }),
-    });
-
-    const data = await res.json();
-    console.log(data);
-
-
-
-    // localStorage.setItem('controlhogar', credential);
-    // setCredential(credential);
+    if (credential === 'guest') {
+      localStorage.setItem('controlhogar', credential);
+      setCredential(credential);
+    } else {
+      const res = await fetch("/api/const", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: credential }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        localStorage.setItem('controlhogar', ownerCredential);
+        setCredential(ownerCredential);
+      }
+    }
   }
 
   const getStates = useCallback(() => {
@@ -67,7 +69,7 @@ function Main() {
   }
   return (
     <div className="main">
-      <Credentials credential={credential} setCredentialsParent={setCredentials}></Credentials>
+      <Credentials credential={credential} ownerCredential={ownerCredential} setCredentialsParent={setCredentials}></Credentials>
       <Screen></Screen>
       <Devices inRange={inRange} devicesState={devicesState} loadingDevices={loadingDevices} changeDeviceParent={changeDevice}></Devices>
       <div>
