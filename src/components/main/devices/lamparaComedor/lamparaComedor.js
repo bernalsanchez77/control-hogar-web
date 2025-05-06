@@ -2,11 +2,11 @@ import React from 'react';
 import './lamparaComedor.css';
 
 function LamparaComedor({devicesState, triggerDeviceParent}) {
-  const triggerDevice = (device, state) => {
-    if (state === 'on') {
+  const triggerDevice = (device) => {
+    if (devicesState[device].state === 'on') {
       triggerDeviceParent(device, 'off');
     }
-    if (state === 'off') {
+    if (devicesState[device].state === 'off') {
       triggerDeviceParent(device, 'on');
     }
   }

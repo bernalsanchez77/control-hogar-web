@@ -6,9 +6,6 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
   const triggerDevice = (device, state) => {
 
     if (inRange || (credential === ownerCredential)) {
-      if (!state) {
-          state = devicesState[device].state;
-      }
       if (!loadingDevices.current) {
         changeDeviceParent(device, state);
           // if (state === 'on') {
