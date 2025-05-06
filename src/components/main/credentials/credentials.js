@@ -16,7 +16,7 @@ function Credentials({credential, guestCredential, setCredentialsParent}) {
       <div>
       </div> :
       <div>
-        <div>
+        <div className='credentials-input'>
           <input
             type="text"
             placeholder='Clave'
@@ -24,9 +24,8 @@ function Credentials({credential, guestCredential, setCredentialsParent}) {
             value={credentialValue}>
           </input>
         </div>
-        <div>o</div>
         <div>
-          <button onClick={setGuestCredential}>Invitado</button>
+          <button className='credentials-button' onClick={setGuestCredential}>Invitado</button>
         </div>
       </div>
       }

@@ -1,3 +1,12 @@
+body {
+  background-color:#282c34;
+}
+
+button, input {
+  background-color: #555;
+  color: #fff;
+}
+
 .App {
   text-align: center;
 }
