@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import './lamparasAbajo.css';
 
 function LamparasAbajo({devicesState, triggerDeviceParent}) {
   const [state, setState] = useState('off');
-  const setLamparasState = () => {
+  const setLamparasState = useCallback(async () => {
     if (
       devicesState.lamparaSala.state === "on" &&
       devicesState.lamparaComedor.state === "on"
@@ -12,7 +12,7 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
     } else {
       setState('off');
     }
-  }
+  }, [devicesState]);
   const triggerDevice = (device) => {
     if (devicesState[device].state === 'on') {
       triggerDeviceParent(device, 'off');
@@ -29,7 +29,7 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
 
   useEffect(() => {
     setLamparasState();
-  }, []);
+  }, [setLamparasState]);
 
   return (
     <div className="lamparasAbajo">
