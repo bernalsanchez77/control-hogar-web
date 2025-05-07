@@ -5,9 +5,17 @@ function Screen() {
   return (
     <div>
       <div className='screen'>
-        <button className='screen-button'>Cuarto</button>
-        <button className='screen-button'>Sala</button>
-        <button className='screen-button'>Proyector</button>
+        <div className='screen-row'>
+          <div className='screen-element'>
+            <button className='screen-button'>Cuarto</button>
+          </div>
+          <div className='screen-element'>
+            <button className='screen-button'>Sala</button>
+            </div>
+          <div className='screen-element'>
+            <button className='screen-button'>Proyector</button>
+          </div>
+        </div>
       </div>
     </div>
   )

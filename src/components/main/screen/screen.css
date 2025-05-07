@@ -1,6 +1,24 @@
 .screen {
-  margin: 30px;
+  margin: 10px;
+}
+.screen-row {
+  display: inline-block;
+  width: 100%;
+}
+.screen-element {
+  float: left;
+  width: 16%;
+  margin: 2%;
+
 }
 .screen-button {
-  margin: 10px
+  font-size: 11px;
+  padding: 3px;
+  width: 100%;
+  border: transparent 2px solid;
+  height: 40px;
+  border-radius: 5px;
+}
+.screen-button--on {
+  border: green 2px solid;
 }
