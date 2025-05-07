@@ -16,15 +16,23 @@ function Main() {
   const ownerCredential = 'owner';
   const guestCredential = 'guest';
 
-  const changeDevice = (device, state) => {
+  const changeDevice = (device, state, nuevo) => {
     const devices = {...devicesState};
     if (typeof device === 'object') {
       device.forEach(item => {
-        fetch('/api/sendIfttt?device=' + item + '&state=' + state);
+        if (nuevo) {
+          fetch('/api/sendIfttt?device=' + item + '&state=' + state + '&nuevo=true');
+        } else {
+          fetch('/api/sendIfttt?device=' + item + '&state=' + state);
+        }
         devices[item] = {...devices[item], state: state};
       });
     } else {
-     fetch('/api/sendIfttt?device=' + device + '&state=' + state);
+      if (nuevo) {
+        fetch('/api/sendIfttt?device=' + device + '&state=' + state + '&nuevo=true');
+      } else {
+        fetch('/api/sendIfttt?device=' + device + '&state=' + state);
+      }
      devices[device] = {...devices[device], state: state};
     }
     setDevicesState(devices);
