@@ -13,7 +13,6 @@ import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
 
 function Devices({credential, ownerCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
   const triggerDevice = (device, state) => {
-
     if (inRange || (credential === ownerCredential)) {
       if (!loadingDevices.current) {
         changeDeviceParent(device, state);
