@@ -14,7 +14,7 @@ function ChimeneaSala({devicesState, triggerDeviceParent}) {
   return (
     <div className="chimenea">
       <div>
-        <button className={`devices-button ${devicesState.chimenea.state === 'on' ? "devices-button--on" : "devices-button-off"}`} onClick={() => triggerDevice(devicesState.chimenea.id)}>{devicesState.chimenea.label}</button>
+        <button className={`devices-button ${devicesState.chimeneaSala.state === 'on' ? "devices-button--on" : "devices-button-off"}`} onClick={() => triggerDevice(devicesState.chimeneaSala.id)}>{devicesState.chimeneaSala.label}</button>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ export const devicesOriginal = {
     lamparaTurca: {state: 'off', label: 'Lampara Turca', id: 'lamparaTurca'},
     lamparaLava: {state: 'off', label: 'Lampara Lava', id: 'lamparaLava'},
     lamparaRotatoria: {state: 'off', label: 'Lampara Rotatoria', id: 'lamparaRotatoria'},
-    chimenea: {state: 'off', label: 'Chimenea', id: 'chimenea'},
+    chimeneaSala: {state: 'off', label: 'Chimenea Sala', id: 'chimeneaSala'},
     lamparasAbajo: {state: 'off', label: 'Lamparas Abajo', id: 'lamparasAbajo'},
     parlantesSala: {state: 'off', label: 'Parlantes Sala', id: 'parlantesSala'},
     palentadorNegro: {state: 'off', label: 'Calentador Lizzie', id: 'calentadorNegro'},
