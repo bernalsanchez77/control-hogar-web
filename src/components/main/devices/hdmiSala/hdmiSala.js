@@ -3,11 +3,11 @@ import './hdmiSala.css';
 
 function HdmiSala({devicesState, triggerDeviceParent}) {
   const triggerDevice = (device) => {
-    if (devicesState[device].state === 'on') {
-      triggerDeviceParent(device, 'off');
+    if (devicesState[device].state === 'roku') {
+      triggerDeviceParent(device, 'cable');
     }
-    if (devicesState[device].state === 'off') {
-      triggerDeviceParent(device, 'on');
+    if (devicesState[device].state === 'cable') {
+      triggerDeviceParent(device, 'roku');
     }
   }
 
