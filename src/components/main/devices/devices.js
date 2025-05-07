@@ -1,6 +1,8 @@
 import React from 'react';
 import LamparaComedor from './lamparaComedor/lamparaComedor';
 import LamparaTurca from './lamparaTurca/lamparaTurca';
+import LamparaSala from './lamparaSala/lamparaSala';
+import ChimeneaSala from './chimeneaSala/chimeneaSala';
 import './devices.css';
 
 function Devices({credential, ownerCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
@@ -45,10 +47,16 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
           </LamparaTurca>
         </div>
         <div className='devices-element'>
-          <button className='devices-button' onClick={() => triggerDevice(devicesState.lamparaSala.id)}>{devicesState.lamparaSala.label} {devicesState.lamparaSala.state}</button>
+          <LamparaSala
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </LamparaSala>
         </div>
         <div className='devices-element'>
-          <button className='devices-button' onClick={() => triggerDevice(devicesState.chimenea.id)}>{devicesState.chimenea.label} {devicesState.chimenea.state}</button>
+          <ChimeneaSala
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </ChimeneaSala>
         </div>
         <div className='devices-element'>
           <button className='devices-button' onClick={() => triggerDevice(devicesState.parlantesSala.id)}>{devicesState.parlantesSala.label} {devicesState.parlantesSala.state}</button>
