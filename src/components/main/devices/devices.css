@@ -3,6 +3,7 @@
 }
 .devices-row {
   display: inline-block;
+  width: 100%;
 }
 .devices-element {
   float: left;
