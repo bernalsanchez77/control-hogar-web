@@ -2,9 +2,12 @@ import React from 'react';
 import LamparaComedor from './lamparaComedor/lamparaComedor';
 import LamparaTurca from './lamparaTurca/lamparaTurca';
 import LamparaSala from './lamparaSala/lamparaSala';
+import LamparaRotatoria from './lamparaRotatoria/lamparaRotatoria';
 import ChimeneaSala from './chimeneaSala/chimeneaSala';
 import ParlantesSala from './parlantesSala/parlantesSala';
 import HdmiSala from './hdmiSala/hdmiSala';
+import CalentadorNegro from './calentadorNegro/calentadorNegro';
+import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import './devices.css';
 
 function Devices({credential, ownerCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
@@ -13,18 +16,6 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
     if (inRange || (credential === ownerCredential)) {
       if (!loadingDevices.current) {
         changeDeviceParent(device, state);
-          // if (state === 'on') {
-          //     changeDeviceParent(device, 'off');
-          // }
-          // if (state === 'off') {
-          //     changeDeviceParent(device, 'on');
-          // }
-          // if (state === 'roku') {
-          //     changeDeviceParent(device, 'cable');
-          // }
-          // if (state === 'cable') {
-          //     changeDeviceParent(device, 'roku');
-          // }
       } else {
         setTimeout(() => {
             triggerDevice(device, state);
@@ -55,16 +46,16 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
           </LamparaSala>
         </div>
         <div className='devices-element'>
+          <LamparaRotatoria
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </LamparaRotatoria>
+        </div>
+        <div className='devices-element'>
           <ChimeneaSala
             devicesState={devicesState}
             triggerDeviceParent={triggerDevice}>
           </ChimeneaSala>
-        </div>
-        <div className='devices-element'>
-          <ParlantesSala
-            devicesState={devicesState}
-            triggerDeviceParent={triggerDevice}>
-          </ParlantesSala>
         </div>
       </div>
       <div className='devices-row'>
@@ -73,6 +64,24 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
             devicesState={devicesState}
             triggerDeviceParent={triggerDevice}>
           </HdmiSala>
+        </div>
+        <div className='devices-element'>
+          <ParlantesSala
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </ParlantesSala>
+        </div>
+        <div className='devices-element'>
+          <CalentadorNegro
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </CalentadorNegro>
+        </div>
+        <div className='devices-element'>
+          <CalentadorBlanco
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </CalentadorBlanco>
         </div>
       </div>
     </div>
