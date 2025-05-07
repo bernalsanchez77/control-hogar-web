@@ -2,6 +2,7 @@ import React from 'react';
 import './lamparasAbajo.css';
 
 function LamparasAbajo({devicesState, triggerDeviceParent}) {
+  setState();
   const triggerDevice = (device) => {
     if (devicesState[device].state === 'on') {
       triggerDeviceParent(device, 'off');
@@ -9,6 +10,10 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
     if (devicesState[device].state === 'off') {
       triggerDeviceParent(device, 'on');
     }
+  }
+
+  const setState = () => {
+    console.log('test');
   }
 
   const getLamparasAbajoState = () => {
