@@ -19,12 +19,17 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
       devicesState.lamparaSala.state === 'on'
     ) {
       triggerDeviceParent([devicesState.lamparaComedor.id, devicesState.lamparaSala.id], 'off');
-    }
-    if (devicesState.lamparaSala.state === 'off') {
-      triggerDeviceParent(devicesState.lamparaSala.id, 'on');
-    }
-    if (devicesState.lamparaComedor.state === 'off') {
-      triggerDeviceParent(devicesState.lamparaComedor.id, 'on');
+      setState('off');
+    } else {
+      let lamparas = [];
+      if (devicesState.lamparaSala.state === 'off') {
+        lamparas.push(devicesState.lamparaSala.id);
+      }
+      if (devicesState.lamparaComedor.state === 'off') {
+        lamparas.push(devicesState.lamparaComedor.id);
+      }
+      triggerDeviceParent(lamparas, 'on');
+      setState('on');
     }
   }
 
