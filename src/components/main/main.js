@@ -21,17 +21,17 @@ function Main() {
     if (typeof device === 'object') {
       device.forEach(item => {
         if (nuevo) {
-          // fetch('/api/sendIfttt?device=' + item + '&state=' + state + '&nuevo=true');
+          fetch('/api/sendIfttt?device=' + item + '&state=' + state + '&nuevo=true');
         } else {
-          // fetch('/api/sendIfttt?device=' + item + '&state=' + state);
+          fetch('/api/sendIfttt?device=' + item + '&state=' + state);
         }
         devices[item] = {...devices[item], state: state};
       });
     } else {
       if (nuevo) {
-        // fetch('/api/sendIfttt?device=' + device + '&state=' + state + '&nuevo=true');
+        fetch('/api/sendIfttt?device=' + device + '&state=' + state + '&nuevo=true');
       } else {
-        // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
+        fetch('/api/sendIfttt?device=' + device + '&state=' + state);
       }
      devices[device] = {...devices[device], state: state};
     }
