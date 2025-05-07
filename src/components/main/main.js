@@ -20,11 +20,11 @@ function Main() {
     const devices = {...devicesState};
     if (typeof device === 'object') {
       device.forEach(item => {
-        // fetch('/api/sendIfttt?device=' + item + '&state=' + state);
+        fetch('/api/sendIfttt?device=' + item + '&state=' + state);
         devices[item] = {...devices[item], state: state};
       });
     } else {
-     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
+     fetch('/api/sendIfttt?device=' + device + '&state=' + state);
      devices[device] = {...devices[device], state: state};
     }
     setDevicesState(devices);
