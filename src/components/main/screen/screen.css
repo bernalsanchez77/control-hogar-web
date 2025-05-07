@@ -4,7 +4,6 @@
 }
 .screen-row {
   display: inline-block;
-  width: 100%;
 }
 .screen-element {
   float: left;
