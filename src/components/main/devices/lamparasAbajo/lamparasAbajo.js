@@ -17,8 +17,15 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
   ];
   const setLamparasState = useCallback(async () => {
     if (
-      devicesState.lamparaSala.state === "on" &&
-      devicesState.lamparaComedor.state === "on"
+      (devicesState.lamparaSala.state === "on" &&
+      devicesState.lamparaComedor.state === "on") ||
+      (devicesState.lamparaTurca.state === "on" &&
+      devicesState.lamparaComedor.state === "on") ||
+      (devicesState.lamparaSala.state === "on" &&
+      devicesState.lamparaTurca.state === "on") ||
+      (devicesState.lamparaSala.state === "on" &&
+      devicesState.lamparaTurca.state === "on" &&
+      devicesState.lamparaComedor.state === "on")
       ) {
       setState('on');
     } else {
@@ -44,23 +51,6 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
       triggerDeviceParent(lamp, 'on');
       setState('on');
     }
-    // if (
-    //   devicesState.lamparaComedor.state === 'on' &&
-    //   devicesState.lamparaSala.state === 'on'
-    // ) {
-    //   triggerDeviceParent([devicesState.lamparaComedor.id, devicesState.lamparaSala.id], 'off');
-    //   setState('off');
-    // } else {
-    //   let lamparas = [];
-    //   if (devicesState.lamparaSala.state === 'off') {
-    //     lamparas.push(devicesState.lamparaSala.id);
-    //   }
-    //   if (devicesState.lamparaComedor.state === 'off') {
-    //     lamparas.push(devicesState.lamparaComedor.id);
-    //   }
-    //   triggerDeviceParent(lamparas, 'on');
-    //   setState('on');
-    // }
   }
 
   useEffect(() => {
