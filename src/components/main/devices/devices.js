@@ -3,6 +3,8 @@ import LamparaComedor from './lamparaComedor/lamparaComedor';
 import LamparaTurca from './lamparaTurca/lamparaTurca';
 import LamparaSala from './lamparaSala/lamparaSala';
 import ChimeneaSala from './chimeneaSala/chimeneaSala';
+import ParlantesSala from './parlantesSala/parlantesSala';
+import HdmiSala from './hdmiSala/hdmiSala';
 import './devices.css';
 
 function Devices({credential, ownerCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
@@ -59,12 +61,18 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
           </ChimeneaSala>
         </div>
         <div className='devices-element'>
-          <button className='devices-button' onClick={() => triggerDevice(devicesState.parlantesSala.id)}>{devicesState.parlantesSala.label} {devicesState.parlantesSala.state}</button>
+          <ParlantesSala
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </ParlantesSala>
         </div>
       </div>
       <div className='devices-row'>
         <div className='devices-element'>
-          <button className='devices-button' onClick={() => triggerDevice(devicesState.hdmi.id)}>{devicesState.hdmi.label} {devicesState.hdmi.state}</button>
+          <HdmiSala
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </HdmiSala>
         </div>
       </div>
     </div>

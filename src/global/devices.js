@@ -12,5 +12,5 @@ export const devicesOriginal = {
     proyectorMute: {state: 'off', label: 'Proyector Mute', id: 'proyectorMute'},
     salaMute: {state: 'off', label: 'Sala Mute', id: 'salaMute'},
     cuartoMute: {state: 'off', label: 'Cuarto Mute', id: 'cuartoMute'},
-    hdmi: {state: 'roku', label: 'Roku', id: 'hdmi'}
+    hdmiSala: {state: 'roku', label: 'Roku', id: 'hdmiSala'}
 };
