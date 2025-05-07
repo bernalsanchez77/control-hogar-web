@@ -3,6 +3,7 @@ import './lamparasAbajo.css';
 
 function LamparasAbajo({devicesState, triggerDeviceParent}) {
   const [state, setState] = useState('off');
+  const lamparas = [devicesState.lamparaComedor.id, devicesState.lamparaSala.id];
   const setLamparasState = useCallback(async () => {
     if (
       devicesState.lamparaSala.state === "on" &&
@@ -14,23 +15,41 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
     }
   }, [devicesState]);
   const triggerDevice = () => {
-    if (
-      devicesState.lamparaComedor.state === 'on' &&
-      devicesState.lamparaSala.state === 'on'
-    ) {
-      triggerDeviceParent([devicesState.lamparaComedor.id, devicesState.lamparaSala.id], 'off');
+    let lamp = [];
+    if (state === 'on') {
+      lamparas.forEach(lampara => {
+        if (devicesState[lampara].state === 'on') {
+          lamp.push(devicesState[lampara].id);
+        }
+      });
+      triggerDeviceParent(lamp, 'off');
       setState('off');
     } else {
-      let lamparas = [];
-      if (devicesState.lamparaSala.state === 'off') {
-        lamparas.push(devicesState.lamparaSala.id);
-      }
-      if (devicesState.lamparaComedor.state === 'off') {
-        lamparas.push(devicesState.lamparaComedor.id);
-      }
-      triggerDeviceParent(lamparas, 'on');
+      lamparas.forEach(lampara => {
+        if (devicesState[lampara].state === 'off') {
+          lamp.push(devicesState[lampara].id);
+        }
+      });
+      triggerDeviceParent(lamp, 'on');
       setState('on');
     }
+    // if (
+    //   devicesState.lamparaComedor.state === 'on' &&
+    //   devicesState.lamparaSala.state === 'on'
+    // ) {
+    //   triggerDeviceParent([devicesState.lamparaComedor.id, devicesState.lamparaSala.id], 'off');
+    //   setState('off');
+    // } else {
+    //   let lamparas = [];
+    //   if (devicesState.lamparaSala.state === 'off') {
+    //     lamparas.push(devicesState.lamparaSala.id);
+    //   }
+    //   if (devicesState.lamparaComedor.state === 'off') {
+    //     lamparas.push(devicesState.lamparaComedor.id);
+    //   }
+    //   triggerDeviceParent(lamparas, 'on');
+    //   setState('on');
+    // }
   }
 
   useEffect(() => {
