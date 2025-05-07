@@ -17,11 +17,15 @@ function Main() {
   const guestCredential = 'guest';
 
   const changeDevice = (device, state) => {
-    // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
-    const devices = {...devicesState};
-    devices[device] = {...devices[device], state: state};
-    setDevicesState(devices);
-    fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
+    if (typeof device === Array) {
+      console.log('array');
+    } else {
+     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
+     const devices = {...devicesState};
+     devices[device] = {...devices[device], state: state};
+     setDevicesState(devices);
+     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
+    }
   }
 
   const setCredentials = async (credential) => {

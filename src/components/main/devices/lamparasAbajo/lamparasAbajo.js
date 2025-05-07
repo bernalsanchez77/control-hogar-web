@@ -18,8 +18,7 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
       devicesState.lamparaComedor.state === 'on' &&
       devicesState.lamparaSala.state === 'on'
     ) {
-      triggerDeviceParent(devicesState.lamparaComedor.id, 'off');
-      triggerDeviceParent(devicesState.lamparaSala.id, 'off');
+      triggerDeviceParent([devicesState.lamparaComedor.id, devicesState.lamparaSala.id], 'off');
     }
     if (devicesState.lamparaSala.state === 'off') {
       triggerDeviceParent(devicesState.lamparaSala.id, 'on');
