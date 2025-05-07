@@ -1,5 +1,6 @@
 .devices {
   margin: 10px;
+  display: inline-block;
 }
 .devices-row {
   display: inline-block;
@@ -7,8 +8,8 @@
 }
 .devices-element {
   float: left;
-  width: 16%;
-  margin: 2%;
+  width: 70px;
+  margin: 5px;
 
 }
 .devices-button {
