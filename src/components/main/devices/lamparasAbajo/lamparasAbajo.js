@@ -19,12 +19,12 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
     if (
       (devicesState.lamparaSala.state === "on" &&
       devicesState.lamparaComedor.state === "on") ||
-      (devicesState.lamparaTurca.state === "on" &&
+      (devicesState.chimeneaSala.state === "on" &&
       devicesState.lamparaComedor.state === "on") ||
       (devicesState.lamparaSala.state === "on" &&
-      devicesState.lamparaTurca.state === "on") ||
+      devicesState.chimeneaSala.state === "on") ||
       (devicesState.lamparaSala.state === "on" &&
-      devicesState.lamparaTurca.state === "on" &&
+      devicesState.chimeneaSala.state === "on" &&
       devicesState.lamparaComedor.state === "on")
       ) {
       setState('on');
