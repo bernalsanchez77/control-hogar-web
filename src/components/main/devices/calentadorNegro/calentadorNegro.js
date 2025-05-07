@@ -13,9 +13,9 @@ function CalentadorNegro({devicesState, triggerDeviceParent}) {
 
   return (
     <div className="calentadorNegro">
-      {/* <div>
+      <div>
         <button className={`devices-button ${devicesState.calentadorNegro.state === 'on' ? "devices-button--on" : "devices-button-off"}`} onClick={() => triggerDevice(devicesState.calentadorNegro.id)}>{devicesState.calentadorNegro.label}</button>
-      </div> */}
+      </div>
     </div>
   );
 }
