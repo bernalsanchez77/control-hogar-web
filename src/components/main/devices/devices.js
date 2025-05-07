@@ -1,5 +1,6 @@
 import React from 'react';
 import LamparaComedor from './lamparaComedor/lamparaComedor';
+import LamparaTurca from './lamparaTurca/lamparaTurca';
 import './devices.css';
 
 function Devices({credential, ownerCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
@@ -38,7 +39,10 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
           </LamparaComedor>
         </div>
         <div className='devices-element'>
-          <button className='devices-button' onClick={() => triggerDevice(devicesState.lamparaTurca.id)}>{devicesState.lamparaTurca.label} {devicesState.lamparaTurca.state}</button>
+          <LamparaTurca
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </LamparaTurca>
         </div>
         <div className='devices-element'>
           <button className='devices-button' onClick={() => triggerDevice(devicesState.lamparaSala.id)}>{devicesState.lamparaSala.label} {devicesState.lamparaSala.state}</button>

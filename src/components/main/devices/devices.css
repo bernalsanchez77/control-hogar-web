@@ -1,10 +1,13 @@
 .devices {
   margin: 30px;
 }
+.devices-row {
+  display: inline-block;
+}
 .devices-element {
   float: left;
   width: 16%;
-  margin: 2px;
+  margin: 2%;
 
 }
 .devices-button {
