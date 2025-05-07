@@ -13,18 +13,20 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
       setState('off');
     }
   }, [devicesState]);
-  const triggerDevice = (device) => {
-    if (devicesState[device].state === 'on') {
-      triggerDeviceParent(device, 'off');
+  const triggerDevice = () => {
+    if (
+      devicesState.lamparaComedor.state === 'on' &&
+      devicesState.lamparaSala.state === 'on'
+    ) {
+      triggerDeviceParent(devicesState.lamparaComedor.id, 'off');
+      triggerDeviceParent(devicesState.lamparaSala.id, 'off');
     }
-    if (devicesState[device].state === 'off') {
-      triggerDeviceParent(device, 'on');
+    if (devicesState.lamparaSala.state === 'off') {
+      triggerDeviceParent(devicesState.lamparaSala.id, 'on');
     }
-  }
-
-  const getLamparasAbajoState = () => {
-    return devicesState.lamparaSala.state === "on" &&
-      devicesState.lamparaComedor.state === "on";
+    if (devicesState.lamparaComedor.state === 'off') {
+      triggerDeviceParent(devicesState.lamparaComedor.id, 'on');
+    }
   }
 
   useEffect(() => {
@@ -34,7 +36,7 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
   return (
     <div className="lamparasAbajo">
       <div>
-        <button className={`devices-button ${getLamparasAbajoState() ? "devices-button--on" : "devices-button-off"}`} onClick={() => triggerDevice()}>Lamparas Abajo</button>
+        <button className={`devices-button ${state ? "devices-button--on" : "devices-button-off"}`} onClick={() => triggerDevice()}>Lamparas Abajo</button>
       </div>
     </div>
   );
