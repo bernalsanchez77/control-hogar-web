@@ -20,9 +20,8 @@ function Main() {
     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
     const devices = {...devicesState};
     devices[device] = {...devices[device], state: state};
-    setDevicesState(devices, () => {
-      fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesState)}).then(res => res.json()).then(data => {}).catch(err => {});
-    });
+    setDevicesState(devices);
+    fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
   }
 
   const setCredentials = async (credential) => {
