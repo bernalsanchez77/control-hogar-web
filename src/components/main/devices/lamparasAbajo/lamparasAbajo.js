@@ -1,15 +1,18 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './lamparasAbajo.css';
 
 function LamparasAbajo({devicesState, triggerDeviceParent}) {
+  let state = 'on';
   const setState = () => {
-    if (devicesState.lamparaSala.state === "on") {
+    if (
+      devicesState.lamparaSala.state === "on" &&
+      devicesState.lamparaComedor.state === "on"
+      ) {
       state = 'on';
     } else {
       state = 'off';
     }
   }
-  let state = setState();
   const triggerDevice = (device) => {
     if (devicesState[device].state === 'on') {
       triggerDeviceParent(device, 'off');
@@ -23,6 +26,10 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
     return devicesState.lamparaSala.state === "on" &&
       devicesState.lamparaComedor.state === "on";
   }
+
+  useEffect(() => {
+    setState();
+  }, []);
 
   return (
     <div className="lamparasAbajo">
