@@ -16,17 +16,13 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
     devicesState.chimeneaSala.id,
   ];
   const setLamparasState = useCallback(async () => {
-    if (
-      (devicesState.lamparaSala.state === "on" &&
-      devicesState.lamparaComedor.state === "on") ||
-      (devicesState.chimeneaSala.state === "on" &&
-      devicesState.lamparaComedor.state === "on") ||
-      (devicesState.lamparaSala.state === "on" &&
-      devicesState.chimeneaSala.state === "on") ||
-      (devicesState.lamparaSala.state === "on" &&
-      devicesState.chimeneaSala.state === "on" &&
-      devicesState.lamparaComedor.state === "on")
-      ) {
+    let lamps = 0;
+    lamparasOff.forEach(lampara => {
+      if (deviceState[lampara].state === 'on') {
+        lamps++;
+      }
+    });
+    if (lamps > 0) {
       setState('on');
     } else {
       setState('off');
