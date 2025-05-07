@@ -3,7 +3,18 @@ import './lamparasAbajo.css';
 
 function LamparasAbajo({devicesState, triggerDeviceParent}) {
   const [state, setState] = useState('off');
-  const lamparas = [devicesState.lamparaComedor.id, devicesState.lamparaSala.id];
+  const lamparasOn = [
+    devicesState.lamparaComedor.id,
+    devicesState.lamparaSala.id,
+    devicesState.chimeneaSala.id
+  ];
+  const lamparasOff = [
+    devicesState.lamparaComedor.id,
+    devicesState.lamparaSala.id,
+    devicesState.lamparaTurca.id,
+    devicesState.lamparaRotatoria.id,
+    devicesState.chimeneaSala.id,
+  ];
   const setLamparasState = useCallback(async () => {
     if (
       devicesState.lamparaSala.state === "on" &&
@@ -17,7 +28,7 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
   const triggerDevice = () => {
     let lamp = [];
     if (state === 'on') {
-      lamparas.forEach(lampara => {
+      lamparasOff.forEach(lampara => {
         if (devicesState[lampara].state === 'on') {
           lamp.push(devicesState[lampara].id);
         }
@@ -25,7 +36,7 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
       triggerDeviceParent(lamp, 'off');
       setState('off');
     } else {
-      lamparas.forEach(lampara => {
+      lamparasOn.forEach(lampara => {
         if (devicesState[lampara].state === 'off') {
           lamp.push(devicesState[lampara].id);
         }
