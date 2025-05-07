@@ -22,7 +22,7 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
         lamps++;
       }
     });
-    if (lamps > 0) {
+    if (lamps > 1) {
       setState('on');
     } else {
       setState('off');
