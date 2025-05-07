@@ -1,5 +1,5 @@
 .devices {
-  margin: 30px;
+  margin: 10px;
 }
 .devices-row {
   display: inline-block;
@@ -11,6 +11,7 @@
 
 }
 .devices-button {
+  font-size: 11px;
   padding: 5px;
   width: 100%;
   border: transparent 2px solid;
