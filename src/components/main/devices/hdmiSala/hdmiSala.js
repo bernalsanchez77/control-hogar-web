@@ -13,9 +13,9 @@ function HdmiSala({devicesState, triggerDeviceParent}) {
 
   return (
     <div className="hdmiSala">
-      {/* <div>
+      <div>
         <button className={`devices-button ${devicesState.hdmiSala.state === 'on' ? "devices-button--on" : "devices-button-off"}`} onClick={() => triggerDevice(devicesState.hdmiSala.id)}>{devicesState.hdmiSala.label}</button>
-      </div> */}
+      </div>
     </div>
   );
 }
