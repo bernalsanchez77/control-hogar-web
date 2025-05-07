@@ -18,7 +18,7 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
   const setLamparasState = useCallback(async () => {
     let lamps = 0;
     lamparasOff.forEach(lampara => {
-      if (deviceState[lampara].state === 'on') {
+      if (devicesState[lampara].state === 'on') {
         lamps++;
       }
     });
