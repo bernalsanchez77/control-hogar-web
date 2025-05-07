@@ -11,10 +11,15 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
     }
   }
 
+  const getLamparasAbajoState = () => {
+    return devicesState.lamparaSala.state === "on" &&
+      devicesState.lamparaComedor.state === "on";
+  }
+
   return (
     <div className="lamparasAbajo">
       <div>
-        <button className={`devices-button ${devicesState.lamparaSala.state === 'on' ? "devices-button--on" : "devices-button-off"}`} onClick={() => triggerDevice()}>Lamparas Abajo</button>
+        <button className={`devices-button ${getLamparasAbajoState ? "devices-button--on" : "devices-button-off"}`} onClick={() => triggerDevice()}>Lamparas Abajo</button>
       </div>
     </div>
   );
