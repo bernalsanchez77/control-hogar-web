@@ -97,9 +97,10 @@ function Main() {
       </Credentials>
       {credential &&
         <div>
-          {inRange || credential === ownerCredential?
+          {inRange || credential === ownerCredential ?
           <div>
-            <Screen>
+            <Screen
+              credential={credential}>
             </Screen>
             <Devices
               credential={credential}
