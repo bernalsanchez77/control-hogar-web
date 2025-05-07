@@ -9,6 +9,7 @@ import HdmiSala from './hdmiSala/hdmiSala';
 import CalentadorNegro from './calentadorNegro/calentadorNegro';
 import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import './devices.css';
+import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
 
 function Devices({credential, ownerCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
   const triggerDevice = (device, state) => {
@@ -82,6 +83,12 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
             devicesState={devicesState}
             triggerDeviceParent={triggerDevice}>
           </CalentadorBlanco>
+        </div>
+        <div className='devices-element'>
+          <LamparasAbajo
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </LamparasAbajo>
         </div>
       </div>
     </div>
