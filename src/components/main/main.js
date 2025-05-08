@@ -59,13 +59,16 @@ function Main() {
 
   const getStates = useCallback(async () => {
     loadingDevices.current = true;
-    gettingInRange.current = true;
     fetch('/api/getDevices').then(res => res.json()).then(
       devices => {
         setDevicesState(devices);
         loadingDevices.current = false;
       }
     ).catch(err => {});
+  }, []);
+
+  const getPosition = useCallback(async () => {
+    gettingInRange.current = true;
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
     gettingInRange.current = false;
@@ -79,6 +82,7 @@ function Main() {
     setInRange(inRange);
     getStates();
     setInterval(() => {getStates();}, 5000);
+    setInterval(() => {getPosition();}, 300000);
   }, [getStates]);
 
   useEffect(() => {
