@@ -75,7 +75,7 @@ function Main() {
     const credential = localStorage.getItem('controlhogar');
     setCredential(credential);
     utils.current = new Utils();
-    const inRange = await utils.current.getGeolocationPosition();
+    const inRange = await utils.current.getInRange();
     setInRange(inRange);
     getStates();
     setInterval(() => {getStates();}, 5000);

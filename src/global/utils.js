@@ -42,7 +42,7 @@ class Utils {
           );
       });
     }
-    getPosition3() {
+    getIpApiPosition() {
         return new Promise((resolve, reject) => {
         fetch('https://ipapi.co/json/')
         .then(res => res.json())
@@ -61,6 +61,22 @@ class Utils {
         const position = await this.getPosition3();
         if (position) {
             const { latitude, longitude } = position.coords;
+            if (this.isHome(latitude, longitude)) {
+                inRange = true;
+            } else {
+                inRange = false;
+            }
+            return inRange;
+        };
+        inRange =false;
+        return inRange;
+    }
+    async getInRange() {
+        let inRange = false;
+        const position = await this.getIpApiPosition();
+        if (position) {
+            const latitude = position.latitude;
+            const longitude = position.longitude;
             if (this.isHome(latitude, longitude)) {
                 inRange = true;
             } else {
