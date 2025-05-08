@@ -23,6 +23,7 @@ function Screens({credential, ownerCredential, inRange, devicesState, loadingDev
   }
   const triggerControl = (control) => {
     console.log(control);
+    console.log(controlSelected);
     if (controlSelected !== control) {
       changeControlParent(control);
     }
