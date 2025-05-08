@@ -15,9 +15,15 @@
   font-size: 11px;
   padding: 3px;
   width: 100%;
-  border: transparent 2px solid;
+  border: transparent 3px solid;
   height: 40px;
   border-radius: 5px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+button.screen-button:active {
+  background-color: green;
+  transition: background-color 0.1s;
 }
 .screen-button--on {
   border: green 2px solid;

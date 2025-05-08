@@ -21,7 +21,7 @@
   user-select: none;
   -webkit-user-select: none;
 }
-button:active {
+button.devices-button:active {
   background-color: green;
   transition: background-color 0.1s;
 }

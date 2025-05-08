@@ -27,7 +27,7 @@ function Screen({credential, ownerCredential, inRange, devicesState, loadingDevi
         <div className='screen-row'>
           {credential === 'owner' &&
           <div className='screen-element'>
-            <button onContextMenu={(e) => e.preventDefault()} className={`devices-button ${devicesState.teleCuarto.state === 'on' ? "screen-button--on" : "screen-button-off"}`} onClick={() => triggerDevice(devicesState.teleCuarto.id)}>{devicesState.teleCuarto.label}</button>
+            <button onContextMenu={(e) => e.preventDefault()} className={`screen-button ${devicesState.teleCuarto.state === 'on' ? "screen-button--on" : "screen-button-off"}`} onClick={() => triggerDevice(devicesState.teleCuarto.id)}>{devicesState.teleCuarto.label}</button>
           </div>
           }
           <div className='screen-element'>
