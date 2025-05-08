@@ -66,7 +66,7 @@ function Main() {
         loadingDevices.current = false;
       }
     ).catch(err => {});
-    // const inRange = await utils.current.getGeolocationPosition();
+    const inRange = await utils.current.getInRange();
     setInRange(inRange);
     gettingInRange.current = false;
   }, []);
