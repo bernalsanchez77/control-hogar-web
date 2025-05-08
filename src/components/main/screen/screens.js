@@ -33,7 +33,7 @@ function Screens({credential, ownerCredential, inRange, devicesState, loadingDev
         <div className='screens-row'>
           {credential === 'owner' &&
           <div className='screens-element'>
-            <button onContextMenu={(e) => e.preventDefault()} className={`screens-button ${controlSelected === 'on' ? "screens-button--on" : "screens-button-off"}`} onClick={() => triggerControl(devicesState.teleCuarto.id)}>{devicesState.teleCuarto.label}</button>
+            <button onContextMenu={(e) => e.preventDefault()} className={`screens-button ${controlSelected === devicesState.teleCuarto.id ? "screens-button--on" : "screens-button-off"}`} onClick={() => triggerControl(devicesState.teleCuarto.id)}>{devicesState.teleCuarto.label}</button>
           </div>
           }
           <div className='screens-element'>
