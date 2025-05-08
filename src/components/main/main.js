@@ -19,7 +19,7 @@ function Main() {
   const guestCredential = useRef('guest');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
-  const changeDevice = (device, change, nuevo) => {
+  const changeDevice = (device, change, value, nuevo) => {
     const devices = {...devicesState};
     if (typeof device === 'object') {
       device.forEach(item => {
@@ -28,7 +28,7 @@ function Main() {
         } else {
           // fetch('/api/sendIfttt?device=' + item + '&state=' + state);
         }
-        devices[item] = {...devices[item], change};
+        devices[item] = {...devices[item], change: value};
       });
     } else {
       if (nuevo) {
@@ -36,7 +36,7 @@ function Main() {
       } else {
         // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
       }
-     devices[device] = {...devices[device], change};
+     devices[device] = {...devices[device], change: value};
     }
     setDevicesState(devices);
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
