@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Screen from './screen/screen';
 import Devices from './devices/devices';
 import Credentials from './credentials/credentials';
@@ -17,9 +17,7 @@ function Main() {
   const ownerCredential = 'owner';
   const guestCredential = 'guest';
   const screenSize = `${window.screen.width}x${window.screen.height}`;
-  const user = useMemo(() => {
-    return utils.current.getUser(screenSize);
-  }, [screenSize]);
+  const user = useRef(screenSize);
 
   const changeDevice = (device, state, nuevo) => {
     const devices = {...devicesState};
