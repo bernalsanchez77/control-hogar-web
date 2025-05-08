@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import Screen from './screen/screen';
+import Screens from './screen/screens';
 import Devices from './devices/devices';
 import Credentials from './credentials/credentials';
 import { devicesOriginal } from '../../global/devices';
@@ -14,11 +14,15 @@ function Main() {
   const userActive = useRef(true);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const [inRange, setInRange] = useState(false);
+  const [controlSelected, setControlSelected] = useState('teleSala');
   const [credential, setCredential] = useState('');
   const ownerCredential = useRef('owner');
   const guestCredential = useRef('guest');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
+  const changeControl = (device) => {
+    setControlSelected(device);
+  }
   const changeDevice = (device, key, value, nuevo) => {
     const devices = {...devicesState};
     if (typeof device === 'object') {
@@ -129,14 +133,16 @@ function Main() {
         <div>
           {inRange || credential === ownerCredential.current ?
           <div>
-            <Screen
+            <Screens
               credential={credential}
               ownerCredential={ownerCredential.current}
               inRange={inRange}
               devicesState={devicesState}
               loadingDevices={loadingDevices}
-              changeDeviceParent={changeDevice}>
-            </Screen>
+              changeDeviceParent={changeDevice}
+              controlSelected={controlSelected}
+              changeControlParent={changeControl}>
+            </Screens>
             <Devices
               credential={credential}
               ownerCredential={ownerCredential.current}

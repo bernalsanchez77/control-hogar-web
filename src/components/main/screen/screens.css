@@ -1,17 +1,17 @@
-.screen {
+.screens {
   margin: 10px;
   display: inline-block;
 }
-.screen-row {
+.screens-row {
   display: inline-block;
 }
-.screen-element {
+.screens-element {
   float: left;
   width: 60px;
   margin: 5px;
 
 }
-.screen-button {
+.screens-button {
   font-size: 11px;
   padding: 3px;
   width: 100%;
@@ -21,10 +21,10 @@
   user-select: none;
   -webkit-user-select: none;
 }
-button.screen-button:active {
+button.screens-button:active {
   background-color: green;
   transition: background-color 0.1s;
 }
-.screen-button--on {
+.screens-button--on {
   border: green 2px solid;
 }
