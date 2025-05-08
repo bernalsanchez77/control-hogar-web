@@ -58,7 +58,6 @@ function Main() {
   }
 
   const getStates = useCallback(async () => {
-    console.log('corre');
     loadingDevices.current = true;
     gettingInRange.current = true;
     fetch('/api/getDevices').then(res => res.json()).then(
@@ -67,7 +66,7 @@ function Main() {
         loadingDevices.current = false;
       }
     ).catch(err => {});
-    const inRange = await utils.current.getGeolocationPosition();
+    // const inRange = await utils.current.getGeolocationPosition();
     setInRange(inRange);
     gettingInRange.current = false;
   }, []);
