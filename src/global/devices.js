@@ -11,6 +11,6 @@ export const devicesOriginal = {
     calentadorBlanco: {state: 'off', label: 'Calentador Amy', id: 'calentadorBlanco'},
     hdmiSala: {state: 'roku', label: {roku: 'Roku', cable: 'Cable'}, id: 'hdmiSala'},
     teleCuarto: {state: 'off', label: 'Tele Cuarto', id: 'teleCuarto', mute: 'off', channelSelected: 'none'},
-    teleSala: {state: 'off', label: 'Tele Cuarto', id: 'teleCuarto', mute: 'off', channelSelected: 'none'},
-    proyectorSala: {state: 'off', label: 'Tele Cuarto', id: 'teleCuarto', mute: 'off', channelSelected: 'none'}
+    teleSala: {state: 'off', label: 'Tele Sala', id: 'teleSala', mute: 'off', channelSelected: 'none'},
+    proyectorSala: {state: 'off', label: 'Proyector Sala', id: 'proyectorSala', mute: 'off', channelSelected: 'none'}
 };
