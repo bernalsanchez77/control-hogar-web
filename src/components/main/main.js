@@ -19,7 +19,7 @@ function Main() {
   const guestCredential = useRef('guest');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
-  const changeDevice = (device, state, nuevo) => {
+  const changeDevice = (device, change, nuevo) => {
     const devices = {...devicesState};
     if (typeof device === 'object') {
       device.forEach(item => {
@@ -28,7 +28,7 @@ function Main() {
         } else {
           // fetch('/api/sendIfttt?device=' + item + '&state=' + state);
         }
-        devices[item] = {...devices[item], state: state};
+        devices[item] = {...devices[item], change};
       });
     } else {
       if (nuevo) {
@@ -36,7 +36,7 @@ function Main() {
       } else {
         // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
       }
-     devices[device] = {...devices[device], state: state};
+     devices[device] = {...devices[device], change};
     }
     setDevicesState(devices);
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
@@ -130,7 +130,8 @@ function Main() {
           {inRange || credential === ownerCredential.current ?
           <div>
             <Screen
-              credential={credential}>
+              credential={credential}
+              devicesState={devicesState}>
             </Screen>
             <Devices
               credential={credential}
@@ -155,78 +156,5 @@ function Main() {
     </div>
   );
 }
-
-// class Main extends Component {
-//   constructor() {
-//     super();
-//     const devices = {
-//       lamparaComedor: {state: 'off', label: 'Lampara Comedor', id: 'lamparaComedor'},
-//       lamparaSala: {state: 'off', label: 'Lampara Sala', id: 'lamparaSala'},
-//       lamparaTurca: {state: 'off', label: 'Lampara Turca', id: 'lamparaTurca'},
-//       lamparaLava: {state: 'off', label: 'Lampara Lava', id: 'lamparaLava'},
-//       lamparaRotatoria: {state: 'off', label: 'Lampara Rotatoria', id: 'lamparaRotatoria'},
-//       chimenea: {state: 'off', label: 'Chimenea', id: 'chimenea'},
-//       lamparasAbajo: {state: 'off', label: 'Lamparas Abajo', id: 'lamparasAbajo'},
-//       parlantesSala: {state: 'off', label: 'Parlantes Sala', id: 'parlantesSala'},
-//       palentadorNegro: {state: 'off', label: 'Calentador Lizzie', id: 'calentadorNegro'},
-//       calentadorBlanco: {state: 'off', label: 'Calentador Amy', id: 'calentadorBlanco'},
-//       proyectorMute: {state: 'off', label: 'Proyector Mute', id: 'proyectorMute'},
-//       salaMute: {state: 'off', label: 'Sala Mute', id: 'salaMute'},
-//       cuartoMute: {state: 'off', label: 'Cuarto Mute', id: 'cuartoMute'},
-//       hdmi: {state: 'roku', label: 'Roku', id: 'hdmi'}
-//   };
-//     this.state = {devices: devices, devicesOriginal: devices};
-//     this.init();
-//   }
-//   async init() {
-//     this.getStates();
-//     setInterval(() => {this.getStates();}, 5000);
-//   }
-//   async getStates() {
-//     fetch('/api/getDevices').then(res => res.json()).then(
-//       devices => {this.setState({devices: this.getUpdatedDevices(devices)})}
-//     ).catch(err => {});
-//   }
-//   getUpdatedDevices(devices) {
-//     const updatedDevices = {};
-//     for (let device in this.state.devices) {
-//       updatedDevices[device] = {...this.state.devices[device], state: devices[device].state};
-//     }
-//     return updatedDevices;
-//   }
-//   async changeDevice(device, state) {
-//     // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
-//     this.setState(prev => ({devices: {...prev.devices, [device]: {...this.state.devices[device], state: state}}}), () => {
-//       const devices = this.state.devices;
-//       fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
-//     });
-//   }
-//   async triggerDevice(device) {
-//     if (this.state.devices[device].state === 'on') {
-//       this.changeDevice(device, 'off');
-//     } else {
-//       this.changeDevice(device, 'on');
-//     }
-//   }
-//   resetDevices() {
-//     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(this.state.devicesOriginal)});
-//   }
-//   render() {
-//     return (
-//       <div>
-//         <Screen></Screen>
-//         <div>
-//         <button onClick={() => this.triggerDevice(this.state.devices.lamparaComedor.id)}>{this.state.devices.lamparaComedor.label} {this.state.devices.lamparaComedor.state}</button>
-//         </div>
-//         <div>
-//         <button onClick={() => this.triggerDevice(this.state.devices.lamparaTurca.id)}>{this.state.devices.lamparaTurca.label} {this.state.devices.lamparaTurca.state}</button>
-//         </div>
-//         <div>
-//         <button onClick={() => this.resetDevices()}>Reset</button>
-//         </div>
-//       </div>
-//     );
-//   }
-// }
 
 export default Main;

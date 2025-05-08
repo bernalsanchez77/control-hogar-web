@@ -9,8 +9,8 @@ export const devicesOriginal = {
     parlantesSala: {state: 'off', label: 'Parlantes Sala', id: 'parlantesSala'},
     calentadorNegro: {state: 'off', label: 'Calentador Lizzie', id: 'calentadorNegro'},
     calentadorBlanco: {state: 'off', label: 'Calentador Amy', id: 'calentadorBlanco'},
-    proyectorMute: {state: 'off', label: 'Proyector Mute', id: 'proyectorMute'},
-    salaMute: {state: 'off', label: 'Sala Mute', id: 'salaMute'},
-    cuartoMute: {state: 'off', label: 'Cuarto Mute', id: 'cuartoMute'},
-    hdmiSala: {state: 'roku', label: {roku: 'Roku', cable: 'Cable'}, id: 'hdmiSala'}
+    hdmiSala: {state: 'roku', label: {roku: 'Roku', cable: 'Cable'}, id: 'hdmiSala'},
+    teleCuarto: {state: 'off', label: 'Tele Cuarto', id: 'teleCuarto', mute: 'off', channelSelected: 'none'},
+    teleSala: {state: 'off', label: 'Tele Cuarto', id: 'teleCuarto', mute: 'off', channelSelected: 'none'},
+    proyectorSala: {state: 'off', label: 'Tele Cuarto', id: 'teleCuarto', mute: 'off', channelSelected: 'none'}
 };

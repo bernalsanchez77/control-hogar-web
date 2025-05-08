@@ -4,10 +4,10 @@ import './calentadorBlanco.css';
 function CalentadorBlanco({devicesState, triggerDeviceParent}) {
   const triggerDevice = (device) => {
     if (devicesState[device].state === 'on') {
-      triggerDeviceParent(device, 'off');
+      triggerDeviceParent(device, {state: 'off'});
     }
     if (devicesState[device].state === 'off') {
-      triggerDeviceParent(device, 'on');
+      triggerDeviceParent(device, {state: 'on'});
     }
   }
 
