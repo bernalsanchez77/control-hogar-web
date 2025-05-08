@@ -18,7 +18,6 @@ class Utils {
             (error) => reject(error),
             {
               enableHighAccuracy: false,
-              timeout: 5000,
               maximumAge: 0
             });
         });
