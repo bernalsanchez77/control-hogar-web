@@ -80,5 +80,12 @@ class Utils {
         inRange =false;
         return inRange;
     }
+    sendLogs(message) {
+      fetch('/api/sendLogs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({message: message}),
+      });
+    }
 }
 export default Utils;

@@ -76,20 +76,12 @@ function Main() {
 
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = () => {
+      let message = '';
       if (document.visibilityState === 'visible') {
-        fetch('/api/sendLogs', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: 'Usuario volvio a la pestaña' }),
-        });
-        console.log('Volvió a la pestaña');
+        message = 'Usuario salio de la pestaña';
       } else {
-        fetch('/api/sendLogs', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: 'Usuario salio de la pestaña' }),
-        });
-        console.log('Salió de la pestaña');
+        message = 'Usuario regreso a la pestaña';
+        utils.current.sendLogs(message);
       }
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
