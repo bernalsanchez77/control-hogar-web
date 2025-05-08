@@ -14,7 +14,7 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
     devicesState.lamparaTurca.id,
     devicesState.lamparaRotatoria.id,
     devicesState.chimeneaSala.id,
-  ], []);
+  ], [devicesState]);
   const setLamparasState = useCallback(async () => {
     let lamps = 0;
     lamparasOff.forEach(lampara => {

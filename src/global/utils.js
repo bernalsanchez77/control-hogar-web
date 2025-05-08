@@ -43,18 +43,11 @@ class Utils {
       });
     }
     getIpApiPosition() {
-        return new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         fetch('https://ipapi.co/json/')
         .then(res => res.json())
-        .then(data => {
-          resolve(data);
-          console.log('Ubicación aproximada:', data.latitude, data.longitude);
-        })
-        .catch(err => {
-        reject(err);
-          console.error('Error al obtener ubicación por IP:', err);
-        });
-    });
+        .then(data => {resolve(data);}).catch(err => {reject(err);});
+      });
     }
     async getGeolocationPosition() {
         let inRange = false;
