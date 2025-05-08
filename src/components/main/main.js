@@ -18,7 +18,7 @@ function Main() {
   const ownerCredential = 'owner';
   const guestCredential = 'guest';
   const screenSize = `${window.screen.width}x${window.screen.height}`;
-  const user = useRef(utils.getUser(screenSize));
+  const user = useRef(utils.current.getUser(screenSize));
 
   const changeDevice = (device, state, nuevo) => {
     const devices = {...devicesState};
