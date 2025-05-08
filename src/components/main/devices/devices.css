@@ -20,7 +20,7 @@
   border-radius: 5px;
 }
 button:active {
-  background-color: #6366f1; /* color cuando se hace click */
+  background-color: green;
   transition: background-color 0.1s;
 }
 .devices-button--on {
