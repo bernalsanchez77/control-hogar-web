@@ -131,7 +131,11 @@ function Main() {
           <div>
             <Screen
               credential={credential}
-              devicesState={devicesState}>
+              ownerCredential={ownerCredential.current}
+              inRange={inRange}
+              devicesState={devicesState}
+              loadingDevices={loadingDevices}
+              changeDeviceParent={changeDevice}>
             </Screen>
             <Devices
               credential={credential}
@@ -141,11 +145,11 @@ function Main() {
               loadingDevices={loadingDevices}
               changeDeviceParent={changeDevice}>
             </Devices>
-            <div>
+            {/* <div>
               <button onClick={resetDevices}>
                 Reset
               </button>
-            </div>
+            </div> */}
           </div> :
           <div>
             <span style={{color: "white"}}>Fuera del Area Permitida</span>

@@ -8,11 +8,10 @@ import ParlantesSala from './parlantesSala/parlantesSala';
 import HdmiSala from './hdmiSala/hdmiSala';
 import CalentadorNegro from './calentadorNegro/calentadorNegro';
 import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
-import './devices.css';
 import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
+import './devices.css';
 
 function Devices({credential, ownerCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
-  console.log(ownerCredential);
   const triggerDevice = (device, key, value, nuevo) => {
     if (inRange || (credential === ownerCredential)) {
       if (!loadingDevices.current) {
