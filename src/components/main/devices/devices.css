@@ -18,6 +18,8 @@
   border: transparent 3px solid;
   height: 40px;
   border-radius: 5px;
+  user-select: none;
+  -webkit-user-select: none;
 }
 button:active {
   background-color: green;
@@ -26,8 +28,3 @@ button:active {
 .devices-button--on {
   border: green 3px solid;
 }
-.no-select {
-  user-select: none;       /* estándar */
-  -webkit-user-select: none; /* Safari */
-}
-  
