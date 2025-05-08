@@ -2,7 +2,7 @@ import React from 'react';
 import './screen.css';
 
 function Screen({credential, ownerCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
-  const triggerDevice = (device, key, value) => {
+  const triggerDeviceParent = (device, key, value) => {
     if (inRange || (credential === ownerCredential)) {
       if (!loadingDevices.current) {
         changeDeviceParent(device, key, value);
@@ -13,7 +13,14 @@ function Screen({credential, ownerCredential, inRange, devicesState, loadingDevi
       }
     }
   }
-
+  const triggerDevice = (device) => {
+    if (devicesState[device].state === 'on') {
+      triggerDeviceParent(device, 'state', 'off');
+    }
+    if (devicesState[device].state === 'off') {
+      triggerDeviceParent(device, 'state', 'on');
+    }
+  }
   return (
     <div>
       <div className='screen'>
