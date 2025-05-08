@@ -26,4 +26,8 @@ button:active {
 .devices-button--on {
   border: green 3px solid;
 }
+.no-select {
+  user-select: none;       /* estándar */
+  -webkit-user-select: none; /* Safari */
+}
   

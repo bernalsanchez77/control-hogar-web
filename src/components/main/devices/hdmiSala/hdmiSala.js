@@ -14,7 +14,7 @@ function HdmiSala({devicesState, triggerDeviceParent}) {
   return (
     <div className="hdmiSala">
       <div>
-        <button className="devices-button devices-button-off" onClick={() => triggerDevice(devicesState.hdmiSala.id)}>{devicesState.hdmiSala.label[devicesState.hdmiSala.state]}</button>
+        <button className="no-select devices-button devices-button-off" onClick={() => triggerDevice(devicesState.hdmiSala.id)}>{devicesState.hdmiSala.label[devicesState.hdmiSala.state]}</button>
       </div>
     </div>
   );
