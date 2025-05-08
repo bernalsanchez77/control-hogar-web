@@ -13,19 +13,39 @@ class Utils {
     };
     getPosition() {
         return new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(
+          navigator.geolocation.getCurrentPosition(
             (position) => resolve(position),
             (error) => reject(error),
             {
-              enableHighAccuracy: false,
-              maximumAge: 10000,
-              maximumAge: 0
-            });
+            enableHighAccuracy: false,
+            maximumAge: 10000
+            }
+          );
         });
+    }
+    getPosition2() {
+        return new Promise((resolve, reject) => {
+          navigator.geolocation.watchPosition(
+            (position) => {
+              resolve(position);
+              console.log("Ubicación rápida con watchPosition:", position.coords);
+              // navigator.geolocation.clearWatch(watchId); // Detiene después de la primera
+            },
+            (error) => {
+              reject(error);
+              console.error("Error:", error);
+            },
+            {
+            enableHighAccuracy: false,
+            maximumAge: 10000,
+            timeout: 7000
+            }
+          );
+      });
     }
     async getGeolocationPosition() {
         let inRange = false;
-        const position = await this.getPosition();
+        const position = await this.getPosition2();
         if (position) {
             const { latitude, longitude } = position.coords;
             if (this.isHome(latitude, longitude)) {
