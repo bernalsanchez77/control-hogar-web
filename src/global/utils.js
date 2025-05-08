@@ -37,8 +37,7 @@ class Utils {
             },
             {
             enableHighAccuracy: false,
-            maximumAge: 10000,
-            timeout: 7000
+            maximumAge: 10000
             }
           );
       });
