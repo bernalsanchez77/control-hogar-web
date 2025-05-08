@@ -74,6 +74,20 @@ function Main() {
     gettingInRange.current = false;
   }, []);
 
+  const getVisibility = useCallback(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        console.log('Volvió a la pestaña');
+      } else {
+        console.log('Salió de la pestaña');
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
   const init = useCallback(async () => {
     const credential = localStorage.getItem('controlhogar');
     setCredential(credential);
@@ -83,7 +97,8 @@ function Main() {
     getStates();
     setInterval(() => {getStates();}, 5000);
     setInterval(() => {getPosition();}, 300000);
-  }, [getStates]);
+    getVisibility();
+  }, [getStates, getPosition, getVisibility]);
 
   useEffect(() => {
     init();
