@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import Screen from './screen/screen';
 import Devices from './devices/devices';
 import Credentials from './credentials/credentials';
@@ -15,7 +15,9 @@ function Main() {
   const [credential, setCredential] = useState('');
   const ownerCredential = 'owner';
   const guestCredential = 'guest';
-
+  const user = useMemo(() => {
+    return utils.current.getUser(`${window.screen.width}x${window.screen.height}`);
+  }, []);
   const changeDevice = (device, state, nuevo) => {
     const devices = {...devicesState};
     if (typeof device === 'object') {
@@ -77,11 +79,10 @@ function Main() {
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = () => {
       let message = '';
-      const usuario =  window.screen.width + 'x' + window.screen.height;
       if (document.visibilityState === 'visible') {
-        message = usuario + ' salio';
+        message = user + ' salio';
       } else {
-        message = usuario + ' regreso';
+        message = user + ' regreso';
       }
       utils.current.sendLogs(message);
     };
@@ -89,7 +90,7 @@ function Main() {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, []);
+  }, [user]);
 
   const init = useCallback(async () => {
     const credential = localStorage.getItem('controlhogar');
@@ -100,10 +101,9 @@ function Main() {
     getStates();
     setInterval(() => {getStates();}, 5000);
     setInterval(() => {getPosition();}, 300000);
-    const usuario = utils.current.getUser(window.screen.width + 'x' + window.screen.height);
-    utils.current.sendLogs(usuario + ' inicio');
+    utils.current.sendLogs(user + ' inicio');
     getVisibility();
-  }, [getStates, getPosition, getVisibility]);
+  }, [getStates, getPosition, getVisibility, user]);
 
   useEffect(() => {
     init();
