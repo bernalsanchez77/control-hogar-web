@@ -44,7 +44,7 @@ class Utils {
     }
     async getGeolocationPosition() {
         let inRange = false;
-        const position = await this.getPosition2();
+        const position = await this.getPosition();
         if (position) {
             const { latitude, longitude } = position.coords;
             if (this.isHome(latitude, longitude)) {
