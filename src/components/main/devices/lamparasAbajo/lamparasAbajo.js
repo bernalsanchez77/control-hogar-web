@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useMemo} from 'react';
 import './lamparasAbajo.css';
 
 function LamparasAbajo({devicesState, triggerDeviceParent}) {
@@ -8,13 +8,13 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
     devicesState.lamparaSala.id,
     devicesState.chimeneaSala.id
   ];
-  const lamparasOff = [
+  const lamparasOff = useMemo(() => [
     devicesState.lamparaComedor.id,
     devicesState.lamparaSala.id,
     devicesState.lamparaTurca.id,
     devicesState.lamparaRotatoria.id,
     devicesState.chimeneaSala.id,
-  ];
+  ], []);
   const setLamparasState = useCallback(async () => {
     let lamps = 0;
     lamparasOff.forEach(lampara => {
@@ -27,7 +27,7 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
     } else {
       setState('off');
     }
-  }, [devicesState]);
+  }, [devicesState, lamparasOff]);
   const triggerDevice = () => {
     let lamp = [];
     if (state === 'on') {
