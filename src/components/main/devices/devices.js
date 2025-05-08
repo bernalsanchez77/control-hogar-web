@@ -57,8 +57,8 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
             triggerDeviceParent={triggerDevice}>
           </ChimeneaSala>
         </div>
-      </div>
-      <div className='devices-row'>
+      {/* </div> */}
+      {/* <div className='devices-row'> */}
         <div className='devices-element'>
           <HdmiSala
             devicesState={devicesState}
