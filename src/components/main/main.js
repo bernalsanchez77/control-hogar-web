@@ -58,6 +58,7 @@ function Main() {
   }
 
   const getStates = useCallback(async () => {
+    console.log('corre');
     loadingDevices.current = true;
     gettingInRange.current = true;
     fetch('/api/getDevices').then(res => res.json()).then(
@@ -75,9 +76,7 @@ function Main() {
     const credential = localStorage.getItem('controlhogar');
     setCredential(credential);
     utils.current = new Utils();
-    alert('va a traer geo');
     const inRange = await utils.current.getGeolocationPosition();
-    alert('geo ready');
     setInRange(inRange);
     getStates();
     setInterval(() => {getStates();}, 5000);
