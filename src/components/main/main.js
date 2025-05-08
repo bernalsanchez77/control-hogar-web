@@ -58,18 +58,14 @@ function Main() {
   }
 
   const getStates = useCallback(async () => {
-    alert('va a traer');
     loadingDevices.current = true;
     gettingInRange.current = true;
     fetch('/api/getDevices').then(res => res.json()).then(
       devices => {
-        alert('devices brought');
         setDevicesState(devices);
         loadingDevices.current = false;
       }
-    ).catch(err => {
-      alert('fallo');
-    });
+    ).catch(err => {});
     const inRange = await utils.current.getGeolocationPosition();
     setInRange(inRange);
     gettingInRange.current = false;
@@ -79,7 +75,9 @@ function Main() {
     const credential = localStorage.getItem('controlhogar');
     setCredential(credential);
     utils.current = new Utils();
+    alert('va a traer geo');
     const inRange = await utils.current.getGeolocationPosition();
+    alert('geo ready');
     setInRange(inRange);
     getStates();
     setInterval(() => {getStates();}, 5000);
