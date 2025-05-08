@@ -62,6 +62,7 @@ function Main() {
     gettingInRange.current = true;
     fetch('/api/getDevices').then(res => res.json()).then(
       devices => {
+        alert('devices brought');
         setDevicesState(devices);
         loadingDevices.current = false;
       }
