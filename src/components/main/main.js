@@ -15,10 +15,9 @@ function Main() {
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const [inRange, setInRange] = useState(false);
   const [credential, setCredential] = useState('');
-  const ownerCredential = 'owner';
-  const guestCredential = 'guest';
-  const screenSize = `${window.screen.width}x${window.screen.height}`;
-  const user = useRef(utils.current.getUser(screenSize));
+  const ownerCredential = useRef('owner');
+  const guestCredential = useRef('guest');
+  const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
   const changeDevice = (device, state, nuevo) => {
     const devices = {...devicesState};
@@ -44,7 +43,7 @@ function Main() {
   }
 
   const setCredentials = async (credential) => {
-    if (credential === guestCredential) {
+    if (credential === guestCredential.current) {
       localStorage.setItem('controlhogar', credential);
       setCredential(credential);
     } else {
@@ -55,8 +54,8 @@ function Main() {
       });
       const data = await res.json();
       if (data.success) {
-        localStorage.setItem('controlhogar', ownerCredential);
-        setCredential(ownerCredential);
+        localStorage.setItem('controlhogar', ownerCredential.current);
+        setCredential(ownerCredential.current);
       }
     }
   }
@@ -123,19 +122,19 @@ function Main() {
     <div className="main">
       <Credentials
         credential={credential}
-        guestCredential={guestCredential}
+        guestCredential={guestCredential.current}
         setCredentialsParent={setCredentials}>
       </Credentials>
       {credential &&
         <div>
-          {inRange || credential === ownerCredential ?
+          {inRange || credential === ownerCredential.current ?
           <div>
             <Screen
               credential={credential}>
             </Screen>
             <Devices
               credential={credential}
-              guestCredential={ownerCredential}
+              ownerCredential={ownerCredential.current}
               inRange={inRange}
               devicesState={devicesState}
               loadingDevices={loadingDevices}
