@@ -13,13 +13,13 @@ import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
 
 function Devices({credential, ownerCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
   console.log(ownerCredential);
-  const triggerDevice = (device, change, value, nuevo) => {
+  const triggerDevice = (device, key, value, nuevo) => {
     if (inRange || (credential === ownerCredential)) {
       if (!loadingDevices.current) {
-        changeDeviceParent(device, change, value, nuevo);
+        changeDeviceParent(device, key, value, nuevo);
       } else {
         setTimeout(() => {
-            triggerDevice(device, change, value, nuevo);
+            triggerDevice(device, key, value, nuevo);
         }, 1000);
       }
     }
