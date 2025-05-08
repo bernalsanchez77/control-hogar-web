@@ -18,6 +18,7 @@ class Utils {
             (error) => reject(error),
             {
               enableHighAccuracy: false,
+              maximumAge: 10000,
               maximumAge: 0
             });
         });
