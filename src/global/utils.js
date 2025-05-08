@@ -15,8 +15,12 @@ class Utils {
         return new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(
             (position) => resolve(position),
-            (error) => reject(error)
-            );
+            (error) => reject(error),
+            {
+              enableHighAccuracy: false,
+              timeout: 5000,
+              maximumAge: 0
+            });
         });
     }
     async getGeolocationPosition() {
@@ -26,10 +30,8 @@ class Utils {
             const { latitude, longitude } = position.coords;
             if (this.isHome(latitude, longitude)) {
                 inRange = true;
-                console.log('in range');
             } else {
                 inRange = false;
-                console.log('not in range');
             }
             return inRange;
         };
