@@ -62,13 +62,15 @@ function Main() {
   }
 
   const getStates = useCallback(async () => {
-    loadingDevices.current = true;
-    fetch('/api/getDevices').then(res => res.json()).then(
-      devices => {
-        setDevicesState(devices);
-        loadingDevices.current = false;
-      }
-    ).catch(err => {});
+    if (userActive.current) {
+      loadingDevices.current = true;
+      fetch('/api/getDevices').then(res => res.json()).then(
+        devices => {
+          setDevicesState(devices);
+          loadingDevices.current = false;
+        }
+      ).catch(err => {});
+    }
   }, []);
 
   const getPosition = useCallback(async () => {
