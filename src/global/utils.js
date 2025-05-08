@@ -87,5 +87,14 @@ class Utils {
         body: JSON.stringify({message: message}),
       });
     }
+    getUser(screenSize) {
+      if (screenSize === '393x873') {
+        return 'Bernal Cel';
+      } else if (screenSize === '672x1060') {
+        return 'Bernal Pc';
+      } else {
+        return 'Invitado';
+      }
+    }
 }
 export default Utils;

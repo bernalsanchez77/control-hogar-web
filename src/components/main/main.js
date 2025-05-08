@@ -100,7 +100,7 @@ function Main() {
     getStates();
     setInterval(() => {getStates();}, 5000);
     setInterval(() => {getPosition();}, 300000);
-    const usuario =  window.screen.width + 'x' + window.screen.height;
+    const usuario = utils.current.getUser(window.screen.width + 'x' + window.screen.height);
     utils.current.sendLogs(usuario + ' inicio');
     getVisibility();
   }, [getStates, getPosition, getVisibility]);
