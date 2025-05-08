@@ -22,8 +22,6 @@ function Screens({credential, ownerCredential, inRange, devicesState, loadingDev
     }
   }
   const triggerControl = (control) => {
-    console.log(control);
-    console.log(controlSelected);
     if (controlSelected !== control) {
       changeControlParent(control);
     }
@@ -38,10 +36,10 @@ function Screens({credential, ownerCredential, inRange, devicesState, loadingDev
           </div>
           }
           <div className='screens-element'>
-            <button className='screens-button'>Sala</button>
+          <button onContextMenu={(e) => e.preventDefault()} className={`screens-button ${controlSelected === devicesState.teleSala.id ? "screens-button--on" : "screens-button-off"}`} onClick={() => triggerControl(devicesState.teleSala.id)}>{devicesState.teleSala.label}</button>
             </div>
           <div className='screens-element'>
-            <button className='screens-button'>Proyector</button>
+          <button onContextMenu={(e) => e.preventDefault()} className={`screens-button ${controlSelected === devicesState.proyectorSala.id ? "screens-button--on" : "screens-button-off"}`} onClick={() => triggerControl(devicesState.proyectorSala.id)}>{devicesState.proyectorSala.label}</button>
           </div>
           <div className='screens-element'>
             <button onContextMenu={(e) => e.preventDefault()} className={`screens-button ${devicesState.teleCuarto.state === 'on' ? "screens-button--on" : "screens-button-off"}`} onClick={() => triggerDevice(devicesState.teleCuarto.id)}>{devicesState.teleCuarto.label}</button>
