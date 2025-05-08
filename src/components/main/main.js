@@ -8,6 +8,7 @@ import './main.css';
 
 function Main() {
   const utils = useRef({});
+  utils.current = new Utils();
   const loadingDevices = useRef(false);
   const gettingInRange = useRef(false);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
@@ -15,9 +16,11 @@ function Main() {
   const [credential, setCredential] = useState('');
   const ownerCredential = 'owner';
   const guestCredential = 'guest';
+  const screenSize = `${window.screen.width}x${window.screen.height}`;
   const user = useMemo(() => {
-    return utils.current.getUser(`${window.screen.width}x${window.screen.height}`);
-  }, []);
+    return utils.current.getUser(screenSize);
+  }, [screenSize]);
+
   const changeDevice = (device, state, nuevo) => {
     const devices = {...devicesState};
     if (typeof device === 'object') {
@@ -95,7 +98,6 @@ function Main() {
   const init = useCallback(async () => {
     const credential = localStorage.getItem('controlhogar');
     setCredential(credential);
-    utils.current = new Utils();
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
     getStates();
