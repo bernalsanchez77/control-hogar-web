@@ -42,9 +42,23 @@ class Utils {
           );
       });
     }
+    getPosition3() {
+        return new Promise((resolve, reject) => {
+        fetch('https://ipapi.co/json/')
+        .then(res => res.json())
+        .then(data => {
+          resolve(data);
+          console.log('Ubicación aproximada:', data.latitude, data.longitude);
+        })
+        .catch(err => {
+        reject(err);
+          console.error('Error al obtener ubicación por IP:', err);
+        });
+    });
+    }
     async getGeolocationPosition() {
         let inRange = false;
-        const position = await this.getPosition();
+        const position = await this.getPosition3();
         if (position) {
             const { latitude, longitude } = position.coords;
             if (this.isHome(latitude, longitude)) {
