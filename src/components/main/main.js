@@ -11,6 +11,7 @@ function Main() {
   utils.current = new Utils();
   const loadingDevices = useRef(false);
   const gettingInRange = useRef(false);
+  const userActive = useRef(true);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const [inRange, setInRange] = useState(false);
   const [credential, setCredential] = useState('');
@@ -71,19 +72,23 @@ function Main() {
   }, []);
 
   const getPosition = useCallback(async () => {
-    gettingInRange.current = true;
-    const inRange = await utils.current.getInRange();
-    setInRange(inRange);
-    gettingInRange.current = false;
+    if (userActive.current) {
+      gettingInRange.current = true;
+      const inRange = await utils.current.getInRange();
+      setInRange(inRange);
+      gettingInRange.current = false;
+    }
   }, []);
 
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = () => {
       let message = '';
       if (document.visibilityState === 'visible') {
-        message = user + ' salio';
+        userActive.current = true;
+        message = user.current + ' regreso';
       } else {
-        message = user + ' regreso';
+        userActive.current = false;
+        message = user.current + ' salio';
       }
       utils.current.sendLogs(message);
     };
@@ -101,7 +106,7 @@ function Main() {
     getStates();
     setInterval(() => {getStates();}, 5000);
     setInterval(() => {getPosition();}, 300000);
-    utils.current.sendLogs(user + ' inicio');
+    utils.current.sendLogs(user.current + ' entro');
     getVisibility();
   }, [getStates, getPosition, getVisibility, user]);
 
