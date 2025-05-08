@@ -1,8 +1,8 @@
 class Utils {
     isHome(lat, lon) {
-        const latCentro = 9.9622781;
-        const lonCentro = -84.0783371;
-        const tolerancia = 0.05; // Aproximadamente 5-6 km de margen
+        const latCentro = 9.9333;
+        const lonCentro = -84.0845;
+        const tolerancia = 0.03; // Aproximadamente 5-6 km de margen
     
         return (
         lat >= latCentro - tolerancia &&
