@@ -77,12 +77,13 @@ function Main() {
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = () => {
       let message = '';
+      const usuario =  window.screen.width + 'x' + window.screen.height;
       if (document.visibilityState === 'visible') {
-        message = 'Usuario salio de la pestaña';
+        message = usuario + ' salio';
       } else {
-        message = 'Usuario regreso a la pestaña';
-        utils.current.sendLogs(message);
+        message = usuario + ' regreso';
       }
+      utils.current.sendLogs(message);
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => {
@@ -99,6 +100,8 @@ function Main() {
     getStates();
     setInterval(() => {getStates();}, 5000);
     setInterval(() => {getPosition();}, 300000);
+    const usuario =  window.screen.width + 'x' + window.screen.height;
+    utils.current.sendLogs(usuario + ' inicio');
     getVisibility();
   }, [getStates, getPosition, getVisibility]);
 
