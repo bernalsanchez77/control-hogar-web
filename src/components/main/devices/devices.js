@@ -5,7 +5,6 @@ import LamparaSala from './lamparaSala/lamparaSala';
 import LamparaRotatoria from './lamparaRotatoria/lamparaRotatoria';
 import ChimeneaSala from './chimeneaSala/chimeneaSala';
 import ParlantesSala from './parlantesSala/parlantesSala';
-import HdmiSala from './hdmiSala/hdmiSala';
 import CalentadorNegro from './calentadorNegro/calentadorNegro';
 import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import LamparasAbajo from './lamparasAbajo/lamparasAbajo';

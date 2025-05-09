@@ -102,7 +102,10 @@ function Main() {
     };
   }, [user]);
   const init = useCallback(async () => {
-    setScreenSelected(localStorage.getItem('screen'));
+    const localStorageScreen = localStorage.getItem('screen');
+    if (localStorageScreen) {
+      setScreenSelected(localStorageScreen);
+    }
     setCredential(localStorage.getItem('user'));
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
