@@ -2,7 +2,7 @@ import React from 'react';
 import Top from './top/top';
 import './controls.css';
 
-function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, controlSelected, changeControlParent}) {
+function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, changeControlParent}) {
   const triggerControl = (control, key, value) => {
     if (inRange || (credential === ownerCredential)) {
       if (!loadingDevices.current) {
@@ -20,7 +20,7 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
       <div className='controls'>
         <Top
           devicesState={devicesState}
-          controlSelected={controlSelected}
+          screenSelected={screenSelected}
           triggerControlParent={triggerControl}>
         </Top>
       </div>

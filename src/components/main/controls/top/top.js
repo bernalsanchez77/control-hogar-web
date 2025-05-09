@@ -1,7 +1,7 @@
 import React from 'react';
 import './top.css';
 
-function Controls({devicesState, controlSelected, triggerControlParent}) {
+function Controls({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (control) => {
     if (devicesState[control].state === 'on') {
       triggerControlParent(control, 'state', 'off');
@@ -14,7 +14,7 @@ function Controls({devicesState, controlSelected, triggerControlParent}) {
     <div>
       <div className='controls-row'>
         <div className='controls-element'>
-          <button onContextMenu={(e) => e.preventDefault()} className={`controls-button ${devicesState[controlSelected].state === 'on' ? "controls-button--on" : "controls-button-off"}`} onClick={() => triggerControl(devicesState[controlSelected].id)}>{devicesState[controlSelected].state}</button>
+          <button onContextMenu={(e) => e.preventDefault()} className={`controls-button ${devicesState[screenSelected].state === 'on' ? "controls-button--on" : "controls-button-off"}`} onClick={() => triggerControl(devicesState[screenSelected].id)}>{devicesState[screenSelected].state}</button>
         </div>
       </div>
     </div>
