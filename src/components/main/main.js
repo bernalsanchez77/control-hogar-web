@@ -141,7 +141,7 @@ function Main() {
               devicesState={devicesState}
               loadingDevices={loadingDevices}
               screenSelected={screenSelected}
-              changeControlParent={changeScreen}>
+              changeScreenParent={changeScreen}>
             </Screens>
             <Controls
               credential={credential}
@@ -149,8 +149,8 @@ function Main() {
               inRange={inRange}
               devicesState={devicesState}
               loadingDevices={loadingDevices}
-              changeControlParent={changeControl}
-              screenSelected={screenSelected}>
+              screenSelected={screenSelected}
+              changeControlParent={changeControl}>
             </Controls>
             <Devices
               credential={credential}
