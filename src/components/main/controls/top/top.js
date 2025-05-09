@@ -18,6 +18,8 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
       triggerControlParent(device, 'state', 'roku');
     }
   }
+  const triggerInput = (input) => {
+  }
   return (
     <div>
       <div className='controls-row'>
@@ -27,7 +29,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
             className={`controls-top-button ${devicesState[screenSelected].state === 'on' ? "controls-button--on" : "controls-button-off"}`}
             onClick={() => triggerPower(devicesState[screenSelected].id)}>
               {devicesState[screenSelected].state}
-            </button>
+          </button>
         </div>
         <div className='controls-element'>
           <button
@@ -35,6 +37,14 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
             className="controls-top-button controls-top-button-off"
             onClick={() => triggerHdmi(devicesState.hdmiSala.id)}>
               {devicesState.hdmiSala.label[devicesState.hdmiSala.state]}
+          </button>
+        </div>
+        <div className='controls-element'>
+          <button
+            onContextMenu={(e) => e.preventDefault()}
+            className={`controls-top-button`}
+            onClick={() => triggerInput()}>
+              Input
           </button>
         </div>
       </div>
