@@ -7,7 +7,7 @@ export default async function handler(req, res) {
       let response = '';
       if (nuevo) {
         console.log('ifttt: ', 'https://maker.ifttt.com/trigger/' + device + '/with/key/' + key + '?value1=' + state);
-        response = await fetch('https://maker.ifttt.com/trigger/' + device + '/with/key/' + key + '?value1=' + state);
+        // response = await fetch('https://maker.ifttt.com/trigger/' + device + '/with/key/' + key + '?value1=' + state);
       } else {
         response = await fetch('https://maker.ifttt.com/trigger/' + deviceUpperCase + stateUpperCase + '/with/key/' + key);
       }
