@@ -141,7 +141,6 @@ function Main() {
               inRange={inRange}
               devicesState={devicesState}
               loadingDevices={loadingDevices}
-              changeDeviceParent={changeDevice}
               controlSelected={controlSelected}
               changeControlParent={changeControl}>
             </Screens>

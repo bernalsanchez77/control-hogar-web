@@ -1,29 +1,16 @@
 import React from 'react';
 import './screens.css';
 
-function Screens({credential, ownerCredential, inRange, devicesState, loadingDevices, changeDeviceParent, controlSelected, changeControlParent}) {
-  const triggerDeviceParent = (device, key, value) => {
-    if (inRange || (credential === ownerCredential)) {
+function Screens({credential, ownerCredential, inRange, devicesState, loadingDevices, controlSelected, changeControlParent}) {
+  const triggerControl = (control) => {
+    if (inRange || (credential === ownerCredential && controlSelected !== control)) {
       if (!loadingDevices.current) {
-        changeDeviceParent(device, key, value);
+        changeControlParent(control);
       } else {
         setTimeout(() => {
-            triggerDevice(device, key, value);
+          changeControlParent(control);
         }, 1000);
       }
-    }
-  }
-  const triggerDevice = (device) => {
-    if (devicesState[device].state === 'on') {
-      triggerDeviceParent(device, 'state', 'off');
-    }
-    if (devicesState[device].state === 'off') {
-      triggerDeviceParent(device, 'state', 'on');
-    }
-  }
-  const triggerControl = (control) => {
-    if (controlSelected !== control) {
-      changeControlParent(control);
     }
   }
   return (
