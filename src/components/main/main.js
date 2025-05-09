@@ -22,6 +22,7 @@ function Main() {
 
   const changeControl = (device) => {
     setControlSelected(device);
+    localStorage.setItem('controlSelected', device);
   }
   const changeDevice = (device, key, value, nuevo) => {
     const devices = {...devicesState};
@@ -104,8 +105,8 @@ function Main() {
   }, [user]);
 
   const init = useCallback(async () => {
-    const credential = localStorage.getItem('controlhogar');
-    setCredential(credential);
+    setControlSelected(localStorage.getItem('controlSelected'));
+    setCredential(localStorage.getItem('controlhogar'));
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
     getStates();
