@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import Screens from './screen/screens';
+import Screens from './screens/screens';
 import Devices from './devices/devices';
+import Controls from './controls/controls';
 import Credentials from './credentials/credentials';
 import { devicesOriginal } from '../../global/devices';
 import Utils from '../../global/utils';
@@ -144,6 +145,15 @@ function Main() {
               controlSelected={controlSelected}
               changeControlParent={changeControl}>
             </Screens>
+            <Controls
+              credential={credential}
+              ownerCredential={ownerCredential.current}
+              inRange={inRange}
+              devicesState={devicesState}
+              loadingDevices={loadingDevices}
+              changeDeviceParent={changeDevice}
+              controlSelected={controlSelected}>
+            </Controls>
             <Devices
               credential={credential}
               ownerCredential={ownerCredential.current}
