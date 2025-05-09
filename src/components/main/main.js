@@ -21,15 +21,7 @@ function Main() {
   const guestCredential = useRef('guest');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
-  const changeControl = (control) => {
-    // setScreenSelected(screen);
-    // localStorage.setItem('screen', screen);
-  }
-  const changeScreen = (screen) => {
-    setScreenSelected(screen);
-    localStorage.setItem('screen', screen);
-  }
-  const changeDevice = (device, key, value, nuevo) => {
+  const changeControlHogarData = (device, key, value, nuevo) => {
     const devices = {...devicesState};
     if (typeof device === 'object') {
       device.forEach(item => {
@@ -51,7 +43,16 @@ function Main() {
     setDevicesState(devices);
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
   }
-
+  const changeDevice = (device, key, value, nuevo) => {
+    changeControlHogarData(device, key, value, nuevo);
+  }
+  const changeControl = (device, key, value, nuevo) => {
+    changeControlHogarData(device, key, value, nuevo);
+  }
+  const changeScreen = (screen) => {
+    setScreenSelected(screen);
+    localStorage.setItem('screen', screen);
+  }
   const setCredentials = async (credential) => {
     if (credential === guestCredential.current) {
       localStorage.setItem('user', credential);
@@ -69,7 +70,6 @@ function Main() {
       }
     }
   }
-
   const getStates = useCallback(async () => {
     if (userActive.current) {
       loadingDevices.current = true;
@@ -81,7 +81,6 @@ function Main() {
       ).catch(err => {});
     }
   }, []);
-
   const getPosition = useCallback(async () => {
     if (userActive.current) {
       gettingInRange.current = true;
@@ -90,7 +89,6 @@ function Main() {
       gettingInRange.current = false;
     }
   }, []);
-
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = () => {
       let message = '';
@@ -108,7 +106,6 @@ function Main() {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [user]);
-
   const init = useCallback(async () => {
     setScreenSelected(localStorage.getItem('screen'));
     setCredential(localStorage.getItem('user'));
@@ -120,11 +117,9 @@ function Main() {
     utils.current.sendLogs(user.current + ' entro');
     getVisibility();
   }, [getStates, getPosition, getVisibility, user]);
-
   useEffect(() => {
     init();
   }, [init]);
-
   const resetDevices = () => {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
   }
