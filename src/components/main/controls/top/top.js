@@ -2,7 +2,6 @@ import React from 'react';
 import './top.css';
 
 function Controls({devicesState, screenSelected, triggerControlParent}) {
-  console.log(screenSelected);
   const triggerPower = (control) => {
     if (devicesState[control].state === 'on') {
       triggerControlParent(control, 'state', 'off');
