@@ -14,7 +14,7 @@ function Controls({devicesState, controlSelected, triggerControlParent}) {
     <div>
       <div className='controls-row'>
         <div className='controls-element'>
-          <button onContextMenu={(e) => e.preventDefault()} className={`controls-button ${devicesState.teleCuarto.state === 'on' ? "controls-button--on" : "controls-button-off"}`} onClick={() => triggerControl(devicesState.teleCuarto.id)}>{devicesState.teleCuarto.state}</button>
+          <button onContextMenu={(e) => e.preventDefault()} className={`controls-button ${devicesState[controlSelected].state === 'on' ? "controls-button--on" : "controls-button-off"}`} onClick={() => triggerControl(devicesState[controlSelected].id)}>{devicesState[controlSelected].state}</button>
         </div>
       </div>
     </div>
