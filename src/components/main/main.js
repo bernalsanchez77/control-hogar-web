@@ -22,35 +22,27 @@ function Main() {
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
   const fetchIfttt = (text) => {
-    // fetch(text);
+    fetch(text);
   }
-  const changeControlHogarData = (device, key, value, nuevo) => {
+  const changeControlHogarData = (device, key, value) => {
     const devices = {...devicesState};
     if (typeof device === 'object') {
       device.forEach(item => {
-        if (nuevo) {
-          fetchIfttt('/api/sendIfttt?device=' + item + '&state=' + state + '&nuevo=true');
-        } else {
-          fetchIfttt('/api/sendIfttt?device=' + item + '&state=' + state);
-        }
+        fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key + '&value=' + value);
         devices[item] = {...devices[item], [key]: value};
       });
     } else {
-      if (nuevo) {
-        fetchIfttt('/api/sendIfttt?device=' + device + '&state=' + state + '&nuevo=true');
-      } else {
-        fetchIfttt('/api/sendIfttt?device=' + device + '&state=' + state);
-      }
-     devices[device] = {...devices[device], [key]: value};
+      fetchIfttt('/api/sendIfttt?device=' + device + '&key=' + key + '&value=' + value);
+      devices[device] = {...devices[device], [key]: value};
     }
     setDevicesState(devices);
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
   }
-  const changeDevice = (device, key, value, nuevo) => {
-    changeControlHogarData(device, key, value, nuevo);
+  const changeDevice = (device, key, value) => {
+    changeControlHogarData(device, key, value);
   }
-  const changeControl = (device, key, value, nuevo) => {
-    changeControlHogarData(device, key, value, nuevo);
+  const changeControl = (device, key, value) => {
+    changeControlHogarData(device, key, value);
   }
   const changeScreen = (screen) => {
     setScreenSelected(screen);
