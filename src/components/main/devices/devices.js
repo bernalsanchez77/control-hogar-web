@@ -60,12 +60,6 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
       </div>
       <div className='devices-row'>
         <div className='devices-element'>
-          <HdmiSala
-            devicesState={devicesState}
-            triggerDeviceParent={triggerDevice}>
-          </HdmiSala>
-        </div>
-        <div className='devices-element'>
           <ParlantesSala
             devicesState={devicesState}
             triggerDeviceParent={triggerDevice}>
