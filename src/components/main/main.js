@@ -15,15 +15,19 @@ function Main() {
   const userActive = useRef(true);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const [inRange, setInRange] = useState(false);
-  const [controlSelected, setControlSelected] = useState('teleSala');
+  const [screenSelected, setScreenSelected] = useState('teleSala');
   const [credential, setCredential] = useState('');
   const ownerCredential = useRef('owner');
   const guestCredential = useRef('guest');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
-  const changeControl = (device) => {
-    setControlSelected(device);
-    localStorage.setItem('controlSelected', device);
+  const changeControl = (control) => {
+    // setScreenSelected(screen);
+    // localStorage.setItem('screen', screen);
+  }
+  const changeScreen = (screen) => {
+    setScreenSelected(screen);
+    localStorage.setItem('screen', screen);
   }
   const changeDevice = (device, key, value, nuevo) => {
     const devices = {...devicesState};
@@ -50,7 +54,7 @@ function Main() {
 
   const setCredentials = async (credential) => {
     if (credential === guestCredential.current) {
-      localStorage.setItem('controlhogar', credential);
+      localStorage.setItem('user', credential);
       setCredential(credential);
     } else {
       const res = await fetch("/api/validateCredentials", {
@@ -60,7 +64,7 @@ function Main() {
       });
       const data = await res.json();
       if (data.success) {
-        localStorage.setItem('controlhogar', ownerCredential.current);
+        localStorage.setItem('user', ownerCredential.current);
         setCredential(ownerCredential.current);
       }
     }
@@ -106,8 +110,8 @@ function Main() {
   }, [user]);
 
   const init = useCallback(async () => {
-    setControlSelected(localStorage.getItem('controlSelected'));
-    setCredential(localStorage.getItem('controlhogar'));
+    setScreenSelected(localStorage.getItem('screen'));
+    setCredential(localStorage.getItem('user'));
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
     getStates();
@@ -141,8 +145,8 @@ function Main() {
               inRange={inRange}
               devicesState={devicesState}
               loadingDevices={loadingDevices}
-              controlSelected={controlSelected}
-              changeControlParent={changeControl}>
+              screenSelected={screenSelected}
+              changeControlParent={changeScreen}>
             </Screens>
             <Controls
               credential={credential}
@@ -150,8 +154,8 @@ function Main() {
               inRange={inRange}
               devicesState={devicesState}
               loadingDevices={loadingDevices}
-              changeDeviceParent={changeDevice}
-              controlSelected={controlSelected}>
+              changeControlParent={changeControl}
+              screenSelected={screenSelected}>
             </Controls>
             <Devices
               credential={credential}
