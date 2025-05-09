@@ -3,13 +3,14 @@ import Top from './top/top';
 import './controls.css';
 
 function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, changeControlParent}) {
+  console.log(screenSelected);
   const triggerControl = (control, key, value) => {
     if (inRange || (credential === ownerCredential)) {
       if (!loadingDevices.current) {
         changeControlParent(control, key, value);
       } else {
         setTimeout(() => {
-          triggerControl(control, key, value);
+            triggerControl(control, key, value);
         }, 1000);
       }
     }
