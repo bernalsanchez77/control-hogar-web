@@ -21,22 +21,25 @@ function Main() {
   const guestCredential = useRef('guest');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
+  const fetchIfttt = (text) => {
+    // fetch(text);
+  }
   const changeControlHogarData = (device, key, value, nuevo) => {
     const devices = {...devicesState};
     if (typeof device === 'object') {
       device.forEach(item => {
         if (nuevo) {
-          // fetch('/api/sendIfttt?device=' + item + '&state=' + state + '&nuevo=true');
+          fetchIfttt('/api/sendIfttt?device=' + item + '&state=' + state + '&nuevo=true');
         } else {
-          // fetch('/api/sendIfttt?device=' + item + '&state=' + state);
+          fetchIfttt('/api/sendIfttt?device=' + item + '&state=' + state);
         }
         devices[item] = {...devices[item], [key]: value};
       });
     } else {
       if (nuevo) {
-        // fetch('/api/sendIfttt?device=' + device + '&state=' + state + '&nuevo=true');
+        fetchIfttt('/api/sendIfttt?device=' + device + '&state=' + state + '&nuevo=true');
       } else {
-        // fetch('/api/sendIfttt?device=' + device + '&state=' + state);
+        fetchIfttt('/api/sendIfttt?device=' + device + '&state=' + state);
       }
      devices[device] = {...devices[device], [key]: value};
     }
