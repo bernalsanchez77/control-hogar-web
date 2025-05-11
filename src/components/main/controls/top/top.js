@@ -3,11 +3,26 @@ import './top.css';
 
 function Controls({devicesState, screenSelected, triggerControlParent}) {
   const triggerPower = (control) => {
-    if (devicesState[control].state === 'on') {
-      triggerControlParent(control, 'state', 'off');
-    }
-    if (devicesState[control].state === 'off') {
-      triggerControlParent(control, 'state', 'on');
+    if (control === 'proyectorSala') {
+      if (devicesState[control].state === 'on') {
+        triggerControlParent(control, 'state', 'off');
+        setTimeout(() => {
+          triggerControlParent('proyectorSwitchSala', 'state', 'off');
+        }, 5000);
+      }
+      if (devicesState[control].state === 'off') {
+        triggerControlParent('proyectorSwitchSala', 'state', 'on');
+        setTimeout(() => {
+          triggerControlParent(control, 'state', 'on');
+        }, 5000);
+      }
+    } else {
+      if (devicesState[control].state === 'on') {
+        triggerControlParent(control, 'state', 'off');
+      }
+      if (devicesState[control].state === 'off') {
+        triggerControlParent(control, 'state', 'on');
+      }
     }
   }
   const triggerHdmi = (device) => {
