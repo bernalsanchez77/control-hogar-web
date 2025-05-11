@@ -9,8 +9,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
         setTimeout(() => {
           triggerControlParent('proyectorSwitchSala', 'state', 'off');
         }, 5000);
-      }
-      if (devicesState[control].state === 'off') {
+      } else {
         triggerControlParent('proyectorSwitchSala', 'state', 'on');
         setTimeout(() => {
           triggerControlParent(control, 'state', 'on');
@@ -19,8 +18,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
     } else {
       if (devicesState[control].state === 'on') {
         triggerControlParent(control, 'state', 'off');
-      }
-      if (devicesState[control].state === 'off') {
+      } else {
         triggerControlParent(control, 'state', 'on');
       }
     }
