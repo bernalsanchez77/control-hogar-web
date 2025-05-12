@@ -14,7 +14,7 @@ function Main() {
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
-  const devicesStateUpdated = useRef(...devicesState);
+  const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
   const [screenSelected, setScreenSelected] = useState('teleSala');
   const [credential, setCredential] = useState('');
@@ -26,7 +26,7 @@ function Main() {
     fetch(text);
   }
   const changeControlHogarData = (device, key, value) => {
-    const devices = {...devicesStateUpdated};
+    const devices = {...devicesState};
     if (typeof device === 'object') {
       device.forEach(item => {
         fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key + '&value=' + value);
