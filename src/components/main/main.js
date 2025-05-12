@@ -14,7 +14,7 @@ function Main() {
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
-  // const devicesStateUpdated = useRef(devicesState);
+  const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
   const [screenSelected, setScreenSelected] = useState('teleSala');
   const [credential, setCredential] = useState('');
@@ -116,15 +116,9 @@ function Main() {
     utils.current.sendLogs(user.current + ' entro');
     getVisibility();
   }, [getStates, getPosition, getVisibility, user]);
-
   useEffect(() => {
     init();
   }, [init]);
-
-  useEffect(() => {
-    // devicesStateUpdated.current = devicesState;
-  }, [devicesState]);
-
   const resetDevices = () => {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
   }
