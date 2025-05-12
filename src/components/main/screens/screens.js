@@ -23,7 +23,7 @@ function Screens({credential, ownerCredential, inRange, devicesState, loadingDev
               onContextMenu={(e) => e.preventDefault()}
               className={`screens-button ${screenSelected === devicesState?.teleCuarto?.id ? "screens-button--on" : "screens-button-off"}`}
               onClick={() => triggerScreen(devicesState.teleCuarto.id)}>
-                {devicesState.teleCuarto.label}
+                {devicesState.teleCuarto?.label}
               </button>
           </div>
           }
