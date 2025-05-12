@@ -128,7 +128,7 @@ function Main() {
         guestCredential={guestCredential.current}
         setCredentialsParent={setCredentials}>
       </Credentials>
-      {credential &&
+      {credential && devicesState.teleCuarto.id &&
         <div>
           {inRange || credential === ownerCredential.current ?
           <div>
