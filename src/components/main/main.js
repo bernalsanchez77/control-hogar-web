@@ -14,7 +14,6 @@ function Main() {
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
-  const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
   const [screenSelected, setScreenSelected] = useState('teleSala');
   const [credential, setCredential] = useState('');
