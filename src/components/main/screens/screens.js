@@ -28,14 +28,6 @@ function Screens({credential, ownerCredential, inRange, devicesState, loadingDev
           </div>
           }
           <div className='screens-element'>
-            <button
-              onContextMenu={(e) => e.preventDefault()}
-              className={`screens-button ${screenSelected === devicesState.teleSala.id ? "screens-button--on" : "screens-button-off"}`}
-              onClick={() => triggerScreen(devicesState.teleSala.id)}>
-                {devicesState.teleSala.label}
-            </button>
-            </div>
-          <div className='screens-element'>
             <button onContextMenu={(e) => e.preventDefault()}
               className={`screens-button ${screenSelected === devicesState.proyectorSala.id ? "screens-button--on" : "screens-button-off"}`}
               onClick={() => triggerScreen(devicesState.proyectorSala.id)}>
