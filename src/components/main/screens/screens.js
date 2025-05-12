@@ -21,25 +21,25 @@ function Screens({credential, ownerCredential, inRange, devicesState, loadingDev
           <div className='screens-element'>
             <button
               onContextMenu={(e) => e.preventDefault()}
-              className={`screens-button ${screenSelected === devicesState?.teleCuarto?.id ? "screens-button--on" : "screens-button-off"}`}
+              className={`screens-button ${screenSelected === devicesState.teleCuarto.id ? "screens-button--on" : "screens-button-off"}`}
               onClick={() => triggerScreen(devicesState.teleCuarto.id)}>
-                {devicesState.teleCuarto?.label}
+                {devicesState.teleCuarto.label}
               </button>
           </div>
           }
           <div className='screens-element'>
             <button
               onContextMenu={(e) => e.preventDefault()}
-              className={`screens-button ${screenSelected === devicesState?.teleSala?.id ? "screens-button--on" : "screens-button-off"}`}
+              className={`screens-button ${screenSelected === devicesState.teleSala.id ? "screens-button--on" : "screens-button-off"}`}
               onClick={() => triggerScreen(devicesState.teleSala.id)}>
-                {devicesState.teleSala?.label}
+                {devicesState.teleSala.label}
             </button>
           </div>
           <div className='screens-element'>
             <button onContextMenu={(e) => e.preventDefault()}
-              className={`screens-button ${screenSelected === devicesState?.proyectorSala?.id ? "screens-button--on" : "screens-button-off"}`}
+              className={`screens-button ${screenSelected === devicesState.proyectorSala.id ? "screens-button--on" : "screens-button-off"}`}
               onClick={() => triggerScreen(devicesState.proyectorSala.id)}>
-                {devicesState.proyectorSala?.label}
+                {devicesState.proyectorSala.label}
               </button>
           </div>
         </div>

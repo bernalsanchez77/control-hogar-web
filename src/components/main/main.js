@@ -14,6 +14,7 @@ function Main() {
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
+  const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
   const [screenSelected, setScreenSelected] = useState('teleSala');
   const [credential, setCredential] = useState('');
@@ -102,6 +103,7 @@ function Main() {
     };
   }, [user]);
   const init = useCallback(async () => {
+    devicesStateUpdated.current = devicesState;
     const localStorageScreen = localStorage.getItem('screen');
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
@@ -114,7 +116,7 @@ function Main() {
     setInterval(() => {getPosition();}, 300000);
     utils.current.sendLogs(user.current + ' entro');
     getVisibility();
-  }, [getStates, getPosition, getVisibility, user]);
+  }, [getStates, getPosition, getVisibility, user, devicesState]);
   useEffect(() => {
     init();
   }, [init]);
@@ -128,7 +130,7 @@ function Main() {
         guestCredential={guestCredential.current}
         setCredentialsParent={setCredentials}>
       </Credentials>
-      {credential && devicesState.teleCuarto.id &&
+      {
         <div>
           {inRange || credential === ownerCredential.current ?
           <div>
@@ -158,11 +160,11 @@ function Main() {
               loadingDevices={loadingDevices}
               changeDeviceParent={changeDevice}>
             </Devices>
-            {/* <div>
+            <div>
               <button onClick={resetDevices}>
                 Reset
               </button>
-            </div> */}
+            </div>
           </div> :
           <div>
             <span style={{color: "white"}}>Fuera del Area Permitida</span>
