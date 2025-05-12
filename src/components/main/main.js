@@ -103,7 +103,7 @@ function Main() {
     };
   }, [user]);
   const init = useCallback(async () => {
-    devicesStateUpdated.current = devicesState;
+    // devicesStateUpdated.current = devicesState;
     const localStorageScreen = localStorage.getItem('screen');
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
