@@ -103,7 +103,6 @@ function Main() {
     };
   }, [user]);
   const init = useCallback(async () => {
-    devicesStateUpdated.current = devicesState;
     const localStorageScreen = localStorage.getItem('screen');
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
@@ -116,7 +115,7 @@ function Main() {
     setInterval(() => {getPosition();}, 300000);
     utils.current.sendLogs(user.current + ' entro');
     getVisibility();
-  }, [getStates, getPosition, getVisibility, user, devicesState]);
+  }, [getStates, getPosition, getVisibility, user]);
   useEffect(() => {
     init();
   }, [init]);
