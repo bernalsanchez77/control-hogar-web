@@ -130,11 +130,11 @@ function Main() {
         guestCredential={guestCredential.current}
         setCredentialsParent={setCredentials}>
       </Credentials>
-      {
+      {credential &&
         <div>
           {inRange || credential === ownerCredential.current ?
           <div>
-            <Screens
+            {/* <Screens
               credential={credential}
               ownerCredential={ownerCredential.current}
               inRange={inRange}
@@ -159,7 +159,7 @@ function Main() {
               devicesState={devicesState}
               loadingDevices={loadingDevices}
               changeDeviceParent={changeDevice}>
-            </Devices>
+            </Devices> */}
             <div>
               <button onClick={resetDevices}>
                 Reset
