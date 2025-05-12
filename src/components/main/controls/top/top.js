@@ -1,18 +1,18 @@
 import React from 'react';
 import './top.css';
 
-function Controls({devicesState, screenSelected, triggerControlParent}) {
+function Controls({devicesState, screenSelected, triggerControlParent, triggerControlParent2}) {
   const triggerPower = (control) => {
     if (control === 'proyectorSala') {
       if (devicesState[control].state === 'on') {
         triggerControlParent(control, 'state', 'off');
         setTimeout(() => {
-          triggerControlParent('proyectorSwitchSala', 'state', 'off');
+          triggerControlParent2('proyectorSwitchSala', 'state', 'off');
         }, 15000);
       } else {
         triggerControlParent('proyectorSwitchSala', 'state', 'on');
         setTimeout(() => {
-          triggerControlParent(control, 'state', 'on');
+          triggerControlParent2(control, 'state', 'on');
         }, 5000);
       }
     } else {

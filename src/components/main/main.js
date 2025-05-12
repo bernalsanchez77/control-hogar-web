@@ -44,6 +44,9 @@ function Main() {
   const changeControl = (device, key, value) => {
     changeControlHogarData(device, key, value);
   }
+  const changeControl2 = (device, key, value) => {
+    changeControlHogarData(device, key, value);
+  }
   const changeScreen = (screen) => {
     setScreenSelected(screen);
     localStorage.setItem('screen', screen);
@@ -148,7 +151,8 @@ function Main() {
               devicesState={devicesState}
               loadingDevices={loadingDevices}
               screenSelected={screenSelected}
-              changeControlParent={changeControl}>
+              changeControlParent={changeControl}
+              changeControlParent2={changeControl2}>
             </Controls>
             <Devices
               credential={credential}
