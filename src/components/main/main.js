@@ -26,7 +26,7 @@ function Main() {
     fetch(text);
   }
   const changeControlHogarData = (device, key, value) => {
-    const devices = {...devicesState};
+    const devices = {...devicesStateUpdated};
     if (typeof device === 'object') {
       device.forEach(item => {
         fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key + '&value=' + value);
@@ -116,9 +116,15 @@ function Main() {
     utils.current.sendLogs(user.current + ' entro');
     getVisibility();
   }, [getStates, getPosition, getVisibility, user]);
+
   useEffect(() => {
     init();
   }, [init]);
+
+  useEffect(() => {
+    devicesStateUpdated.current = devicesState;
+  }, [devicesState]);
+
   const resetDevices = () => {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
   }
