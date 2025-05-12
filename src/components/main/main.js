@@ -14,6 +14,7 @@ function Main() {
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
+  const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
   const [screenSelected, setScreenSelected] = useState('teleSala');
   const [credential, setCredential] = useState('');
@@ -25,7 +26,7 @@ function Main() {
     fetch(text);
   }
   const changeControlHogarData = (device, key, value) => {
-    const devices = {...devicesState};
+    const devices = {...devicesStateUpdated.current};
     if (typeof device === 'object') {
       device.forEach(item => {
         fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key + '&value=' + value);
@@ -42,9 +43,6 @@ function Main() {
     changeControlHogarData(device, key, value);
   }
   const changeControl = (device, key, value) => {
-    changeControlHogarData(device, key, value);
-  }
-  const changeControl2 = (device, key, value) => {
     changeControlHogarData(device, key, value);
   }
   const changeScreen = (screen) => {
@@ -105,6 +103,7 @@ function Main() {
     };
   }, [user]);
   const init = useCallback(async () => {
+    devicesStateUpdated.current = devicesState;
     const localStorageScreen = localStorage.getItem('screen');
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
@@ -117,7 +116,7 @@ function Main() {
     setInterval(() => {getPosition();}, 300000);
     utils.current.sendLogs(user.current + ' entro');
     getVisibility();
-  }, [getStates, getPosition, getVisibility, user]);
+  }, [getStates, getPosition, getVisibility, user, devicesState]);
   useEffect(() => {
     init();
   }, [init]);
@@ -151,8 +150,7 @@ function Main() {
               devicesState={devicesState}
               loadingDevices={loadingDevices}
               screenSelected={screenSelected}
-              changeControlParent={changeControl}
-              changeControlParent2={changeControl2}>
+              changeControlParent={changeControl}>
             </Controls>
             <Devices
               credential={credential}
@@ -162,11 +160,11 @@ function Main() {
               loadingDevices={loadingDevices}
               changeDeviceParent={changeDevice}>
             </Devices>
-            {/* <div>
+            <div>
               <button onClick={resetDevices}>
                 Reset
               </button>
-            </div> */}
+            </div>
           </div> :
           <div>
             <span style={{color: "white"}}>Fuera del Area Permitida</span>
