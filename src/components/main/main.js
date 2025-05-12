@@ -122,7 +122,7 @@ function Main() {
   }, [init]);
 
   useEffect(() => {
-    devicesStateUpdated.current = devicesState;
+    // devicesStateUpdated.current = devicesState;
   }, [devicesState]);
 
   const resetDevices = () => {
