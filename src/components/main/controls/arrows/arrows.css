@@ -1,1 +1,30 @@
-
+.controls-top {
+    margin: 10px;
+    display: inline-block;
+  }
+  .controls-top-row {
+    display: inline-block;
+  }
+  .controls-top-element {
+    float: left;
+    width: 70px;
+    margin: 5px;
+  
+  }
+  .controls-top-button {
+    font-size: 11px;
+    padding: 3px;
+    width: 100%;
+    border: transparent 3px solid;
+    height: 40px;
+    border-radius: 5px;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  button.controls-top-button:active {
+    background-color: green;
+    transition: background-color 0.1s;
+  }
+  .controls-top-button--on {
+    border: green 2px solid;
+  }
