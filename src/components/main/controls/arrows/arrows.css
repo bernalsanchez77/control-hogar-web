@@ -1,17 +1,17 @@
-.controls-top {
+.controls-arrows {
     margin: 10px;
     display: inline-block;
   }
-  .controls-top-row {
+  .controls-arrows-row {
     display: inline-block;
   }
-  .controls-top-element {
+  .controls-arrows-element {
     float: left;
     width: 70px;
     margin: 5px;
   
   }
-  .controls-top-button {
+  .controls-arrows-button {
     font-size: 11px;
     padding: 3px;
     width: 100%;
@@ -21,10 +21,10 @@
     user-select: none;
     -webkit-user-select: none;
   }
-  button.controls-top-button:active {
+  button.controls-arrows-button:active {
     background-color: green;
     transition: background-color 0.1s;
   }
-  .controls-top-button--on {
+  .controls-arrows-button--on {
     border: green 2px solid;
   }
