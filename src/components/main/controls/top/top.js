@@ -2,28 +2,29 @@ import React from 'react';
 import './top.css';
 
 function Controls({devicesState, screenSelected, triggerControlParent}) {
-  const triggerPower = (control) => {
-    if (control === 'proyectorSala') {
-      if (devicesState[control].state === 'on') {
-        triggerControlParent(control, 'state', 'off');
+  const triggerPower = () => {
+    if (screenSelected === devicesState.proyectorSala.id) {
+      if (devicesState[screenSelected].state === 'on') {
+        triggerControlParent(screenSelected, 'state', 'off');
         setTimeout(() => {
-          triggerControlParent('proyectorSwitchSala', 'state', 'off');
+          triggerControlParent(devicesState.proyectorSwitchSala.id, 'state', 'off');
         }, 15000);
       } else {
-        triggerControlParent('proyectorSwitchSala', 'state', 'on');
+        triggerControlParent(devicesState.proyectorSwitchSala.id, 'state', 'on');
         setTimeout(() => {
-          triggerControlParent(control, 'state', 'on');
+          triggerControlParent(screenSelected, 'state', 'on');
         }, 5000);
       }
     } else {
-      if (devicesState[control].state === 'on') {
-        triggerControlParent(control, 'state', 'off');
+      if (devicesState[screenSelected].state === 'on') {
+        triggerControlParent(screenSelected, 'state', 'off');
       } else {
-        triggerControlParent(control, 'state', 'on');
+        triggerControlParent(screenSelected, 'state', 'on');
       }
     }
   }
-  const triggerHdmi = (device) => {
+  const triggerHdmi = () => {
+    const device = devicesState.hdmiSala.id;
     if (devicesState[device].state === 'roku') {
       triggerControlParent(device, 'state', 'cable');
     }
@@ -31,7 +32,14 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
       triggerControlParent(device, 'state', 'roku');
     }
   }
-  const triggerInput = (input) => {
+  const triggerInput = () => {
+    if (screenSelected === devicesState.proyectorSala.id) {
+      if (devicesState[screenSelected].input === 'hdmi1') {
+        triggerControlParent(devicesState[screenSelected].id, 'input', 'hdmi2');
+      } else {
+        triggerControlParent(devicesState[screenSelected].id, 'input', 'hdmi1');
+      }
+    }
   }
   return (
     <div>
@@ -40,7 +48,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
           <button
             onContextMenu={(e) => e.preventDefault()}
             className={`controls-top-button ${devicesState[screenSelected].state === 'on' ? "controls-button--on" : "controls-button-off"}`}
-            onClick={() => triggerPower(devicesState[screenSelected].id)}>
+            onClick={() => triggerPower()}>
               {devicesState[screenSelected].state}
           </button>
         </div>
@@ -48,7 +56,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
           <button
             onContextMenu={(e) => e.preventDefault()}
             className="controls-top-button controls-top-button-off"
-            onClick={() => triggerHdmi(devicesState.hdmiSala.id)}>
+            onClick={() => triggerHdmi()}>
               {devicesState.hdmiSala.label[devicesState.hdmiSala.state]}
           </button>
         </div>
@@ -57,7 +65,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
             onContextMenu={(e) => e.preventDefault()}
             className={`controls-top-button`}
             onClick={() => triggerInput()}>
-              Input
+              {devicesState[screenSelected].input.label.hdmi1}
           </button>
         </div>
       </div>

@@ -25,6 +25,7 @@ function Main() {
   const fetchIfttt = (text) => {
     fetch(text);
   }
+
   const changeControlHogarData = (device, key, value) => {
     const devices = {...devicesStateUpdated.current};
     if (typeof device === 'object') {
@@ -39,16 +40,20 @@ function Main() {
     setDevicesState(devices);
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
   }
+
   const changeDevice = (device, key, value) => {
     changeControlHogarData(device, key, value);
   }
+
   const changeControl = (device, key, value) => {
     changeControlHogarData(device, key, value);
   }
+
   const changeScreen = (screen) => {
     setScreenSelected(screen);
     localStorage.setItem('screen', screen);
   }
+
   const setCredentials = async (credential) => {
     if (credential === guestCredential.current) {
       localStorage.setItem('user', credential);
@@ -66,6 +71,7 @@ function Main() {
       }
     }
   }
+
   const getStates = useCallback(async () => {
     if (userActive.current) {
       loadingDevices.current = true;
@@ -77,6 +83,7 @@ function Main() {
       ).catch(err => {});
     }
   }, []);
+
   const getPosition = useCallback(async () => {
     if (userActive.current) {
       gettingInRange.current = true;
@@ -85,6 +92,7 @@ function Main() {
       gettingInRange.current = false;
     }
   }, []);
+
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = () => {
       let message = '';
@@ -102,8 +110,8 @@ function Main() {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [user]);
+
   const init = useCallback(async () => {
-    // devicesStateUpdated.current = devicesState;
     const localStorageScreen = localStorage.getItem('screen');
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
@@ -117,15 +125,19 @@ function Main() {
     utils.current.sendLogs(user.current + ' entro');
     getVisibility();
   }, [getStates, getPosition, getVisibility, user]);
+
   useEffect(() => {
     init();
   }, [init]);
+
   useEffect(() => {
     devicesStateUpdated.current = devicesState;
   }, [devicesState]);
+
   const resetDevices = () => {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
   }
+
   return (
     <div className="main">
       <Credentials
