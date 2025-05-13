@@ -40,11 +40,25 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
         triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi1');
       }
     }
+    if (screenSelected === devicesState.teleSala.id) {
+      if (devicesState[screenSelected].input.state === 'hdmi1') {
+        triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi2');
+      } else {
+        triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi1');
+      }
+    }
+    if (screenSelected === devicesState.teleCuarto.id) {
+      if (devicesState[screenSelected].input.state === 'hdmi1') {
+        triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi2');
+      } else {
+        triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi1');
+      }
+    }
   }
   return (
     <div>
-      <div className='controls-row'>
-        <div className='controls-element'>
+      <div className='controls-top-row'>
+        <div className='controls-top-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className={`controls-top-button ${devicesState[screenSelected].state === 'on' ? "controls-button--on" : "controls-button-off"}`}
@@ -52,7 +66,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
               {devicesState[screenSelected].state}
           </button>
         </div>
-        <div className='controls-element'>
+        <div className='controls-top-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className="controls-top-button controls-top-button-off"
@@ -60,7 +74,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
               {devicesState.hdmiSala.label[devicesState.hdmiSala.state]}
           </button>
         </div>
-        <div className='controls-element'>
+        <div className='controls-top-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className={`controls-top-button`}

@@ -50,14 +50,14 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
             triggerDeviceParent={triggerDevice}>
           </LamparaRotatoria>
         </div>
+      </div>
+      <div className='devices-row'>
         <div className='devices-element'>
           <ChimeneaSala
             devicesState={devicesState}
             triggerDeviceParent={triggerDevice}>
           </ChimeneaSala>
         </div>
-      </div>
-      <div className='devices-row'>
         <div className='devices-element'>
           <ParlantesSala
             devicesState={devicesState}
