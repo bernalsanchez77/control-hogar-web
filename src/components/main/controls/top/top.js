@@ -5,39 +5,39 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
   const triggerPower = () => {
     if (screenSelected === devicesState.proyectorSala.id) {
       if (devicesState[screenSelected].state === 'on') {
-        triggerControlParent(screenSelected, 'state', 'off');
+        triggerControlParent([screenSelected], ['state'], 'off');
         setTimeout(() => {
-          triggerControlParent(devicesState.proyectorSwitchSala.id, 'state', 'off');
+          triggerControlParent(devicesState.proyectorSwitchSala.id, ['state'], 'off');
         }, 15000);
       } else {
-        triggerControlParent(devicesState.proyectorSwitchSala.id, 'state', 'on');
+        triggerControlParent(devicesState.proyectorSwitchSala.id, ['state'], 'on');
         setTimeout(() => {
-          triggerControlParent(screenSelected, 'state', 'on');
+          triggerControlParent([screenSelected], ['state'], 'on');
         }, 5000);
       }
     } else {
       if (devicesState[screenSelected].state === 'on') {
-        triggerControlParent(screenSelected, 'state', 'off');
+        triggerControlParent([screenSelected], ['state'], 'off');
       } else {
-        triggerControlParent(screenSelected, 'state', 'on');
+        triggerControlParent([screenSelected], ['state'], 'on');
       }
     }
   }
   const triggerHdmi = () => {
     const device = devicesState.hdmiSala.id;
     if (devicesState[device].state === 'roku') {
-      triggerControlParent(device, 'state', 'cable');
+      triggerControlParent([device], ['state'], 'cable');
     }
     if (devicesState[device].state === 'cable') {
-      triggerControlParent(device, 'state', 'roku');
+      triggerControlParent([device], ['state'], 'roku');
     }
   }
   const triggerInput = () => {
     if (screenSelected === devicesState.proyectorSala.id) {
       if (devicesState[screenSelected].input === 'hdmi1') {
-        triggerControlParent(devicesState[screenSelected].id, 'input', 'hdmi2');
+        triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi2');
       } else {
-        triggerControlParent(devicesState[screenSelected].id, 'input', 'hdmi1');
+        triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi1');
       }
     }
   }

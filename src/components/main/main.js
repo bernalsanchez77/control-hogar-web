@@ -23,20 +23,19 @@ function Main() {
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
   const fetchIfttt = (text) => {
-    fetch(text);
+    // fetch(text);
   }
 
   const changeControlHogarData = (device, key, value) => {
     const devices = {...devicesStateUpdated.current};
-    if (typeof device === 'object') {
-      device.forEach(item => {
-        fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key + '&value=' + value);
-        devices[item] = {...devices[item], [key]: value};
-      });
-    } else {
-      fetchIfttt('/api/sendIfttt?device=' + device + '&key=' + key + '&value=' + value);
-      devices[device] = {...devices[device], [key]: value};
-    }
+    device.forEach(item => {
+      fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key + '&value=' + value);
+      if (key[1]) {
+        devices[item] = {...devices[item], [key[0]]: value};
+      } else {
+        devices[item] = {...devices[item], [key[0]]: value};
+      }
+    });
     setDevicesState(devices);
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
   }

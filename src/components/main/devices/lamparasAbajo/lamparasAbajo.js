@@ -36,7 +36,7 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
           lamp.push(devicesState[lampara].id);
         }
       });
-      triggerDeviceParent(lamp, 'state', 'off');
+      triggerDeviceParent(lamp, ['state'], 'off');
       setState('off');
     } else {
       lamparasOn.forEach(lampara => {
@@ -44,7 +44,7 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
           lamp.push(devicesState[lampara].id);
         }
       });
-      triggerDeviceParent(lamp, 'state', 'on');
+      triggerDeviceParent(lamp, ['state'], 'on');
       setState('on');
     }
   }

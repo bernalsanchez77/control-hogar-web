@@ -4,10 +4,10 @@ import './calentadorNegro.css';
 function CalentadorNegro({devicesState, triggerDeviceParent}) {
   const triggerDevice = (device) => {
     if (devicesState[device].state === 'on') {
-      triggerDeviceParent(device, 'state', 'off');
+      triggerDeviceParent([device], 'state', 'off');
     }
     if (devicesState[device].state === 'off') {
-      triggerDeviceParent(device, 'state', 'on');
+      triggerDeviceParent([device], 'state', 'on');
     }
   }
 
