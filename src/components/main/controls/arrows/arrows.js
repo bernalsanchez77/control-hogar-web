@@ -58,21 +58,23 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
   }
   return (
     <div>
-      <div className='controls-top-row'>
-        <div className='controls-top-element'>
+      <div className='controls-arrows-row'>
+        <div className='controls-arrows-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className={`controls-top-button ${devicesState[screenSelected].state === 'on' ? "controls-button--on" : "controls-button-off"}`}
-            onClick={() => triggerPower()}>
-              {devicesState[screenSelected].state}
+            className="controls-arrows-button"
+            onClick={() => triggerControl('up')}>
+              arriba
           </button>
         </div>
-        <div className='controls-top-element'>
+      </div>
+      <div>
+        <div className='controls-arrows-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className="controls-top-button controls-top-button-off"
-            onClick={() => triggerHdmi()}>
-              {devicesState.hdmiSala.label[devicesState.hdmiSala.state]}
+            className="controls-arrows-button"
+            onClick={() => triggerControl()}>
+              derecha
           </button>
         </div>
         <div className='controls-top-element'>
