@@ -80,6 +80,8 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
           </CalentadorBlanco>
         </div>
         }
+      </div>
+      <div className='devices-row'>
         <div className='devices-element'>
           <LamparasAbajo
             devicesState={devicesState}
