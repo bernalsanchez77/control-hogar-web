@@ -65,7 +65,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
             onContextMenu={(e) => e.preventDefault()}
             className={`controls-top-button`}
             onClick={() => triggerInput()}>
-              {devicesState[screenSelected].input.label.hdmi1}
+              {/* {devicesState[screenSelected].input.label.hdmi1} */}
           </button>
         </div>
       </div>
