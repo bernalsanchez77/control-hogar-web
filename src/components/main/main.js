@@ -31,7 +31,7 @@ function Main() {
     device.forEach(item => {
       fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key + '&value=' + value);
       if (key[1]) {
-        devices[item] = {...devices[item], [key[0]]: value};
+        devices[item][key[0]] = {...devices[item], [key[1]]: value};
       } else {
         devices[item] = {...devices[item], [key[0]]: value};
       }
