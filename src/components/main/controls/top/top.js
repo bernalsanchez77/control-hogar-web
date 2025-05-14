@@ -33,14 +33,26 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
     }
   }
   const triggerInput = () => {
-    if (screenSelected === devicesState.proyectorSala.id) {
+    if (screenSelected === devicesState.teleSala.id) {
       if (devicesState[screenSelected].input.state === 'hdmi1') {
-        triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi2');
+        triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi');
+        setTimeout(() => {
+          triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi');
+        }, 5000);
       } else {
-        triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi1');
+        triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi');
+        setTimeout(() => {
+          triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi');
+          setTimeout(() => {
+            triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi');
+            setTimeout(() => {
+              triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi');
+            }, 5000);
+          }, 5000);
+        }, 5000);
       }
     }
-    if (screenSelected === devicesState.teleSala.id) {
+    if (screenSelected === devicesState.proyectorSala.id) {
       if (devicesState[screenSelected].input.state === 'hdmi1') {
         triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi2');
       } else {
