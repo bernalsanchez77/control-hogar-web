@@ -35,9 +35,9 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
   const triggerInput = () => {
     if (screenSelected === devicesState.teleSala.id) {
       if (devicesState[screenSelected].input.state === 'hdmi1') {
-        triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi1');
-      } else {
         triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi2');
+      } else {
+        triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi1');
       }
     }
     if (screenSelected === devicesState.proyectorSala.id) {
