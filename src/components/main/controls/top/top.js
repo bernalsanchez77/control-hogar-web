@@ -56,7 +56,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
     }
   }
   return (
-    <div>
+    <div className='controls-top'>
       <div className='controls-top-row'>
         <div className='controls-top-element'>
           <button

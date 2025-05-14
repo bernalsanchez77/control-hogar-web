@@ -7,7 +7,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
   }
 
   return (
-    <div>
+    <div className='controls-arrows'>
       <div className='controls-arrows-row controls-arrows-row--one'>
         <div className='controls-arrows-element'>
           <button
