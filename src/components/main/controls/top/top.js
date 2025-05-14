@@ -3,6 +3,7 @@ import './top.css';
 
 function Controls({devicesState, screenSelected, triggerControlParent}) {
   const triggerPower = () => {
+    screenSelected = devicesState[screenSelected].id;
     if (screenSelected === devicesState.proyectorSala.id) {
       if (devicesState[screenSelected].state === 'on') {
         triggerControlParent([screenSelected], ['state'], 'off');
