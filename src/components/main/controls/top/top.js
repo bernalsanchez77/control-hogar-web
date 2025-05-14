@@ -3,15 +3,14 @@ import './top.css';
 
 function Controls({devicesState, screenSelected, triggerControlParent}) {
   const triggerPower = () => {
-    screenSelected = devicesState[screenSelected].id;
     if (screenSelected === devicesState.proyectorSala.id) {
       if (devicesState[screenSelected].state === 'on') {
         triggerControlParent([screenSelected], ['state'], 'off');
         setTimeout(() => {
-          triggerControlParent(devicesState.proyectorSwitchSala.id, ['state'], 'off');
+          triggerControlParent([devicesState.proyectorSwitchSala.id], ['state'], 'off');
         }, 5000);
       } else {
-        triggerControlParent(devicesState.proyectorSwitchSala.id, ['state'], 'on');
+        triggerControlParent([devicesState.proyectorSwitchSala.id], ['state'], 'on');
         setTimeout(() => {
           triggerControlParent([screenSelected], ['state'], 'on');
         }, 5000);
