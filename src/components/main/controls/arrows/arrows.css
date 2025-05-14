@@ -5,6 +5,9 @@
   .controls-arrows-row {
     display: inline-block;
   }
+  .controls-arrows-row--one {
+    margin: 0 20%;
+  }
   .controls-arrows-element {
     float: left;
     width: 70px;

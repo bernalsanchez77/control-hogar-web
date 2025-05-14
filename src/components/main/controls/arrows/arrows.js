@@ -8,7 +8,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
 
   return (
     <div>
-      <div className='controls-arrows-row'>
+      <div className='controls-arrows-row controls-arrows-row--one'>
         <div className='controls-arrows-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
@@ -44,7 +44,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
           </button>
         </div>
       </div>
-      <div className='controls-arrows-row'>
+      <div className='controls-arrows-row  controls-arrows-row--one'>
         <div className='controls-arrows-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
