@@ -12,11 +12,11 @@
 
 }
 .screens-button {
-  background-color: rgb(255, 71, 3, 0.2) ;
+  background-color: rgb(255, 71, 3, 0.3) ;
   font-size: 11px;
   padding: 3px;
   width: 100%;
-  border: transparent 3px solid;
+  border: white 3px solid;
   height: 40px;
   border-radius: 5px;
   user-select: none;
