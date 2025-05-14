@@ -1,5 +1,6 @@
 import React from 'react';
 import Top from './top/top';
+import Arrows from './arrows/arrows';
 import './controls.css';
 
 function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, changeControlParent}) {
@@ -23,6 +24,11 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           screenSelected={screenSelected}
           triggerControlParent={triggerControl}>
         </Top>
+        <Arrows
+          devicesState={devicesState}
+          screenSelected={screenSelected}
+          triggerControlParent={triggerControl}>
+        </Arrows>
       </div>
     </div>
   )
