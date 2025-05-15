@@ -5,9 +5,6 @@
   .controls-arrows-row {
     display: inline-block;
   }
-  .controls-arrows-row--right {
-    margin-top: 10px;
-  }
   .controls-arrows-row--one {
     margin: 0 20%;
   }
@@ -15,7 +12,9 @@
     float: left;
     width: 70px;
     margin: 5px;
-  
+  }
+  .controls-arrows-element--right {
+    margin-top: 10px;
   }
   .controls-arrows-button {
     background-color: rgb(0, 44, 16, 0.8);
@@ -33,10 +32,6 @@
     height: 50px;
     width: 50px;
   }
-  .controls-arrows-button--right {
-    margin-top: 10px;
-  }
-
   button.controls-arrows-button:active {
     background-color: white;
     transition: background-color 0.1s;
