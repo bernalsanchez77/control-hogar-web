@@ -48,6 +48,10 @@ function Main() {
     changeControlHogarData(device, key, value);
   }
 
+  const changeArrows = (device, key, value) => {
+    fetchIfttt('/api/sendIfttt?device=' + device + '&key=' + key[0] + '&value=' + value);
+  }
+
   const changeScreen = (screen) => {
     setScreenSelected(screen);
     localStorage.setItem('screen', screen);
@@ -164,6 +168,7 @@ function Main() {
               devicesState={devicesState}
               loadingDevices={loadingDevices}
               screenSelected={screenSelected}
+              changeArrowsParent={changeArrows}
               changeControlParent={changeControl}>
             </Controls>
             <Devices
