@@ -3,6 +3,7 @@ import './top.css';
 
 function Controls({devicesState, screenSelected, triggerControlParent}) {
   const triggerPower = () => {
+    navigator.vibrate([200]);
     if (screenSelected === devicesState.proyectorSala.id) {
       if (devicesState[screenSelected].state === 'on') {
         triggerControlParent([screenSelected], ['state'], 'off');
@@ -24,6 +25,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
     }
   }
   const triggerHdmi = () => {
+    navigator.vibrate([200]);
     const device = devicesState.hdmiSala.id;
     if (devicesState[device].state === 'roku') {
       triggerControlParent([device], ['state'], 'cable');
@@ -33,6 +35,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
     }
   }
   const triggerInput = () => {
+    navigator.vibrate([200]);
     if (screenSelected === devicesState.teleSala.id) {
       if (devicesState[screenSelected].input.state === 'hdmi1') {
         triggerControlParent([devicesState[screenSelected].id], ['input','state'], 'hdmi2');
