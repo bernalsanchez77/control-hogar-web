@@ -22,7 +22,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
         </div>
       </div>
       <div className='controls-arrows-row'>
-        <div className='controls-arrows-element'>
+        <div className='controls-arrows-element controls-arrows-element--left'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className="controls-arrows-button control-arrows-button--left"
@@ -38,10 +38,10 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
               enter
           </button>
         </div>
-        <div className='controls-arrows-element controls-arrows-element--right '>
+        <div className='controls-arrows-element controls-arrows-element--right'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className="controls-arrows-button control-arrows-button--right"
+            className="controls-arrows-button"
             onClick={() => triggerControl('right')}>
               derecha
           </button>
