@@ -48,7 +48,7 @@ function Main() {
     changeControlHogarData(device, key, value);
   }
 
-  const changeArrows = (device, key, value) => {
+  const changeCommands = (device, key, value) => {
     fetchIfttt('/api/sendIfttt?device=' + device + '&key=' + key[0] + '&value=' + value);
   }
 
@@ -168,7 +168,7 @@ function Main() {
               devicesState={devicesState}
               loadingDevices={loadingDevices}
               screenSelected={screenSelected}
-              changeArrowsParent={changeArrows}
+              changeCommandsParent={changeCommands}
               changeControlParent={changeControl}>
             </Controls>
             <Devices
