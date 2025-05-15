@@ -6,7 +6,7 @@
     display: inline-block;
   }
   .controls-arrows-row--one {
-    margin: 0 20%;
+    margin: 0 25%;
   }
   .controls-arrows-element {
     float: left;
@@ -26,7 +26,7 @@
     -webkit-user-select: none;
   }
   .controls-arrows-button--circle {
-    border-radius: 30px;
+    border-radius: 25px;
     height: 50px;
     width: 50px;
   }
