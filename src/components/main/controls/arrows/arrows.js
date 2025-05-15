@@ -38,7 +38,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
               enter
           </button>
         </div>
-        <div className='controls-arrows-element'>
+        <div className='controls-arrows-element controls-arrows-element--right '>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className="controls-arrows-button control-arrows-button--right"
