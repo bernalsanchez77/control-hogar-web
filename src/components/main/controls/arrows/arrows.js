@@ -3,7 +3,10 @@ import React from 'react';
 import './arrows.css';
 
 function Controls({devicesState, screenSelected, triggerControlParent}) {
-  const triggerControl = () => {
+  const triggerControl = (value) => {
+    navigator.vibrate([200]);
+    const device = 'rokuSala';
+    triggerControlParent([device], ['command'], value);
   }
 
   return (
