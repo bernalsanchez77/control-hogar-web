@@ -12,19 +12,20 @@
   
   }
   .controls-top-button {
+    background-color: rgb(128, 0, 12, 0.3);
     font-size: 11px;
     padding: 3px;
     width: 100%;
-    border: transparent 3px solid;
+    border: gray 1px solid;
     height: 40px;
     border-radius: 5px;
     user-select: none;
     -webkit-user-select: none;
   }
   button.controls-top-button:active {
-    background-color: green;
+    background-color: white;
     transition: background-color 0.1s;
   }
   .controls-top-button--on {
-    border: green 2px solid;
+    border: white 1px solid;
   }
