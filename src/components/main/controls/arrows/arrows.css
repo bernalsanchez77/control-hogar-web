@@ -5,6 +5,9 @@
   .controls-arrows-row {
     display: inline-block;
   }
+  .controls-arrows-row--right {
+    margin-top: 10px;
+  }
   .controls-arrows-row--one {
     margin: 0 20%;
   }
