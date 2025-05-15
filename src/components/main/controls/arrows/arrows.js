@@ -4,7 +4,7 @@ import './arrows.css';
 
 function Controls({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
-    navigator.vibrate([201]);
+    navigator.vibrate([200]);
     const device = 'rokuSala';
     triggerControlParent([device], ['command'], value, false);
   }
