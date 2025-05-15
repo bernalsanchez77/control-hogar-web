@@ -6,7 +6,7 @@
     display: inline-block;
   }
   .controls-arrows-row--one {
-    margin: 0 25%;
+    margin: 0 20% 5px;
   }
   .controls-arrows-element {
     float: left;
