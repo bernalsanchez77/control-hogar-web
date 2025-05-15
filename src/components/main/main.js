@@ -166,7 +166,6 @@ function Main() {
               devicesState={devicesState}
               loadingDevices={loadingDevices}
               screenSelected={screenSelected}
-              changeCommandsParent={changeCommands}
               changeControlParent={changeControl}>
             </Controls>
             <Devices
