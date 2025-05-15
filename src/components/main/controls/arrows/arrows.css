@@ -30,6 +30,9 @@
     height: 50px;
     width: 50px;
   }
+  .controls-arrows-button--right {
+    margin-top: 10px;
+  }
 
   button.controls-arrows-button:active {
     background-color: white;
