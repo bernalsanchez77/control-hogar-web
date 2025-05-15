@@ -12,6 +12,7 @@ import './devices.css';
 
 function Devices({credential, ownerCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
   const triggerDevice = (device, key, value) => {
+    navigator.vibrate([200]);
     if (inRange || (credential === ownerCredential)) {
       if (!loadingDevices.current) {
         changeDeviceParent(device, key, value);
