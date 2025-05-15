@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+seimport React, { useState, useEffect, useCallback, useRef } from 'react';
 import Screens from './screens/screens';
 import Devices from './devices/devices';
 import Controls from './controls/controls';
@@ -26,7 +26,7 @@ function Main() {
     fetch(text);
   }
 
-  const changeControlHogarData = (device, key, value) => {
+  const changeControlHogarData = (device, key, value, save = true) => {
     const devices = {...devicesStateUpdated.current};
     device.forEach(item => {
       fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key[0] + '&value=' + value);
@@ -36,8 +36,10 @@ function Main() {
         devices[item] = {...devices[item], [key[0]]: value};
       }
     });
-    setDevicesState(devices);
-    fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
+    if (save) {
+      setDevicesState(devices);
+      fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
+    }
   }
 
   const changeDevice = (device, key, value) => {
@@ -46,10 +48,6 @@ function Main() {
 
   const changeControl = (device, key, value) => {
     changeControlHogarData(device, key, value);
-  }
-
-  const changeCommands = (device, key, value) => {
-    fetchIfttt('/api/sendIfttt?device=' + device + '&key=' + key[0] + '&value=' + value);
   }
 
   const changeScreen = (screen) => {
