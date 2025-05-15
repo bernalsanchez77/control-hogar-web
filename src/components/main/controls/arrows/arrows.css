@@ -25,6 +25,12 @@
     user-select: none;
     -webkit-user-select: none;
   }
+  .controls-arrows-button--circle {
+    border-radius: 30px;
+    height: 50px;
+    width: 50px;
+  }
+
   button.controls-arrows-button:active {
     background-color: white;
     transition: background-color 0.1s;
