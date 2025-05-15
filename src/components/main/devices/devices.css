@@ -12,19 +12,20 @@
 
 }
 .devices-button {
+  background-color: rgb(71, 3, 3, 0.8);
   font-size: 11px;
   padding: 3px;
   width: 100%;
-  border: transparent 3px solid;
+  border: transparent 1px solid;
   height: 40px;
   border-radius: 5px;
   user-select: none;
   -webkit-user-select: none;
 }
 button.devices-button:active {
-  background-color: green;
+  background-color: white;
   transition: background-color 0.1s;
 }
 .devices-button--on {
-  border: green 3px solid;
+  border: white 1px solid;
 }
