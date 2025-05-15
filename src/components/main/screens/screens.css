@@ -16,16 +16,16 @@
   font-size: 11px;
   padding: 3px;
   width: 100%;
-  border: gray 2px solid;
+  border: gray 1px solid;
   height: 40px;
   border-radius: 5px;
   user-select: none;
   -webkit-user-select: none;
 }
 button.screens-button:active {
-  background-color: green;
+  background-color: white;
   transition: background-color 0.1s;
 }
 .screens-button--on {
-  border: white 2px solid;
+  border: white 1px solid;
 }
