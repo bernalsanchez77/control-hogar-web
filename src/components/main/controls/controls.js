@@ -4,13 +4,13 @@ import Arrows from './arrows/arrows';
 import './controls.css';
 
 function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, changeControlParent}) {
-  const triggerControl = (control, key, value) => {
+  const triggerControl = (control, key, value, save) => {
     if (inRange || (credential === ownerCredential)) {
       if (!loadingDevices.current) {
-        changeControlParent(control, key, value);
+        changeControlParent(control, key, value, save);
       } else {
         setTimeout(() => {
-            triggerControl(control, key, value);
+            triggerControl(control, key, value, save);
         }, 1000);
       }
     }
