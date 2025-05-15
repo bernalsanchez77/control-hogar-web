@@ -13,6 +13,9 @@
     width: 70px;
     margin: 5px;
   }
+  .controls-arrows-element--left {
+    margin-top: 10px;
+  }
   .controls-arrows-element--right {
     margin-top: 10px;
   }
