@@ -66,7 +66,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
             onContextMenu={(e) => e.preventDefault()}
             className={`controls-top-button ${devicesState[screenSelected].state === 'on' ? "controls-top-button--on" : "controls-top-button-off"}`}
             onClick={() => triggerPower()}>
-             &#x23FB; {devicesState[screenSelected].state}
+             {devicesState[screenSelected].state}
           </button>
         </div>
         <div className='controls-top-element'>
