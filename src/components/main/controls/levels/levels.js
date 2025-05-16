@@ -78,7 +78,8 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
               mute
           </button>
         </div>
-        <div className='controls-levels-element'>
+       {devicesState.hdmi.state === 'roku'
+         <div className='controls-levels-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className={`controls-levels-button`}
@@ -86,6 +87,16 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
               home
           </button>
         </div>
+        } else {
+         <div className='controls-levels-element'>
+          <button
+            onContextMenu={(e) => e.preventDefault()}
+            className={`controls-levels-button`}
+            onClick={() => triggerInput()}>
+              up
+          </button>
+        </div>  
+        }
       </div>
     </div>
   )
