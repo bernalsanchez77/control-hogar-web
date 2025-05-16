@@ -60,14 +60,14 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
     }
   }
   return (
-    <div className='controls-top'>
-      <div className='controls-top-row'>
-        <div className='controls-top-element'>
+    <div className='controls-levels'>
+      <div className='controls-levels-row'>
+        <div className='controls-levels-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className={`controls-top-button ${devicesState[screenSelected].state === 'on' ? "controls-top-button--on" : "controls-top-button-off"}`}
+            className='controls-levels-button'
             onClick={() => triggerPower()}>
-             &#x23FB; {devicesState[screenSelected].state}
+             up
           </button>
         </div>
         <div className='controls-top-element'>
