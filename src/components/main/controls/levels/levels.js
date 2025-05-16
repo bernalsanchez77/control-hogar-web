@@ -87,6 +87,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
               home
           </button>
         </div>
+        }
         {devicesState.hdmiSala.state === 'cable' &&
          <div className='controls-levels-element'>
           <button
