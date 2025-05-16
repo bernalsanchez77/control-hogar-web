@@ -30,6 +30,11 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           screenSelected={screenSelected}
           triggerControlParent={triggerControl}>
         </Arrows>
+        <Levels
+          devicesState={devicesState}
+          screenSelected={screenSelected}
+          triggerControlParent={triggerControl}>
+        </Levels>
       </div>
     </div>
   )
