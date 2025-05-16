@@ -67,23 +67,23 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
             onContextMenu={(e) => e.preventDefault()}
             className='controls-levels-button'
             onClick={() => triggerPower()}>
-             up
+             &#9650;
           </button>
         </div>
-        <div className='controls-top-element'>
+        <div className='controls-levels-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className="controls-top-button controls-top-button-off"
+            className="controls-levels-button"
             onClick={() => triggerHdmi()}>
-              {devicesState.hdmiSala.label[devicesState.hdmiSala.state]}
+              mute
           </button>
         </div>
-        <div className='controls-top-element'>
+        <div className='controls-levels-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className={`controls-top-button`}
+            className={`controls-levels-button`}
             onClick={() => triggerInput()}>
-              {devicesState[screenSelected].input.label[devicesState[screenSelected].input.state]}
+              home
           </button>
         </div>
       </div>
