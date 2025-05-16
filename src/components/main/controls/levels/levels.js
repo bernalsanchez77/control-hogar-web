@@ -101,7 +101,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
       </div>
       <div className='controls-levels-row'>
         <div className='controls-levels-element'>
-          <span>
+          <span className='controls-levels-span'>
               vol
           </span>
         </div>
@@ -114,7 +114,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
           </button>
         </div>
        <div className='controls-levels-element'>
-          <span>
+          <span className='controls-levels-span'>
               ch
           </span>
         </div>
