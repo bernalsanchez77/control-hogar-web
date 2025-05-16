@@ -21,6 +21,9 @@
     user-select: none;
     -webkit-user-select: none;
   }
+  .controls-levels-button {
+      color:white
+  }
   button.controls-levels-button:active {
     background-color: white;
     transition: background-color 0.1s;
