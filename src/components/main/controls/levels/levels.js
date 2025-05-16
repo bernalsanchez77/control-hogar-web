@@ -78,7 +78,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
               mute
           </button>
         </div>
-       {devicesState.hdmi.state === 'roku'
+       {devicesState.hdmi.state === devicesState.hdmi.labels.roku &&
          <div className='controls-levels-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
