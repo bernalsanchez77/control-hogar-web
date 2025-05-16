@@ -99,6 +99,26 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
         </div>  
         }
       </div>
+      <div className='controls-levels-row'>
+        <div className='controls-levels-element'>
+          <span>
+              vol
+          </span>
+        </div>
+             <div className='controls-levels-element'>
+          <button
+            onContextMenu={(e) => e.preventDefault()}
+            className="controls-levels-button"
+            onClick={() => triggerHdmi()}>
+              mute
+          </button>
+        </div>
+       <div className='controls-levels-element'>
+          <span>
+              ch
+          </span>
+        </div>
+      </div>
     </div>
   )
 }
