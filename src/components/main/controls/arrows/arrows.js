@@ -27,7 +27,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
             onContextMenu={(e) => e.preventDefault()}
             className="controls-arrows-button control-arrows-button--left"
             onClick={() => triggerControl('left')}>
-              izquierda
+              &#9664;
           </button>
         </div>
         <div className='controls-arrows-element'>
@@ -43,7 +43,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
             onContextMenu={(e) => e.preventDefault()}
             className="controls-arrows-button"
             onClick={() => triggerControl('right')}>
-              derecha
+              &#9654;
           </button>
         </div>
       </div>
@@ -53,7 +53,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
             onContextMenu={(e) => e.preventDefault()}
             className="controls-arrows-button"
             onClick={() => triggerControl('down')}>
-              abajo
+              &#9660;
           </button>
         </div>
       </div>
