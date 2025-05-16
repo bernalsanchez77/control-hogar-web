@@ -21,7 +21,7 @@
     user-select: none;
     -webkit-user-select: none;
   }
-  .controls-levels-button {
+  .controls-levels-span {
       color:white
   }
   button.controls-levels-button:active {
