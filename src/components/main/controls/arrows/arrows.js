@@ -17,7 +17,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
             onContextMenu={(e) => e.preventDefault()}
             className="controls-arrows-button"
             onClick={() => triggerControl('up')}>
-              arriba
+              &#9650;
           </button>
         </div>
       </div>
