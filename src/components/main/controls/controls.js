@@ -1,6 +1,7 @@
 import React from 'react';
 import Top from './top/top';
 import Arrows from './arrows/arrows';
+import Levels from './levels/levels';
 import './controls.css';
 
 function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, changeControlParent}) {
