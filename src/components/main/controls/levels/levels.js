@@ -87,7 +87,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
               home
           </button>
         </div>
-        } else {
+        {devicesState.hdmiSala.state === 'cable' &&
          <div className='controls-levels-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
