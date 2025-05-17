@@ -62,7 +62,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
   return (
     <div className='controls-levels'>
       <div className='controls-levels-row'>
-        <div className='controls-levels-element controls-levels-element--left '>
+        <div className='controls-levels-element controls-levels-element--left'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className='controls-levels-button'
@@ -70,8 +70,9 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
              &#9650;
           </button>
         </div>
-       {devicesState.hdmiSala.state === 'roku' &&
-         <div className='controls-levels-element controls-levels-element--right '>
+       {
+         devicesState.hdmiSala.state === 'roku' &&
+         <div className='controls-levels-element controls-levels-element--right'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className={`controls-levels-button`}
@@ -80,13 +81,14 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
           </button>
         </div>
         }
-        {devicesState.hdmiSala.state === 'cable' &&
-         <div className='controls-levels-element controls-levels-element--right '>
+        {
+         devicesState.hdmiSala.state === 'cable' &&
+         <div className='controls-levels-element controls-levels-element--right'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className={`controls-levels-button`}
+            className={'controls-levels-button'}
             onClick={() => triggerInput()}>
-              up
+              &#9650
           </button>
         </div>  
         }
@@ -97,7 +99,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
               vol
           </span>
         </div>
-             <div className='controls-levels-element'>
+        <div className='controls-levels-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className="controls-levels-button"
@@ -112,7 +114,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
         </div>
       </div>
       <div className='controls-levels-row'>
-        <div className='controls-levels-element controls-levels-element--left '>
+        <div className='controls-levels-element controls-levels-element--left'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className='controls-levels-button'
@@ -121,7 +123,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
           </button>
         </div> 
         {devicesState.hdmiSala.state === 'roku' &&
-         <div className='controls-levels-element controls-levels-element--right '>
+         <div className='controls-levels-element controls-levels-element--right'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className={`controls-levels-button`}
@@ -130,8 +132,9 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
           </button>
         </div>
         }
-        {devicesState.hdmiSala.state === 'cable' &&
-         <div className='controls-levels-element  controls-levels-element--right'>
+        {
+         devicesState.hdmiSala.state === 'cable' &&
+         <div className='controls-levels-element controls-levels-element--right'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className={`controls-levels-button`}
