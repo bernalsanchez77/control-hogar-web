@@ -10,6 +10,12 @@
     width: 70px;
     margin: 5px;
   }
+  .controls-levels-element--left {
+    float: left;
+  }
+  .controls-levels-element--right {
+    float: right;
+  }
   .controls-levels-button {
     background-color: rgb(0, 44, 16, 0.8);
     font-size: 15px;
@@ -22,7 +28,7 @@
     -webkit-user-select: none;
   }
   .controls-levels-span {
-      color:white
+      color: white
   }
   button.controls-levels-button:active {
     background-color: white;
