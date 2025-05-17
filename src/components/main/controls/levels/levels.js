@@ -119,7 +119,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
             onContextMenu={(e) => e.preventDefault()}
             className='controls-levels-button'
             onClick={() => triggerPower()}>
-             &#9650;
+             &#9660;
           </button>
         </div> 
         {devicesState.hdmiSala.state === 'roku' &&
@@ -139,7 +139,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
             onContextMenu={(e) => e.preventDefault()}
             className={`controls-levels-button`}
             onClick={() => triggerInput()}>
-              down
+              &#9660;
           </button>
         </div>  
         }
