@@ -27,6 +27,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
   }
   const triggerMute = () => {
     navigator.vibrate([200]);
+    alert(screenSelected);
     if (devicesState[screenSelected].mute === 'on') {
       triggerControlParent([screenSelected], ['mute'], 'off');
     }
