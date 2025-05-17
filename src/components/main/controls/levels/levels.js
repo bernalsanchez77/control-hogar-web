@@ -119,6 +119,36 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
           </span>
         </div>
       </div>
+      <div className='controls-levels-row'>
+        <div className='controls-levels-element'>
+          <button
+            onContextMenu={(e) => e.preventDefault()}
+            className='controls-levels-button'
+            onClick={() => triggerPower()}>
+             &#9650;
+          </button>
+        </div> 
+        {devicesState.hdmiSala.state === 'roku' &&
+         <div className='controls-levels-element'>
+          <button
+            onContextMenu={(e) => e.preventDefault()}
+            className={`controls-levels-button`}
+            onClick={() => triggerInput()}>
+              rewind
+          </button>
+        </div>
+        }
+        {devicesState.hdmiSala.state === 'cable' &&
+         <div className='controls-levels-element'>
+          <button
+            onContextMenu={(e) => e.preventDefault()}
+            className={`controls-levels-button`}
+            onClick={() => triggerInput()}>
+              down
+          </button>
+        </div>  
+        }
+      </div>
     </div>
   )
 }
