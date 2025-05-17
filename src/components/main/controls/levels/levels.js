@@ -88,7 +88,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
             onContextMenu={(e) => e.preventDefault()}
             className={'controls-levels-button'}
             onClick={() => triggerInput()}>
-              &#9650
+              &#9650;
           </button>
         </div>  
         }
