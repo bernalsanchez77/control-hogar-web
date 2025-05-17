@@ -4,6 +4,7 @@
   }
   .controls-levels-row {
     display: inline-block;
+    width: 300px;
   }
   .controls-levels-element {
     float: left;
