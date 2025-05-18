@@ -1,4 +1,3 @@
-de
 import React from 'react';
 import './levels.css';
 
