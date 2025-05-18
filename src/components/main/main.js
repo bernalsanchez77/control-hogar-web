@@ -29,11 +29,11 @@ function Main() {
   const changeControlHogarData = (device, key, value, save = true) => {
     const devices = {...devicesStateUpdated.current};
     device.forEach(item => {
-      fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key[0] + '&value=' + value);
+      fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key[0] + '&value=' + value[0]);
       if (key[1]) {
-        devices[item][key[0]] = {...devices[item][key[0]], [key[1]]: value};
+        devices[item][key[0]] = {...devices[item][key[0]], [key[1]]: value[1] || value[0]};
       } else {
-        devices[item] = {...devices[item], [key[0]]: value};
+        devices[item] = {...devices[item], [key[0]]: value[1] || value[0]};
       }
     });
     if (save) {
