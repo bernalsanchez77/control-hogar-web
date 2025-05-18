@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import eruda from 'eruda';
 import logo from './logo.svg';
 import './App.css';
 import Test1 from './components/test/test1';
@@ -12,6 +13,7 @@ import Test8 from './components/test/test8';
 import Main from './components/main/main';
 
  function App() {
+   eruda.init();
    return <Main></Main>;
  }
 
