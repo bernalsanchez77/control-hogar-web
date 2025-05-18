@@ -100,7 +100,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
       <div className='controls-levels-row controls-levels-row--mute'>
         <div className='controls-levels-element controls-levels-element--mute'>
           <span className='controls-levels-span'>
-            {{ devicesState[screenSelected].volume }}
+            vo
           </span>
         </div>
         <div className='controls-levels-element controls-levels-element--mute-icon'>
