@@ -3,66 +3,21 @@ import React from 'react';
 import './levels.css';
 
 function Controls({ devicesState, screenSelected, triggerControlParent }) {
-  const triggerPower = () => {
-    navigator.vibrate([200]);
-    if (screenSelected === devicesState.proyectorSala.id) {
-      if (devicesState[screenSelected].state === 'on') {
-        triggerControlParent([screenSelected], ['state'], 'off');
-        setTimeout(() => {
-          triggerControlParent([devicesState.proyectorSwitchSala.id], ['state'], 'off');
-        }, 20000);
-      } else {
-        triggerControlParent([devicesState.proyectorSwitchSala.id], ['state'], 'on');
-        setTimeout(() => {
-          triggerControlParent([screenSelected], ['state'], 'on');
-        }, 5000);
-      }
-    } else {
-      if (devicesState[screenSelected].state === 'on') {
-        triggerControlParent([screenSelected], ['state'], 'off');
-      } else {
-        triggerControlParent([screenSelected], ['state'], 'on');
-      }
-    }
-  }
   const triggerMute = () => {
     navigator.vibrate([200]);
     if (devicesState[screenSelected].mute === 'on') {
-      triggerControlParent([screenSelected], ['mute'], 'off');
+      triggerControlParent([screenSelected], ['mute'], ['off']);
     }
     if (devicesState[screenSelected].mute === 'off') {
-      triggerControlParent([screenSelected], ['mute'], 'on');
+      triggerControlParent([screenSelected], ['mute'], ['on']);
     }
   }
   const triggerVolume = (vol) => {
     navigator.vibrate([200]);
     const newVol = parseInt(devicesState[screenSelected].volume) + parseInt(vol);
-    triggerControlParent([screenSelected], ['volume'], newVol);
+    triggerControlParent([screenSelected], ['volume'], [newVol, vol]);
   }
-  const triggerInput = () => {
-    navigator.vibrate([200]);
-    if (screenSelected === devicesState.teleSala.id) {
-      if (devicesState[screenSelected].input.state === 'hdmi1') {
-        triggerControlParent([devicesState[screenSelected].id], ['input', 'state'], 'hdmi2');
-      } else {
-        triggerControlParent([devicesState[screenSelected].id], ['input', 'state'], 'hdmi1');
-      }
-    }
-    if (screenSelected === devicesState.proyectorSala.id) {
-      if (devicesState[screenSelected].input.state === 'hdmi1') {
-        triggerControlParent([devicesState[screenSelected].id], ['input', 'state'], 'hdmi2');
-      } else {
-        triggerControlParent([devicesState[screenSelected].id], ['input', 'state'], 'hdmi1');
-      }
-    }
-    if (screenSelected === devicesState.teleCuarto.id) {
-      if (devicesState[screenSelected].input.state === 'hdmi1') {
-        triggerControlParent([devicesState[screenSelected].id], ['input', 'state'], 'hdmi2');
-      } else {
-        triggerControlParent([devicesState[screenSelected].id], ['input', 'state'], 'hdmi1');
-      }
-    }
-  }
+      
   return (
     <div className='controls-levels'>
       <div className='controls-levels-row'>
