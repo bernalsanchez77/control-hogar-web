@@ -1,4 +1,4 @@
-
+de
 import React from 'react';
 import './levels.css';
 
@@ -18,7 +18,6 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
     if (button === 'up') {
       newVol = parseInt(devicesState[screenSelected].volume) + parseInt(vol);
     } else {
-      console.log(button);
       newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
     }
     triggerControlParent([screenSelected], ['volume'], [button + vol, newVol]);
@@ -98,7 +97,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
           <button
             onContextMenu={(e) => e.preventDefault()}
             className='controls-levels-button'
-            onClick={() => triggerVolume('-1')}>
+            onClick={() => triggerVolume('1', 'down')}>
             &#9660;
           </button>
         </div>
