@@ -92,13 +92,13 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
           </div>
         }
       </div>
-      <div className='controls-levels-row'>
-        <div className='controls-levels-element'>
+      <div className='controls-levels-row controls-levels-row--mute'>
+        <div className='controls-levels-element controls-levels-element--mute'>
           <span className='controls-levels-span'>
             vol
           </span>
         </div>
-        <div className='controls-levels-element'>
+        <div className='controls-levels-element controls-levels-element--mute-icon'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className="controls-levels-button controls-levels-button--img"
@@ -121,7 +121,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             }
           </button>
         </div>
-        <div className='controls-levels-element'>
+        <div className='controls-levels-element  controls-levels-element--mute'>
           <span className='controls-levels-span'>
             ch
           </span>

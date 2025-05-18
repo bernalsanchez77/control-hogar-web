@@ -6,10 +6,19 @@
     display: inline-block;
     width: 240px;
   }
+  .controls-levels-row--mute {
+    height: 20px;
+  }
   .controls-levels-element {
     float: left;
     width: 70px;
     margin: 5px;
+  }
+  .controls-levels-element--mute {
+    margin-top: 0;
+  }
+  .controls-levels-element--mute-icon {
+    margin-top: -8px;
   }
   .controls-levels-element--left {
     float: left;
