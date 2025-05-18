@@ -104,7 +104,8 @@ export const devicesOriginal = {
     proyectorSwitchSala: {
         state: 'off',
         label: 'Proyector Switch Sala',
-        id: 'proyectorSwitchSala'
+        id: 'proyectorSwitchSala',
+        test: 'test'
     }
 };
 
