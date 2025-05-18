@@ -14,7 +14,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
   }
   const triggerVolume = (vol, button) => {
     navigator.vibrate([200]);
-    const newVol = 0;
+    let newVol = 0;
     if (button === 'up') {
       newVol = parseInt(devicesState[screenSelected].volume) + parseInt(vol);
     } else {
