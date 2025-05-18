@@ -46,7 +46,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             <button
               onContextMenu={(e) => e.preventDefault()}
               className={'controls-levels-button'}
-              onClick={() => triggerInput()}>
+              onClick={() => triggerVolume()}>
               &#9650;
             </button>
           </div>
@@ -101,7 +101,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             <button
               onContextMenu={(e) => e.preventDefault()}
               className={`controls-levels-button`}
-              onClick={() => triggerInput()}>
+              onClick={() => triggerVolume()}>
               rewind
             </button>
           </div>
@@ -112,7 +112,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             <button
               onContextMenu={(e) => e.preventDefault()}
               className={`controls-levels-button`}
-              onClick={() => triggerInput()}>
+              onClick={() => triggerVolume()}>
               &#9660;
             </button>
           </div>
