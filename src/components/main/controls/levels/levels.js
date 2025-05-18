@@ -40,7 +40,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             <button
               onContextMenu={(e) => e.preventDefault()}
               className={`controls-levels-button`}
-              onClick={() => triggerVolume('1', 'down')}>
+              onClick={() => triggerVolume()}>
               home
             </button>
           </div>
@@ -51,7 +51,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             <button
               onContextMenu={(e) => e.preventDefault()}
               className={'controls-levels-button'}
-              onClick={() => triggerVolume('1', 'down')}>
+              onClick={() => triggerVolume()}>
               &#9650;
             </button>
           </div>
