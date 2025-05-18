@@ -34,6 +34,10 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
       triggerControlParent([screenSelected], ['mute'], 'on');
     }
   }
+  const triggerVolume = (vol) => {
+    navigator.vibrate([200]);
+      triggerControlParent([screenSelected], ['mute'], 'off');
+  }
   const triggerInput = () => {
     navigator.vibrate([200]);
     if (screenSelected === devicesState.teleSala.id) {
@@ -65,7 +69,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
           <button
             onContextMenu={(e) => e.preventDefault()}
             className='controls-levels-button'
-            onClick={() => triggerPower()}>
+            onClick={() => triggerVolume()}>
             &#9650;
           </button>
         </div>
