@@ -106,11 +106,11 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             onClick={() => triggerMute()}>
             {
               devicesState[screenSelected].mute === 'off' &&
-              <img width="50" height="50" src="https://img.icons8.com/ios/50/mute--v1.png" alt="mute--v1" />
+              <img src="/imgs/sound-50.png" alt="icono" />
             }
             {
               devicesState[screenSelected].mute === 'on' &&
-              <img width="50" height="50" src="https://img.icons8.com/ios/50/mute--v1.png" alt="mute--v1" />
+              <img src="/imgs/mute-50.png" alt="icono" />
             }
           </button>
         </div>
