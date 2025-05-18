@@ -28,6 +28,13 @@
     user-select: none;
     -webkit-user-select: none;
   }
+  .controls-levels-button--img {
+    background-color: transparent;
+    border: none;
+  }
+  .controls-levels-img {
+    width: 30px;
+  }
   .controls-levels-span {
       color: white
   }

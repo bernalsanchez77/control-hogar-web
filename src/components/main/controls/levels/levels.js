@@ -27,7 +27,6 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
   }
   const triggerMute = () => {
     navigator.vibrate([200]);
-    alert(screenSelected);
     if (devicesState[screenSelected].mute === 'on') {
       triggerControlParent([screenSelected], ['mute'], 'off');
     }
@@ -102,15 +101,23 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
         <div className='controls-levels-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className="controls-levels-button"
+            className="controls-levels-button controls-levels-button--img"
             onClick={() => triggerMute()}>
             {
               devicesState[screenSelected].mute === 'off' &&
-              <img src="/imgs/sound-50.png" alt="icono" />
+              <img
+                className='controls-levels-img'
+                src="/imgs/sound-50.png"
+                alt="icono">
+              </img>
             }
             {
               devicesState[screenSelected].mute === 'on' &&
-              <img src="/imgs/mute-50.png" alt="icono" />
+              <img
+                className='controls-levels-img'
+                src="/imgs/mute-50.png"
+                alt="icono">
+              </img>
             }
           </button>
         </div>
