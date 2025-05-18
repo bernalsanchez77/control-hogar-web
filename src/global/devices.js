@@ -52,8 +52,8 @@ export const devicesOriginal = {
     hdmiSala: {
         state: 'roku',
         label: {
-        roku: 'Stream',
-        cable: 'Cable'
+            roku: 'Stream',
+            cable: 'Cable'
         },
         id: 'hdmiSala'
     },
@@ -65,11 +65,11 @@ export const devicesOriginal = {
         volume: '0',
         channelSelected: 'siete',
         input: {
-        state: 'hdmi1',
-        label: {
-            hdmi1: 'Roku/Cable',
-            hdmi2: 'Chromecast'
-        }
+            state: 'hdmi1',
+            label: {
+                hdmi1: 'Roku/Cable',
+                hdmi2: 'Chromecast'
+            }
         }
     },
     teleSala: {
@@ -80,11 +80,11 @@ export const devicesOriginal = {
         volume: '0',
         channelSelected: 'siete',
         input: {
-        state: 'hdmi1', 
-        label: {
-            hdmi1: 'Roku/Cable',
-            hdmi2: 'Fire stick'
-        }
+            state: 'hdmi1', 
+            label: {
+                hdmi1: 'Roku/Cable',
+                hdmi2: 'Fire stick'
+            }
         }
     },
     proyectorSala: {
@@ -94,11 +94,11 @@ export const devicesOriginal = {
         mute: 'off',
         volume: '0',
         input: {
-        state: 'hdmi1',
-        label: {
-            hdmi1: 'Roku/Cable',
-            hdmi2: 'Playstation'
-        }
+            state: 'hdmi1',
+            label: {
+                hdmi1: 'Roku/Cable',
+                hdmi2: 'Playstation'
+            }
         }
     },
     proyectorSwitchSala: {
