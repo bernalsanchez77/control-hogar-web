@@ -36,7 +36,8 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
   }
   const triggerVolume = (vol) => {
     navigator.vibrate([200]);
-      triggerControlParent([screenSelected], ['mute'], 'off');
+    const newVol = devicesState[screenSelected].volume + vol;
+    triggerControlParent([screenSelected], ['volume'], newVol);
   }
   const triggerInput = () => {
     navigator.vibrate([200]);
@@ -69,7 +70,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
           <button
             onContextMenu={(e) => e.preventDefault()}
             className='controls-levels-button'
-            onClick={() => triggerVolume()}>
+            onClick={() => triggerVolume('1')}>
             &#9650;
           </button>
         </div>
@@ -79,7 +80,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             <button
               onContextMenu={(e) => e.preventDefault()}
               className={`controls-levels-button`}
-              onClick={() => triggerInput()}>
+              onClick={() => triggerVolume('-1')}>
               home
             </button>
           </div>
