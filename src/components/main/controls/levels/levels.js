@@ -41,7 +41,11 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
               onContextMenu={(e) => e.preventDefault()}
               className={`controls-levels-button`}
               onClick={() => triggerVolume()}>
-              home
+              <img
+                className='controls-levels-img'
+                src="/imgs/home-50.png"
+                alt="icono">
+              </img>
             </button>
           </div>
         }
