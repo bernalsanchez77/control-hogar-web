@@ -21,6 +21,7 @@ function Main() {
   const [credential, setCredential] = useState('');
   const ownerCredential = useRef('owner');
   const guestCredential = useRef('guest');
+  const devCredential = useRef('dev');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
   const fetchIfttt = (text) => {
@@ -68,8 +69,13 @@ function Main() {
       });
       const data = await res.json();
       if (data.success) {
-        localStorage.setItem('user', ownerCredential.current);
-        setCredential(ownerCredential.current);
+        if (data.dev) {
+          localStorage.setItem('user', data.dev);
+          setCredential(devCredential.current);
+        } else {
+          localStorage.setItem('user', ownerCredential.current);
+          setCredential(ownerCredential.current);
+        }
       }
     }
   }

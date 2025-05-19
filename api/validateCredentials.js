@@ -3,7 +3,11 @@ export default function handler(req, res) {
     if (req.method !== "POST") {
       return res.status(405).end();
     }
-    const validKey = process.env.REACT_APP_CREDENTIALS_KEY;
-    const isValid = key === validKey;
-    res.status(200).json({ success: isValid });
+    const validKey = ''
+    if (key === process.env.REACT_APP_CREDENTIALS_KEY) {
+      res.status(200).json({ success: isValid, type: ''});
+    }
+    if (key === process.env.REACT_APP_DEV_CREDENTIALS_KEY) {
+      res.status(200).json({ success: isValid, type: 'dev'});
+    }
   }
