@@ -17,6 +17,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
     if (button === 'up') {
       newVol = parseInt(devicesState[screenSelected].volume) + parseInt(vol);
     } else if (devicesState[screenSelected].volume !== '0') {
+      console.log(parseInt(devicesState[screenSelected].volume) - parseInt(vol));
       newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
     }
     triggerControlParent([screenSelected], ['volume'], [button + vol, newVol]);
