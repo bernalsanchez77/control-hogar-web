@@ -157,48 +157,48 @@ function Main() {
         setCredentialsParent={setCredentials}>
       </Credentials>
       {credential &&
+      <div className='main-components'>
+        {inRange || credential === ownerCredential.current ?
         <div>
-          {inRange || credential === ownerCredential.current ?
+          <Screens
+            credential={credential}
+            ownerCredential={ownerCredential.current}
+            inRange={inRange}
+            devicesState={devicesState}
+            loadingDevices={loadingDevices}
+            screenSelected={screenSelected}
+            changeScreenParent={changeScreen}>
+          </Screens>
+          <Controls
+            credential={credential}
+            ownerCredential={ownerCredential.current}
+            inRange={inRange}
+            devicesState={devicesState}
+            loadingDevices={loadingDevices}
+            screenSelected={screenSelected}
+            changeControlParent={changeControl}>
+          </Controls>
+          <Devices
+            credential={credential}
+            ownerCredential={ownerCredential.current}
+            inRange={inRange}
+            devicesState={devicesState}
+            loadingDevices={loadingDevices}
+            changeDeviceParent={changeDevice}>
+          </Devices>
+          {credential === devCredential.current &&
           <div>
-            <Screens
-              credential={credential}
-              ownerCredential={ownerCredential.current}
-              inRange={inRange}
-              devicesState={devicesState}
-              loadingDevices={loadingDevices}
-              screenSelected={screenSelected}
-              changeScreenParent={changeScreen}>
-            </Screens>
-            <Controls
-              credential={credential}
-              ownerCredential={ownerCredential.current}
-              inRange={inRange}
-              devicesState={devicesState}
-              loadingDevices={loadingDevices}
-              screenSelected={screenSelected}
-              changeControlParent={changeControl}>
-            </Controls>
-            <Devices
-              credential={credential}
-              ownerCredential={ownerCredential.current}
-              inRange={inRange}
-              devicesState={devicesState}
-              loadingDevices={loadingDevices}
-              changeDeviceParent={changeDevice}>
-            </Devices>
-            {credential === devCredential.current &&
-            <div>
-              <button onClick={resetDevices}>
-                Reset
-              </button>
-            </div>
-            }
-          </div> :
-          <div>
-            <span style={{color: "white"}}>Fuera del Area Permitida</span>
+            <button onClick={resetDevices}>
+              Reset
+            </button>
           </div>
           }
+        </div> :
+        <div>
+          <span style={{color: "white"}}>Fuera del Area Permitida</span>
         </div>
+        }
+      </div>
       }
     </div>
   );
