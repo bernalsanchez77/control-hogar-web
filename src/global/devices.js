@@ -115,6 +115,12 @@ export const devicesOriginal = {
         state: 'off',
         label: 'Proyector Switch Sala',
         id: 'proyectorSwitchSala'
+    },
+    rokuSala: {
+      state: 'play',
+      label: '',
+      id: 'rokuSala',
+      app: 'none'
     }
 };
 

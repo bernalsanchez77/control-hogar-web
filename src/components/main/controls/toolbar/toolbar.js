@@ -24,7 +24,11 @@ function Toolbar({ devicesState, triggerControlParent }) {
                 onContextMenu={(e) => e.preventDefault()}
                 className={`toolbar-levels-button`}
                 onClick={() => triggerControl('play')}>
-                &#x23ef;
+                <img
+                    className='toolbar-levels-img toolbar-levels-img--button'
+                    src="/imgs/pause-50.png"
+                    alt="icono">
+                </img>
             </button>
         </div>
         <div className='toolbar-levels-element toolbar-levels-element--right'>
