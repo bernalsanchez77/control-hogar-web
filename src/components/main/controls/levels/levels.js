@@ -101,7 +101,8 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             &#9660;
           </button>
         </div>
-        {devicesState.hdmiSala.state === 'roku' &&
+        {
+        devicesState.hdmiSala.state === 'roku' &&
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               onContextMenu={(e) => e.preventDefault()}
@@ -112,7 +113,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
           </div>
         }
         {
-          devicesState.hdmiSala.state === 'cable' &&
+        devicesState.hdmiSala.state === 'cable' &&
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               onContextMenu={(e) => e.preventDefault()}
