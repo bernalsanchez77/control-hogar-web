@@ -13,9 +13,9 @@ function LuzEscalera({devicesState, triggerDeviceParent}) {
 
   return (
     <div className="luzEscalera">
-      <div>
+      {/* <div>
         <button className={`devices-button ${devicesState.LuzEscalera.state === 'on' ? "devices-button--on" : "devices-button-off"}`} onClick={() => triggerDevice(devicesState.LuzEscalera.id)}>{devicesState.LuzEscalera.label}</button>
-      </div>
+      </div> */}
     </div>
   );
 }
