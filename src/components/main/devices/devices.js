@@ -12,10 +12,10 @@ import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
 import './devices.css';
 
-function Devices({credential, ownerCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
+function Devices({credential, ownerCredential, devCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
   const triggerDevice = (device, key, value) => {
     navigator.vibrate([200]);
-    if (inRange || (credential === ownerCredential)) {
+    if (inRange || (credential === ownerCredential || credential === devCredential)) {
       if (!loadingDevices.current) {
         changeDeviceParent(device, key, value);
       } else {
@@ -67,7 +67,7 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
             triggerDeviceParent={triggerDevice}>
           </ParlantesSala>
         </div>
-        {credential === ownerCredential &&
+        {(credential === ownerCredential || credential === devCredential) &&
         <div className='devices-element'>
           <CalentadorNegro
             devicesState={devicesState}
@@ -75,7 +75,7 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
           </CalentadorNegro>
         </div>
         }
-        {credential === ownerCredential &&
+        {(credential === ownerCredential || credential === devCredential) &&
         <div className='devices-element'>
           <CalentadorBlanco
             devicesState={devicesState}
@@ -85,7 +85,7 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
         }
       </div>
       <div className='devices-row'>
-        {credential === ownerCredential &&
+        {(credential === ownerCredential || credential === devCredential) &&
         <div className='devices-element'>
           <LuzCuarto
             devicesState={devicesState}
@@ -93,7 +93,7 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
           </LuzCuarto>
         </div>
         }
-        {credential === ownerCredential &&
+        {(credential === ownerCredential || credential === devCredential) &&
         <div className='devices-element'>
           <LuzEscalera
             devicesState={devicesState}

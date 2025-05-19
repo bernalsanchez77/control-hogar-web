@@ -13,9 +13,9 @@ function LuzCuarto({devicesState, triggerDeviceParent}) {
 
   return (
     <div className="luzCuarto">
-      {/* <div>
+      <div>
         <button className={`devices-button ${devicesState.LuzCuarto.state === 'on' ? "devices-button--on" : "devices-button-off"}`} onClick={() => triggerDevice(devicesState.LuzCuarto.id)}>{devicesState.LuzCuarto.label}</button>
-      </div> */}
+      </div>
     </div>
   );
 }

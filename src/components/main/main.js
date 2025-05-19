@@ -183,6 +183,7 @@ function Main() {
           <Devices
             credential={credential}
             ownerCredential={ownerCredential.current}
+            devCredential={devCredential.current}
             inRange={inRange}
             devicesState={devicesState}
             loadingDevices={loadingDevices}
