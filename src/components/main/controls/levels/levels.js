@@ -11,13 +11,14 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
       triggerControlParent([screenSelected], ['mute'], ['on']);
     }
   }
-  const triggerControl = (device) => {
+  const triggerControl = (value) => {
     navigator.vibrate([200]);
     const device = 'rokuSala';
     triggerControlParent([device], ['command'], [value], false);
   }
-  const triggerChannel = (channel) => {
+  const triggerChannel = (value) => {
     navigator.vibrate([200]);
+    const device = 'rokuSala';
     triggerControlParent([device], ['command'], [value], false);
   }
   const triggerVolume = (vol, button) => {
