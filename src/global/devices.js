@@ -24,6 +24,16 @@ export const devicesOriginal = {
         label: 'Lampara Rotatoria',
         id: 'lamparaRotatoria'
     },
+    luzCuarto: {
+        state: 'off',
+        label: 'Luz Cuarto',
+        id: 'luzCuarto'
+    },
+    luzEscalera: {
+        state: 'off',
+        label: 'Luz Escalera',
+        id: 'luzEscalera'
+    },
     chimeneaSala: {
         state: 'off',
         label: 'Chimenea Sala',

@@ -3,12 +3,15 @@ import LamparaComedor from './lamparaComedor/lamparaComedor';
 import LamparaTurca from './lamparaTurca/lamparaTurca';
 import LamparaSala from './lamparaSala/lamparaSala';
 import LamparaRotatoria from './lamparaRotatoria/lamparaRotatoria';
+import LuzCuarto from './luzCuarto/luzCuarto';
+import LuzEscalera from './luzEscalera/luzEscalera';
 import ChimeneaSala from './chimeneaSala/chimeneaSala';
 import ParlantesSala from './parlantesSala/parlantesSala';
 import CalentadorNegro from './calentadorNegro/calentadorNegro';
 import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
 import './devices.css';
+import LuzCuarto from './luzCuarto/luzCuarto';
 
 function Devices({credential, ownerCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
   const triggerDevice = (device, key, value) => {
@@ -83,6 +86,22 @@ function Devices({credential, ownerCredential, inRange, devicesState, loadingDev
         }
       </div>
       <div className='devices-row'>
+        {credential === ownerCredential &&
+        <div className='devices-element'>
+          <LuzCuarto
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </LuzCuarto>
+        </div>
+        }
+        {credential === ownerCredential &&
+        <div className='devices-element'>
+          <LuzEscalera
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </LuzEscalera>
+        </div>
+        }
         <div className='devices-element'>
           <LamparasAbajo
             devicesState={devicesState}

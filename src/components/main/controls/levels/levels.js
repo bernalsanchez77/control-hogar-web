@@ -11,6 +11,15 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
       triggerControlParent([screenSelected], ['mute'], ['on']);
     }
   }
+  const triggerControl = (device) => {
+    navigator.vibrate([200]);
+    const device = 'rokuSala';
+    triggerControlParent([device], ['command'], [value], false);
+  }
+  const triggerChannel = (channel) => {
+    navigator.vibrate([200]);
+    triggerControlParent([device], ['command'], [value], false);
+  }
   const triggerVolume = (vol, button) => {
     navigator.vibrate([200]);
     let newVol = 0;
@@ -40,7 +49,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             <button
               onContextMenu={(e) => e.preventDefault()}
               className={`controls-levels-button`}
-              onClick={() => triggerVolume()}>
+              onClick={() => triggerControl('home')}>
               <img
                 className='controls-levels-img controls-levels-img--button'
                 src="/imgs/home-50.png"
@@ -55,7 +64,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             <button
               onContextMenu={(e) => e.preventDefault()}
               className={'controls-levels-button'}
-              onClick={() => triggerVolume()}>
+              onClick={() => triggerChannel('up')}>
               &#9650;
             </button>
           </div>
@@ -72,16 +81,14 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             onContextMenu={(e) => e.preventDefault()}
             className="controls-levels-button controls-levels-button--img"
             onClick={() => triggerMute()}>
-            {
-              devicesState[screenSelected].mute === 'off' &&
+            {devicesState[screenSelected].mute === 'off' &&
               <img
                 className='controls-levels-img controls-levels-img--no-button'
                 src="/imgs/sound-50.png"
                 alt="icono">
               </img>
             }
-            {
-              devicesState[screenSelected].mute === 'on' &&
+            {devicesState[screenSelected].mute === 'on' &&
               <img
                 className='controls-levels-img controls-levels-img--no-button'
                 src="/imgs/mute-50.png"
@@ -92,7 +99,12 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
         </div>
         <div className='controls-levels-element  controls-levels-element--mute'>
           <span className='controls-levels-span'>
-            ch
+            {devicesState.hdmiSala.state === 'roku'  &&
+              'op'
+            }
+            {devicesState.hdmiSala.state === 'cable'  &&
+              'ch'
+            }
           </span>
         </div>
       </div>
@@ -111,8 +123,12 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             <button
               onContextMenu={(e) => e.preventDefault()}
               className={`controls-levels-button`}
-              onClick={() => triggerVolume()}>
-              rewind
+              onClick={() => triggerControl('back')}>
+              <img
+                className='controls-levels-img controls-levels-img--button'
+                src="/imgs/back-50.png"
+                alt="icono">
+              </img>
             </button>
           </div>
         }
@@ -122,7 +138,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             <button
               onContextMenu={(e) => e.preventDefault()}
               className={`controls-levels-button`}
-              onClick={() => triggerVolume()}>
+              onClick={() => triggerChannel('down')}>
               &#9660;
             </button>
           </div>
