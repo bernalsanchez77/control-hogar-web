@@ -120,12 +120,14 @@ function Main() {
   }, [user]);
 
   const init = useCallback(async () => {
-    eruda.init();
     const localStorageScreen = localStorage.getItem('screen');
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
     }
     setCredential(localStorage.getItem('user'));
+    if (credential === devCredential.current) {
+      eruda.init();
+    }
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
     getStates();
