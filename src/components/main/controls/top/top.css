@@ -22,6 +22,17 @@
     user-select: none;
     -webkit-user-select: none;
   }
+  .controls-top-button--img {
+    background-color: transparent;
+    border: none;
+  }
+  .controls-top-img--no-button {
+    width: 30px;
+  }
+  .controls-top-img--button {
+    width: 20px;
+    margin-top: 5px;
+  }
   button.controls-top-button:active {
     background-color: white;
     transition: background-color 0.1s;
