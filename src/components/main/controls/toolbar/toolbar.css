@@ -1,0 +1,58 @@
+.toolbar-levels {
+    margin: 0 10px 20px;
+    display: inline-block;
+  }
+  .toolbar-levels-row {
+    display: inline-block;
+    width: 240px;
+  }
+  .toolbar-levels-row--mute {
+    height: 20px;
+  }
+  .toolbar-levels-element {
+    float: left;
+    width: 70px;
+    margin: 5px;
+  }
+  .toolbar-levels-element--mute {
+    margin-top: -2px;
+  }
+  .toolbar-levels-element--mute-icon {
+    margin-top: -8px;
+  }
+  .toolbar-levels-element--left {
+    float: left;
+  }
+  .toolbar-levels-element--right {
+    float: right;
+  }
+  .toolbar-levels-button {
+    background-color: rgb(0, 12, 96, 0.5);
+    font-size: 15px;
+    padding: 3px;
+    width: 100%;
+    border: grey 1px solid;
+    height: 40px;
+    border-radius: 5px;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .toolbar-levels-button--img {
+    background-color: transparent;
+    border: none;
+  }
+  .toolbar-levels-img--no-button {
+    width: 30px;
+  }
+  .toolbar-levels-img--button {
+    width: 20px;
+    margin-top: 5px;
+  }
+  .toolbar-levels-span {
+      color: white
+  }
+  button.toolbar-levels-button:active {
+    background-color: white;
+    transition: background-color 0.1s;
+  }
+  

@@ -2,6 +2,7 @@ import React from 'react';
 import Top from './top/top';
 import Arrows from './arrows/arrows';
 import Levels from './levels/levels';
+import Toolbar from './toolbar/toolbar';
 import './controls.css';
 
 function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, changeControlParent}) {
@@ -35,6 +36,10 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           screenSelected={screenSelected}
           triggerControlParent={triggerControl}>
         </Levels>
+        <Toolbar
+          devicesState={devicesState}
+          triggerControlParent={triggerControl}>
+        </Toolbar>
       </div>
     </div>
   )
