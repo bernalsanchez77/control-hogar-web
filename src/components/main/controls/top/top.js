@@ -6,12 +6,12 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
     navigator.vibrate([200]);
     if (screenSelected === devicesState.proyectorSala.id) {
       if (devicesState[screenSelected].state === 'on') {
-        triggerControlParent([screenSelected], ['state'], ['off']);
+        triggerControlParent([screenSelected, devicesState.parlantesSala.id, devicesState.lamparaSala.id, devicesState.lamparaComedor.id], ['state'], ['off']);
         setTimeout(() => {
           triggerControlParent([devicesState.proyectorSwitchSala.id], ['state'], ['off']);
         }, 20000);
       } else {
-        triggerControlParent([devicesState.proyectorSwitchSala.id], ['state'], ['on']);
+        triggerControlParent([devicesState.proyectorSwitchSala.id, devicesState.parlantesSala.id, devicesState.lamparaSala.id, devicesState.lamparaComedor.id], ['state'], ['on']);
         setTimeout(() => {
           triggerControlParent([screenSelected], ['state'], ['on']);
         }, 5000);
