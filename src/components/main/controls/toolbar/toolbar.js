@@ -19,7 +19,7 @@ function Toolbar({ devicesState, triggerControlParent }) {
             &#x23ee;
           </button>
         </div>
-        <div className='toolbar-levels-element toolbar-levels-element--right'>
+        <div className='toolbar-levels-element'>
             <button
                 onContextMenu={(e) => e.preventDefault()}
                 className={`toolbar-levels-button`}
