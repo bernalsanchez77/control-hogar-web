@@ -41,8 +41,12 @@
     background-color: transparent;
     border: none;
   }
-  .controls-levels-img {
+  .controls-levels-img--no-button {
     width: 30px;
+  }
+  .controls-levels-img--button {
+    width: 20px;
+    margin-top: 5px;
   }
   .controls-levels-span {
       color: white

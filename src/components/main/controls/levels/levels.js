@@ -42,7 +42,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
               className={`controls-levels-button`}
               onClick={() => triggerVolume()}>
               <img
-                className='controls-levels-img'
+                className='controls-levels-img controls-levels-img--button'
                 src="/imgs/home-50.png"
                 alt="icono">
               </img>
@@ -83,7 +83,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             {
               devicesState[screenSelected].mute === 'on' &&
               <img
-                className='controls-levels-img'
+                className='controls-levels-img controls-levels-img--no-button'
                 src="/imgs/mute-50.png"
                 alt="icono">
               </img>
