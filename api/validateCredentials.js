@@ -5,9 +5,9 @@ export default function handler(req, res) {
     }
     const validKey = ''
     if (key === process.env.REACT_APP_CREDENTIALS_KEY) {
-      res.status(200).json({ success: isValid, type: ''});
+      res.status(200).json({ success: isValid});
     }
     if (key === process.env.REACT_APP_DEV_CREDENTIALS_KEY) {
-      res.status(200).json({ success: isValid, type: 'dev'});
+      res.status(200).json({ success: isValid});
     }
   }
