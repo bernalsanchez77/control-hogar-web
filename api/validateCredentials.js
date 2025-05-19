@@ -10,7 +10,7 @@ export default function handler(req, res) {
     }
     if (key === process.env.REACT_APP_DEV_CREDENTIALS_KEY) {
       validKey = true;
-      dev = true;
+      dev = 'dev';
     }
-    res.status(200).json({ success: validKey, dev: dev});
+    res.status(200).json({ success: validKey, dev});
   }
