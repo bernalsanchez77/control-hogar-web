@@ -125,9 +125,6 @@ function Main() {
       setScreenSelected(localStorageScreen);
     }
     setCredential(localStorage.getItem('user'));
-    if (credential === devCredential.current) {
-      eruda.init();
-    }
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
     getStates();
@@ -142,8 +139,11 @@ function Main() {
   }, [init]);
 
   useEffect(() => {
+    if (credential === devCredential.current) {
+      eruda.init();
+    }
     devicesStateUpdated.current = devicesState;
-  }, [devicesState]);
+  }, [devicesState, credential, devCredential]);
 
   const resetDevices = () => {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
