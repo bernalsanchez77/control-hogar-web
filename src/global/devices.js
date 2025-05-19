@@ -120,7 +120,24 @@ export const devicesOriginal = {
       state: 'play',
       label: '',
       id: 'rokuSala',
-      app: 'none'
+      app: 'none',
+      channelSelected: 'siete',
+      channels: {
+        siete: {
+            number: '07',
+            label: 'Siete',
+            id: 'siete',
+            info: '',
+            img: '/imgs/home-50.png'
+        },
+        seis: {
+            number: '06',
+            label: 'Seis',
+            id: 'seis',
+            info: '',
+            img: '/imgs/back-50.png'
+        },
+      }
     }
 };
 
