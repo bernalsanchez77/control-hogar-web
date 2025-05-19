@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import eruda from 'eruda';
 import Screens from './screens/screens';
 import Devices from './devices/devices';
 import Controls from './controls/controls';
@@ -113,6 +114,7 @@ function Main() {
   }, [user]);
 
   const init = useCallback(async () => {
+    eruda.init();
     const localStorageScreen = localStorage.getItem('screen');
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
