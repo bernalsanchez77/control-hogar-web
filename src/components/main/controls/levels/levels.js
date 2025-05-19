@@ -75,7 +75,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
             {
               devicesState[screenSelected].mute === 'off' &&
               <img
-                className='controls-levels-img'
+                className='controls-levels-img controls-levels-img--no-button'
                 src="/imgs/sound-50.png"
                 alt="icono">
               </img>
