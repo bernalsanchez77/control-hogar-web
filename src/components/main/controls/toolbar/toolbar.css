@@ -1,32 +1,32 @@
-.toolbar-levels {
+.controls-toolbar-levels {
     margin: 0 10px 20px;
     display: inline-block;
   }
-  .toolbar-levels-row {
+  .controls-toolbar-levels-row {
     display: inline-block;
     width: 240px;
   }
-  .toolbar-levels-row--mute {
+  .controls-toolbar-levels-row--mute {
     height: 20px;
   }
-  .toolbar-levels-element {
+  .controls-toolbar-levels-element {
     float: left;
     width: 70px;
     margin: 5px;
   }
-  .toolbar-levels-element--mute {
+  .controls-toolbar-levels-element--mute {
     margin-top: -2px;
   }
-  .toolbar-levels-element--mute-icon {
+  .controls-toolbar-levels-element--mute-icon {
     margin-top: -8px;
   }
-  .toolbar-levels-element--left {
+  .controls-toolbar-levels-element--left {
     float: left;
   }
-  .toolbar-levels-element--right {
+  .controls-toolbar-levels-element--right {
     float: right;
   }
-  .toolbar-levels-button {
+  .controls-toolbar-levels-button {
     background-color: rgb(0, 12, 96, 0.5);
     font-size: 15px;
     padding: 3px;
@@ -37,21 +37,21 @@
     user-select: none;
     -webkit-user-select: none;
   }
-  .toolbar-levels-button--img {
+  .controls-toolbar-levels-button--img {
     background-color: transparent;
     border: none;
   }
-  .toolbar-levels-img--no-button {
+  .controls-toolbar-levels-img--no-button {
     width: 30px;
   }
-  .toolbar-levels-img--button {
+  .controls-toolbar-levels-img--button {
     width: 20px;
     margin-top: 5px;
   }
-  .toolbar-levels-span {
+  .controls-toolbar-levels-span {
       color: white
   }
-  button.toolbar-levels-button:active {
+  button.controls-toolbar-levels-button:active {
     background-color: white;
     transition: background-color 0.1s;
   }
