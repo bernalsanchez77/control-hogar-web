@@ -194,6 +194,10 @@ function Main() {
             <button onClick={resetDevices}>
               Reset
             </button>
+            <button onClick={resetDevices}>
+              Reset
+            </button>
+            
           </div>
           }
         </div> :
