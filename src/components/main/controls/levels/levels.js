@@ -18,7 +18,8 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
   }
   const triggerChannel = (value) => {
     navigator.vibrate([200]);
-    const channelSelected = devicesState.cableSala.channelSelected;
+    const channelIdSelected = devicesState.cableSala.channelSelected;
+    const channelSelected = devicesState.cableSala.channels[channelIdSelected];
     const newChannel = Object.values(devicesState.cableSala.channels).find(obj => obj.order === 1);
     const device = 'cableSala';
     // triggerControlParent([device], ['channel'], [value], false);
