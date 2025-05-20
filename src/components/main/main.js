@@ -4,6 +4,7 @@ import Screens from './screens/screens';
 import Devices from './devices/devices';
 import Controls from './controls/controls';
 import Credentials from './credentials/credentials';
+import Dev from './dev/dev';
 import { devicesOriginal } from '../../global/devices';
 import Utils from '../../global/utils';
 import './main.css';
@@ -160,6 +161,9 @@ function Main() {
       iftttDisabled.current = true;
     }
   }
+  const changeDev = (fn) => {
+    fn();
+  }
 
   return (
     <div className="main">
@@ -201,18 +205,23 @@ function Main() {
             changeDeviceParent={changeDevice}>
           </Devices>
           {credential === devCredential.current &&
-          <div>
+          <Dev
+            changeDevParent={changeDev}>
+          </Dev>
+          }
+          {credential === devCredential.current &&
+          <div className='extra'>
             <button onClick={resetDevices}>
               Reset
             </button>
             <button className={iftttDisabled.current ? 'no-ifttt' : 'ifttt'} onClick={disableIfttt}>
               IFTTT
             </button>
+            <button className={iftttDisabled.current ? 'no-ifttt' : 'ifttt'} onClick={disableIfttt}>
+              
+            </button>
           </div>
           }
-          {/* <button onClick={localStorage.setItem('user', 'dev')}>
-            cookie
-          </button> */}
         </div> :
         <div>
           <span style={{color: "white"}}>Fuera del Area Permitida</span>
