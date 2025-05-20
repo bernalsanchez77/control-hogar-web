@@ -161,9 +161,18 @@ function Main() {
       iftttDisabled.current = true;
     }
   }
-  const changeDev = (fn) => {
-    [fn]();
+
+  const changeDev = (name) => {
+    const fn = devActions[name];
+    if (typeof fn === 'function') {
+      fn();
+    }
   }
+
+  const devActions = {
+    resetDevices,
+    disableIfttt
+  };
 
   return (
     <div className="main">
