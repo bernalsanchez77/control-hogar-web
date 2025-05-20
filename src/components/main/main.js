@@ -14,6 +14,7 @@ function Main() {
   const loadingDevices = useRef(false);
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
+  const iftttDisabled = useRef(false);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
@@ -150,6 +151,13 @@ function Main() {
   const resetDevices = () => {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
   }
+  const disableIfttt = () => {
+    if (iftttDisabled.current === true) {
+      iftttDisabled.current = false;
+    } else {
+      iftttDisabled.current = true;
+    }
+  }
 
   return (
     <div className="main">
@@ -194,8 +202,8 @@ function Main() {
             <button onClick={resetDevices}>
               Reset
             </button>
-            <button onClick={resetDevices}>
-              Reset
+            <button className={iftttDisabled ? 'no-ifttt' : 'ifttt'} onClick={disableIfttt}>
+              IFTTT
             </button>
             
           </div>
