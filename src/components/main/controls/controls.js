@@ -36,10 +36,12 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           screenSelected={screenSelected}
           triggerControlParent={triggerControl}>
         </Levels>
+        {devicesState.hdmiSala.state === 'roku' &&
         <Toolbar
           devicesState={devicesState}
           triggerControlParent={triggerControl}>
         </Toolbar>
+        }
       </div>
     </div>
   )

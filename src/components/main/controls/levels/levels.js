@@ -29,8 +29,6 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
       newChannelOrder = channelOrderSelected - 1; 
     }
     const newChannel = Object.values(devicesState.cableSala.channels).find(obj => obj.order === newChannelOrder);
-    console.log(newChannelOrder);
-    console.log(newChannel);
     triggerControlParent([device], ['selected'], [newChannel.id]);
   }
   const triggerVolume = (vol, button) => {
