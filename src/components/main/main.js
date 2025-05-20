@@ -16,6 +16,7 @@ function Main() {
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
   const iftttDisabled = useRef(false);
+  const channelsDisabled = useRef(false);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
@@ -167,6 +168,14 @@ function Main() {
     localStorage.setItem('user', '');
   }
 
+  const disableChannels = () => {
+    if (channelsDisabled.current === true) {
+      channelsDisabled.current = false;
+    } else {
+      channelsDisabled.current = true;
+    }
+  }
+
   const changeDev = (name) => {
     const fn = devActions[name];
     if (typeof fn === 'function') {
@@ -177,7 +186,8 @@ function Main() {
   const devActions = {
     resetDevices,
     disableIfttt,
-    removeStorage
+    removeStorage,
+    disableChannels
   };
 
   return (
@@ -222,6 +232,7 @@ function Main() {
           {credential === devCredential.current &&
           <Dev
             iftttDisabled={iftttDisabled.current}
+            channelsDisabled={channelsDisabled.current}
             changeDevParent={changeDev}>
           </Dev>
           }
