@@ -41,6 +41,7 @@ function Main() {
         send = false;
       } else if (channelsDisabled.current && item === 'hdmiSala') {
         send = false;
+        save = false;
       }
       if (send) {
         fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key[0] + '&value=' + value[0]);
