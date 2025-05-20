@@ -34,13 +34,12 @@ function Main() {
   }
 
   const changeControlHogarData = (device, key, value, save = true) => {
-    let send = true;
-    if (iftttDisabled.current) {
-      send = false;
-    }
     const devices = {...devicesStateUpdated.current};
     device.forEach(item => {
-      if (channelsDisabled.current && item === 'hdmiSala') {
+      let send = true;
+      if (iftttDisabled.current) {
+        send = false;
+      } else if (channelsDisabled.current && item === 'hdmiSala') {
         send = false;
       }
       if (send) {
