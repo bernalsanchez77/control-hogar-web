@@ -15,7 +15,7 @@ function Main() {
   const loadingDevices = useRef(false);
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
-  const iftttDisabled = useRef(false);
+  const [iftttDisabled, setIftttDisabled] = useState(false);
   const [channelsDisabled, setChannelDisabled] = useState(true);
   const [updatesDisabled, setUpdatesDisabled] = useState(true);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
@@ -29,7 +29,7 @@ function Main() {
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
   const fetchIfttt = (text) => {
-    if (!iftttDisabled.current) {
+    if (!iftttDisabled) {
       fetch(text);
     }
   }
@@ -39,7 +39,7 @@ function Main() {
     let saveState = true;
     device.forEach(item => {
       let send = true;
-      if (iftttDisabled.current) {
+      if (iftttDisabled) {
         send = false;
       } else if (channelsDisabled && item === 'hdmiSala') {
         send = false;
@@ -174,10 +174,10 @@ function Main() {
   }
 
   const disableIfttt = () => {
-    if (iftttDisabled.current === true) {
-      iftttDisabled.current = false;
+    if (iftttDisabled === true) {
+      setIftttDisabled(false);
     } else {
-      iftttDisabled.current = true;
+      setIftttDisabled(true);
     }
   }
 
