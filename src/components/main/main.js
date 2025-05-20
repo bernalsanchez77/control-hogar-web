@@ -202,7 +202,7 @@ function Main() {
             <button onClick={resetDevices}>
               Reset
             </button>
-            <button className={iftttDisabled ? 'no-ifttt' : 'ifttt'} onClick={disableIfttt}>
+            <button className={iftttDisabled.current ? 'no-ifttt' : 'ifttt'} onClick={disableIfttt}>
               IFTTT
             </button>
             
