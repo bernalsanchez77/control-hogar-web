@@ -17,7 +17,7 @@ function Main() {
   const userActive = useRef(true);
   const iftttDisabled = useRef(false);
   const channelsDisabled = useRef(true);
-  const updatesDisabled = useRef(false);
+  const updatesDisabled = useRef(true);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
