@@ -210,9 +210,9 @@ function Main() {
             </button>
           </div>
           }
-          <button onClick={localStorage.setItem('user', 'dev')}>
+          {/* <button onClick={localStorage.setItem('user', 'dev')}>
             cookie
-          </button>
+          </button> */}
         </div> :
         <div>
           <span style={{color: "white"}}>Fuera del Area Permitida</span>
