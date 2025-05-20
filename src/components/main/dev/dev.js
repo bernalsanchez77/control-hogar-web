@@ -42,15 +42,15 @@ function Dev({ iftttDisabled, channelsDisabled, updatesDisabled, changeDevParent
               Remove Storage
             </button>
         </div>
-        <div className='dev-row'>
-          <div className='dev-element'>
-            <button
-              onContextMenu={(e) => e.preventDefault()}
-              className={`dev-button ${updatesDisabled.current ? "dev-button--on" : "dev-button-off"}`}
-              onClick={() => changeDev('disableUpdates')}>
-                Disable Updates
-              </button>
-          </div>
+      </div>
+      <div className='dev-row'>
+        <div className='dev-element'>
+          <button
+            onContextMenu={(e) => e.preventDefault()}
+            className={`dev-button ${updatesDisabled.current ? "dev-button--on" : "dev-button-off"}`}
+            onClick={() => changeDev('disableUpdates')}>
+              Disable Updates
+            </button>
         </div>
       </div>
     </div>
