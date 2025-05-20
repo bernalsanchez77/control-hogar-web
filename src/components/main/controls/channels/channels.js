@@ -21,7 +21,7 @@ function Channels({ devicesState, triggerControlParent }) {
         <div className='controls-channels-element'>
             <img
                 className='controls-channels-img'
-                src="/imgs/pause-50.png"
+                src="/imgs/channels/siete.png"
                 alt="icono">
             </img>
         </div>
