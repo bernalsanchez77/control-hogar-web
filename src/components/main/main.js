@@ -162,7 +162,7 @@ function Main() {
     }
   }
   const changeDev = (fn) => {
-    fn();
+    [fn]();
   }
 
   return (
@@ -211,14 +211,8 @@ function Main() {
           }
           {credential === devCredential.current &&
           <div className='extra'>
-            <button onClick={resetDevices}>
-              Reset
-            </button>
             <button className={iftttDisabled.current ? 'no-ifttt' : 'ifttt'} onClick={disableIfttt}>
               IFTTT
-            </button>
-            <button className={iftttDisabled.current ? 'no-ifttt' : 'ifttt'} onClick={disableIfttt}>
-              
             </button>
           </div>
           }
