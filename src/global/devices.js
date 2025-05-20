@@ -117,27 +117,31 @@ export const devicesOriginal = {
         id: 'proyectorSwitchSala'
     },
     rokuSala: {
-      state: 'play',
-      label: '',
-      id: 'rokuSala',
-      app: 'none',
-      channelSelected: 'siete',
-      channels: {
-        siete: {
-            number: '07',
-            label: 'Siete',
-            id: 'siete',
-            info: '',
-            img: '/imgs/home-50.png'
-        },
-        seis: {
-            number: '06',
-            label: 'Seis',
-            id: 'seis',
-            info: '',
-            img: '/imgs/back-50.png'
-        },
-      }
+        state: 'play',
+        label: '',
+        id: 'rokuSala',
+        app: 'none',
+    },
+    cableSala: {
+        channelSelected: 'seis',
+        channels: {
+            seis: {
+                order: 1,
+                number: '06',
+                label: 'Seis',
+                id: 'seis',
+                info: '',
+                img: '/imgs/back-50.png'
+            },
+            siete: {
+                order: 2,
+                number: '07',
+                label: 'Siete',
+                id: 'siete',
+                info: '',
+                img: '/imgs/home-50.png'
+            },
+        }
     }
 };
 
