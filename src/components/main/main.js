@@ -154,12 +154,17 @@ function Main() {
   const resetDevices = () => {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
   }
+
   const disableIfttt = () => {
     if (iftttDisabled.current === true) {
       iftttDisabled.current = false;
     } else {
       iftttDisabled.current = true;
     }
+  }
+
+  const removeStorage = () => {
+    localStorage.setItem('user', '');
   }
 
   const changeDev = (name) => {
@@ -171,7 +176,8 @@ function Main() {
 
   const devActions = {
     resetDevices,
-    disableIfttt
+    disableIfttt,
+    removeStorage
   };
 
   return (
@@ -215,15 +221,9 @@ function Main() {
           </Devices>
           {credential === devCredential.current &&
           <Dev
+            iftttDisabled={iftttDisabled.current}
             changeDevParent={changeDev}>
           </Dev>
-          }
-          {credential === devCredential.current &&
-          <div className='extra'>
-            <button className={iftttDisabled.current ? 'no-ifttt' : 'ifttt'} onClick={disableIfttt}>
-              IFTTT
-            </button>
-          </div>
           }
         </div> :
         <div>
