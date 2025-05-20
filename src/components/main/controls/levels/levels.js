@@ -18,9 +18,18 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
   }
   const triggerChannel = (value) => {
     navigator.vibrate([200]);
+    let newChannelOrder = 0;
     const channelIdSelected = devicesState.cableSala.channelSelected;
-    const channelSelected = devicesState.cableSala.channels[channelIdSelected];
-    const newChannel = Object.values(devicesState.cableSala.channels).find(obj => obj.order === 1);
+    const channelOrderSelected = devicesState.cableSala.channels[channelIdSelected].order;
+    if (value === 'up') {
+      newChannelOrder = channelOrderSelected + 1; 
+    }
+    if (value === 'down') {
+      newChannelOrder = channelOrderSelected - 1; 
+    }
+    const newChannel = Object.values(devicesState.cableSala.channels).find(obj => obj.order === newChannelOrder);
+    console.log(newChannelOrder);
+    console.log(newChannel);
     const device = 'cableSala';
     // triggerControlParent([device], ['channel'], [value], false);
   }
