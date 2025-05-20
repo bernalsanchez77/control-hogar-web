@@ -170,7 +170,7 @@ function Main() {
       </Credentials>
       {credential &&
       <div className='main-components'>
-        {inRange || credential === ownerCredential.current ?
+        {inRange || (credential === ownerCredential.current || credential === devCredential.current) ?
         <div>
           <Screens
             credential={credential}
@@ -208,7 +208,6 @@ function Main() {
             <button className={iftttDisabled.current ? 'no-ifttt' : 'ifttt'} onClick={disableIfttt}>
               IFTTT
             </button>
-            
           </div>
           }
         </div> :
