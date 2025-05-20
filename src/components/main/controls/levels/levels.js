@@ -18,8 +18,10 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
   }
   const triggerChannel = (value) => {
     navigator.vibrate([200]);
-    const device = 'rokuSala';
-    triggerControlParent([device], ['command'], [value], false);
+    const channelSelected = devicesState.cableSala.channelSelected;
+    const newChannel = Object.values(devicesState.cableSala.channels).find(obj => obj.order === 1);
+    const device = 'cableSala';
+    // triggerControlParent([device], ['channel'], [value], false);
   }
   const triggerVolume = (vol, button) => {
     navigator.vibrate([200]);
