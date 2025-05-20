@@ -231,8 +231,8 @@ function Main() {
           </Devices>
           {credential === devCredential.current &&
           <Dev
-            iftttDisabled={iftttDisabled.current}
-            channelsDisabled={channelsDisabled.current}
+            iftttDisabled={iftttDisabled}
+            channelsDisabled={channelsDisabled}
             changeDevParent={changeDev}>
           </Dev>
           }

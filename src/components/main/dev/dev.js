@@ -1,7 +1,7 @@
 import React from 'react';
 import './dev.css';
 
-function Dev({ iftttDisabled, channelDisabled, changeDevParent }) {
+function Dev({ iftttDisabled, channelsDisabled, changeDevParent }) {
   const changeDev = (fn) => {
     navigator.vibrate([200]);
     changeDevParent(fn);
@@ -21,7 +21,7 @@ function Dev({ iftttDisabled, channelDisabled, changeDevParent }) {
         <div className='dev-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className={`dev-button ${iftttDisabled ? "dev-button--on" : "dev-button-off"}`}
+            className={`dev-button ${iftttDisabled.current ? "dev-button--on" : "dev-button-off"}`}
             onClick={() => changeDev('disableIfttt')}>
               Disable IFTTT
             </button>
@@ -29,7 +29,7 @@ function Dev({ iftttDisabled, channelDisabled, changeDevParent }) {
         <div className='dev-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className={`dev-button ${channelDisabled ? "dev-button--on" : "dev-button-off"}`}
+            className={`dev-button ${channelsDisabled.current ? "dev-button--on" : "dev-button-off"}`}
             onClick={() => changeDev('disableChannels')}>
               Disable Channels
             </button>
