@@ -17,6 +17,7 @@ function Main() {
   const userActive = useRef(true);
   const iftttDisabled = useRef(false);
   const channelsDisabled = useRef(true);
+  const updatesDisabled = useRef(false);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
@@ -147,7 +148,11 @@ function Main() {
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
     getStates();
-    setInterval(() => {getStates();}, 5000);
+    setInterval(() => {
+      if (!disableUpdates.current) {
+        getStates();
+      }
+    }, 5000);
     setInterval(() => {getPosition();}, 300000);
     utils.current.sendLogs(user.current + ' entro');
     getVisibility();
@@ -176,6 +181,14 @@ function Main() {
     }
   }
 
+  const disableUpdates = () => {
+    if (updatesDisabled.current === true) {
+      updatesDisabled.current = false;
+    } else {
+      updatesDisabled.current = true;
+    }
+  }
+
   const removeStorage = () => {
     localStorage.setItem('user', '');
   }
@@ -185,6 +198,7 @@ function Main() {
       channelsDisabled.current = false;
     } else {
       channelsDisabled.current = true;
+      updatesDisabled.current = true;
     }
   }
 
@@ -199,7 +213,8 @@ function Main() {
     resetDevices,
     disableIfttt,
     removeStorage,
-    disableChannels
+    disableChannels,
+    disableUpdates
   };
 
   return (
@@ -245,6 +260,7 @@ function Main() {
           <Dev
             iftttDisabled={iftttDisabled}
             channelsDisabled={channelsDisabled}
+            updatesDisabled={updatesDisabled}
             changeDevParent={changeDev}>
           </Dev>
           }

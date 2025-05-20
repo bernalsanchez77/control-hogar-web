@@ -1,7 +1,7 @@
 import React from 'react';
 import './dev.css';
 
-function Dev({ iftttDisabled, channelsDisabled, changeDevParent }) {
+function Dev({ iftttDisabled, channelsDisabled, updatesDisabled, changeDevParent }) {
   const changeDev = (fn) => {
     navigator.vibrate([200]);
     changeDevParent(fn);
@@ -40,6 +40,14 @@ function Dev({ iftttDisabled, channelsDisabled, changeDevParent }) {
             className={`dev-button`}
             onClick={() => changeDev('removeStorage')}>
               Remove Storage
+            </button>
+        </div>
+        <div className='dev-element'>
+          <button
+            onContextMenu={(e) => e.preventDefault()}
+            className={`dev-button ${updatesDisabled.current ? "dev-button--on" : "dev-button-off"}`}
+            onClick={() => changeDev('disableUpdates')}>
+              Disable Updates
             </button>
         </div>
       </div>
