@@ -123,7 +123,7 @@ export const devicesOriginal = {
         app: 'none',
     },
     cableSala: {
-        channelSelected: 'seis',
+        selected: 'seis',
         channels: {
             seis: {
                 order: 1,
