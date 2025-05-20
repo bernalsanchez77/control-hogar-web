@@ -131,7 +131,7 @@ export const devicesOriginal = {
                 label: 'Seis',
                 id: 'seis',
                 info: '',
-                img: '/imgs/back-50.png'
+                img: '/imgs/channels/seis.png'
             },
             siete: {
                 order: 2,
@@ -139,7 +139,7 @@ export const devicesOriginal = {
                 label: 'Siete',
                 id: 'siete',
                 info: '',
-                img: '/imgs/home-50.png'
+                img: '/imgs/channels/siete.png'
             },
             once: {
                 order: 3,
@@ -147,7 +147,7 @@ export const devicesOriginal = {
                 label: 'Once',
                 id: 'once',
                 info: '',
-                img: '/imgs/back-50.png'
+                img: '/imgs/channels/once.png'
             },
         }
     }

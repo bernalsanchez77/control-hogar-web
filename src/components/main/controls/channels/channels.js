@@ -2,6 +2,7 @@ import React from 'react';
 import './channels.css';
 
 function Channels({ devicesState, triggerControlParent }) {
+  let selectedImg = '/imgs/channels/' + devicesState.cableSala.selected + '.png';
   const triggerControl = (value) => {
     navigator.vibrate([200]);
     if (value === 'play') {
@@ -21,7 +22,7 @@ function Channels({ devicesState, triggerControlParent }) {
         <div className='controls-channels-element'>
             <img
                 className='controls-channels-img'
-                src="/imgs/channels/siete.png"
+                src={selectedImg}
                 alt="icono">
             </img>
         </div>
