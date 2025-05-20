@@ -34,9 +34,17 @@ function Main() {
   }
 
   const changeControlHogarData = (device, key, value, save = true) => {
+    let send = true;
+    if (iftttDisabled.current) {
+      send = false;
+    } else if (device === 'hdmiSala' && channelsDisabled.current) {
+      send = false;
+    }
     const devices = {...devicesStateUpdated.current};
     device.forEach(item => {
-      fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key[0] + '&value=' + value[0]);
+      if (send) {
+        fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key[0] + '&value=' + value[0]);
+      }
       if (save) {
         if (key[1]) {
           devices[item][key[0]] = {...devices[item][key[0]], [key[1]]: value[1] || value[0]};
