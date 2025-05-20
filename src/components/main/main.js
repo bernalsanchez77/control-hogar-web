@@ -196,6 +196,7 @@ function Main() {
   const disableChannels = () => {
     if (channelsDisabled.current === true) {
       channelsDisabled.current = false;
+      updatesDisabled.current = false;
     } else {
       channelsDisabled.current = true;
       updatesDisabled.current = true;
