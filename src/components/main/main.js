@@ -149,7 +149,7 @@ function Main() {
     setInRange(inRange);
     getStates();
     setInterval(() => {
-      if (!disableUpdates.current) {
+      if (!updatesDisabled.current) {
         getStates();
       }
     }, 5000);
