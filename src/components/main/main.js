@@ -26,7 +26,9 @@ function Main() {
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
   const fetchIfttt = (text) => {
-    fetch(text);
+    if (!iftttDisabled.current) {
+      fetch(text);
+    }
   }
 
   const changeControlHogarData = (device, key, value, save = true) => {
