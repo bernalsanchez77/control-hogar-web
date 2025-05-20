@@ -16,7 +16,7 @@ function Main() {
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
   const iftttDisabled = useRef(false);
-  const channelsDisabled = useRef(true);
+  const [channelsDisabled, setChannelDisabled] = useState(true);
   const updatesDisabled = useRef(true);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
@@ -41,7 +41,7 @@ function Main() {
       let send = true;
       if (iftttDisabled.current) {
         send = false;
-      } else if (channelsDisabled.current && item === 'hdmiSala') {
+      } else if (channelsDisabled && item === 'hdmiSala') {
         send = false;
         saveState = false;
       }
@@ -194,11 +194,12 @@ function Main() {
   }
 
   const disableChannels = () => {
-    if (channelsDisabled.current === true) {
+    if (channelsDisabled === true) {
+      setChannelDisabled(false);
       channelsDisabled.current = false;
       updatesDisabled.current = false;
     } else {
-      channelsDisabled.current = true;
+      setChannelDisabled(true);
       updatesDisabled.current = true;
     }
   }

@@ -29,7 +29,7 @@ function Dev({ iftttDisabled, channelsDisabled, updatesDisabled, changeDevParent
         <div className='dev-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className={`dev-button ${channelsDisabled.current ? "dev-button--on" : "dev-button-off"}`}
+            className={`dev-button ${channelsDisabled ? "dev-button--on" : "dev-button-off"}`}
             onClick={() => changeDev('disableChannels')}>
               Disable Channels
             </button>
