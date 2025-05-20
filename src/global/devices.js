@@ -141,6 +141,14 @@ export const devicesOriginal = {
                 info: '',
                 img: '/imgs/home-50.png'
             },
+            once: {
+                order: 3,
+                number: '11',
+                label: 'Once',
+                id: 'once',
+                info: '',
+                img: '/imgs/back-50.png'
+            },
         }
     }
 };
