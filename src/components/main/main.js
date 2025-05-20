@@ -17,7 +17,7 @@ function Main() {
   const userActive = useRef(true);
   const iftttDisabled = useRef(false);
   const [channelsDisabled, setChannelDisabled] = useState(true);
-  const updatesDisabled = useRef(true);
+  const [updatesDisabled, setUpdatesDisabled] = useState(true);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
@@ -149,7 +149,7 @@ function Main() {
     setInRange(inRange);
     getStates();
     setInterval(() => {
-      if (!updatesDisabled.current) {
+      if (!updatesDisabled) {
         getStates();
       }
     }, 5000);
@@ -182,10 +182,10 @@ function Main() {
   }
 
   const disableUpdates = () => {
-    if (updatesDisabled.current === true) {
-      updatesDisabled.current = false;
+    if (updatesDisabled === true) {
+      setUpdatesDisabled(false);
     } else {
-      updatesDisabled.current = true;
+      setUpdatesDisabled(true);
     }
   }
 
@@ -196,11 +196,10 @@ function Main() {
   const disableChannels = () => {
     if (channelsDisabled === true) {
       setChannelDisabled(false);
-      channelsDisabled.current = false;
-      updatesDisabled.current = false;
+      setUpdatesDisabled(false);
     } else {
       setChannelDisabled(true);
-      updatesDisabled.current = true;
+      setUpdatesDisabled(true);
     }
   }
 
