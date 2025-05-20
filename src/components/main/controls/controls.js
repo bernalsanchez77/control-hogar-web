@@ -3,6 +3,7 @@ import Top from './top/top';
 import Arrows from './arrows/arrows';
 import Levels from './levels/levels';
 import Toolbar from './toolbar/toolbar';
+import Channels from './channels/channels';
 import './controls.css';
 
 function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, changeControlParent}) {
@@ -41,6 +42,12 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           devicesState={devicesState}
           triggerControlParent={triggerControl}>
         </Toolbar>
+        }
+        {devicesState.hdmiSala.state === 'cable' &&
+        <Channels
+          devicesState={devicesState}
+          triggerControlParent={triggerControl}>
+        </Channels>
         }
       </div>
     </div>

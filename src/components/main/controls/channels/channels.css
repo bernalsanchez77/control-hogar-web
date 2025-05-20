@@ -1,0 +1,14 @@
+.controls-channels {
+    margin: 0 10px 20px;
+    display: inline-block;
+  }
+  .controls-channels-row {
+    display: inline-block;
+  }
+  .controls-channels-element {
+    float: left;
+    width: 70px;
+    margin: 5px;
+  }
+  .controls-channels-img {
+  }
