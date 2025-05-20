@@ -1,7 +1,7 @@
 import React from 'react';
 import './screens.css';
 
-function Screens({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, changeScreenParent}) {
+function Screens({credential, ownerCredential, devCredential,  inRange, devicesState, loadingDevices, screenSelected, changeScreenParent}) {
   const triggerScreen = (screen) => {
     navigator.vibrate([200]);
     if (inRange || (credential === ownerCredential && screenSelected !== screen)) {
@@ -18,7 +18,7 @@ function Screens({credential, ownerCredential, inRange, devicesState, loadingDev
     <div>
       <div className='screens'>
         <div className='screens-row'>
-          {credential === 'owner' &&
+          {(credential === ownerCredential || credential === devCredenrial) &&
           <div className='screens-element'>
             <button
               onContextMenu={(e) => e.preventDefault()}
