@@ -18,7 +18,7 @@ function Screens({credential, ownerCredential, devCredential,  inRange, devicesS
     <div>
       <div className='screens'>
         <div className='screens-row'>
-          {(credential === ownerCredential || credential === devCredenrial) &&
+          {(credential === ownerCredential || credential === devCredential) &&
           <div className='screens-element'>
             <button
               onContextMenu={(e) => e.preventDefault()}
