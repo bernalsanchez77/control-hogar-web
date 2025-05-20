@@ -37,11 +37,12 @@ function Main() {
     let send = true;
     if (iftttDisabled.current) {
       send = false;
-    } else if (device === 'hdmiSala' && channelsDisabled.current) {
-      send = false;
     }
     const devices = {...devicesStateUpdated.current};
     device.forEach(item => {
+      if (channelsDisabled.current && item === 'hdmiSala') {
+        send = false;
+      }
       if (send) {
         fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key[0] + '&value=' + value[0]);
       }
