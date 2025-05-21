@@ -18,7 +18,6 @@ function Main() {
 
   const [iftttDisabled, setIftttDisabled] = useState(false);
   const [channelsDisabled, setChannelsDisabled] = useState(false);
-  const channelsDisabledRef = useRef(false);
   const [updatesDisabled, setUpdatesDisabled] = useState(false);
   const [credential, setCredential] = useState('');
   const credentialRef = useRef('');
@@ -105,7 +104,7 @@ function Main() {
   }
 
   const getStates = useCallback(async () => {
-    if (userActive.current && !updatesDisabled) {
+    if (userActive.current) {
       loadingDevices.current = true;
       fetch('/api/getDevices').then(res => res.json()).then(
         devices => {
@@ -114,7 +113,7 @@ function Main() {
         }
       ).catch(err => {});
     }
-  }, [updatesDisabled]);
+  }, []);
 
   const getPosition = useCallback(async () => {
     if (userActive.current) {
@@ -170,10 +169,6 @@ function Main() {
       setUpdatesDisabled(true);
     }
   }, [credential]);
-
-  useEffect(() => {
-    setChannelsDisabled(channelsDisabledRef.current);
-  }, [channelsDisabledRef]);
 
   useEffect(() => {
     setCredential(credentialRef.current);
