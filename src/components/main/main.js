@@ -20,7 +20,6 @@ function Main() {
   const [channelsDisabled, setChannelsDisabled] = useState(false);
   const [updatesDisabled, setUpdatesDisabled] = useState(false);
   const [credential, setCredential] = useState('');
-  const credentialRef = useRef('');
 
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
@@ -83,7 +82,7 @@ function Main() {
   const setCredentials = async (userCredential) => {
     if (userCredential === guestCredential.current) {
       localStorage.setItem('user', userCredential);
-      credentialRef.current = userCredential;
+      setCredential(userCredential);
     } else {
       const res = await fetch("/api/validateCredentials", {
         method: "POST",
@@ -94,10 +93,10 @@ function Main() {
       if (data.success) {
         if (data.dev) {
           localStorage.setItem('user', data.dev);
-          credentialRef.current = devCredential.current;
+          setCredential(devCredential.current);
         } else {
           localStorage.setItem('user', ownerCredential.current);
-          credentialRef.current = ownerCredential.current;
+          setCredential(ownerCredential.current);
         }
       }
     }
@@ -147,7 +146,7 @@ function Main() {
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
     }
-    credentialRef.current = localStorage.getItem('user');
+    setCredential(localStorage.getItem('user'));
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
     getStates();
@@ -171,11 +170,7 @@ function Main() {
   }, [credential]);
 
   useEffect(() => {
-    setCredential(credentialRef.current);
-  }, [credentialRef]);
-
-  useEffect(() => {
-    if (credentialRef.current === devCredential.current) {
+    if (credential === devCredential.current) {
       eruda.init();
     }
     devicesStateUpdated.current = devicesState;
