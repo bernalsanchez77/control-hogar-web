@@ -169,11 +169,11 @@ function Main() {
   }, [init]);
 
   useEffect(() => {
-    setUpdatesDisabled(updatesDisabledRef);
+    // setUpdatesDisabled(updatesDisabledRef);
   }, [updatesDisabledRef]);
 
   useEffect(() => {
-    setChannelsDisabled(channelsDisabledRef);
+    // setChannelsDisabled(channelsDisabledRef);
   }, [channelsDisabledRef]);
 
   useEffect(() => {
