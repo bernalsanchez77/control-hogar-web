@@ -158,11 +158,11 @@ function Main() {
     setInterval(() => {getPosition();}, 300000);
     utils.current.sendLogs(user.current + ' entro');
     getVisibility();
-    if (credential === 'dev') {
-      channelsDisabledRef.current = true;
-      updatesDisabledRef.current = true;
-    }
-  }, [getStates, getPosition, getVisibility, user, credential]);
+    // if (credential === 'dev') {
+    //   channelsDisabledRef.current = true;
+    //   updatesDisabledRef.current = true;
+    // }
+  }, [getStates, getPosition, getVisibility, user]);
 
   useEffect(() => {
     init();
