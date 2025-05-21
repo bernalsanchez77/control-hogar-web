@@ -17,7 +17,9 @@ function Main() {
   const userActive = useRef(true);
   const [iftttDisabled, setIftttDisabled] = useState(false);
   const [channelsDisabled, setChannelsDisabled] = useState(false);
+  const channelsDisabledRef = useRef(channelsDisabled);
   const [updatesDisabled, setUpdatesDisabled] = useState(false);
+  const updatesDisabledRef = useRef(updatesDisabled);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
@@ -149,7 +151,7 @@ function Main() {
     setInRange(inRange);
     getStates();
     setInterval(() => {
-      if (!updatesDisabled) {
+      if (!updatesDisabled.current) {
         getStates();
       }
     }, 5000);
@@ -157,14 +159,22 @@ function Main() {
     utils.current.sendLogs(user.current + ' entro');
     getVisibility();
     if (credential === 'dev') {
-      // setUpdatesDisabled(true);
-      // setChannelsDisabled(true);
+      channelsDisabledRef.current = true;
+      updatesDisabledRef.current = true;
     }
-  }, [getStates, getPosition, getVisibility, user, credential]);
+  }, [getStates, getPosition, getVisibility, user, updatesDisabled, credential]);
 
   useEffect(() => {
     init();
   }, [init]);
+
+  useEffect(() => {
+    setUpdatesDisabled(updatesDisabledRef);
+  }, [updatesDisabledRef]);
+
+  useEffect(() => {
+    setChannelsDisabled(channelsDisabledRef);
+  }, [channelsDisabledRef]);
 
   useEffect(() => {
     if (credential === devCredential.current) {
