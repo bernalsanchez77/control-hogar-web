@@ -34,7 +34,7 @@ function Main() {
     }
   }
 
-  const changeControlHogarData = (device, key, value, saveChange = true) => {
+  const changeControlHogarData = (device, key, value, saveChange) => {
     const devices = {...devicesStateUpdated.current};
     let saveState = true;
     device.forEach(item => {
@@ -64,12 +64,12 @@ function Main() {
     }
   }
 
-  const changeDevice = (device, key, value) => {
-    changeControlHogarData(device, key, value);
+  const changeDevice = (device, key, value, save) => {
+    changeControlHogarData(device, key, value, save);
   }
 
-  const changeControl = (device, key, value) => {
-    changeControlHogarData(device, key, value);
+  const changeControl = (device, key, value, save) => {
+    changeControlHogarData(device, key, value, save);
   }
 
   const changeScreen = (screen) => {
