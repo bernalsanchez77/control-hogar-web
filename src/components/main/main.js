@@ -161,7 +161,7 @@ function Main() {
     setInterval(() => {getPosition();}, 300000);
     utils.current.sendLogs(user.current + ' entro');
     getVisibility();
-    if (credentialRef === 'dev') {
+    if (credentialRef.current === 'dev') {
       channelsDisabledRef.current = true;
       updatesDisabledRef.current = true;
     }
@@ -172,15 +172,15 @@ function Main() {
   }, [init]);
 
   useEffect(() => {
-    // setUpdatesDisabled(updatesDisabledRef);
+    // setUpdatesDisabled(updatesDisabledRef.current);
   }, [updatesDisabledRef]);
 
   useEffect(() => {
-    // setChannelsDisabled(channelsDisabledRef);
+    // setChannelsDisabled(channelsDisabledRef.current);
   }, [channelsDisabledRef]);
 
   useEffect(() => {
-    setCredential(credentialRef);
+    setCredential(credentialRef.current);
   }, [credentialRef]);
 
   useEffect(() => {
