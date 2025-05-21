@@ -150,10 +150,6 @@ function Main() {
       setScreenSelected(localStorageScreen);
     }
     credentialRef.current = localStorage.getItem('user');
-    if (credentialRef.current === 'dev') {
-      channelsDisabledRef.current = true;
-      updatesDisabledRef.current = true;
-    }
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
     getStates();
@@ -172,8 +168,11 @@ function Main() {
   }, [init]);
 
   useEffect(() => {
-    // setUpdatesDisabled(updatesDisabledRef.current);
-  }, [updatesDisabledRef]);
+    if (credential === 'dev') {
+      channelsDisabledRef.current = true;
+      updatesDisabledRef.current = true;
+    }
+  }, [credential]);
 
   useEffect(() => {
     setUpdatesDisabled(updatesDisabledRef.current);
