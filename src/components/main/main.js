@@ -16,8 +16,8 @@ function Main() {
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
   const [iftttDisabled, setIftttDisabled] = useState(false);
-  const [channelsDisabled, setChannelDisabled] = useState(true);
-  const [updatesDisabled, setUpdatesDisabled] = useState(true);
+  const [channelsDisabled, setChannelsDisabled] = useState(false);
+  const [updatesDisabled, setUpdatesDisabled] = useState(false);
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
@@ -156,6 +156,10 @@ function Main() {
     setInterval(() => {getPosition();}, 300000);
     utils.current.sendLogs(user.current + ' entro');
     getVisibility();
+    if (credential === 'dev') {
+      setUpdatesDisabled(true);
+      setChannelsDisabled(true);
+    }
   }, [getStates, getPosition, getVisibility, user]);
 
   useEffect(() => {
@@ -195,10 +199,10 @@ function Main() {
 
   const disableChannels = () => {
     if (channelsDisabled === true) {
-      setChannelDisabled(false);
+      setChannelsDisabled(false);
       setUpdatesDisabled(false);
     } else {
-      setChannelDisabled(true);
+      setChannelsDisabled(true);
       setUpdatesDisabled(true);
     }
   }
