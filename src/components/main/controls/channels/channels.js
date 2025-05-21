@@ -7,9 +7,9 @@ function Channels({ devicesState, triggerControlParent }) {
     navigator.vibrate([200]);
     if (value === 'play') {
       if (devicesState.rokuSala.state === 'play') {
-        triggerControlParent([devicesState.rokuSala.id], ['state'], ['pause']);
+        triggerControlParent([devicesState.rokuSala.id], ['state'], ['pause'], true);
       } else {
-        triggerControlParent([devicesState.rokuSala.id], ['state'], ['play']);
+        triggerControlParent([devicesState.rokuSala.id], ['state'], ['play'], true);
       }
     } else {
       triggerControlParent([devicesState.rokuSala.id], ['command'], [value], false);

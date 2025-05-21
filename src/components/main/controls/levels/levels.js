@@ -5,10 +5,10 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
   const triggerMute = () => {
     navigator.vibrate([200]);
     if (devicesState[screenSelected].mute === 'on') {
-      triggerControlParent([screenSelected], ['mute'], ['off']);
+      triggerControlParent([screenSelected], ['mute'], ['off'], true);
     }
     if (devicesState[screenSelected].mute === 'off') {
-      triggerControlParent([screenSelected], ['mute'], ['on']);
+      triggerControlParent([screenSelected], ['mute'], ['on'], true);
     }
   }
   const triggerControl = (value) => {
@@ -29,17 +29,17 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
       newChannelOrder = channelOrderSelected - 1; 
     }
     const newChannel = Object.values(devicesState.cableSala.channels).find(obj => obj.order === newChannelOrder);
-    triggerControlParent([device], ['selected'], [newChannel.id]);
+    triggerControlParent([device], ['selected'], [newChannel.id], true);
   }
   const triggerVolume = (vol, button) => {
     navigator.vibrate([200]);
     let newVol = 0;
     if (button === 'up') {
       newVol = parseInt(devicesState[screenSelected].volume) + parseInt(vol);
-      triggerControlParent([screenSelected], ['volume'], [button + vol, newVol.toString()]);
+      triggerControlParent([screenSelected], ['volume'], [button + vol, newVol.toString()], true);
     } else if (devicesState[screenSelected].volume !== '0') {
       newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
-      triggerControlParent([screenSelected], ['volume'], [button + vol, newVol.toString()]);
+      triggerControlParent([screenSelected], ['volume'], [button + vol, newVol.toString()], true);
     } else {
       triggerControlParent([screenSelected], ['volume'], [button + vol], false);      
     }
