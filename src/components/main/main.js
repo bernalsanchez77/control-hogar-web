@@ -151,7 +151,7 @@ function Main() {
     setInRange(inRange);
     getStates();
     setInterval(() => {
-      if (!updatesDisabled.current) {
+      if (!updatesDisabledRef.current) {
         getStates();
       }
     }, 5000);
@@ -162,7 +162,7 @@ function Main() {
       channelsDisabledRef.current = true;
       updatesDisabledRef.current = true;
     }
-  }, [getStates, getPosition, getVisibility, user, updatesDisabled, credential]);
+  }, [getStates, getPosition, getVisibility, user, credential]);
 
   useEffect(() => {
     init();
