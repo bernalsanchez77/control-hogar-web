@@ -24,7 +24,7 @@ function Main() {
   const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
   const [screenSelected, setScreenSelected] = useState('teleSala');
-  const [credential, setCredential] = useState('');
+  const credentialRef = useRef('');
   const ownerCredential = useRef('owner');
   const guestCredential = useRef('guest');
   const devCredential = useRef('dev');
@@ -82,7 +82,7 @@ function Main() {
   const setCredentials = async (credential) => {
     if (credential === guestCredential.current) {
       localStorage.setItem('user', credential);
-      setCredential(credential);
+      credentialRef.current = credential;
     } else {
       const res = await fetch("/api/validateCredentials", {
         method: "POST",
@@ -93,10 +93,10 @@ function Main() {
       if (data.success) {
         if (data.dev) {
           localStorage.setItem('user', data.dev);
-          setCredential(devCredential.current);
+          credentialRef.current = devCredential.current;
         } else {
           localStorage.setItem('user', ownerCredential.current);
-          setCredential(ownerCredential.current);
+          credentialRef.current = ownerCredential.current;
         }
       }
     }
@@ -146,7 +146,7 @@ function Main() {
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
     }
-    setCredential(localStorage.getItem('user'));
+    credentialRef.current = localStorage.getItem('user');
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
     getStates();
@@ -158,10 +158,10 @@ function Main() {
     setInterval(() => {getPosition();}, 300000);
     utils.current.sendLogs(user.current + ' entro');
     getVisibility();
-    // if (credential === 'dev') {
-    //   channelsDisabledRef.current = true;
-    //   updatesDisabledRef.current = true;
-    // }
+    if (credentialRef === 'dev') {
+      channelsDisabledRef.current = true;
+      updatesDisabledRef.current = true;
+    }
   }, [getStates, getPosition, getVisibility, user]);
 
   useEffect(() => {
@@ -177,11 +177,11 @@ function Main() {
   }, [channelsDisabledRef]);
 
   useEffect(() => {
-    if (credential === devCredential.current) {
+    if (credentialRef.current === devCredential.current) {
       eruda.init();
     }
     devicesStateUpdated.current = devicesState;
-  }, [devicesState, credential, devCredential]);
+  }, [devicesState]);
 
   const resetDevices = () => {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
@@ -235,16 +235,16 @@ function Main() {
   return (
     <div className="main">
       <Credentials
-        credential={credential}
+        credential={credentialRef}
         guestCredential={guestCredential.current}
         setCredentialsParent={setCredentials}>
       </Credentials>
-      {credential &&
+      {credentialRef &&
       <div className='main-components'>
-        {inRange || (credential === ownerCredential.current || credential === devCredential.current) ?
+        {inRange || (credentialRef === ownerCredential.current || credentialRef === devCredential.current) ?
         <div>
           <Screens
-            credential={credential}
+            credential={credentialRef}
             ownerCredential={ownerCredential.current}
             devCredential={devCredential.current}
             inRange={inRange}
@@ -254,7 +254,7 @@ function Main() {
             changeScreenParent={changeScreen}>
           </Screens>
           <Controls
-            credential={credential}
+            credential={credentialRef}
             ownerCredential={ownerCredential.current}
             inRange={inRange}
             devicesState={devicesState}
@@ -263,7 +263,7 @@ function Main() {
             changeControlParent={changeControl}>
           </Controls>
           <Devices
-            credential={credential}
+            credential={credentialRef}
             ownerCredential={ownerCredential.current}
             devCredential={devCredential.current}
             inRange={inRange}
@@ -271,7 +271,7 @@ function Main() {
             loadingDevices={loadingDevices}
             changeDeviceParent={changeDevice}>
           </Devices>
-          {credential === devCredential.current &&
+          {credentialRef === devCredential.current &&
           <Dev
             iftttDisabled={iftttDisabled}
             channelsDisabled={channelsDisabled}
