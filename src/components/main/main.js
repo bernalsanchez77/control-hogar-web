@@ -103,8 +103,12 @@ function Main() {
     }
   }
 
-  const getStates = useCallback(async () => {
-    if (userActive.current && !updatesDisabledRef.current) {
+  const getStates = useCallback(async (firstTime) => {
+    let updatesEnabled = !updatesDisabledRef.current;
+    if (firstTime) {
+      updatesEnabled = true;
+    }
+    if (userActive.current && updatesEnabled) {
       loadingDevices.current = true;
       fetch('/api/getDevices').then(res => res.json()).then(
         devices => {
@@ -150,7 +154,7 @@ function Main() {
     setCredential(localStorage.getItem('user'));
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
-    getStates();
+    getStates(true);
     setInterval(() => {
       getStates();
     }, 5000);
