@@ -160,7 +160,7 @@ function Main() {
       setUpdatesDisabled(true);
       setChannelsDisabled(true);
     }
-  }, [getStates, getPosition, getVisibility, user]);
+  }, [getStates, getPosition, getVisibility, user, credential, updatesDisabled]);
 
   useEffect(() => {
     init();
