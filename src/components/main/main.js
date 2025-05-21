@@ -19,6 +19,7 @@ function Main() {
   const [iftttDisabled, setIftttDisabled] = useState(false);
   const [channelsDisabled, setChannelsDisabled] = useState(false);
   const [updatesDisabled, setUpdatesDisabled] = useState(false);
+  const updatesDisabledRef = useRef(updatesDisabled);
   const [credential, setCredential] = useState('');
 
   const [devicesState, setDevicesState] = useState(devicesOriginal);
@@ -103,7 +104,7 @@ function Main() {
   }
 
   const getStates = useCallback(async () => {
-    if (userActive.current) {
+    if (userActive.current && !updatesDisabledRef.current) {
       loadingDevices.current = true;
       fetch('/api/getDevices').then(res => res.json()).then(
         devices => {
@@ -126,7 +127,7 @@ function Main() {
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = () => {
       let message = '';
-      if (document.visibilityState === 'visible' && !updatesDisabled) {
+      if (document.visibilityState === 'visible') {
         userActive.current = true;
         message = user.current + ' regreso';
       } else {
@@ -139,7 +140,7 @@ function Main() {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [user, updatesDisabled]);
+  }, [user]);
 
   const init = useCallback(async () => {
     const localStorageScreen = localStorage.getItem('screen');
@@ -163,10 +164,13 @@ function Main() {
   }, [init]);
 
   useEffect(() => {
+    updatesDisabledRef.current = updatesDisabled;
+  }, [updatesDisabled]);
+
+  useEffect(() => {
     if (credential === 'dev') {
       setChannelsDisabled(true);
       setUpdatesDisabled(true);
-      userActive.current = false;
     }
   }, [credential]);
 
@@ -192,10 +196,8 @@ function Main() {
   const disableUpdates = () => {
     if (updatesDisabled === true) {
       setUpdatesDisabled(false);
-      userActive.current = true;
     } else {
       setUpdatesDisabled(true);
-      userActive.current = false;
     }
   }
 
