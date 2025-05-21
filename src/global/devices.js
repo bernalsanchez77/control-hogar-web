@@ -77,13 +77,13 @@ export const devicesOriginal = {
         input: {
             state: 'hdmi1',
             label: {
-                hdmi1: 'Roku/Cable',
-                hdmi2: 'Chromecast'
+                hdmi1: 'Modo Normal',
+                hdmi2: 'Modo Chromecast'
             }
         }
     },
     teleSala: {
-        state: 'on',
+        state: 'off',
         label: 'Tele Sala',
         id: 'teleSala',
         mute: 'off',
@@ -92,8 +92,8 @@ export const devicesOriginal = {
         input: {
             state: 'hdmi1', 
             label: {
-                hdmi1: 'Roku/Cable',
-                hdmi2: 'Fire stick'
+                hdmi1: 'Modo Normal',
+                hdmi2: 'Modo Firestick'
             }
         }
     },
@@ -106,8 +106,8 @@ export const devicesOriginal = {
         input: {
             state: 'hdmi1',
             label: {
-                hdmi1: 'Roku/Cable',
-                hdmi2: 'Playstation'
+                hdmi1: 'Modo Normal',
+                hdmi2: 'Modo Playstation'
             }
         }
     },
