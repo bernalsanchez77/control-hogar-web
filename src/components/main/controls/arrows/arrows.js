@@ -6,7 +6,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
     navigator.vibrate([200]);
     const device = 'rokuSala';
-    triggerControlParent([device], ['command'], [value], false);
+    triggerControlParent([device], ['command'], [value], 'false');
   }
 
   return (

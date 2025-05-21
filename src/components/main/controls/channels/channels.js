@@ -12,7 +12,7 @@ function Channels({ devicesState, triggerControlParent }) {
         triggerControlParent([devicesState.rokuSala.id], ['state'], ['play']);
       }
     } else {
-      triggerControlParent([devicesState.rokuSala.id], ['command'], [value], false);
+      triggerControlParent([devicesState.rokuSala.id], ['command'], [value], 'false');
     }
   }
 

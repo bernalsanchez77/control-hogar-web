@@ -83,7 +83,7 @@ export const devicesOriginal = {
         }
     },
     teleSala: {
-        state: 'on',
+        state: 'off',
         label: 'Tele Sala',
         id: 'teleSala',
         mute: 'off',
