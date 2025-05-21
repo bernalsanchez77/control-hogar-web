@@ -34,7 +34,7 @@ function Main() {
     }
   }
 
-  const changeControlHogarData = (device, key, value, saveChange) => {
+  const changeControlHogarData = (device, key, value, saveChange = true) => {
     const devices = {...devicesStateUpdated.current};
     let saveState = true;
     device.forEach(item => {
