@@ -14,7 +14,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
   const triggerControl = (value) => {
     navigator.vibrate([200]);
     const device = 'rokuSala';
-    triggerControlParent([device], ['command'], [value], 'false');
+    triggerControlParent([device], ['command'], [value], false);
   }
   const triggerChannel = (value) => {
     navigator.vibrate([200]);
@@ -41,7 +41,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
       newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
       triggerControlParent([screenSelected], ['volume'], [button + vol, newVol.toString()]);
     } else {
-      triggerControlParent([screenSelected], ['volume'], [button + vol], 'false');      
+      triggerControlParent([screenSelected], ['volume'], [button + vol], false);      
     }
   }
       
