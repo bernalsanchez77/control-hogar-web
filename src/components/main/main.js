@@ -128,8 +128,10 @@ function Main() {
       let message = '';
       if (document.visibilityState === 'visible' && !updatesDisabled) {
         userActive.current = true;
+        message = user.current + ' regreso';
       } else {
         userActive.current = false;
+        message = user.current + ' salio';
       }
       utils.current.sendLogs(message);
     };
@@ -137,7 +139,7 @@ function Main() {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [user]);
+  }, [user, updatesDisabled]);
 
   const init = useCallback(async () => {
     const localStorageScreen = localStorage.getItem('screen');
@@ -173,7 +175,7 @@ function Main() {
       eruda.init();
     }
     devicesStateUpdated.current = devicesState;
-  }, [devicesState]);
+  }, [devicesState, credential]);
 
   const resetDevices = () => {
     fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
