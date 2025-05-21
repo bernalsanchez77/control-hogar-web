@@ -169,8 +169,8 @@ function Main() {
 
   useEffect(() => {
     if (credential === 'dev') {
-      channelsDisabledRef.current = true;
-      updatesDisabledRef.current = true;
+      setChannelsDisabled(true);
+      setUpdatesDisabled(true);
     }
   }, [credential]);
 
