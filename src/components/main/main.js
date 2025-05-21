@@ -126,12 +126,10 @@ function Main() {
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = () => {
       let message = '';
-      if (document.visibilityState === 'visible') {
+      if (document.visibilityState === 'visible' && !updatesDisabled) {
         userActive.current = true;
-        message = user.current + ' regreso';
       } else {
         userActive.current = false;
-        message = user.current + ' salio';
       }
       utils.current.sendLogs(message);
     };
@@ -166,6 +164,7 @@ function Main() {
     if (credential === 'dev') {
       setChannelsDisabled(true);
       setUpdatesDisabled(true);
+      userActive.current = false;
     }
   }, [credential]);
 
@@ -191,8 +190,10 @@ function Main() {
   const disableUpdates = () => {
     if (updatesDisabled === true) {
       setUpdatesDisabled(false);
+      userActive.current = true;
     } else {
       setUpdatesDisabled(true);
+      userActive.current = false;
     }
   }
 
