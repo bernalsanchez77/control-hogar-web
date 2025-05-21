@@ -20,7 +20,6 @@ function Main() {
   const [channelsDisabled, setChannelsDisabled] = useState(false);
   const channelsDisabledRef = useRef(false);
   const [updatesDisabled, setUpdatesDisabled] = useState(false);
-  const updatesDisabledRef = useRef(false);
   const [credential, setCredential] = useState('');
   const credentialRef = useRef('');
 
@@ -106,7 +105,7 @@ function Main() {
   }
 
   const getStates = useCallback(async () => {
-    if (userActive.current) {
+    if (userActive.current && !updatesDisabled) {
       loadingDevices.current = true;
       fetch('/api/getDevices').then(res => res.json()).then(
         devices => {
@@ -115,7 +114,7 @@ function Main() {
         }
       ).catch(err => {});
     }
-  }, []);
+  }, [updatesDisabled]);
 
   const getPosition = useCallback(async () => {
     if (userActive.current) {
@@ -154,9 +153,7 @@ function Main() {
     setInRange(inRange);
     getStates();
     setInterval(() => {
-      if (!updatesDisabledRef.current) {
-        getStates();
-      }
+      getStates();
     }, 5000);
     setInterval(() => {getPosition();}, 300000);
     utils.current.sendLogs(user.current + ' entro');
@@ -173,10 +170,6 @@ function Main() {
       setUpdatesDisabled(true);
     }
   }, [credential]);
-
-  useEffect(() => {
-    setUpdatesDisabled(updatesDisabledRef.current);
-  }, [updatesDisabledRef]);
 
   useEffect(() => {
     setChannelsDisabled(channelsDisabledRef.current);
