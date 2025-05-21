@@ -40,6 +40,8 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
     } else if (devicesState[screenSelected].volume !== '0') {
       newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
       triggerControlParent([screenSelected], ['volume'], [button + vol, newVol.toString()]);
+    } else {
+      triggerControlParent([screenSelected], ['volume'], [button + vol], false);      
     }
   }
       
