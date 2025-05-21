@@ -34,7 +34,7 @@ function Main() {
     }
   }
 
-  const changeControlHogarData = (device, key, value, save) => {
+  const changeControlHogarData = (device, key, value, saveChange) => {
     const devices = {...devicesStateUpdated.current};
     let saveState = true;
     device.forEach(item => {
@@ -48,7 +48,7 @@ function Main() {
       if (send) {
         fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key[0] + '&value=' + value[0]);
       }
-      if (save) {
+      if (saveChange) {
         if (key[1]) {
           devices[item][key[0]] = {...devices[item][key[0]], [key[1]]: value[1] || value[0]};
         } else {
@@ -56,7 +56,7 @@ function Main() {
         }
       }
     });
-    if (save) {
+    if (saveChange) {
       setDevicesState(devices);
       if (saveState) {
         fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
