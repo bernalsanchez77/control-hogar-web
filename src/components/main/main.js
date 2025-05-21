@@ -15,16 +15,19 @@ function Main() {
   const loadingDevices = useRef(false);
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
+
   const [iftttDisabled, setIftttDisabled] = useState(false);
   const [channelsDisabled, setChannelsDisabled] = useState(false);
-  const channelsDisabledRef = useRef(channelsDisabled);
+  const channelsDisabledRef = useRef(false);
   const [updatesDisabled, setUpdatesDisabled] = useState(false);
-  const updatesDisabledRef = useRef(updatesDisabled);
+  const updatesDisabledRef = useRef(false);
+  const [credential, setCredential] = useState('');
+  const credentialRef = useRef('');
+
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
   const [screenSelected, setScreenSelected] = useState('teleSala');
-  const credentialRef = useRef('');
   const ownerCredential = useRef('owner');
   const guestCredential = useRef('guest');
   const devCredential = useRef('dev');
@@ -177,6 +180,10 @@ function Main() {
   }, [channelsDisabledRef]);
 
   useEffect(() => {
+    setCredential(credentialRef);
+  }, [credentialRef]);
+
+  useEffect(() => {
     if (credentialRef.current === devCredential.current) {
       eruda.init();
     }
@@ -235,16 +242,16 @@ function Main() {
   return (
     <div className="main">
       <Credentials
-        credential={credentialRef}
+        credential={credential}
         guestCredential={guestCredential.current}
         setCredentialsParent={setCredentials}>
       </Credentials>
-      {credentialRef &&
+      {credential &&
       <div className='main-components'>
-        {inRange || (credentialRef === ownerCredential.current || credentialRef === devCredential.current) ?
+        {inRange || (credential === ownerCredential.current || credential === devCredential.current) ?
         <div>
           <Screens
-            credential={credentialRef}
+            credential={credential}
             ownerCredential={ownerCredential.current}
             devCredential={devCredential.current}
             inRange={inRange}
@@ -254,7 +261,7 @@ function Main() {
             changeScreenParent={changeScreen}>
           </Screens>
           <Controls
-            credential={credentialRef}
+            credential={credential}
             ownerCredential={ownerCredential.current}
             inRange={inRange}
             devicesState={devicesState}
@@ -263,7 +270,7 @@ function Main() {
             changeControlParent={changeControl}>
           </Controls>
           <Devices
-            credential={credentialRef}
+            credential={credential}
             ownerCredential={ownerCredential.current}
             devCredential={devCredential.current}
             inRange={inRange}
@@ -271,7 +278,7 @@ function Main() {
             loadingDevices={loadingDevices}
             changeDeviceParent={changeDevice}>
           </Devices>
-          {credentialRef === devCredential.current &&
+          {credential === devCredential.current &&
           <Dev
             iftttDisabled={iftttDisabled}
             channelsDisabled={channelsDisabled}
