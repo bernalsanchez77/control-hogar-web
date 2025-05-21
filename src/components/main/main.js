@@ -172,11 +172,11 @@ function Main() {
   }, [init]);
 
   useEffect(() => {
-    // setUpdatesDisabled(updatesDisabledRef.current);
+    setUpdatesDisabled(updatesDisabledRef.current);
   }, [updatesDisabledRef]);
 
   useEffect(() => {
-    // setChannelsDisabled(channelsDisabledRef.current);
+    setChannelsDisabled(channelsDisabledRef.current);
   }, [channelsDisabledRef]);
 
   useEffect(() => {
