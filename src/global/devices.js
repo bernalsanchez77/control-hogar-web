@@ -62,7 +62,7 @@ export const devicesOriginal = {
     hdmiSala: {
         state: 'roku',
         label: {
-            roku: 'Stream',
+            roku: 'Roku',
             cable: 'Cable'
         },
         id: 'hdmiSala'

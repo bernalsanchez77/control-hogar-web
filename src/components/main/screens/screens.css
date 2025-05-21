@@ -16,7 +16,7 @@
   font-size: 11px;
   padding: 3px;
   width: 100%;
-  border: gray 1px solid;
+  border: gray 2px solid;
   height: 40px;
   border-radius: 5px;
   user-select: none;
@@ -27,5 +27,5 @@ button.screens-button:active {
   transition: background-color 0.1s;
 }
 .screens-button--on {
-  border: white 1px solid;
+  border: yellow 2px solid;
 }

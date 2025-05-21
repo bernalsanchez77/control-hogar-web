@@ -157,10 +157,10 @@ function Main() {
     utils.current.sendLogs(user.current + ' entro');
     getVisibility();
     if (credential === 'dev') {
-      setUpdatesDisabled(true);
-      setChannelsDisabled(true);
+      // setUpdatesDisabled(true);
+      // setChannelsDisabled(true);
     }
-  }, [getStates, getPosition, getVisibility, user, credential, updatesDisabled]);
+  }, [getStates, getPosition, getVisibility, user, credential]);
 
   useEffect(() => {
     init();
