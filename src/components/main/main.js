@@ -82,15 +82,15 @@ function Main() {
     localStorage.setItem('screen', screen);
   }
 
-  const setCredentials = async (credential) => {
-    if (credential === guestCredential.current) {
-      localStorage.setItem('user', credential);
-      credentialRef.current = credential;
+  const setCredentials = async (userCredential) => {
+    if (userCredential === guestCredential.current) {
+      localStorage.setItem('user', userCredential);
+      credentialRef.current = userCredential;
     } else {
       const res = await fetch("/api/validateCredentials", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({key: credential}),
+        body: JSON.stringify({key: userCredential}),
       });
       const data = await res.json();
       if (data.success) {
