@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import './levels.css';
 
 function Controls({ devicesState, screenSelected, triggerControlParent }) {
+  const timeout3s = useRef(null);
+  const timeout6s = useRef(null);
   const triggerMute = () => {
     navigator.vibrate([200]);
     if (devicesState[screenSelected].mute === 'on') {
@@ -46,8 +48,19 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
       triggerControlParent([screenSelected], ['volume'], [button + vol], false);      
     }
   }
-  const triggerVolumeLong = () => {
-    alert('va');
+  const triggerVolumeStart = (button) => {
+    timeout3s.current = setTimeout(() => {
+      console.log('Disparo a los 3 segundos');
+    }, 3000);
+    timeout6s.current = setTimeout(() => {
+      console.log('Disparo a los 6 segundos');
+    }, 6000);
+  }
+
+  const triggerVolumeEnd = (button) => {
+    clearTimeout(timeout3s.current);
+    clearTimeout(timeout6s.current);
+    console.log('Presión terminada antes de completar tiempos');    
   }
       
   return (
@@ -131,7 +144,8 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
           <button
             onContextMenu={(e) => e.preventDefault()}
             className='controls-levels-button'
-            onTouchStart={triggerVolumeLong}
+            onTouchStart={() => triggerVolumeStar('down')}
+            onTouchEnd={() => triggerVolumeEnd('down')}
             onClick={() => triggerVolume('1', 'down')}>
             &#9660;
           </button>
