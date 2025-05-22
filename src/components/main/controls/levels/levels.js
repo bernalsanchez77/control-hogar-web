@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import './levels.css';
 
-function Controls({ credential, devicesState, screenSelected, triggerControlParent }) {
+function Levels({ devicesState, screenSelected, credential, triggerControlParent }) {
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
   const volumeChange = useRef('1');
@@ -187,4 +187,4 @@ function Controls({ credential, devicesState, screenSelected, triggerControlPare
   )
 }
 
-export default Controls;
+export default Levels;
