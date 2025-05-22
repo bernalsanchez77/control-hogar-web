@@ -25,7 +25,7 @@ export const devicesOriginal = {
         id: 'lamparaRotatoria'
     },
     luzCuarto: {
-        state: 'on',
+        state: 'off',
         label: 'Luz Cuarto',
         id: 'luzCuarto'
     },
@@ -68,11 +68,11 @@ export const devicesOriginal = {
         id: 'hdmiSala'
     },
     teleCuarto: {
-        state: 'on',
+        state: 'off',
         label: 'TV Cuarto',
         id: 'teleCuarto',
         mute: 'off',
-        volume: '5',
+        volume: '0',
         channelSelected: 'siete',
         input: {
             state: 'hdmi1',
@@ -83,7 +83,7 @@ export const devicesOriginal = {
         }
     },
     teleSala: {
-        state: 'on',
+        state: 'off',
         label: 'TV Sala',
         id: 'teleSala',
         mute: 'off',
@@ -99,7 +99,7 @@ export const devicesOriginal = {
     },
     proyectorSala: {
         state: 'off',
-        label: 'Proyector Sala',
+        label: 'Proyector',
         id: 'proyectorSala',
         mute: 'off',
         volume: '0',

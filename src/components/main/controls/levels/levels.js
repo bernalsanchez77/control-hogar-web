@@ -53,10 +53,10 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     volumeChange.current = '1';
     timeout3s.current = setTimeout(() => {
       volumeChange.current = '5';
-    }, 5000);
+    }, 2000);
     timeout6s.current = setTimeout(() => {
       volumeChange.current = '10';
-    }, 10000);
+    }, 4000);
   }
 
   const triggerVolumeEnd = (button) => {
