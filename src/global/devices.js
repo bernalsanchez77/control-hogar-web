@@ -69,7 +69,7 @@ export const devicesOriginal = {
     },
     teleCuarto: {
         state: 'off',
-        label: 'Tele Cuarto',
+        label: 'TV Cuarto',
         id: 'teleCuarto',
         mute: 'off',
         volume: '0',
@@ -84,7 +84,7 @@ export const devicesOriginal = {
     },
     teleSala: {
         state: 'off',
-        label: 'Tele Sala',
+        label: 'TV Sala',
         id: 'teleSala',
         mute: 'off',
         volume: '0',
