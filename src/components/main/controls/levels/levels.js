@@ -51,22 +51,18 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
   }
   const triggerVolumeStart = (button) => {
     volumeChange.current = '1';
-    if (credential === 'dev') {
-      timeout3s.current = setTimeout(() => {
-        volumeChange.current = '5';
-      }, 5000);
-      timeout6s.current = setTimeout(() => {
-        volumeChange.current = '10';
-      }, 10000);
-    }
+    timeout3s.current = setTimeout(() => {
+      volumeChange.current = '5';
+    }, 5000);
+    timeout6s.current = setTimeout(() => {
+      volumeChange.current = '10';
+    }, 10000);
   }
 
   const triggerVolumeEnd = (button) => {
-    if (credential === 'dev') {
-      clearTimeout(timeout3s.current);
-      clearTimeout(timeout6s.current);
-      triggerVolume(volumeChange, button);
-    }
+    clearTimeout(timeout3s.current);
+    clearTimeout(timeout6s.current);
+    triggerVolume(volumeChange, button);
   }
       
   return (
@@ -147,14 +143,23 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       </div>
       <div className='controls-levels-row'>
         <div className='controls-levels-element controls-levels-element--left'>
+          {credential === 'dev' && 
           <button
             onContextMenu={(e) => e.preventDefault()}
             className='controls-levels-button'
             onTouchStart={() => triggerVolumeStart('down')}
-            onTouchEnd={() => triggerVolumeEnd('down')}
+            onTouchEnd={() => triggerVolumeEnd('down')}>
+            &#9660;
+          </button>
+          }
+          {credential !== 'dev' && 
+          <button
+            onContextMenu={(e) => e.preventDefault()}
+            className='controls-levels-button'
             onClick={() => triggerVolume('1', 'down')}>
             &#9660;
           </button>
+          }
         </div>
         {
         devicesState.hdmiSala.state === 'roku' &&
