@@ -62,7 +62,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
   const triggerVolumeEnd = (button) => {
     clearTimeout(timeout3s.current);
     clearTimeout(timeout6s.current);
-    triggerVolume(volumeChange, button);
+    triggerVolume(volumeChange.current, button);
   }
       
   return (
