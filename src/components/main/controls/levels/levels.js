@@ -50,13 +50,14 @@ function Controls({ credential, devicesState, screenSelected, triggerControlPare
     }
   }
   const triggerVolumeStart = (button) => {
+    volumeChange.current = '1';
     if (credential === 'dev') {
       timeout3s.current = setTimeout(() => {
-        volumeChange.current = '3';
-      }, 3000);
+        volumeChange.current = '5';
+      }, 5000);
       timeout6s.current = setTimeout(() => {
-        volumeChange.current = '6';
-      }, 6000);
+        volumeChange.current = '10';
+      }, 10000);
     }
   }
 
