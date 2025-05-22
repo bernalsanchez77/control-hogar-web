@@ -46,6 +46,9 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
       triggerControlParent([screenSelected], ['volume'], [button + vol], false);      
     }
   }
+  const triggerVolumeLong = () => {
+    alert('va');
+  }
       
   return (
     <div className='controls-levels'>
@@ -128,6 +131,7 @@ function Controls({ devicesState, screenSelected, triggerControlParent }) {
           <button
             onContextMenu={(e) => e.preventDefault()}
             className='controls-levels-button'
+            onTouchStart={triggerVolumeLong}
             onClick={() => triggerVolume('1', 'down')}>
             &#9660;
           </button>
