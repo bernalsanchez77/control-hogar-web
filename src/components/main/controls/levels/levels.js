@@ -49,8 +49,8 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
         newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
         triggerControlParent([screenSelected], ['volume'], [button + vol, newVol.toString()], true);
       } else {
-        newVol = parseInt(vol) - parseInt(devicesState[screenSelected].volume);
-        triggerControlParent([screenSelected], ['volume'], [button + vol, newVol.toString()], true);
+        newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
+        triggerControlParent([screenSelected], ['volume'], [button + vol, '0'], true);
       }
     } else {
       triggerControlParent([screenSelected], ['volume'], [button + vol], false);      
