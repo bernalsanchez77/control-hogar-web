@@ -5,7 +5,6 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
   const volumeChange = useRef('1');
-  const volumeShow = useRef('0');
   const triggerMute = () => {
     navigator.vibrate([200]);
     if (devicesState[screenSelected].mute === 'on') {
@@ -55,36 +54,17 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     timeout3s.current = setTimeout(() => {
       volumeChange.current = '5';
       navigator.vibrate([400]);
-      if (button === 'down') {
-        volumeShow.current = parseInt(devicesState[screenSelected].volume) - parseInt(volumeChange.current);
-      } else {
-        volumeShow.current = parseInt(devicesState[screenSelected].volume) + parseInt(volumeChange.current);
-      }
-    }, 5000);
+    }, 2000);
     timeout6s.current = setTimeout(() => {
       volumeChange.current = '10';
       navigator.vibrate([600]);
-      if (button === 'down') {
-        volumeShow.current = parseInt(devicesState[screenSelected].volume) - parseInt(volumeChange.current);
-      } else {
-        volumeShow.current = parseInt(devicesState[screenSelected].volume) + parseInt(volumeChange.current);
-      }
-    }, 10000);
+    }, 4000);
   }
 
   const triggerVolumeEnd = (button) => {
     clearTimeout(timeout3s.current);
     clearTimeout(timeout6s.current);
-    volumeShow.current = null;
     triggerVolume(volumeChange.current, button);
-  }
-
-  const renderVolume = () => {
-    if (volumeShow.current) {
-      return volumeShow.current;
-    } else {
-      return devicesState[screenSelected].volume;
-    }
   }
       
   return (
@@ -139,7 +119,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       <div className='controls-levels-row controls-levels-row--mute'>
         <div className='controls-levels-element controls-levels-element--mute'>
           <span className='controls-levels-span'>
-            vol {volumeShow.current}
+            vol {devicesState[screenSelected].volume}
           </span>
         </div>
         <div className='controls-levels-element controls-levels-element--mute-icon'>
