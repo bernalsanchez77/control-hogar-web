@@ -5,7 +5,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
   const volumeChange = useRef('1');
-  const volumeShow = useRef(null);
+  const volumeShow = useRef('0');
   const triggerMute = () => {
     navigator.vibrate([200]);
     if (devicesState[screenSelected].mute === 'on') {
@@ -137,7 +137,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       <div className='controls-levels-row controls-levels-row--mute'>
         <div className='controls-levels-element controls-levels-element--mute'>
           <span className='controls-levels-span'>
-            vol {renderVolume()}
+            vol {volumeShow.current}
           </span>
         </div>
         <div className='controls-levels-element controls-levels-element--mute-icon'>
