@@ -59,7 +59,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       } else {
         volumeShow.current = parseInt(devicesState[screenSelected].volume) + parseInt(volumeChange.current);
       }
-    }, 1000);
+    }, 5000);
     timeout6s.current = setTimeout(() => {
       volumeChange.current = '10';
       if (button === 'down') {
@@ -67,7 +67,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       } else {
         volumeShow.current = parseInt(devicesState[screenSelected].volume) + parseInt(volumeChange.current);
       }
-    }, 2000);
+    }, 10000);
   }
 
   const triggerVolumeEnd = (button) => {
