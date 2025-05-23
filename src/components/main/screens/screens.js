@@ -3,7 +3,7 @@ import './screens.css';
 
 function Screens({credential, ownerCredential, devCredential,  inRange, devicesState, loadingDevices, screenSelected, changeScreenParent}) {
   const triggerScreen = (screen) => {
-    navigator.vibrate([200]);
+    navigator.vibrate([100]);
     if (inRange || (credential === ownerCredential && screenSelected !== screen)) {
       if (!loadingDevices.current) {
         changeScreenParent(screen);

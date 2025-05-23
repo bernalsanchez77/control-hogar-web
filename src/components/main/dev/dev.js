@@ -3,7 +3,7 @@ import './dev.css';
 
 function Dev({ iftttDisabled, channelsDisabled, updatesDisabled, changeDevParent }) {
   const changeDev = (fn) => {
-    navigator.vibrate([200]);
+    navigator.vibrate([100]);
     changeDevParent(fn);
   }
 
