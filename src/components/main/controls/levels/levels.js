@@ -76,6 +76,14 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     volumeShow.current = null;
     triggerVolume(volumeChange.current, button);
   }
+
+  const renderVolume = () => {
+    if (volumeShow.current) {
+      return volumeShow.current;
+    } else {
+      return devicesState[screenSelected].volume;
+    }
+  }
       
   return (
     <div className='controls-levels'>
@@ -129,7 +137,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       <div className='controls-levels-row controls-levels-row--mute'>
         <div className='controls-levels-element controls-levels-element--mute'>
           <span className='controls-levels-span'>
-            vol {volumeShow.current || devicesState[screenSelected].volume}
+            vol {renderVolume()}
           </span>
         </div>
         <div className='controls-levels-element controls-levels-element--mute-icon'>
