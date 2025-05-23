@@ -36,8 +36,10 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       triggerControlParent([device], ['selected'], [newChannel.id], true);
     }
   }
-  const triggerVolume = (vol, button) => {
-    navigator.vibrate([100]);
+  const triggerVolume = (vol, button, vib = true) => {
+    if (vib) {
+      navigator.vibrate([100]);
+    }
     let newVol = 0;
     if (button === 'up') {
       newVol = parseInt(devicesState[screenSelected].volume) + parseInt(vol);
@@ -64,7 +66,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
   const triggerVolumeEnd = (button) => {
     clearTimeout(timeout3s.current);
     clearTimeout(timeout6s.current);
-    triggerVolume(volumeChange.current, button);
+    triggerVolume(volumeChange.current, button, false);
   }
       
   return (
