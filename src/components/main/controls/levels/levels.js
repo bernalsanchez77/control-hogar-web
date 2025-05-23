@@ -37,7 +37,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     }
   }
   const triggerVolume = (vol, button) => {
-    navigator.vibrate([200]);
+    navigator.vibrate([100]);
     let newVol = 0;
     if (button === 'up') {
       newVol = parseInt(devicesState[screenSelected].volume) + parseInt(vol);
@@ -53,12 +53,12 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     volumeChange.current = '1';
     timeout3s.current = setTimeout(() => {
       volumeChange.current = '5';
-      navigator.vibrate([400]);
-    }, 2000);
+      navigator.vibrate([200]);
+    }, 1000);
     timeout6s.current = setTimeout(() => {
       volumeChange.current = '10';
-      navigator.vibrate([600]);
-    }, 4000);
+      navigator.vibrate([400]);
+    }, 2000);
   }
 
   const triggerVolumeEnd = (button) => {
