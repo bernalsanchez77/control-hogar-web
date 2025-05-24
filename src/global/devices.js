@@ -200,10 +200,10 @@ export const devicesOriginal = {
             xpertv: {
                 order: 10,
                 number: '14',
-                label: 'Expertv',
-                id: 'expertv',
+                label: 'Xpertv',
+                id: 'xpertv',
                 info: '',
-                img: '/imgs/channels/expertv.png'
+                img: '/imgs/channels/xpertv.png'
             },
             ucr: {
                 order: 11,
