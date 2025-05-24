@@ -82,7 +82,6 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     <div className='controls-levels'>
       <div className='controls-levels-row'>
         <div className='controls-levels-element controls-levels-element--left'>
-          {credential === 'dev' && 
           <button
             onContextMenu={(e) => e.preventDefault()}
             className='controls-levels-button'
@@ -90,15 +89,6 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
             onTouchEnd={() => triggerVolumeEnd('up')}>
             &#9650;
           </button>
-          }
-          {credential !== 'dev' && 
-          <button
-            onContextMenu={(e) => e.preventDefault()}
-            className='controls-levels-button'
-            onClick={() => triggerVolume('1', 'up')}>
-            &#9650;
-          </button>
-          }
         </div>
         {
           devicesState.hdmiSala.state === 'roku' &&
@@ -167,7 +157,6 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       </div>
       <div className='controls-levels-row'>
         <div className='controls-levels-element controls-levels-element--left'>
-          {credential === 'dev' && 
           <button
             onContextMenu={(e) => e.preventDefault()}
             className='controls-levels-button'
@@ -175,15 +164,6 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
             onTouchEnd={() => triggerVolumeEnd('down')}>
             &#9660;
           </button>
-          }
-          {credential !== 'dev' && 
-          <button
-            onContextMenu={(e) => e.preventDefault()}
-            className='controls-levels-button'
-            onClick={() => triggerVolume('1', 'down')}>
-            &#9660;
-          </button>
-          }
         </div>
         {
         devicesState.hdmiSala.state === 'roku' &&
