@@ -133,7 +133,7 @@ export const devicesOriginal = {
                 info: '',
                 img: '/imgs/channels/tve.png'
             },
-            seis: {
+            cuatro: {
                 order: 2,
                 number: '04',
                 label: 'Cuatro',
