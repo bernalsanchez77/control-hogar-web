@@ -125,8 +125,24 @@ export const devicesOriginal = {
     cableSala: {
         selected: 'seis',
         channels: {
-            seis: {
+            tve: {
                 order: 1,
+                number: '03',
+                label: 'Tve',
+                id: 'tve',
+                info: '',
+                img: '/imgs/channels/tve.png'
+            },
+            seis: {
+                order: 2,
+                number: '04',
+                label: 'Cuatro',
+                id: 'cuatro',
+                info: '',
+                img: '/imgs/channels/cuatro.png'
+            },
+            seis: {
+                order: 3,
                 number: '06',
                 label: 'Seis',
                 id: 'seis',
@@ -134,20 +150,52 @@ export const devicesOriginal = {
                 img: '/imgs/channels/seis.png'
             },
             siete: {
-                order: 2,
+                order: 4,
                 number: '07',
                 label: 'Siete',
                 id: 'siete',
                 info: '',
                 img: '/imgs/channels/siete.png'
             },
+            multimedios: {
+                order: 5,
+                number: '08',
+                label: 'Multimedios',
+                id: 'multimedios',
+                info: '',
+                img: '/imgs/channels/multimedios.png'
+            },
+            nueve: {
+                order: 6,
+                number: '09',
+                label: 'Nueve',
+                id: 'nueve',
+                info: '',
+                img: '/imgs/channels/nueve.png'
+            },
+            estrellas: {
+                order: 7,
+                number: '10',
+                label: 'Estrellas',
+                id: 'estrellas',
+                info: '',
+                img: '/imgs/channels/estrellas.png'
+            },
             once: {
-                order: 3,
+                order: 8,
                 number: '11',
                 label: 'Once',
                 id: 'once',
                 info: '',
                 img: '/imgs/channels/once.png'
+            },
+            sinart: {
+                order: 9,
+                number: '13',
+                label: 'Sinart',
+                id: 'sinart',
+                info: '',
+                img: '/imgs/channels/sinart.png'
             },
         }
     }
