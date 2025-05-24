@@ -197,6 +197,22 @@ export const devicesOriginal = {
                 info: '',
                 img: '/imgs/channels/sinart.png'
             },
+            xpertv: {
+                order: 10,
+                number: '14',
+                label: 'Expertv',
+                id: 'expertv',
+                info: '',
+                img: '/imgs/channels/expertv.png'
+            },
+            ucr: {
+                order: 11,
+                number: '15',
+                label: 'Ucr',
+                id: 'ucr',
+                info: '',
+                img: '/imgs/channels/ucr.png'
+            },
         }
     }
 };
