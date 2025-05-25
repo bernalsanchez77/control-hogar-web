@@ -107,9 +107,8 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
           devicesState.hdmiSala.state === 'cable' &&
           <div className='controls-levels-element controls-levels-element--right'>
             <button
-              onContextMenu={(e) => e.preventDefault()}
               className={'controls-levels-button'}
-              onClick={() => triggerChannel('up')}>
+              onTouchStart={() => triggerChannel('up')}>
               &#9650;
             </button>
           </div>
@@ -123,9 +122,8 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
         </div>
         <div className='controls-levels-element controls-levels-element--mute-icon'>
           <button
-            onContextMenu={(e) => e.preventDefault()}
             className="controls-levels-button controls-levels-button--img"
-            onClick={() => triggerMute()}>
+            onTouchStart={() => triggerMute()}>
             {devicesState[screenSelected].mute === 'off' &&
               <img
                 className='controls-levels-img controls-levels-img--no-button'
@@ -166,9 +164,8 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
         devicesState.hdmiSala.state === 'roku' &&
           <div className='controls-levels-element controls-levels-element--right'>
             <button
-              onContextMenu={(e) => e.preventDefault()}
               className={`controls-levels-button`}
-              onClick={() => triggerControl('back')}>
+              onTouchStart={() => triggerControl('back')}>
               <img
                 className='controls-levels-img controls-levels-img--button'
                 src="/imgs/back-50.png"
@@ -181,9 +178,8 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
         devicesState.hdmiSala.state === 'cable' &&
           <div className='controls-levels-element controls-levels-element--right'>
             <button
-              onContextMenu={(e) => e.preventDefault()}
               className={`controls-levels-button`}
-              onClick={() => triggerChannel('down')}>
+              onTouchStart={() => triggerChannel('down')}>
               &#9660;
             </button>
           </div>
