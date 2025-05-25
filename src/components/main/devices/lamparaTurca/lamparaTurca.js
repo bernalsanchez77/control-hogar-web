@@ -14,7 +14,10 @@ function LamparaTurca({devicesState, triggerDeviceParent}) {
   return (
     <div className="lamparaTurca">
       <div>
-        <button className={`devices-button ${devicesState.lamparaTurca.state === 'on' ? "devices-button--on" : "devices-button-off"}`} onClick={() => triggerDevice(devicesState.lamparaTurca.id)}>{devicesState.lamparaTurca.label}</button>
+        <button
+          className={`devices-button ${devicesState.lamparaTurca.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
+          onTouchStart={() => triggerDevice(devicesState.lamparaTurca.id)}>{devicesState.lamparaTurca.label}
+        </button>
       </div>
     </div>
   );
