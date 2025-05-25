@@ -21,25 +21,23 @@ function Screens({credential, ownerCredential, devCredential,  inRange, devicesS
           {(credential === ownerCredential || credential === devCredential) &&
           <div className='screens-element'>
             <button
-              onContextMenu={(e) => e.preventDefault()}
               className={`screens-button ${screenSelected === devicesState.teleCuarto.id ? "screens-button--on" : "screens-button-off"}`}
-              onClick={() => triggerScreen(devicesState.teleCuarto.id)}>
+              onTouchStart={() => triggerScreen(devicesState.teleCuarto.id)}>
                 {devicesState.teleCuarto.label}
               </button>
           </div>
           }
           <div className='screens-element'>
             <button
-              onContextMenu={(e) => e.preventDefault()}
               className={`screens-button ${screenSelected === devicesState.teleSala.id ? "screens-button--on" : "screens-button-off"}`}
-              onClick={() => triggerScreen(devicesState.teleSala.id)}>
+              onTouchStart={() => triggerScreen(devicesState.teleSala.id)}>
                 {devicesState.teleSala.label}
             </button>
           </div>
           <div className='screens-element'>
-            <button onContextMenu={(e) => e.preventDefault()}
+            <button
               className={`screens-button ${screenSelected === devicesState.proyectorSala.id ? "screens-button--on" : "screens-button-off"}`}
-              onClick={() => triggerScreen(devicesState.proyectorSala.id)}>
+              onTouchStart={() => triggerScreen(devicesState.proyectorSala.id)}>
                 {devicesState.proyectorSala.label}
               </button>
           </div>
