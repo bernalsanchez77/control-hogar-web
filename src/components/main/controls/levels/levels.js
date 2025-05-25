@@ -93,9 +93,8 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
           devicesState.hdmiSala.state === 'roku' &&
           <div className='controls-levels-element controls-levels-element--right'>
             <button
-              onContextMenu={(e) => e.preventDefault()}
               className={`controls-levels-button`}
-              onClick={() => triggerControl('home')}>
+              onTouchStart={() => triggerControl('home')}>
               <img
                 className='controls-levels-img controls-levels-img--button'
                 src="/imgs/home-50.png"
