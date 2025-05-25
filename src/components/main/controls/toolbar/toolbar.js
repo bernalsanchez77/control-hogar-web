@@ -21,17 +21,15 @@ function Toolbar({ devicesState, triggerControlParent }) {
       <div className='controls-toolbar-row'>
         <div className='controls-toolbar-element controls-toolbar-element--left'>
           <button
-            onContextMenu={(e) => e.preventDefault()}
             className='controls-toolbar-button'
-            onClick={() => triggerControl('rewind')}>
+            onTouchStart={() => triggerControl('rewind')}>
             &#x23ee;
           </button>
         </div>
         <div className='controls-toolbar-element'>
             <button
-                onContextMenu={(e) => e.preventDefault()}
                 className={`controls-toolbar-button`}
-                onClick={() => triggerControl('play')}>
+                onTouchStart={() => triggerControl('play')}>
                 {devicesState.rokuSala.state === 'play' &&
                 <img
                   className='controls-toolbar-img controls-toolbar-img--button'
@@ -50,9 +48,8 @@ function Toolbar({ devicesState, triggerControlParent }) {
         </div>
         <div className='controls-toolbar-element controls-toolbar-element--right'>
         <button
-            onContextMenu={(e) => e.preventDefault()}
             className={'controls-toolbar-button'}
-            onClick={() => triggerControl('forward')}>
+            onTouchStart={() => triggerControl('forward')}>
             &#x23ed;
         </button>
         </div>
