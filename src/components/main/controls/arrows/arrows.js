@@ -14,9 +14,8 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
       <div className='controls-arrows-row controls-arrows-row--one'>
         <div className='controls-arrows-element'>
           <button
-            onContextMenu={(e) => e.preventDefault()}
             className="controls-arrows-button"
-            onClick={() => triggerControl('up')}>
+            onTouchStart={() => triggerControl('up')}>
               &#9650;
           </button>
         </div>
@@ -24,25 +23,22 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
       <div className='controls-arrows-row'>
         <div className='controls-arrows-element controls-arrows-element--left'>
           <button
-            onContextMenu={(e) => e.preventDefault()}
             className="controls-arrows-button control-arrows-button--left"
-            onClick={() => triggerControl('left')}>
+            onTouchStart={() => triggerControl('left')}>
               &#9664;
           </button>
         </div>
         <div className='controls-arrows-element'>
           <button
-            onContextMenu={(e) => e.preventDefault()}
             className="controls-arrows-button controls-arrows-button--circle"
-            onClick={() => triggerControl('enter')}>
+            onTouchStart={() => triggerControl('enter')}>
               ok
           </button>
         </div>
         <div className='controls-arrows-element controls-arrows-element--right'>
           <button
-            onContextMenu={(e) => e.preventDefault()}
             className="controls-arrows-button"
-            onClick={() => triggerControl('right')}>
+            onTouchStart={() => triggerControl('right')}>
               &#9654;
           </button>
         </div>
@@ -50,9 +46,8 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
       <div className='controls-arrows-row  controls-arrows-row--one'>
         <div className='controls-arrows-element'>
           <button
-            onContextMenu={(e) => e.preventDefault()}
             className="controls-arrows-button"
-            onClick={() => triggerControl('down')}>
+            onTouchStart={() => triggerControl('down')}>
               &#9660;
           </button>
         </div>
