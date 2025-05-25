@@ -83,7 +83,6 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       <div className='controls-levels-row'>
         <div className='controls-levels-element controls-levels-element--left'>
           <button
-            onContextMenu={(e) => e.preventDefault()}
             className='controls-levels-button'
             onTouchStart={() => triggerVolumeStart('up')}
             onTouchEnd={() => triggerVolumeEnd('up')}>
@@ -158,7 +157,6 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       <div className='controls-levels-row'>
         <div className='controls-levels-element controls-levels-element--left'>
           <button
-            onContextMenu={(e) => e.preventDefault()}
             className='controls-levels-button'
             onTouchStart={() => triggerVolumeStart('down')}
             onTouchEnd={() => triggerVolumeEnd('down')}>
