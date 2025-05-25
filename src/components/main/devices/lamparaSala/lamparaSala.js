@@ -14,7 +14,10 @@ function LamparaSala({devicesState, triggerDeviceParent}) {
   return (
     <div className="lamparaSala">
       <div>
-        <button className={`devices-button ${devicesState.lamparaSala.state === 'on' ? "devices-button--on" : "devices-button-off"}`} onClick={() => triggerDevice(devicesState.lamparaSala.id)}>{devicesState.lamparaSala.label}</button>
+        <button
+          className={`devices-button ${devicesState.lamparaSala.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
+          onTouchStart={() => triggerDevice(devicesState.lamparaSala.id)}>{devicesState.lamparaSala.label}
+        </button>
       </div>
     </div>
   );
