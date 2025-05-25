@@ -63,9 +63,8 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
       <div className='controls-top-row'>
         <div className='controls-top-element'>
           <button
-            onContextMenu={(e) => e.preventDefault()}
             className={`controls-top-button`}
-            onClick={() => triggerPower()}>
+            onTouchStart={() => triggerPower()}>
               {devicesState[screenSelected].state === 'on' &&
                 <img
                   className='controls-top-img controls-top-img--button'
@@ -84,17 +83,15 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
         </div>
         <div className='controls-top-element'>
           <button
-            onContextMenu={(e) => e.preventDefault()}
             className="controls-top-button controls-top-button-off"
-            onClick={() => triggerHdmi()}>
+            onTouchStart={() => triggerHdmi()}>
               {devicesState.hdmiSala.label[devicesState.hdmiSala.state]}
           </button>
         </div>
         <div className='controls-top-element'>
           <button
-            onContextMenu={(e) => e.preventDefault()}
             className={`controls-top-button`}
-            onClick={() => triggerInput()}>
+            onTouchStart={() => triggerInput()}>
               {devicesState[screenSelected].input.label[devicesState[screenSelected].input.state]}
           </button>
         </div>
