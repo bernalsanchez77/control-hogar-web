@@ -14,7 +14,10 @@ function CalentadorBlanco({devicesState, triggerDeviceParent}) {
   return (
     <div className="calentadorBlanco">
       <div>
-        <button className={`devices-button ${devicesState.calentadorBlanco.state === 'on' ? "devices-button--on" : "devices-button-off"}`} onClick={() => triggerDevice(devicesState.calentadorBlanco.id)}>{devicesState.calentadorBlanco.label}</button>
+        <button
+          className={`devices-button ${devicesState.calentadorBlanco.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
+          onTouchStart={() => triggerDevice(devicesState.calentadorBlanco.id)}>{devicesState.calentadorBlanco.label}
+        </button>
       </div>
     </div>
   );
