@@ -14,7 +14,10 @@ function LamparaRotatoria({devicesState, triggerDeviceParent}) {
   return (
     <div className="lamparaRotatoria">
       <div>
-        <button className={`devices-button ${devicesState.lamparaRotatoria.state === 'on' ? "devices-button--on" : "devices-button-off"}`} onClick={() => triggerDevice(devicesState.lamparaRotatoria.id)}>{devicesState.lamparaRotatoria.label}</button>
+        <button
+          className={`devices-button ${devicesState.lamparaRotatoria.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
+          onTouchStart={() => triggerDevice(devicesState.lamparaRotatoria.id)}>{devicesState.lamparaRotatoria.label}
+        </button>
       </div>
     </div>
   );
