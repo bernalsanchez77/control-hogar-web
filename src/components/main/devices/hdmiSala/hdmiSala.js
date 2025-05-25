@@ -14,7 +14,10 @@ function HdmiSala({devicesState, triggerDeviceParent}) {
   return (
     <div className="hdmiSala">
       <div>
-        <button onContextMenu={(e) => e.preventDefault()} className="devices-button devices-button-off" onClick={() => triggerDevice(devicesState.hdmiSala.id)}>{devicesState.hdmiSala.label[devicesState.hdmiSala.state]}</button>
+        <button
+          className="devices-button devices-button-off"
+          onTouchStart={() => triggerDevice(devicesState.hdmiSala.id)}>{devicesState.hdmiSala.label[devicesState.hdmiSala.state]}
+        </button>
       </div>
     </div>
   );
