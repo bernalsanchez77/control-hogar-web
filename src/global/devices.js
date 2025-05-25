@@ -213,6 +213,22 @@ export const devicesOriginal = {
                 info: '',
                 img: '/imgs/channels/ucr.png'
             },
+            tvchile: {
+                order: 12,
+                number: '16',
+                label: 'Tv Chile',
+                id: 'tvchile',
+                info: '',
+                img: '/imgs/channels/tvchile.png'
+            },
+            caracol: {
+                order: 13,
+                number: '17',
+                label: 'Caracol',
+                id: 'caracol',
+                info: '',
+                img: '/imgs/channels/caracol.png'
+            },
         }
     }
 };
