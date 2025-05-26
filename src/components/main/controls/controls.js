@@ -44,6 +44,8 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           devicesState={devicesState}
           triggerControlParent={triggerControl}>
         </Toolbar>
+        }
+        {devicesState.hdmiSala.state === 'roku' &&  
         <Apps
           devicesState={devicesState}
           triggerControlParent={triggerControl}>
