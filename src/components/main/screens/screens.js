@@ -14,6 +14,7 @@ function Screens({credential, ownerCredential, devCredential,  inRange, devicesS
       }
     }
   }
+  const isIphone = /iPhone/i.test(navigator.userAgent);
   return (
     <div>
       <div className='screens'>
@@ -37,7 +38,8 @@ function Screens({credential, ownerCredential, devCredential,  inRange, devicesS
           <div className='screens-element'>
             <button
               className={`screens-button ${screenSelected === devicesState.proyectorSala.id ? "screens-button--on" : "screens-button-off"}`}
-              onTouchStart={() => triggerScreen(devicesState.proyectorSala.id)}>
+              onTouchStart={isIphone ? undefined : () => triggerScreen(devicesState.proyectorSala.id)}
+              onClick={isIphone ? () => triggerScreen(devicesState.proyectorSala.id) : undefined}>
                 {devicesState.proyectorSala.label}
               </button>
           </div>
