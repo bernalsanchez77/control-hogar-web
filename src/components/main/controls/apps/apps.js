@@ -7,7 +7,7 @@ function Apps({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
     navigator.vibrate([100]);
     const device = 'rokuSala';
-    triggerControlParent([device], ['command'], [value], false);
+    // triggerControlParent([device], ['command'], [value], false);
   }
 
   return (
@@ -18,6 +18,20 @@ function Apps({devicesState, screenSelected, triggerControlParent}) {
             className="controls-apps-button"
             onTouchStart={() => triggerControl('netflix')}>
               Netflix
+          </button>
+        </div>
+        <div className='controls-apps-element'>
+          <button
+            className="controls-apps-button"
+            onTouchStart={() => triggerControl('disney')}>
+              Disney
+          </button>
+        </div>
+        <div className='controls-apps-element'>
+          <button
+            className="controls-apps-button"
+            onTouchStart={() => triggerControl('youtube')}>
+              Youtube
           </button>
         </div>
       </div>
