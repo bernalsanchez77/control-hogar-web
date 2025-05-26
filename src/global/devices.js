@@ -138,7 +138,7 @@ export const devicesOriginal = {
             label: 'Max',
             id: 'max'
           },
-          Amazon: {
+          amazon: {
             label: 'Amazon',
             id: 'amazon'
           }
