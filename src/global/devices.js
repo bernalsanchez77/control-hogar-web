@@ -124,23 +124,28 @@ export const devicesOriginal = {
         apps: {
           netflix: {
             label: 'Netflix',
-            id: 'netflix'
+            id: 'netflix',
+            img: '/imgs/apps/netflix.png'
           },
           disney: {
             label: 'Disney',
-            id: 'disney'
+            id: 'disney',
+            img: '/imgs/apps/disney.png'
           },
           youtube: {
             label: 'Youtube',
-            id: 'youtube'
+            id: 'youtube',
+            img: '/imgs/apps/youtube.png'
           },
           max: {
             label: 'Max',
-            id: 'max'
+            id: 'max',
+            img: '/imgs/apps/max.png'
           },
           amazon: {
             label: 'Amazon',
-            id: 'amazon'
+            id: 'amazon',
+            img: '/imgs/apps/amazon.png'
           }
         }
     },

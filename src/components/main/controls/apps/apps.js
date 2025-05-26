@@ -19,7 +19,11 @@ function Apps({devicesState, screenSelected, triggerControlParent}) {
           <button
             className={`controls-apps-button ${devicesState.rokuSala.apps.netflix.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
             onTouchStart={() => triggerControl(devicesState.rokuSala.apps.netflix.id)}>
-              {devicesState.rokuSala.apps.netflix.label}
+              <img
+                className='controls-apps-img controls-apps-img--no-button'
+                src={devicesState.rokuSala.apps.netflix.img}
+                alt="icono">
+              </img>
           </button>
         </div>
         <div className='controls-apps-element'>
