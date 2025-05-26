@@ -36,6 +36,20 @@ function Apps({devicesState, screenSelected, triggerControlParent}) {
               {devicesState.rokuSala.apps.youtube.label}
           </button>
         </div>
+        <div className='controls-apps-element'>
+          <button
+            className={`controls-apps-button ${devicesState.rokuSala.apps.max.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
+            onTouchStart={() => triggerControl(devicesState.rokuSala.apps.max.id)}>
+              {devicesState.rokuSala.apps.max.label}
+          </button>
+        </div>
+        <div className='controls-apps-element'>
+          <button
+            className={`controls-apps-button ${devicesState.rokuSala.apps.amazon.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
+            onTouchStart={() => triggerControl(devicesState.rokuSala.apps.amazon.id)}>
+              {devicesState.rokuSala.apps.amazon.label}
+          </button>
+        </div>
       </div>
     </div>
   )
