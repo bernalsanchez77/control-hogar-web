@@ -24,14 +24,14 @@ function Apps({devicesState, screenSelected, triggerControlParent}) {
         </div>
         <div className='controls-apps-element'>
           <button
-                        className={`controls-apps-button ${devicesState.rokuSala.apps.disney.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
+            className={`controls-apps-button ${devicesState.rokuSala.apps.disney.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
             onTouchStart={() => triggerControl(devicesState.rokuSala.apps.disney.id)}>
               {devicesState.rokuSala.apps.disney.label}
           </button>
         </div>
         <div className='controls-apps-element'>
           <button
-                        className={`controls-apps-button ${devicesState.rokuSala.apps.youtube.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
+            className={`controls-apps-button ${devicesState.rokuSala.apps.youtube.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
             onTouchStart={() => triggerControl(devicesState.rokuSala.apps.youtube.id)}>
               {devicesState.rokuSala.apps.youtube.label}
           </button>
