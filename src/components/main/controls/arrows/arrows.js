@@ -2,7 +2,7 @@
 import React from 'react';
 import './arrows.css';
 
-function Controls({devicesState, screenSelected, triggerControlParent}) {
+function Arrows({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
     navigator.vibrate([100]);
     const device = 'rokuSala';
@@ -56,4 +56,4 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
   )
 }
 
-export default Controls;
+export default Arrows;
