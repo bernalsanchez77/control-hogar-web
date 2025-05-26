@@ -3,7 +3,9 @@ import './screens.css';
 
 function Screens({credential, ownerCredential, devCredential,  inRange, devicesState, loadingDevices, screenSelected, changeScreenParent}) {
   const triggerScreen = (screen) => {
-    // navigator.vibrate([100]);
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
     if (inRange || (credential === ownerCredential && screenSelected !== screen)) {
       if (!loadingDevices.current) {
         changeScreenParent(screen);
@@ -14,7 +16,6 @@ function Screens({credential, ownerCredential, devCredential,  inRange, devicesS
       }
     }
   }
-  const isIphone = /iPhone/i.test(navigator.userAgent);
   return (
     <div>
       <div className='screens'>
@@ -38,8 +39,7 @@ function Screens({credential, ownerCredential, devCredential,  inRange, devicesS
           <div className='screens-element'>
             <button
               className={`screens-button ${screenSelected === devicesState.proyectorSala.id ? "screens-button--on" : "screens-button-off"}`}
-              onTouchStart={isIphone ? undefined : () => triggerScreen(devicesState.proyectorSala.id)}
-              onClick={isIphone ? () => triggerScreen(devicesState.proyectorSala.id) : undefined}>
+              onTouchStart={() => triggerScreen(devicesState.proyectorSala.id)}>
                 {devicesState.proyectorSala.label}
               </button>
           </div>

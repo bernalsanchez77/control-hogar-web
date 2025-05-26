@@ -3,7 +3,9 @@ import './toolbar.css';
 
 function Toolbar({ devicesState, triggerControlParent }) {
   const triggerControl = (value) => {
-    navigator.vibrate([100]);
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
     if (value === 'play') {
       if (devicesState.rokuSala.state === 'play') {
         triggerControlParent([devicesState.rokuSala.id], ['state'], ['pause'], true);

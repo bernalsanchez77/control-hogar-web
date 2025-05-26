@@ -5,7 +5,9 @@ import './apps.css';
 
 function Apps({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
-    navigator.vibrate([100]);
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
     const device = 'rokuSala';
     // triggerControlParent([device], ['command'], [value], false);
   }

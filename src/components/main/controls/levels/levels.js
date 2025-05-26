@@ -6,7 +6,9 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
   const timeout6s = useRef(null);
   const volumeChange = useRef('1');
   const triggerMute = () => {
-    navigator.vibrate([100]);
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
     if (devicesState[screenSelected].mute === 'on') {
       triggerControlParent([screenSelected], ['mute'], ['off'], true);
     }
@@ -15,12 +17,16 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     }
   }
   const triggerControl = (value) => {
-    navigator.vibrate([100]);
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
     const device = 'rokuSala';
     triggerControlParent([device], ['command'], [value], false);
   }
   const triggerChannel = (value) => {
-    navigator.vibrate([100]);
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
     const device = 'cableSala';
     let newChannelOrder = 0;
     const channelIdSelected = devicesState.cableSala.selected;
@@ -37,7 +43,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     }
   }
   const triggerVolume = (vol, button, vib = true) => {
-    if (vib) {
+    if (vib && navigator.vibrate) {
       navigator.vibrate([100]);
     }
     let newVol = 0;
@@ -60,11 +66,15 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     volumeChange.current = '1';
     timeout3s.current = setTimeout(() => {
       volumeChange.current = '5';
-      navigator.vibrate([200]);
+      if (navigator.vibrate) {
+        navigator.vibrate([200]);
+      }
     }, 1000);
     timeout6s.current = setTimeout(() => {
       volumeChange.current = '10';
-      navigator.vibrate([400]);
+      if (navigator.vibrate) {
+        navigator.vibrate([400]);
+      }
     }, 2000);
   }
 
