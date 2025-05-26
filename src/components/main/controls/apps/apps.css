@@ -4,7 +4,7 @@
   }
   .controls-apps-row {
     display: inline-block;
-    width: 240px;
+    width: 100%;
   }
   .controls-apps-element {
     float: left;
