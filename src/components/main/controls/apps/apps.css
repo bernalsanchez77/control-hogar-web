@@ -13,10 +13,10 @@
   }
   .controls-apps-button {
     background-color: rgb(0, 12, 96, 0.5);
-    font-size: 15px;
+    font-size: 11px;
     padding: 3px;
     width: 100%;
-    border: grey 1px solid;
+    border: gray 1px solid;
     height: 40px;
     border-radius: 5px;
     user-select: none;
@@ -32,6 +32,9 @@
   }
   .controls-apps-span {
       color: white
+  }
+  .controls-apps-button--on {
+    border: yellow 1px solid;
   }
   button.controls-apps-button:active {
     background-color: white;

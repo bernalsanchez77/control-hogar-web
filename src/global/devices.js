@@ -121,6 +121,28 @@ export const devicesOriginal = {
         label: '',
         id: 'rokuSala',
         app: 'none',
+        apps: {
+          netflix: {
+            label: 'Netflix',
+            id: 'netflix'
+          },
+          disney: {
+            label: 'Disney',
+            id: 'disney'
+          },
+          youtube: {
+            label: 'Youtube',
+            id: 'youtube'
+          },
+          max: {
+            label: 'Max',
+            id: 'max'
+          },
+          Amazon: {
+            label: 'Amazon',
+            id: 'amazon'
+          }
+        }
     },
     cableSala: {
         selected: 'seis',

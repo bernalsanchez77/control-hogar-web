@@ -9,7 +9,7 @@ function Apps({devicesState, screenSelected, triggerControlParent}) {
       navigator.vibrate([100]);
     }
     const device = 'rokuSala';
-    // triggerControlParent([device], ['command'], [value], false);
+    triggerControlParent([device], ['app'], [value]);
   }
 
   return (
@@ -17,23 +17,23 @@ function Apps({devicesState, screenSelected, triggerControlParent}) {
       <div className='controls-apps-row'>
         <div className='controls-apps-element'>
           <button
-            className="controls-apps-button"
-            onTouchStart={() => triggerControl('netflix')}>
-              Netflix
+            className={`controls-apps-button ${devicesState.rokuSala.apps.netflix.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
+            onTouchStart={() => triggerControl(devicesState.rokuSala.apps.netflix.id)}>
+              {devicesState.rokuSala.apps.netflix.label}
           </button>
         </div>
         <div className='controls-apps-element'>
           <button
-            className="controls-apps-button"
-            onTouchStart={() => triggerControl('disney')}>
-              Disney
+                        className={`controls-apps-button ${devicesState.rokuSala.apps.disney.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
+            onTouchStart={() => triggerControl(devicesState.rokuSala.apps.disney.id)}>
+              {devicesState.rokuSala.apps.disney.label}
           </button>
         </div>
         <div className='controls-apps-element'>
           <button
-            className="controls-apps-button"
-            onTouchStart={() => triggerControl('youtube')}>
-              Youtube
+                        className={`controls-apps-button ${devicesState.rokuSala.apps.youtube.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
+            onTouchStart={() => triggerControl(devicesState.rokuSala.apps.youtube.id)}>
+              {devicesState.rokuSala.apps.youtube.label}
           </button>
         </div>
       </div>
