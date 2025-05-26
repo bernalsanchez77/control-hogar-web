@@ -1,1 +1,40 @@
-
+.controls-apps {
+    margin: 0 10px 15px;
+    display: inline-block;
+  }
+  .controls-apps-row {
+    display: inline-block;
+    width: 240px;
+  }
+  .controls-apps-element {
+    float: left;
+    width: 70px;
+    margin: 5px;
+  }
+  .controls-apps-button {
+    background-color: rgb(0, 12, 96, 0.5);
+    font-size: 15px;
+    padding: 3px;
+    width: 100%;
+    border: grey 1px solid;
+    height: 40px;
+    border-radius: 5px;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .controls-apps-button--img {
+    background-color: transparent;
+    border: none;
+  }
+  .controls-apps-img--button {
+    width: 20px;
+    margin-top: 5px;
+  }
+  .controls-apps-span {
+      color: white
+  }
+  button.controls-apps-button:active {
+    background-color: white;
+    transition: background-color 0.1s;
+  }
+  
