@@ -3,12 +3,17 @@
     display: inline-block;
   }
   .controls-channels-row {
+    width: 300px;
     display: inline-block;
   }
   .controls-channels-element {
-    float: left;
-    width: 70px;
     margin: 5px;
+  }
+  .controls-channels-element--left {
+    float: left;
+  }
+  .controls-channels-element--right {
+    float: right;
   }
   .controls-channels-img {
     width: 50px;
