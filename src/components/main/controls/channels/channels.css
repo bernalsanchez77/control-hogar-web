@@ -3,13 +3,13 @@
     display: inline-block;
   }
   .controls-channels-row {
-    width: 300px;
+    width: 350px;
     display: inline-block;
   }
   .controls-channels-element {
     margin: 5px;
     float: left;
-    width: 120px;
+    width: 100px;
   }
   .controls-channels-element--img {
     width: 50px;
