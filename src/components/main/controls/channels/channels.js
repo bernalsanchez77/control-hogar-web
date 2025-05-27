@@ -40,7 +40,7 @@ function Channels({devicesState, credential, triggerControlParent}) {
               Deportes
             </p>
           </div>
-          <div className='controls-channels-element'>
+          <div className='controls-channels-element controls-channels-element--img'>
               <img
                   className='controls-channels-img'
                   src={selectedImg}
