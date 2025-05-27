@@ -24,35 +24,39 @@ function Channels({devicesState, credential, triggerControlParent}) {
       <div className='controls-channels'>
         <div className='controls-channels-row'>
           <div className='controls-channels-element'>
-              <img
-                  className='controls-channels-img'
-                  src={selectedImg}
-                  alt="icono">
-              </img>
+              Nacionales
+          </div>
+          <div className='controls-channels-element'>
+              Noticias
           </div>
         </div>
         <div className='controls-channels-row'>
+          <div className='controls-channels-element'>
+              Deportes
+          </div>
           <div className='controls-channels-element'>
               <img
                   className='controls-channels-img'
                   src={selectedImg}
                   alt="icono">
               </img>
+          </div>
+          <div className='controls-channels-element'>
+              Entretenimiento
+          </div>
+        </div>
+        <div className='controls-channels-row'>
+          <div className='controls-channels-element'>
+              Historia
+          </div>
+          <div className='controls-channels-element'>
+              Peliculas y Series
           </div>
         </div>
       </div>
       }
       {credential !== 'dev' &&
       <div className='controls-channels'>
-        <div className='controls-channels-row'>
-          <div className='controls-channels-element'>
-              <img
-                  className='controls-channels-img'
-                  src={selectedImg}
-                  alt="icono">
-              </img>
-          </div>
-        </div>
         <div className='controls-channels-row'>
           <div className='controls-channels-element'>
               <img
