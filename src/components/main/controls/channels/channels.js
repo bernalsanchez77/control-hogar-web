@@ -1,7 +1,7 @@
 import React from 'react';
 import './channels.css';
 
-function Channels({ devicesState, triggerControlParent }) {
+function Channels({devicesState, credential, triggerControlParent}) {
   let selectedImg = '/imgs/channels/' + devicesState.cableSala.selected + '.png';
   const triggerControl = (value) => {
     if (navigator.vibrate) {
@@ -19,16 +19,51 @@ function Channels({ devicesState, triggerControlParent }) {
   }
 
   return (
-    <div className='controls-channels'>
-      <div className='controls-channels-row'>
-        <div className='controls-channels-element'>
-            <img
-                className='controls-channels-img'
-                src={selectedImg}
-                alt="icono">
-            </img>
+    <div>
+      {credential === 'dev' &&
+      <div className='controls-channels'>
+        <div className='controls-channels-row'>
+          <div className='controls-channels-element'>
+              <img
+                  className='controls-channels-img'
+                  src={selectedImg}
+                  alt="icono">
+              </img>
+          </div>
+        </div>
+        <div className='controls-channels-row'>
+          <div className='controls-channels-element'>
+              <img
+                  className='controls-channels-img'
+                  src={selectedImg}
+                  alt="icono">
+              </img>
+          </div>
         </div>
       </div>
+      }
+      {credential !== 'dev' &&
+      <div className='controls-channels'>
+        <div className='controls-channels-row'>
+          <div className='controls-channels-element'>
+              <img
+                  className='controls-channels-img'
+                  src={selectedImg}
+                  alt="icono">
+              </img>
+          </div>
+        </div>
+        <div className='controls-channels-row'>
+          <div className='controls-channels-element'>
+              <img
+                  className='controls-channels-img'
+                  src={selectedImg}
+                  alt="icono">
+              </img>
+          </div>
+        </div>
+      </div>
+      }
     </div>
   )
 }
