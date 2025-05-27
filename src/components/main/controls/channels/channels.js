@@ -49,7 +49,7 @@ function Channels({devicesState, credential, triggerControlParent}) {
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
             <p className='controls-channels-elements-paragraph controls-channels-elements-paragraph--left'>
-              Entretenimiento
+              Entreten
             </p>
           </div>
         </div>
@@ -61,7 +61,7 @@ function Channels({devicesState, credential, triggerControlParent}) {
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
             <p className='controls-channels-elements-paragraph controls-channels-elements-paragraph--left'>
-              Peliculas y Series
+              Peliculas
             </p>
           </div>
         </div>
