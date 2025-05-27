@@ -24,19 +24,19 @@ function Channels({devicesState, credential, triggerControlParent}) {
       <div className='controls-channels'>
         <div className='controls-channels-row'>
           <div className='controls-channels-element controls-channels-element--left'>
-            <p className='controls-channels-elements-paragraph'>
+            <p className='controls-channels-elements-paragraph--right'>
               Nacionales
             </p>
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
-            <p className='controls-channels-elements-paragraph'>
+            <p className='controls-channels-elements-paragraph-left'>
               Noticias
             </p>
           </div>
         </div>
         <div className='controls-channels-row'>
           <div className='controls-channels-element controls-channels-element--left'>
-            <p className='controls-channels-elements-paragraph'>
+            <p className='controls-channels-elements-paragraph--right'>
               Deportes
             </p>
           </div>
@@ -48,19 +48,19 @@ function Channels({devicesState, credential, triggerControlParent}) {
               </img>
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
-            <p className='controls-channels-elements-paragraph'>
+            <p className='controls-channels-elements-paragraph--left'>
               Entretenimiento
             </p>
           </div>
         </div>
         <div className='controls-channels-row'>
           <div className='controls-channels-element controls-channels-element--left'>
-            <p className='controls-channels-elements-paragraph'>
+            <p className='controls-channels-elements-paragraph--right'>
               Historia
             </p>
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
-            <p className='controls-channels-elements-paragraph'>
+            <p className='controls-channels-elements-paragraph--left'>
               Peliculas y Series
             </p>
           </div>

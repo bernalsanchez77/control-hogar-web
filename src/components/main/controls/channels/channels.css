@@ -8,6 +8,7 @@
   }
   .controls-channels-element {
     margin: 5px;
+    float: left;
   }
   .controls-channels-element--left {
     float: left;
@@ -21,4 +22,10 @@
   }
   .controls-channels-elements-paragraph {
       color: white
+  }
+    .controls-channels-elements-paragraph--left {
+      float: left;
+  }
+    .controls-channels-elements-paragraph--right {
+      float: right;
   }
