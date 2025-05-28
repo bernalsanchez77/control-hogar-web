@@ -22,11 +22,11 @@
   .controls-channels-img {
     width: 50px;
   }
-  .controls-channels-elements-paragraph {
+  .controls-channels-elements-button {
       color: white;
       text-align: center;
       margin: 5px 0;
   }
-    .controls-channels-elements-paragraph--tall {
+    .controls-channels-elements-paragraph--button {
       margin: 15px 0;
   }

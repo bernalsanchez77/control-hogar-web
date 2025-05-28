@@ -24,21 +24,21 @@ function Channels({devicesState, credential, triggerControlParent}) {
       <div className='controls-channels'>
         <div className='controls-channels-row'>
           <div className='controls-channels-element  controls-channels-element--left'>
-            <p className='controls-channels-elements-paragraph'>
+            <button className='controls-channels-elements-button'>
               Nacionales
-            </p>
+            </button>
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
-            <p className='controls-channels-elements-paragraph'>
+            <button className='controls-channels-elements-button'>
               Noticias
-            </p>
+            </button>
           </div>
         </div>
         <div className='controls-channels-row'>
           <div className='controls-channels-element controls-channels-element--left'>
-            <p className='controls-channels-elements-paragraph controls-channels-elements-paragraph--tall'>
+            <button className='controls-channels-elements-button controls-channels-elements-button--tall'>
               Deportes
-            </p>
+            </button>
           </div>
           <div className='controls-channels-element controls-channels-element--img'>
               <img
@@ -48,21 +48,21 @@ function Channels({devicesState, credential, triggerControlParent}) {
               </img>
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
-            <p className='controls-channels-elements-paragraph controls-channels-elements-paragraph--tall'>
+            <button className='controls-channels-elements-button controls-channels-elements-button--tall'>
               Entreten
-            </p>
+            </button>
           </div>
         </div>
         <div className='controls-channels-row'>
           <div className='controls-channels-element controls-channels-element--left'>
-            <p className='controls-channels-elements-paragraph'>
+            <button className='controls-channels-elements-button'>
               Historia
-            </p>
+            </button>
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
-            <p className='controls-channels-elements-paragraph'>
+            <button className='controls-channels-elements-button'>
               Peliculas
-            </p>
+            </button>
           </div>
         </div>
       </div>
