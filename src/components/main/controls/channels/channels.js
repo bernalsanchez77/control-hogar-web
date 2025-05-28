@@ -49,19 +49,19 @@ function Channels({devicesState, credential, triggerControlParent}) {
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
             <button className='controls-channels-elements-button controls-channels-elements-button--tall'>
-              Entreten
+              Entretenimiento
             </button>
           </div>
         </div>
         <div className='controls-channels-row'>
           <div className='controls-channels-element controls-channels-element--left'>
             <button className='controls-channels-elements-button'>
-              Historia
+              Ciencia y Historia
             </button>
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
             <button className='controls-channels-elements-button'>
-              Peliculas
+              Peliculas y Series
             </button>
           </div>
         </div>

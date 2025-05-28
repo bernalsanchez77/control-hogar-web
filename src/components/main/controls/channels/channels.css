@@ -23,9 +23,12 @@
     width: 50px;
   }
   .controls-channels-elements-button {
-      color: white;
-      text-align: center;
-      margin: 5px 0;
+    color: white;
+    text-align: center;
+    margin: 5px 0;
+    border: rgba(181, 181, 181, 0.525) 1px solid;
+    background: transparent;
+    border-radius: 5px;
   }
     .controls-channels-elements-button--tall {
       margin: 15px 0;
