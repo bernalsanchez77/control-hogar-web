@@ -20,7 +20,6 @@ function Channels({devicesState, credential, triggerControlParent}) {
 
   return (
     <div>
-      {credential === 'dev' &&
       <div className='controls-channels'>
         <div className='controls-channels-row'>
           <div className='controls-channels-element  controls-channels-element--left'>
@@ -66,20 +65,6 @@ function Channels({devicesState, credential, triggerControlParent}) {
           </div>
         </div>
       </div>
-      }
-      {credential !== 'dev' &&
-      <div className='controls-channels'>
-        <div className='controls-channels-row'>
-          <div className='controls-channels-element'>
-              <img
-                  className='controls-channels-img'
-                  src={selectedImg}
-                  alt="icono">
-              </img>
-          </div>
-        </div>
-      </div>
-      }
     </div>
   )
 }
