@@ -23,20 +23,20 @@ function Channels({devicesState, credential, triggerControlParent}) {
       {credential === 'dev' &&
       <div className='controls-channels'>
         <div className='controls-channels-row'>
-          <div className='controls-channels-element controls-channels-element--left'>
-            <p className='controls-channels-elements-paragraph controls-channels-elements-paragraph--right'>
+          <div className='controls-channels-element  controls-channels-element--left'>
+            <p className='controls-channels-elements-paragraph'>
               Nacionales
             </p>
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
-            <p className='controls-channels-elements-paragraph controls-channels-elements-paragraph-left'>
+            <p className='controls-channels-elements-paragraph'>
               Noticias
             </p>
           </div>
         </div>
         <div className='controls-channels-row'>
           <div className='controls-channels-element controls-channels-element--left'>
-            <p className='controls-channels-elements-paragraph controls-channels-elements-paragraph--right'>
+            <p className='controls-channels-elements-paragraph controls-channels-elements-paragraph--tall'>
               Deportes
             </p>
           </div>
@@ -48,19 +48,19 @@ function Channels({devicesState, credential, triggerControlParent}) {
               </img>
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
-            <p className='controls-channels-elements-paragraph controls-channels-elements-paragraph--left'>
+            <p className='controls-channels-elements-paragraph controls-channels-elements-paragraph--tall'>
               Entreten
             </p>
           </div>
         </div>
         <div className='controls-channels-row'>
           <div className='controls-channels-element controls-channels-element--left'>
-            <p className='controls-channels-elements-paragraph controls-channels-elements-paragraph--right'>
+            <p className='controls-channels-elements-paragraph'>
               Historia
             </p>
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
-            <p className='controls-channels-elements-paragraph controls-channels-elements-paragraph--left'>
+            <p className='controls-channels-elements-paragraph'>
               Peliculas
             </p>
           </div>

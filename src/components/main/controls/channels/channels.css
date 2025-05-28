@@ -25,8 +25,8 @@
   .controls-channels-elements-paragraph {
       color: white;
       text-align: center;
+      margin: 5px 0;
   }
-    .controls-channels-elements-paragraph--left {
-  }
-    .controls-channels-elements-paragraph--right {
+    .controls-channels-elements-paragraph--tall {
+      margin: 15px 0;
   }
