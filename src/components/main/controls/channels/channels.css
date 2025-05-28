@@ -7,12 +7,11 @@
     display: inline-block;
   }
   .controls-channels-element {
-    margin: 5px;
     float: left;
-    width: 130px;
+    width: 40%;
   }
   .controls-channels-element--img {
-    width: 50px;
+    width: 20%;
   }
   .controls-channels-element--left {
     float: left;
@@ -22,7 +21,6 @@
   }
   .controls-channels-img {
     width: 50px;
-    margin: -5px 0 6px;
   }
   .controls-channels-elements-paragraph {
       color: white;
