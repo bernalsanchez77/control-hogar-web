@@ -12,6 +12,7 @@
   }
   .controls-channels-element--img {
     width: 20%;
+    position: relative;
   }
   .controls-channels-element--left {
     float: left;
@@ -20,8 +21,11 @@
     float: right;
   }
   .controls-channels-img {
-    margin: -10px 0;
+    margin: 0;
     width: 50px;
+    left: 10px;
+    top: -5px;
+    position: absolute;
   }
   .controls-channels-elements-button {
     color: white;
