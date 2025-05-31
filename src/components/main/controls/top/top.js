@@ -11,7 +11,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
         triggerControlParent([screenSelected, devicesState.parlantesSala.id, devicesState.lamparaSala.id, devicesState.lamparaComedor.id], ['state'], ['off'], true);
         setTimeout(() => {
           triggerControlParent([devicesState.proyectorSwitchSala.id], ['state'], ['off'], true);
-        }, 20000);
+        }, 60000);
       } else {
         triggerControlParent([devicesState.proyectorSwitchSala.id, devicesState.parlantesSala.id, devicesState.lamparaSala.id, devicesState.lamparaComedor.id], ['state'], ['on'], true);
         setTimeout(() => {
