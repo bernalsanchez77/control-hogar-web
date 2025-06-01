@@ -21,7 +21,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = [];
+    let device = [];
     if (devicesState.hdmiSala.state === 'roku') {
       device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
     } else {
