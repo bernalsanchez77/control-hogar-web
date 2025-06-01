@@ -8,8 +8,8 @@ function Apps({devicesState, screenSelected, triggerControlParent}) {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = 'rokuSala';
-    triggerControlParent([device], ['app'], [value]);
+    const device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
+    triggerControlParent(device, ['app'], [value]);
   }
 
   return (

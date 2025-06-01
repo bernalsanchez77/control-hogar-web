@@ -7,14 +7,15 @@ function Channels({devicesState, credential, triggerControlParent}) {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
+    const device = [{device: devicesState.rokuSala.id, ifttt: devicesState.rokuSala.id}];
     if (value === 'play') {
       if (devicesState.rokuSala.state === 'play') {
-        triggerControlParent([devicesState.rokuSala.id], ['state'], ['pause'], true);
+        triggerControlParent(device, ['state'], ['pause'], true);
       } else {
-        triggerControlParent([devicesState.rokuSala.id], ['state'], ['play'], true);
+        triggerControlParent(device, ['state'], ['play'], true);
       }
     } else {
-      triggerControlParent([devicesState.rokuSala.id], ['command'], [value], false);
+      triggerControlParent(device, ['command'], [value], false);
     }
   }
 

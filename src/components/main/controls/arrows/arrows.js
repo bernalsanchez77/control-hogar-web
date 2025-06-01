@@ -7,8 +7,8 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = 'rokuSala';
-    triggerControlParent([device], ['command'], [value], false);
+    const device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
+    triggerControlParent(device, ['command'], [value], false);
   }
 
   return (
