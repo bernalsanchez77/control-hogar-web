@@ -2,7 +2,7 @@ import React from 'react';
 import './channels.css';
 
 function Channels({devicesState, credential, triggerControlParent}) {
-  let selectedImg = '/imgs/channels/' + devicesState.channelsSala.selected + '.png';
+  // let selectedImg = '/imgs/channels/' + devicesState.channelsSala.selected + '.png';
   const triggerControl = (value) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
