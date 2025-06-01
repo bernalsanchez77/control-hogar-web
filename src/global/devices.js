@@ -155,6 +155,7 @@ export const devicesOriginal = {
             tve: {
                 order: 1,
                 number: '03',
+                ifttt: '1',
                 label: 'Tve',
                 id: 'tve',
                 info: '',
@@ -163,6 +164,7 @@ export const devicesOriginal = {
             cuatro: {
                 order: 2,
                 number: '04',
+                ifttt: '1',
                 label: 'Cuatro',
                 id: 'cuatro',
                 info: '',
@@ -171,6 +173,7 @@ export const devicesOriginal = {
             seis: {
                 order: 3,
                 number: '06',
+                ifttt: '1',
                 label: 'Seis',
                 id: 'seis',
                 info: '',
@@ -179,6 +182,7 @@ export const devicesOriginal = {
             siete: {
                 order: 4,
                 number: '07',
+                ifttt: '1',
                 label: 'Siete',
                 id: 'siete',
                 info: '',
@@ -187,6 +191,7 @@ export const devicesOriginal = {
             multimedios: {
                 order: 5,
                 number: '08',
+                ifttt: '1',
                 label: 'Multimedios',
                 id: 'multimedios',
                 info: '',
@@ -195,6 +200,7 @@ export const devicesOriginal = {
             nueve: {
                 order: 6,
                 number: '09',
+                ifttt: '1',
                 label: 'Nueve',
                 id: 'nueve',
                 info: '',
@@ -203,6 +209,7 @@ export const devicesOriginal = {
             estrellas: {
                 order: 7,
                 number: '10',
+                ifttt: '1',
                 label: 'Estrellas',
                 id: 'estrellas',
                 info: '',
@@ -211,6 +218,7 @@ export const devicesOriginal = {
             once: {
                 order: 8,
                 number: '11',
+                ifttt: '1',
                 label: 'Once',
                 id: 'once',
                 info: '',
@@ -219,6 +227,7 @@ export const devicesOriginal = {
             sinart: {
                 order: 9,
                 number: '13',
+                ifttt: '1',
                 label: 'Sinart',
                 id: 'sinart',
                 info: '',
@@ -227,6 +236,7 @@ export const devicesOriginal = {
             xpertv: {
                 order: 10,
                 number: '14',
+                ifttt: '1',
                 label: 'Xpertv',
                 id: 'xpertv',
                 info: '',
@@ -235,6 +245,7 @@ export const devicesOriginal = {
             ucr: {
                 order: 11,
                 number: '15',
+                ifttt: '1',
                 label: 'Ucr',
                 id: 'ucr',
                 info: '',
@@ -243,6 +254,7 @@ export const devicesOriginal = {
             tvchile: {
                 order: 12,
                 number: '16',
+                ifttt: '1',
                 label: 'Tv Chile',
                 id: 'tvchile',
                 info: '',
@@ -251,6 +263,7 @@ export const devicesOriginal = {
             caracol: {
                 order: 13,
                 number: '17',
+                ifttt: '1',
                 label: 'Caracol',
                 id: 'caracol',
                 info: '',
@@ -259,6 +272,7 @@ export const devicesOriginal = {
             uno: {
                 order: 14,
                 number: '31',
+                ifttt: '1',
                 label: 'Canal 1',
                 id: 'uno',
                 info: '',
@@ -267,6 +281,7 @@ export const devicesOriginal = {
             tvn: {
                 order: 15,
                 number: '32',
+                ifttt: '1',
                 label: 'Tvn 14',
                 id: 'tvn',
                 info: '',
@@ -275,6 +290,7 @@ export const devicesOriginal = {
             tvsur: {
                 order: 16,
                 number: '33',
+                ifttt: '1',
                 label: 'Tv Sur',
                 id: 'tvsur',
                 info: '',
@@ -283,6 +299,7 @@ export const devicesOriginal = {
             trivision: {
                 order: 17,
                 number: '36',
+                ifttt: '1',
                 label: 'Trivision',
                 id: 'trivision',
                 info: '',
@@ -291,6 +308,7 @@ export const devicesOriginal = {
             telemundo: {
                 order: 18,
                 number: '100',
+                ifttt: '1',
                 label: 'Telemundo',
                 id: 'telemundo',
                 info: '',
@@ -299,6 +317,7 @@ export const devicesOriginal = {
             azcorazon: {
                 order: 19,
                 number: '101',
+                ifttt: '1',
                 label: 'Az Corazon',
                 id: 'azcorazon',
                 info: '',
@@ -307,6 +326,7 @@ export const devicesOriginal = {
             gourmet: {
                 order: 20,
                 number: '105',
+                ifttt: '1',
                 label: 'Gourmet',
                 id: 'gourmet',
                 info: '',

@@ -45,6 +45,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     }
     const newChannel = Object.values(devicesState.channelsSala.channels).find(obj => obj.order === newChannelOrder);
     if (newChannel) {
+      device[0].ifttt = device[0].ifttt + newChannel.ifttt;
       triggerControlParent(device, ['selected'], [newChannel.id], true);
     }
   }
