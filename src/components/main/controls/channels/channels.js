@@ -43,7 +43,6 @@ function Channels({devicesState, credential, triggerControlParent}) {
           <div className='controls-channels-element controls-channels-element--img'>
               <img
                   className='controls-channels-img'
-                  src={selectedImg}
                   alt="icono">
               </img>
           </div>
