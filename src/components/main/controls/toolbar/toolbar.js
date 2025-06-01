@@ -6,14 +6,15 @@ function Toolbar({devicesState, triggerControlParent}) {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
+    const device = [{device: devicesState.rokuSala.id, ifttt: devicesState.rokuSala.id}];
     if (value === 'play') {
       if (devicesState.rokuSala.state === 'play') {
-        triggerControlParent([{device: devicesState.rokuSala.id, ifttt: devicesState.rokuSala.id}], ['state'], ['pause'], true);
+        triggerControlParent(device, ['state'], ['pause'], true);
       } else {
-        triggerControlParent([{device: devicesState.rokuSala.id, ifttt: devicesState.rokuSala.id}], ['state'], ['play'], true);
+        triggerControlParent(device, ['state'], ['play'], true);
       }
     } else {
-      triggerControlParent([{device: devicesState.rokuSala.id, ifttt: devicesState.rokuSala.id}], ['command'], [value], false);
+      triggerControlParent(device, ['command'], [value], false);
     }
 
   }
