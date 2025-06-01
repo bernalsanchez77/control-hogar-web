@@ -187,7 +187,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
             <button
               className={`controls-levels-button`}
               onTouchStart={() => triggerControl('options')}>
-              &#9660;
+              &#9660;*
             </button>
           </div>
         }
