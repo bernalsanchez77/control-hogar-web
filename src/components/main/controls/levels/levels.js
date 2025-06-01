@@ -20,7 +20,12 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = 'rokuSala';
+    const device = '';
+    if (devicesState.hdmiSala.state === 'roku') {
+      device = 'rokuSala';
+    } else {
+      device = 'cableSala';
+    }
     triggerControlParent([device], ['command'], [value], false);
   }
   const triggerChannel = (value) => {
