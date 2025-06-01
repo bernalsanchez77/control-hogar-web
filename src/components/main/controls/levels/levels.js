@@ -99,6 +99,26 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
             &#9650;
           </button>
         </div>
+        <div className='controls-levels-element controls-levels-element--mute-icon'>
+          <button
+            className="controls-levels-button controls-levels-button--img"
+            onTouchStart={() => triggerMute()}>
+            {devicesState[screenSelected].mute === 'off' &&
+              <img
+                className='controls-levels-img controls-levels-img--no-button'
+                src="/imgs/sound-50.png"
+                alt="icono">
+              </img>
+            }
+            {devicesState[screenSelected].mute === 'on' &&
+              <img
+                className='controls-levels-img controls-levels-img--no-button'
+                src="/imgs/mute-50.png"
+                alt="icono">
+              </img>
+            }
+          </button>
+        </div>
         {
           devicesState.hdmiSala.state === 'roku' &&
           <div className='controls-levels-element controls-levels-element--right'>
@@ -129,26 +149,6 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
           <span className='controls-levels-span'>
             vol {devicesState[screenSelected].volume}
           </span>
-        </div>
-        <div className='controls-levels-element controls-levels-element--mute-icon'>
-          <button
-            className="controls-levels-button controls-levels-button--img"
-            onTouchStart={() => triggerMute()}>
-            {devicesState[screenSelected].mute === 'off' &&
-              <img
-                className='controls-levels-img controls-levels-img--no-button'
-                src="/imgs/sound-50.png"
-                alt="icono">
-              </img>
-            }
-            {devicesState[screenSelected].mute === 'on' &&
-              <img
-                className='controls-levels-img controls-levels-img--no-button'
-                src="/imgs/mute-50.png"
-                alt="icono">
-              </img>
-            }
-          </button>
         </div>
         <div className='controls-levels-element  controls-levels-element--mute'>
           <span className='controls-levels-span'>
