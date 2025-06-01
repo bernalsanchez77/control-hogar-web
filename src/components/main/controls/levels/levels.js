@@ -76,20 +76,21 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     if (vib && navigator.vibrate) {
       navigator.vibrate([100]);
     }
+    const device = [{device: screenSelected, ifttt: screenSelected}];
     let newVol = 0;
     if (button === 'up') {
       newVol = parseInt(devicesState[screenSelected].volume) + parseInt(vol);
-      triggerControlParent([screenSelected], ['volume'], [button + vol, newVol.toString()], true);
+      triggerControlParent(device, ['volume'], [button + vol, newVol.toString()], true);
     } else if (devicesState[screenSelected].volume !== '0') {
       if (parseInt(devicesState[screenSelected].volume) - parseInt(vol) >= 0) {
         newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
-        triggerControlParent([screenSelected], ['volume'], [button + vol, newVol.toString()], true);
+        triggerControlParent(device, ['volume'], [button + vol, newVol.toString()], true);
       } else {
         newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
-        triggerControlParent([screenSelected], ['volume'], [button + vol, '0'], true);
+        triggerControlParent(device, ['volume'], [button + vol, '0'], true);
       }
     } else {
-      triggerControlParent([screenSelected], ['volume'], [button + vol], false);      
+      triggerControlParent(device, ['volume'], [button + vol], false);      
     }
   }
   const triggerVolumeStart = (button) => {
