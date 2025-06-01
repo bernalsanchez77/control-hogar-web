@@ -256,6 +256,62 @@ export const devicesOriginal = {
                 info: '',
                 img: '/imgs/channels/caracol.png'
             },
+            uno: {
+                order: 14,
+                number: '31',
+                label: 'Canal 1',
+                id: 'uno',
+                info: '',
+                img: '/imgs/channels/uno.png'
+            },
+            tvn: {
+                order: 15,
+                number: '32',
+                label: 'Tvn 14',
+                id: 'tvn',
+                info: '',
+                img: '/imgs/channels/tvn.png'
+            },
+            tvsur: {
+                order: 16,
+                number: '33',
+                label: 'Tv Sur',
+                id: 'tvsur',
+                info: '',
+                img: '/imgs/channels/tvsur.png'
+            },
+            trivision: {
+                order: 17,
+                number: '36',
+                label: 'Trivision',
+                id: 'trivision',
+                info: '',
+                img: '/imgs/channels/trivision.png'
+            },
+            telemundo: {
+                order: 18,
+                number: '100',
+                label: 'Telemundo',
+                id: 'telemundo',
+                info: '',
+                img: '/imgs/channels/telemundo.png'
+            },
+            azcorazon: {
+                order: 19,
+                number: '101',
+                label: 'Az Corazon',
+                id: 'azcorazon',
+                info: '',
+                img: '/imgs/channels/azcorazon.png'
+            },
+            gourmet: {
+                order: 20,
+                number: '105',
+                label: 'Gourmet',
+                id: 'gourmet',
+                info: '',
+                img: '/imgs/channels/gourmet.png'
+            },
         }
     }
 };
