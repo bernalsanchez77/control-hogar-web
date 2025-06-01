@@ -41,10 +41,10 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
       navigator.vibrate([100]);
     }
     const device = [{device: devicesState.hdmiSala.id, ifttt: devicesState.hdmiSala.id}];
-    if (devicesState[device].state === 'roku') {
+    if (devicesState[devicesState.hdmiSala.id].state === 'roku') {
       triggerControlParent(device, ['state'], ['cable'], true);
     }
-    if (devicesState[device].state === 'cable') {
+    if (devicesState[devicesState.hdmiSala.id].state === 'cable') {
       triggerControlParent(device, ['state'], ['roku'], true);
     }
   }
