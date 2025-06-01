@@ -32,9 +32,8 @@
     font-size: 15px;
     padding: 3px;
     width: 100%;
-    /*border: grey 1px solid;*/
-    border: none;
-    height: 35px;
+    border: grey 1px solid;
+    height: 30px;
     border-radius: 5px;
     user-select: none;
     -webkit-user-select: none;
