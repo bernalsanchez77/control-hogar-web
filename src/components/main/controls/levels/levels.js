@@ -11,10 +11,10 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     }
     const device = [{device: screenSelected, ifttt: screenSelected}];
     if (devicesState[screenSelected].mute === 'on') {
-      triggerControlParent(screenSelected, ['mute'], ['off'], true);
+      triggerControlParent(device, ['mute'], ['off'], true);
     }
     if (devicesState[screenSelected].mute === 'off') {
-      triggerControlParent(screenSelected, ['mute'], ['on'], true);
+      triggerControlParent(device, ['mute'], ['on'], true);
     }
   }
   const triggerControl = (value) => {
