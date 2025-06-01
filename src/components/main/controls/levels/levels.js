@@ -172,7 +172,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
         </div>
         <div className='controls-levels-element controls-levels-element--back'>
           <button
-            className='controls-levels-button'
+            className='controls-levels-button controls-levels-button--img'
             onTouchStart={() => triggerControl('back')}>
             <img
               className='controls-levels-img controls-levels-img--no-button'
