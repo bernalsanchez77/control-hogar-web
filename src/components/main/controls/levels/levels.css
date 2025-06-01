@@ -39,7 +39,8 @@
     border: none;
   }
   .controls-levels-img--no-button {
-    width: 35px;
+    width: 25px;
+    transform: translate(0, 3px);
   }
   .controls-levels-img--button {
     width: 20px;
