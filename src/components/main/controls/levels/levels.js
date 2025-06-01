@@ -16,17 +16,20 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       triggerControlParent([screenSelected], ['mute'], ['on'], true);
     }
   }
-  const triggerControl = (value) => {
+  const triggerControl = (value, obj) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = '';
+    const device = [];
     if (devicesState.hdmiSala.state === 'roku') {
-      device = 'rokuSala';
+      device.push('rokuSala');
     } else {
-      device = 'cableSala';
+      device.push('cableSala');
     }
-    triggerControlParent([device], ['command'], [value], false);
+    if (obj) {
+      device.push(obj);
+    }
+    triggerControlParent(device, ['command'], [value], false);
   }
   const triggerChannel = (value) => {
     if (navigator.vibrate) {
