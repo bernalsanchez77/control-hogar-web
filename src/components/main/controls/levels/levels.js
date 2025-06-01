@@ -170,17 +170,24 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
             &#9660;
           </button>
         </div>
+        <div className='controls-levels-element controls-levels-element--back'>
+          <button
+            className='controls-levels-button'
+            onTouchStart={() => triggerControl('back')}>
+            <img
+              className='controls-levels-img controls-levels-img--button'
+              src="/imgs/back-50.png"
+              alt="icono">
+            </img>
+          </button>
+        </div>
         {
         devicesState.hdmiSala.state === 'roku' &&
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               className={`controls-levels-button`}
-              onTouchStart={() => triggerControl('back')}>
-              <img
-                className='controls-levels-img controls-levels-img--button'
-                src="/imgs/back-50.png"
-                alt="icono">
-              </img>
+              onTouchStart={() => triggerControl('options')}>
+              &#9660;
             </button>
           </div>
         }
