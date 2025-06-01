@@ -1,19 +1,19 @@
 import React from 'react';
 import './toolbar.css';
 
-function Toolbar({ devicesState, triggerControlParent }) {
+function Toolbar({devicesState, triggerControlParent}) {
   const triggerControl = (value) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
     if (value === 'play') {
       if (devicesState.rokuSala.state === 'play') {
-        triggerControlParent([devicesState.rokuSala.id], ['state'], ['pause'], true);
+        triggerControlParent([{device: devicesState.rokuSala.id, ifttt: devicesState.rokuSala.id}], ['state'], ['pause'], true);
       } else {
-        triggerControlParent([devicesState.rokuSala.id], ['state'], ['play'], true);
+        triggerControlParent([{device: devicesState.rokuSala.id, ifttt: devicesState.rokuSala.id}], ['state'], ['play'], true);
       }
     } else {
-      triggerControlParent([devicesState.rokuSala.id], ['command'], [value], false);
+      triggerControlParent([{device: devicesState.rokuSala.id, ifttt: devicesState.rokuSala.id}], ['command'], [value], false);
     }
 
   }

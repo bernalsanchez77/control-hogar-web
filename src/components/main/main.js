@@ -67,12 +67,42 @@ function Main() {
     }
   }
 
+  const changeControlHogarData2 = (device, key, value, saveChange = true) => {
+    const devices = {...devicesStateUpdated.current};
+    let saveState = true;
+    device.forEach(item => {
+      let send = true;
+      if (iftttDisabled) {
+        send = false;
+      } else if (channelsDisabled && item.device === 'hdmiSala') {
+        send = false;
+        saveState = false;
+      }
+      if (send) {
+        fetchIfttt('/api/sendIfttt?device=' + item.ifttt + '&key=' + key[0] + '&value=' + value[0]);
+      }
+      if (saveChange) {
+        if (key[1]) {
+          devices[item.device][key[0]] = {...devices[item.device][key[0]], [key[1]]: value[1] || value[0]};
+        } else {
+          devices[item.device] = {...devices[item.device], [key[0]]: value[1] || value[0]};
+        }
+      }
+    });
+    if (saveChange) {
+      setDevicesState(devices);
+      if (saveState) {
+        fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
+      }
+    }
+  }
+
   const changeDevice = (device, key, value, save) => {
     changeControlHogarData(device, key, value, save);
   }
 
   const changeControl = (device, key, value, save) => {
-    changeControlHogarData(device, key, value, save);
+    changeControlHogarData2(device, key, value, save);
   }
 
   const changeScreen = (screen) => {

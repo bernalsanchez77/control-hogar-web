@@ -16,6 +16,27 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       triggerControlParent([screenSelected], ['mute'], ['on'], true);
     }
   }
+  const triggerHome = () => {
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
+    const device = 'rokuSala';
+    triggerControlParent([device], ['command'], ['home'], false);
+  }
+  const triggerOptions = () => {
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
+    const device = 'rokuSala';
+    triggerControlParent([device], ['command'], ['options'], false);
+  }
+  const triggerBack = () => {
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
+    const device = 'rokuSala';
+    triggerControlParent([device], ['command'], ['back'], false);
+  }
   const triggerControl = (value, obj) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
@@ -50,6 +71,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       triggerControlParent([device], ['selected'], [newChannel.id], true);
     }
   }
+
   const triggerVolume = (vol, button, vib = true) => {
     if (vib && navigator.vibrate) {
       navigator.vibrate([100]);
@@ -132,7 +154,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               className={`controls-levels-button`}
-              onTouchStart={() => triggerControl('home')}>
+              onTouchStart={() => triggerHome()}>
               <img
                 className='controls-levels-img controls-levels-img--button'
                 src="/imgs/home-50.png"
@@ -181,7 +203,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
         <div className='controls-levels-element controls-levels-element--back'>
           <button
             className='controls-levels-button controls-levels-button--img'
-            onTouchStart={() => triggerControl('back')}>
+            onTouchStart={() => triggerBack()}>
             <img
               className='controls-levels-img controls-levels-img--no-button'
               src="/imgs/back-50.png"
@@ -194,7 +216,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               className={`controls-levels-button`}
-              onTouchStart={() => triggerControl('options')}>
+              onTouchStart={() => triggerOptions()}>
               *
             </button>
           </div>
