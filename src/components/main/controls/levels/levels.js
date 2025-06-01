@@ -17,30 +17,35 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       triggerControlParent(device, ['mute'], ['on'], true);
     }
   }
-  const triggerControl = (value) => {
+  const triggerControl = (value, saveChange = true) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
-    triggerControlParent(device, ['command'], [value], false);
+    const device = [];
+    if (devicesState.hdmiSala.state === 'roku') {
+      device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
+    } else {
+      device = [{device: 'cableSala', ifttt: 'cableSala'}];
+    }
+    triggerControlParent(device, ['command'], [value], saveChange);
   }
   const triggerChannel = (value) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = 'cableSala';
+    const device = [{device: 'channelsSala', ifttt: 'channelsSala'}];
     let newChannelOrder = 0;
-    const channelIdSelected = devicesState.cableSala.selected;
-    const channelOrderSelected = devicesState.cableSala.channels[channelIdSelected].order;
+    const channelIdSelected = devicesState.channelsSala.selected;
+    const channelOrderSelected = devicesState.channelsSala.channels[channelIdSelected].order;
     if (value === 'up') {
       newChannelOrder = channelOrderSelected + 1; 
     }
     if (value === 'down') {
       newChannelOrder = channelOrderSelected - 1; 
     }
-    const newChannel = Object.values(devicesState.cableSala.channels).find(obj => obj.order === newChannelOrder);
+    const newChannel = Object.values(devicesState.channelsSala.channels).find(obj => obj.order === newChannelOrder);
     if (newChannel) {
-      triggerControlParent([device], ['selected'], [newChannel.id], true);
+      triggerControlParent(device, ['selected'], [newChannel.id], true);
     }
   }
 
@@ -176,7 +181,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
         <div className='controls-levels-element controls-levels-element--back'>
           <button
             className='controls-levels-button controls-levels-button--img'
-            onTouchStart={() => triggerControl('back')}>
+            onTouchStart={() => triggerControl('back', false)}>
             <img
               className='controls-levels-img controls-levels-img--no-button'
               src="/imgs/back-50.png"
@@ -189,7 +194,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               className={`controls-levels-button`}
-              onTouchStart={() => triggerControl('options')}>
+              onTouchStart={() => triggerControl('options', false)}>
               *
             </button>
           </div>

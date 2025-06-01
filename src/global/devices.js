@@ -149,7 +149,7 @@ export const devicesOriginal = {
           }
         }
     },
-    cableSala: {
+    channelsSala: {
         selected: 'seis',
         channels: {
             tve: {
