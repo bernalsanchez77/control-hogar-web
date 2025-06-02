@@ -82,6 +82,21 @@ export const devicesOriginal = {
             }
         }
     },
+    teleCocina: {
+        state: 'off',
+        label: 'TV Cocina',
+        id: 'teleCocina',
+        mute: 'off',
+        volume: '0',
+        channelSelected: 'siete',
+        input: {
+            state: 'hdmi1',
+            label: {
+                hdmi1: 'Modo Normal',
+                hdmi2: 'Modo Chromecast'
+            }
+        }
+    },
     teleSala: {
         state: 'off',
         label: 'TV Sala',
