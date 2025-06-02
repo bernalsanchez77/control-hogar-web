@@ -26,7 +26,11 @@ function Toolbar({devicesState, triggerControlParent}) {
           <button
             className='controls-toolbar-button'
             onTouchStart={() => triggerControl('rewind')}>
-            &#x23ee;
+            <img
+              className='controls-toolbar-img controls-toolbar-img--button'
+              src="/imgs/rewind-50.png"
+              alt="icono">
+            </img>
           </button>
         </div>
         <div className='controls-toolbar-element'>
@@ -53,7 +57,11 @@ function Toolbar({devicesState, triggerControlParent}) {
         <button
             className={'controls-toolbar-button'}
             onTouchStart={() => triggerControl('forward')}>
-            &#x23ed;
+            <img
+              className='controls-toolbar-img controls-toolbar-img--button'
+              src="/imgs/forward-50.png"
+              alt="icono">
+            </img>
         </button>
         </div>
       </div>
