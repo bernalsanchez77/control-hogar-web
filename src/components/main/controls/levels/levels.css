@@ -14,6 +14,9 @@
     width: 70px;
     margin: 5px;
   }
+  .controls-levels-element--no-margin {
+    margin: 0 5px 0;
+  }
   .controls-levels-element--mute {
     margin-top: -2px;
   }

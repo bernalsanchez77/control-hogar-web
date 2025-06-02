@@ -153,13 +153,13 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
           </div>
         }
       </div>
-      <div className='controls-levels-row controls-levels-row--mute'>
-        <div className='controls-levels-element'>
+      <div className='controls-levels-row'>
+        <div className='controls-levels-element controls-levels-element--no-margin'>
           <span className='controls-levels-span'>
             vol {devicesState[screenSelected].volume}
           </span>
         </div>
-        <div className='controls-levels-element controls-levels-element--right'>
+        <div className='controls-levels-element controls-levels-element--right controls-levels-element--no-margin'>
           <span className='controls-levels-span'>
             {devicesState.hdmiSala.state === 'roku'  &&
               'op'
