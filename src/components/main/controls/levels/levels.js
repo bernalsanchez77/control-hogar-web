@@ -196,7 +196,11 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
             <button
               className={`controls-levels-button`}
               onTouchStart={() => triggerControl('options', false)}>
-              *
+              <img
+                className='controls-levels-img controls-levels-img--button'
+                src="/imgs/asterisk-24.png"
+                alt="icono">
+              </img>
             </button>
           </div>
         }
