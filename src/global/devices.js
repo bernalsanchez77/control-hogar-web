@@ -341,7 +341,6 @@ export const devicesOriginal = {
                 info: '',
                 img: '/imgs/channels/homeandhealth.png'
             },
-            },
             maschic: {
                 order: 22,
                 number: '107',
