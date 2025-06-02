@@ -38,6 +38,13 @@ function Screens({credential, ownerCredential, devCredential,  inRange, devicesS
           </div>
           <div className='screens-element'>
             <button
+              className={`screens-button ${screenSelected === devicesState.teleCocina.id ? "screens-button--on" : "screens-button--off"}`}
+              onTouchStart={() => triggerScreen(devicesState.teleCocina.id)}>
+                {devicesState.teleCocina.label}
+            </button>
+          </div>  
+          <div className='screens-element'>
+            <button
               className={`screens-button ${screenSelected === devicesState.proyectorSala.id ? "screens-button--on" : "screens-button--off"}`}
               onTouchStart={() => triggerScreen(devicesState.proyectorSala.id)}>
                 {devicesState.proyectorSala.label}
