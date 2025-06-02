@@ -332,6 +332,97 @@ export const devicesOriginal = {
                 info: '',
                 img: '/imgs/channels/gourmet.png'
             },
+            homeandhealth: {
+                order: 21,
+                number: '106',
+                ifttt: '2',
+                label: 'Home And Health',
+                id: 'homeandhealth',
+                info: '',
+                img: '/imgs/channels/homeandhealth.png'
+            },
+            },
+            maschic: {
+                order: 22,
+                number: '107',
+                ifttt: '2',
+                label: 'Mas Chic',
+                id: 'maschic',
+                info: '',
+                img: '/imgs/channels/maschic.png'
+            },
+            telexitos: {
+                order: 23,
+                number: '109',
+                ifttt: '2',
+                label: 'Telexitos',
+                id: 'telexitos',
+                info: '',
+                img: '/imgs/channels/telexitos.png'
+            },
+            hogartv: {
+                order: 24,
+                number: '110',
+                ifttt: '2',
+                label: 'Hogar tv',
+                id: 'hogartv',
+                info: '',
+                img: '/imgs/channels/hogartv.png'
+            },
+            lifetime: {
+                order: 25,
+                number: '111',
+                ifttt: '2',
+                label: 'Lifetime',
+                id: 'lifetime',
+                info: '',
+                img: '/imgs/channels/lifetime.png'
+            },
+            holatv: {
+                order: 26,
+                number: '112',
+                ifttt: '2',
+                label: 'Hola tv',
+                id: 'holatv',
+                info: '',
+                img: '/imgs/channels/holatv.png'
+            },
+            univision: {
+                order: 27,
+                number: '113',
+                ifttt: '2',
+                label: 'Univision',
+                id: 'univision',
+                info: '',
+                img: '/imgs/channels/univision.png'
+            },
+            filmandarts: {
+                order: 28,
+                number: '115',
+                ifttt: '2',
+                label: 'Film and Arts',
+                id: 'filmandarts',
+                info: '',
+                img: '/imgs/channels/filmandarts.png'
+            },
+            foodnetworkes: {
+                order: 29,
+                number: '116',
+                ifttt: '2',
+                label: 'Food Network Es',
+                id: 'foodnetworkes',
+                info: '',
+                img: '/imgs/channels/foodnetworkes.png'
+            },
+            foodnetworkus: {
+                order: 30,
+                number: '117',
+                ifttt: '2',
+                label: 'Food Network Us',
+                id: 'foodnetworkus',
+                info: '',
+                img: '/imgs/channels/foodnetworkus.png'
+            },
         }
     }
 };
