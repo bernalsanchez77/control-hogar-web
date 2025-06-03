@@ -60,6 +60,13 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
         triggerControlParent(device, ['input','state'], ['hdmi1'], true);
       }
     }
+    if (screenSelected === devicesState.teleCocina.id) {
+      if (devicesState[screenSelected].input.state === 'hdmi1') {
+        triggerControlParent(device, ['input','state'], ['hdmi2'], true);
+      } else {
+        triggerControlParent(device, ['input','state'], ['hdmi1'], true);
+      }
+    }
     if (screenSelected === devicesState.proyectorSala.id) {
       if (devicesState[screenSelected].input.state === 'hdmi1') {
         triggerControlParent(device, ['input','state'], ['hdmi2'], true);
