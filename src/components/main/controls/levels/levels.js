@@ -33,6 +33,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
+    let newChannel = {};
     const device = [{device: 'channelsSala', ifttt: 'channelsSala'}];
     let newChannelOrder = 0;
     const channelIdSelected = devicesState.channelsSala.selected;
@@ -43,11 +44,16 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     if (value === 'down') {
       newChannelOrder = channelOrderSelected - 1; 
     }
-    const newChannel = Object.values(devicesState.channelsSala.channels).find(obj => obj.order === newChannelOrder);
-    if (newChannel) {
-      device[0].ifttt = device[0].ifttt + newChannel.ifttt;
-      triggerControlParent(device, ['selected'], [newChannel.id], true);
+    newChannel = Object.values(devicesState.channelsSala.channels).find(obj => obj.order === newChannelOrder);
+    if (!newChannel) {
+      if (value === 'up') {
+        newChannel = Object.values(devicesState.channelsSala.channels).find(obj => obj.order === "1");
+      } else {
+        newChannel = Object.values(devicesState.channelsSala.channels).find(obj => obj.order === "1");
+      }     
     }
+    device[0].ifttt = device[0].ifttt + newChannel.ifttt;
+    triggerControlParent(device, ['selected'], [newChannel.id], true);
   }
 
   const triggerVolume = (vol, button, vib = true) => {
