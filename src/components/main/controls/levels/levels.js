@@ -47,9 +47,9 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     newChannel = Object.values(devicesState.channelsSala.channels).find(obj => obj.order === newChannelOrder);
     if (!newChannel) {
       if (value === 'up') {
-        newChannel = Object.values(devicesState.channelsSala.channels).find(obj => obj.order === "1");
+        newChannel = Object.values(devicesState.channelsSala.channels).find(obj => obj.order === 1);
       } else {
-        newChannel = Object.values(devicesState.channelsSala.channels).find(obj => obj.order === "1");
+        newChannel = Object.values(devicesState.channelsSala.channels).find(obj => obj.order === 1);
       }     
     }
     device[0].ifttt = device[0].ifttt + newChannel.ifttt;
