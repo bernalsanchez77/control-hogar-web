@@ -437,6 +437,33 @@ export const devicesOriginal = {
                 info: '',
                 img: '/imgs/channels/foodnetworkus.png'
             },
+            hgtv: {
+                order: 31,
+                number: '118',
+                ifttt: '2',
+                label: 'Hgtv',
+                id: 'hgtv',
+                info: '',
+                img: '/imgs/channels/hgtv.png'
+            },
+            cartoon: {
+                order: 32,
+                number: '125',
+                ifttt: '2',
+                label: 'Cartoon',
+                id: 'cartoon',
+                info: '',
+                img: '/imgs/channels/cartoon.png'
+            },
+            nick: {
+                order: 33,
+                number: '127',
+                ifttt: '2',
+                label: 'Nick',
+                id: 'nick',
+                info: '',
+                img: '/imgs/channels/nick.png'
+            },
         }
     }
 };
