@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './channels.css';
 
 function Channels({devicesState, credential, triggerControlParent}) {
