@@ -65,7 +65,8 @@ function Channels({devicesState, credential, triggerControlParent}) {
       {view === 'nationals' &&
       <div>
         <ul>
-          {Object.entries(devicesState.channelsSala.channels).map(([key, value]) => (
+          {
+            Object.entries(devicesState.channelsSala.channels).map(([key, value]) => value.category === 'national' ? (
             <li key={key} className='controls-channels-category'>
               <div className='controls-channels-element controls-channels-element--img'>
                 <img
@@ -75,7 +76,9 @@ function Channels({devicesState, credential, triggerControlParent}) {
                 </img>
               </div>
             </li>
-          ))}
+            ) : null
+            )
+          }
         </ul>
       </div>
       }
