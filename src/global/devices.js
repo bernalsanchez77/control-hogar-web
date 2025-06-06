@@ -174,7 +174,8 @@ export const devicesOriginal = {
                 label: 'Tve',
                 id: 'tve',
                 info: '',
-                img: '/imgs/channels/tve.png'
+                img: '/imgs/channels/tve.png',
+                category: 'general',
             },
             cuatro: {
                 order: 2,
@@ -183,7 +184,8 @@ export const devicesOriginal = {
                 label: 'Cuatro',
                 id: 'cuatro',
                 info: '',
-                img: '/imgs/channels/cuatro.png'
+                img: '/imgs/channels/cuatro.png',
+                category: 'national',
             },
             seis: {
                 order: 3,
@@ -192,7 +194,8 @@ export const devicesOriginal = {
                 label: 'Seis',
                 id: 'seis',
                 info: '',
-                img: '/imgs/channels/seis.png'
+                img: '/imgs/channels/seis.png',
+                category: 'national',
             },
             siete: {
                 order: 4,
@@ -201,7 +204,8 @@ export const devicesOriginal = {
                 label: 'Siete',
                 id: 'siete',
                 info: '',
-                img: '/imgs/channels/siete.png'
+                img: '/imgs/channels/siete.png',
+                category: 'national',
             },
             multimedios: {
                 order: 5,
@@ -210,7 +214,8 @@ export const devicesOriginal = {
                 label: 'Multimedios',
                 id: 'multimedios',
                 info: '',
-                img: '/imgs/channels/multimedios.png'
+                img: '/imgs/channels/multimedios.png',
+                category: 'national',
             },
             nueve: {
                 order: 6,
@@ -219,7 +224,8 @@ export const devicesOriginal = {
                 label: 'Nueve',
                 id: 'nueve',
                 info: '',
-                img: '/imgs/channels/nueve.png'
+                img: '/imgs/channels/nueve.png',
+                category: 'national',
             },
             estrellas: {
                 order: 7,
@@ -228,7 +234,8 @@ export const devicesOriginal = {
                 label: 'Estrellas',
                 id: 'estrellas',
                 info: '',
-                img: '/imgs/channels/estrellas.png'
+                img: '/imgs/channels/estrellas.png',
+                category: 'entertainment',
             },
             once: {
                 order: 8,
@@ -237,7 +244,8 @@ export const devicesOriginal = {
                 label: 'Once',
                 id: 'once',
                 info: '',
-                img: '/imgs/channels/once.png'
+                img: '/imgs/channels/once.png',
+                category: 'national',
             },
             sinart: {
                 order: 9,
@@ -246,7 +254,8 @@ export const devicesOriginal = {
                 label: 'Sinart',
                 id: 'sinart',
                 info: '',
-                img: '/imgs/channels/sinart.png'
+                img: '/imgs/channels/sinart.png',
+                category: 'national',
             },
             xpertv: {
                 order: 10,
@@ -255,7 +264,8 @@ export const devicesOriginal = {
                 label: 'Xpertv',
                 id: 'xpertv',
                 info: '',
-                img: '/imgs/channels/xpertv.png'
+                img: '/imgs/channels/xpertv.png',
+                category: 'national',
             },
             ucr: {
                 order: 11,
@@ -264,7 +274,8 @@ export const devicesOriginal = {
                 label: 'Ucr',
                 id: 'ucr',
                 info: '',
-                img: '/imgs/channels/ucr.png'
+                img: '/imgs/channels/ucr.png',
+                category: 'national',
             },
             tvchile: {
                 order: 12,
@@ -273,7 +284,8 @@ export const devicesOriginal = {
                 label: 'Tv Chile',
                 id: 'tvchile',
                 info: '',
-                img: '/imgs/channels/tvchile.png'
+                img: '/imgs/channels/tvchile.png',
+                category: 'general',
             },
             caracol: {
                 order: 13,
@@ -282,7 +294,8 @@ export const devicesOriginal = {
                 label: 'Caracol',
                 id: 'caracol',
                 info: '',
-                img: '/imgs/channels/caracol.png'
+                img: '/imgs/channels/caracol.png',
+                category: 'entertainment',
             },
             uno: {
                 order: 14,
@@ -291,7 +304,8 @@ export const devicesOriginal = {
                 label: 'Canal 1',
                 id: 'uno',
                 info: '',
-                img: '/imgs/channels/uno.png'
+                img: '/imgs/channels/uno.png',
+                category: 'national',
             },
             tvn: {
                 order: 15,
@@ -300,7 +314,8 @@ export const devicesOriginal = {
                 label: 'Tvn 14',
                 id: 'tvn',
                 info: '',
-                img: '/imgs/channels/tvn.png'
+                img: '/imgs/channels/tvn.png',
+                category: 'national',
             },
             tvsur: {
                 order: 16,
@@ -309,7 +324,8 @@ export const devicesOriginal = {
                 label: 'Tv Sur',
                 id: 'tvsur',
                 info: '',
-                img: '/imgs/channels/tvsur.png'
+                img: '/imgs/channels/tvsur.png',
+                category: 'national',
             },
             trivision: {
                 order: 17,
@@ -318,7 +334,8 @@ export const devicesOriginal = {
                 label: 'Trivision',
                 id: 'trivision',
                 info: '',
-                img: '/imgs/channels/trivision.png'
+                img: '/imgs/channels/trivision.png',
+                category: 'national',
             },
             telemundo: {
                 order: 18,
@@ -327,7 +344,8 @@ export const devicesOriginal = {
                 label: 'Telemundo',
                 id: 'telemundo',
                 info: '',
-                img: '/imgs/channels/telemundo.png'
+                img: '/imgs/channels/telemundo.png',
+                category: 'entertainment',
             },
             azcorazon: {
                 order: 19,
@@ -336,7 +354,8 @@ export const devicesOriginal = {
                 label: 'Az Corazon',
                 id: 'azcorazon',
                 info: '',
-                img: '/imgs/channels/azcorazon.png'
+                img: '/imgs/channels/azcorazon.png',
+                category: 'entertainment',
             },
             gourmet: {
                 order: 20,
@@ -345,7 +364,8 @@ export const devicesOriginal = {
                 label: 'Gourmet',
                 id: 'gourmet',
                 info: '',
-                img: '/imgs/channels/gourmet.png'
+                img: '/imgs/channels/gourmet.png',
+                category: 'food',
             },
             homeandhealth: {
                 order: 21,
@@ -354,7 +374,8 @@ export const devicesOriginal = {
                 label: 'Home And Health',
                 id: 'homeandhealth',
                 info: '',
-                img: '/imgs/channels/homeandhealth.png'
+                img: '/imgs/channels/homeandhealth.png',
+                category: 'science',
             },
             maschic: {
                 order: 22,
@@ -363,7 +384,8 @@ export const devicesOriginal = {
                 label: 'Mas Chic',
                 id: 'maschic',
                 info: '',
-                img: '/imgs/channels/maschic.png'
+                img: '/imgs/channels/maschic.png',
+                category: 'entertainment',
             },
             telexitos: {
                 order: 23,
@@ -372,7 +394,8 @@ export const devicesOriginal = {
                 label: 'Telexitos',
                 id: 'telexitos',
                 info: '',
-                img: '/imgs/channels/telexitos.png'
+                img: '/imgs/channels/telexitos.png',
+                category: 'national',
             },
             hogartv: {
                 order: 24,
@@ -381,7 +404,8 @@ export const devicesOriginal = {
                 label: 'Hogar tv',
                 id: 'hogartv',
                 info: '',
-                img: '/imgs/channels/hogartv.png'
+                img: '/imgs/channels/hogartv.png',
+                category: 'entertainment',
             },
             lifetime: {
                 order: 25,
@@ -390,7 +414,8 @@ export const devicesOriginal = {
                 label: 'Lifetime',
                 id: 'lifetime',
                 info: '',
-                img: '/imgs/channels/lifetime.png'
+                img: '/imgs/channels/lifetime.png',
+                category: 'movies',
             },
             holatv: {
                 order: 26,
@@ -399,7 +424,8 @@ export const devicesOriginal = {
                 label: 'Hola tv',
                 id: 'holatv',
                 info: '',
-                img: '/imgs/channels/holatv.png'
+                img: '/imgs/channels/holatv.png',
+                category: 'entertainment',
             },
             univision: {
                 order: 27,
@@ -408,7 +434,8 @@ export const devicesOriginal = {
                 label: 'Univision',
                 id: 'univision',
                 info: '',
-                img: '/imgs/channels/univision.png'
+                img: '/imgs/channels/univision.png',
+                category: 'entertainment',
             },
             filmandarts: {
                 order: 28,
@@ -417,7 +444,8 @@ export const devicesOriginal = {
                 label: 'Film and Arts',
                 id: 'filmandarts',
                 info: '',
-                img: '/imgs/channels/filmandarts.png'
+                img: '/imgs/channels/filmandarts.png',
+                category: 'movies',
             },
             foodnetworkes: {
                 order: 29,
@@ -426,7 +454,8 @@ export const devicesOriginal = {
                 label: 'Food Network Es',
                 id: 'foodnetworkes',
                 info: '',
-                img: '/imgs/channels/foodnetworkes.png'
+                img: '/imgs/channels/foodnetworkes.png',
+                category: 'food',
             },
             foodnetworkus: {
                 order: 30,
@@ -435,7 +464,8 @@ export const devicesOriginal = {
                 label: 'Food Network Us',
                 id: 'foodnetworkus',
                 info: '',
-                img: '/imgs/channels/foodnetworkus.png'
+                img: '/imgs/channels/foodnetworkus.png',
+                category: 'food',
             },
             hgtv: {
                 order: 31,
@@ -444,7 +474,8 @@ export const devicesOriginal = {
                 label: 'Hgtv',
                 id: 'hgtv',
                 info: '',
-                img: '/imgs/channels/hgtv.png'
+                img: '/imgs/channels/hgtv.png',
+                category: 'entertainment',
             },
             cartoon: {
                 order: 32,
@@ -453,7 +484,8 @@ export const devicesOriginal = {
                 label: 'Cartoon',
                 id: 'cartoon',
                 info: '',
-                img: '/imgs/channels/cartoon.png'
+                img: '/imgs/channels/cartoon.png',
+                category: 'children',
             },
             nick: {
                 order: 33,
@@ -462,7 +494,8 @@ export const devicesOriginal = {
                 label: 'Nick',
                 id: 'nick',
                 info: '',
-                img: '/imgs/channels/nick.png'
+                img: '/imgs/channels/nick.png',
+                category: 'children',
             },
         }
     }

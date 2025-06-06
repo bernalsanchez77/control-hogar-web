@@ -2,29 +2,24 @@ import React from 'react';
 import './channels.css';
 
 function Channels({devicesState, credential, triggerControlParent}) {
+  const [view, setView] = useState('default');
   let selectedImg = '/imgs/channels/' + devicesState.channelsSala.selected + '.png';
-  const triggerControl = (value) => {
+  const triggerCategory = (category) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = [{device: devicesState.rokuSala.id, ifttt: devicesState.rokuSala.id}];
-    if (value === 'play') {
-      if (devicesState.rokuSala.state === 'play') {
-        triggerControlParent(device, ['state'], ['pause'], true);
-      } else {
-        triggerControlParent(device, ['state'], ['play'], true);
-      }
-    } else {
-      triggerControlParent(device, ['command'], [value], false);
-    }
+    setView(category);
   }
 
   return (
     <div>
+      {view === 'default' &&
       <div className='controls-channels'>
         <div className='controls-channels-row'>
           <div className='controls-channels-element  controls-channels-element--left'>
-            <button className='controls-channels-elements-button'>
+            <button
+              className='controls-channels-elements-button'
+              onTouchStart={() => triggerCategory('nationals')}>
               Nacionales
             </button>
           </div>
@@ -66,6 +61,12 @@ function Channels({devicesState, credential, triggerControlParent}) {
           </div>
         </div>
       </div>
+      }
+      {view = 'nationals' &&
+      <div>
+        bernalito
+      </div>
+      }
     </div>
   )
 }
