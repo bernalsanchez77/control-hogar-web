@@ -74,7 +74,6 @@ function Channels({devicesState, credential, triggerControlParent}) {
                   alt="icono">
                 </img>
               </div>
-              <strong>{key}:</strong> {value.label}
             </li>
           ))}
         </ul>
