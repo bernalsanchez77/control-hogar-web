@@ -66,7 +66,7 @@ function Channels({devicesState, credential, triggerControlParent}) {
       <div>
         <ul>
           {Object.entries(devicesState.channelsSala.channels).map(([key, value]) => (
-            <li key={key} style="float: left">
+            <li key={key} className='controls-channels-category'>
               <div className='controls-channels-element controls-channels-element--img'>
                 <img
                   className='controls-channels-img'
