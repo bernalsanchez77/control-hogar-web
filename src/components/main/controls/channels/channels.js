@@ -67,6 +67,13 @@ function Channels({devicesState, credential, triggerControlParent}) {
         <ul>
           {Object.entries(devicesState.channelsSala.channels).map(([key, value]) => (
             <li key={key}>
+              <div className='controls-channels-element controls-channels-element--img'>
+                <img
+                  className='controls-channels-img'
+                  src={value.img}
+                  alt="icono">
+                </img>
+              </div>
               <strong>{key}:</strong> {value.label}
             </li>
           ))}
