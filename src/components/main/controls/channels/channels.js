@@ -62,7 +62,7 @@ function Channels({devicesState, credential, triggerControlParent}) {
         </div>
       </div>
       }
-      {view = 'nationals' &&
+      {view === 'nationals' &&
       <div>
         bernalito
       </div>
