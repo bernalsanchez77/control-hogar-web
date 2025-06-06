@@ -66,12 +66,12 @@ function Channels({devicesState, credential, triggerControlParent}) {
       <div>
         <ul>
           {
-            Object.entries(devicesState.channelsSala.channels).map(([key, value]) => value.category === 'national' ? (
+            Object.entries(devicesState.channelsSala.channels).map(([key, channel]) => channel.category == 'national' ? (
             <li key={key} className='controls-channels-category'>
               <div className='controls-channels-element controls-channels-element--img'>
                 <img
                   className='controls-channels-img'
-                  src={value.img}
+                  src={channel.img}
                   alt="icono">
                 </img>
               </div>
