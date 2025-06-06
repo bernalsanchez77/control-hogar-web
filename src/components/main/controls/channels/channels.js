@@ -64,7 +64,13 @@ function Channels({devicesState, credential, triggerControlParent}) {
       }
       {view === 'nationals' &&
       <div>
-        bernalito
+        <ul>
+          {Object.entries(devicesState.channelsSala.channels).map(([key, value]) => (
+            <li key={key}>
+              <strong>{key}:</strong> {value.label}
+            </li>
+          ))}
+        </ul>
       </div>
       }
     </div>
