@@ -63,8 +63,8 @@ function Channels({devicesState, credential, triggerControlParent}) {
       </div>
       }
       {view === 'nationals' &&
-      <div>
-        <ul>
+      <div className='controls-channels-categories'>
+        <ul className='controls-channels-categories-ul'>
           {
             Object.entries(devicesState.channelsSala.channels).map(([key, channel]) => channel.category == 'national' ? (
             <li key={key} className='controls-channels-category'>

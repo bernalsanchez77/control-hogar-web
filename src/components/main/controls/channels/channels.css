@@ -41,9 +41,19 @@
     background-color: white;
     transition: background-color 0.1s;
   }
+  .controls-channels-categories {
+    display: inline-block;
+    margin: 0 10px;
+  }
   .controls-channels-category {
     float: left;
     width: 30px;
+    height: 50px;
+    padding: 0 5px;
+    list-style-type: none;
+  }
+  .controls-channels-category-ul {
+    padding: 0;
   }
   .controls-channels-category-img {
     width: 30px;
