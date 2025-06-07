@@ -1,6 +1,6 @@
 .controls-toolbar {
-    margin: 0 10px 5px;
     display: inline-block;
+    height: 50px;
   }
   .controls-toolbar-row {
     display: inline-block;

@@ -1,6 +1,7 @@
 .controls-channels {
     margin: 0 0 10px;
     display: inline-block;
+    height: 150px;
   }
   .controls-channels-row {
     width: 350px;
@@ -46,7 +47,7 @@
   .controls-channels-categories {
     display: inline-block;
     margin: 0 10px;
-    height: 157px;
+    height: 150px;
   }
   .controls-channels-category {
     height: 50px;
