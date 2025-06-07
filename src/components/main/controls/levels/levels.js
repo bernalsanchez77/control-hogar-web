@@ -106,6 +106,9 @@ function Levels({devicesState, screenSelected, credential, channelCategory, trig
   }
 
   const triggerChannelCategory = (category) => {
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
     triggerChannelCategoryParent(category);
   }
       
