@@ -44,7 +44,6 @@
     transition: background-color 0.1s;
   }
   .controls-channels-categories {
-    display: inline-block;
     height: 150px;
     position: relative;
     width: 100%;
