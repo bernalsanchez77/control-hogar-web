@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './channels.css';
 
-function Channels({devicesState, credential, triggerControlParent}) {
-  const [view, setView] = useState('default');
+function Channels({devicesState, credential, channelCategory, triggerControlParent, triggerCategoryParent}) {
   let selectedImg = '/imgs/channels/' + devicesState.channelsSala.selected + '.png';
   const triggerCategory = (category) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    setView(category);
+    triggerCategoryParent(category);
   }
 
   return (
     <div>
-      {view === 'default' &&
+      {channelCategory === 'default' &&
       <div className='controls-channels'>
         <div className='controls-channels-row'>
           <div className='controls-channels-element  controls-channels-element--left'>
@@ -62,7 +61,7 @@ function Channels({devicesState, credential, triggerControlParent}) {
         </div>
       </div>
       }
-      {view === 'nationals' &&
+      {channelCategory === 'nationals' &&
       <div className='controls-channels-categories'>
         <ul className='controls-channels-categories-ul'>
           {

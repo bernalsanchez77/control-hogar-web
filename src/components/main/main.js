@@ -21,6 +21,7 @@ function Main() {
   const [updatesDisabled, setUpdatesDisabled] = useState(false);
   const updatesDisabledRef = useRef(updatesDisabled);
   const [credential, setCredential] = useState('');
+  const [channelCategory, setChannelCategory] = useState('default');
 
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
@@ -95,6 +96,10 @@ function Main() {
         fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
       }
     }
+  }
+
+  const changeChannelCategory = (category) => {
+    setChannelCategory(category);
   }
 
   const changeDevice = (device, key, value, save) => {
@@ -292,6 +297,8 @@ function Main() {
             devicesState={devicesState}
             loadingDevices={loadingDevices}
             screenSelected={screenSelected}
+            channelCategory={channelCategory}
+            changeChannelCategoryParent={changeChannelCategory}
             changeControlParent={changeControl}>
           </Controls>
           <Devices

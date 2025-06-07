@@ -7,7 +7,7 @@ import Channels from './channels/channels';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, changeControlParent}) {
+function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, channelCategory, changeControlParent, changeChannelCategoryParent}) {
   const triggerControl = (control, key, value, save) => {
     if (inRange || (credential === ownerCredential)) {
       if (!loadingDevices.current) {
@@ -18,6 +18,9 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
         }, 1000);
       }
     }
+  }
+  const triggerChannelCategory = (category) => {
+    changeChannelCategoryParent(category);
   }
 
   return (
@@ -37,7 +40,9 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           devicesState={devicesState}
           screenSelected={screenSelected}
           credential={credential}
-          triggerControlParent={triggerControl}>
+          channelCategory={channelCategory}
+          triggerControlParent={triggerControl}
+          triggerChannelCategoryParent={triggerChannelCategory}>
         </Levels>
         {devicesState.hdmiSala.state === 'roku' &&
         <Toolbar
@@ -55,7 +60,9 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           <Channels
             devicesState={devicesState}
             credential={credential}
-            triggerControlParent={triggerControl}>
+            channelCategory={channelCategory}
+            triggerControlParent={triggerControl}
+            triggerCategoryParent={triggerChannelCategory}>
           </Channels>
         </div>
       </div>

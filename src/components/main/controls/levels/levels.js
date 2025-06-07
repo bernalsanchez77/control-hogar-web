@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import './levels.css';
 
-function Levels({ devicesState, screenSelected, credential, triggerControlParent }) {
+function Levels({devicesState, screenSelected, credential, channelCategory, triggerControlParent, triggerChannelCategoryParent}) {
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
   const volumeChange = useRef('1');
@@ -29,6 +29,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     }
     triggerControlParent(device, ['command'], [value], saveChange);
   }
+
   const triggerChannel = (value) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
@@ -77,6 +78,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
       triggerControlParent(device, ['volume'], [button + vol], false);      
     }
   }
+
   const triggerVolumeStart = (button) => {
     volumeChange.current = '1';
     timeout3s.current = setTimeout(() => {
@@ -101,6 +103,10 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
     } else {
       triggerVolume(volumeChange.current, button, false);
     }
+  }
+
+  const triggerChannelCategory = (category) => {
+    triggerChannelCategoryParent(category);
   }
       
   return (
@@ -188,7 +194,7 @@ function Levels({ devicesState, screenSelected, credential, triggerControlParent
         <div className='controls-levels-element controls-levels-element--back'>
           <button
             className='controls-levels-button controls-levels-button--img'
-            onTouchStart={() => triggerControl('back', false)}>
+            onTouchStart={() => channelCategory == 'default' ? triggerChannelCategory('default') : triggerControl('back', false)}>
             <img
               className='controls-levels-img controls-levels-img--no-button'
               src="/imgs/back-50.png"
