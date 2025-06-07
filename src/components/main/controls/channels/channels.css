@@ -74,6 +74,9 @@
     background-color: transparent;
     border: none;
   }
+  .controls-channels-category-button--selected {
+    border: 1px solid white;
+  }
   button.controls-channels-category-button:active {
     background-color: white;
     transition: background-color 0.1s;
