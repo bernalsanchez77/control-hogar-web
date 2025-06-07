@@ -50,7 +50,7 @@
   }
   .controls-channels-category {
     height: 50px;
-    padding: 0 10px;
+    padding: 0 5px;
     list-style-type: none;         /* Tamaño del ícono */
     display: flex;
     align-items: center;
@@ -67,4 +67,8 @@
   }
   .controls-channels-category-img {
     width: 35px;
+  }
+  .controls-channels-category-button {
+    background-color: transparent;
+    border: none;
   }

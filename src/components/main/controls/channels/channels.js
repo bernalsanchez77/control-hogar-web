@@ -88,7 +88,7 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
             Object.entries(devicesState.channelsSala.channels).map(([key, channel]) => channel.category == channelCategory ? (
             <li key={key} className='controls-channels-category'>
               <button
-                className='controls-channels-category-element'
+                className='controls-channels-category-button'
                 onTouchStart={() => triggerChannel(channel.id)}>
                 <img
                   className='controls-channels-category-img'
