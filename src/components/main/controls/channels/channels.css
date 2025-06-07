@@ -45,8 +45,9 @@
   }
   .controls-channels-categories {
     display: inline-block;
-    margin: 0 10px;
     height: 150px;
+    position: relative;
+    width: 100%;
   }
   .controls-channels-category {
     height: 50px;
@@ -56,6 +57,9 @@
     align-items: center;
   }
   .controls-channels-categories-ul {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     padding: 0;
     display: flex;
     flex-wrap: wrap;            /* Permite que los íconos pasen a otra fila */
