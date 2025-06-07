@@ -79,7 +79,7 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
           {
             Object.entries(devicesState.channelsSala.channels).map(([key, channel]) => channel.category == channelCategory ? (
             <li key={key} className='controls-channels-category'>
-              <div className='controls-channels-category-element'>
+              <button className='controls-channels-category-element'>
                 <img
                   className='controls-channels-category-img'
                   src={channel.img}
