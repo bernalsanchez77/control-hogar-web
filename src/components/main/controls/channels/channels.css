@@ -13,6 +13,7 @@
   .controls-channels-element--img {
     width: 20%;
     position: relative;
+    margin-top: 12px;
   }
   .controls-channels-element--left {
     float: left;
