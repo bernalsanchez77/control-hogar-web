@@ -14,7 +14,7 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
       navigator.vibrate([100]);
     }
     const device = [{device: 'channelsSala', ifttt: 'channelsSala'}];
-    device[0].ifttt = device[0].ifttt + devicesState.channelsSala[channel].ifttt;
+    device[0].ifttt = device[0].ifttt + devicesState.channelsSala.channels[channel].ifttt;
     triggerControlParent(device, ['selected'], [channel], true);
   }
 
