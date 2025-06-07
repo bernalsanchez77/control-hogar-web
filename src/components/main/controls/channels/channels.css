@@ -46,6 +46,7 @@
   .controls-channels-categories {
     display: inline-block;
     margin: 0 10px;
+    height: 157px;
   }
   .controls-channels-category {
     height: 50px;
