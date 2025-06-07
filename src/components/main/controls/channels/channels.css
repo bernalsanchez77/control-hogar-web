@@ -46,23 +46,18 @@
     margin: 0 10px;
   }
   .controls-channels-category {
-    float: left;
-    width: 30px;
     height: 50px;
     padding: 0 5px;
     list-style-type: none;         /* Tamaño del ícono */
     display: flex;
     align-items: center;
-    justify-content: center;
   }
   .controls-channels-categories-ul {
     padding: 0;
     display: flex;
     flex-wrap: wrap;            /* Permite que los íconos pasen a otra fila */
-    justify-content: center;    /* Centra horizontalmente los íconos */
-    list-style: none;           /* Quita los puntos de la lista */
+    justify-content: center;    /* Centra horizontalmente los íconos */        /* Quita los puntos de la lista */
     margin: 0;
-    gap: 1rem;
   }
   .controls-channels-category-img {
     width: 30px;
