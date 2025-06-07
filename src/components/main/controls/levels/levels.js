@@ -194,7 +194,7 @@ function Levels({devicesState, screenSelected, credential, channelCategory, trig
         <div className='controls-levels-element controls-levels-element--back'>
           <button
             className='controls-levels-button controls-levels-button--img'
-            onTouchStart={() => channelCategory == 'default' ? triggerChannelCategory('default') : triggerControl('back', false)}>
+            onTouchStart={() => channelCategory == 'default' ? triggerControl('back', false) : triggerChannelCategory('default')}>
             <img
               className='controls-levels-img controls-levels-img--no-button'
               src="/imgs/back-50.png"
