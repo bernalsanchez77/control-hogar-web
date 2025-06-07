@@ -4,7 +4,6 @@
   }
   .controls-apps-row {
     display: inline-block;
-    width: 100%;
   }
   .controls-apps-element {
     float: left;
@@ -16,7 +15,7 @@
     font-size: 11px;
     width: 100%;
     border: gray 1px solid;
-    height: 40px;
+    height: 35px;
     border-radius: 5px;
     user-select: none;
     -webkit-user-select: none;
