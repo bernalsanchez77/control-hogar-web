@@ -9,11 +9,13 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
     }
     triggerCategoryParent(category);
   }
-  const triggerChannel = (category) => {
+  const triggerChannel = (channel) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    triggerControlParent(category);
+    const device = [{device: 'channelsSala', ifttt: 'channelsSala'}];
+    device[0].ifttt = device[0].ifttt + devicesState.channelsSala[channel].ifttt;
+    triggerControlParent(device, ['selected'], [channel], true);
   }
 
   return (
