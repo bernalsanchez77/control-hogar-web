@@ -49,7 +49,7 @@
   }
   .controls-channels-category {
     height: 50px;
-    padding: 0 5px;
+    padding: 0 10px;
     list-style-type: none;         /* Tamaño del ícono */
     display: flex;
     align-items: center;
