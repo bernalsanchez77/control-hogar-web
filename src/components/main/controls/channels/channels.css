@@ -55,7 +55,7 @@
     align-items: center;
     justify-content: center;
   }
-  .controls-channels-category-ul {
+  .controls-channels-categories-ul {
     padding: 0;
     display: flex;
     flex-wrap: wrap;            /* Permite que los íconos pasen a otra fila */
