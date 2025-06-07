@@ -9,6 +9,12 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
     }
     triggerCategoryParent(category);
   }
+  const triggerChannel = (category) => {
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
+    triggerControlParent(category);
+  }
 
   return (
     <div>
@@ -79,13 +85,15 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
           {
             Object.entries(devicesState.channelsSala.channels).map(([key, channel]) => channel.category == channelCategory ? (
             <li key={key} className='controls-channels-category'>
-              <button className='controls-channels-category-element'>
+              <button
+                className='controls-channels-category-element'
+                onTouchStart={() => triggerChannel(channel.id)}>
                 <img
                   className='controls-channels-category-img'
                   src={channel.img}
                   alt="icono">
                 </img>
-              </div>
+              </button>
             </li>
             ) : null
             )
