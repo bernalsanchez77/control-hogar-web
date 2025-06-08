@@ -295,7 +295,7 @@ export const devicesOriginal = {
                 id: 'caracol',
                 info: '',
                 img: '/imgs/channels/caracol.png',
-                category: 'entertainment',
+                category: 'general',
             },
             uno: {
                 order: 14,
