@@ -235,7 +235,7 @@ export const devicesOriginal = {
                 id: 'estrellas',
                 info: '',
                 img: '/imgs/channels/estrellas.png',
-                category: 'entertainment',
+                category: 'general',
             },
             once: {
                 order: 8,
@@ -345,7 +345,7 @@ export const devicesOriginal = {
                 id: 'telemundo',
                 info: '',
                 img: '/imgs/channels/telemundo.png',
-                category: 'entertainment',
+                category: 'general',
             },
             azcorazon: {
                 order: 19,
@@ -355,7 +355,7 @@ export const devicesOriginal = {
                 id: 'azcorazon',
                 info: '',
                 img: '/imgs/channels/azcorazon.png',
-                category: 'entertainment',
+                category: 'soapopera',
             },
             gourmet: {
                 order: 20,
@@ -375,7 +375,7 @@ export const devicesOriginal = {
                 id: 'homeandhealth',
                 info: '',
                 img: '/imgs/channels/homeandhealth.png',
-                category: 'science',
+                category: 'lifestyle',
             },
             maschic: {
                 order: 22,
@@ -385,7 +385,7 @@ export const devicesOriginal = {
                 id: 'maschic',
                 info: '',
                 img: '/imgs/channels/maschic.png',
-                category: 'entertainment',
+                category: 'lifestyle',
             },
             telexitos: {
                 order: 23,
@@ -395,7 +395,7 @@ export const devicesOriginal = {
                 id: 'telexitos',
                 info: '',
                 img: '/imgs/channels/telexitos.png',
-                category: 'national',
+                category: 'series',
             },
             hogartv: {
                 order: 24,
