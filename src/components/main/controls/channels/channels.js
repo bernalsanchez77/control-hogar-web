@@ -20,7 +20,7 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
 
   return (
     <div>
-      {channelCategory == ['default'] &&
+      {channelCategory.includes('default') &&
       <div className='controls-channels'>
         <div className='controls-channels-row'>
           <div className='controls-channels-element  controls-channels-element--left'>
