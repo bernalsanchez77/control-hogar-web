@@ -20,7 +20,7 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
 
   return (
     <div>
-      {channelCategory === 'default' &&
+      {channelCategory == ['default'] &&
       <div className='controls-channels'>
         <div className='controls-channels-row'>
           <div className='controls-channels-element  controls-channels-element--left'>
@@ -95,7 +95,7 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
         </div>
       </div>
       }
-      {channelCategory !== ['default'] &&
+      {channelCategory != ['default'] &&
       <div className='controls-channels-categories'>
         <ul className='controls-channels-categories-ul'>
           {
