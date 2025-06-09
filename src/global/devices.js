@@ -405,7 +405,7 @@ export const devicesOriginal = {
                 id: 'hogartv',
                 info: '',
                 img: '/imgs/channels/hogartv.png',
-                category: 'entertainment',
+                category: 'lifestyle',
             },
             lifetime: {
                 order: 25,
@@ -425,7 +425,7 @@ export const devicesOriginal = {
                 id: 'holatv',
                 info: '',
                 img: '/imgs/channels/holatv.png',
-                category: 'entertainment',
+                category: 'lifestyle',
             },
             univision: {
                 order: 27,
@@ -435,7 +435,7 @@ export const devicesOriginal = {
                 id: 'univision',
                 info: '',
                 img: '/imgs/channels/univision.png',
-                category: 'entertainment',
+                category: 'lifestyle',
             },
             filmandarts: {
                 order: 28,
@@ -475,7 +475,7 @@ export const devicesOriginal = {
                 id: 'hgtv',
                 info: '',
                 img: '/imgs/channels/hgtv.png',
-                category: 'entertainment',
+                category: 'lifestyle',
             },
             cartoon: {
                 order: 32,
