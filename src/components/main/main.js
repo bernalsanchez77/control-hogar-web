@@ -21,7 +21,7 @@ function Main() {
   const [updatesDisabled, setUpdatesDisabled] = useState(false);
   const updatesDisabledRef = useRef(updatesDisabled);
   const [credential, setCredential] = useState('');
-  const [channelCategory, setChannelCategory] = useState('default');
+  const [channelCategory, setChannelCategory] = useState(['default']);
 
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
