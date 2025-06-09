@@ -56,8 +56,8 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
           <div className='controls-channels-element controls-channels-element--right'>
             <button
               className='controls-channels-elements-button'
-              onTouchStart={() => triggerCategory('entertainment')}>
-              Entretenimiento
+              onTouchStart={() => triggerCategory('general')}>
+              General
             </button>
           </div>
         </div>
