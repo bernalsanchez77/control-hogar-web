@@ -95,7 +95,7 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
         </div>
       </div>
       }
-      {channelCategory != ['default'] &&
+      {!channelCategory.includes('default') &&
       <div className='controls-channels-categories'>
         <ul className='controls-channels-categories-ul'>
           {
