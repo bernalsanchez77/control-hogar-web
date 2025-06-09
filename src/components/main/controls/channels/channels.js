@@ -95,11 +95,11 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
         </div>
       </div>
       }
-      {channelCategory !== 'default' &&
+      {channelCategory !== ['default'] &&
       <div className='controls-channels-categories'>
         <ul className='controls-channels-categories-ul'>
           {
-            Object.entries(devicesState.channelsSala.channels).map(([key, channel]) => channel.category == channelCategory ? (
+            Object.entries(devicesState.channelsSala.channels).map(([key, channel]) => channelCategory.includes(channel.category) ? (
             <li key={key} className='controls-channels-category'>
               <button
                 className={`controls-channels-category-button ${devicesState.channelsSala.selected === channel.id ? 'controls-channels-category-button--selected' : ''}`}
