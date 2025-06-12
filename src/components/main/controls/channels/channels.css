@@ -43,19 +43,22 @@
     background-color: white;
     transition: background-color 0.1s;
   }
-  .controls-channels-categories {
+  .controls-channels-categories,
+  .controls-channels-devices {
     height: 150px;
     position: relative;
     width: 100%;
   }
-  .controls-channels-category {
+  .controls-channels-category,
+  .controls-channels-device {
     height: 50px;
     padding: 0 10px;
     list-style-type: none;
     display: flex;
     align-items: center;
   }
-  .controls-channels-categories-ul {
+  .controls-channels-categories-ul,
+  .controls-channels-devices-ul {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -71,6 +74,11 @@
     width: 40px;
   }
   .controls-channels-category-button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+  }
+  .controls-channels-device-button {
     background-color: transparent;
     border: none;
     padding: 0;

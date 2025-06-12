@@ -9,6 +9,7 @@ function Channels({devicesState, credential, channelCategory, deviceState, trigg
     }
     triggerCategoryParent(category);
   }
+
   const triggerChannel = (channel) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
@@ -16,6 +17,10 @@ function Channels({devicesState, credential, channelCategory, deviceState, trigg
     const device = [{device: 'channelsSala', ifttt: 'channelsSala'}];
     device[0].ifttt = device[0].ifttt + devicesState.channelsSala.channels[channel].ifttt;
     triggerControlParent(device, ['selected'], [channel], true);
+  }
+
+  const triggerDevice = (device) => {
+
   }
 
   return (
@@ -118,8 +123,15 @@ function Channels({devicesState, credential, channelCategory, deviceState, trigg
       </div>
       }
       {deviceState == 'luzCuarto' &&
-      <div>
-        Luz Cuarto
+      <div className='controls-channels-devices'>
+        <ul className='controls-channels-devices-ul'>
+          <li className='controls-channels-device'>
+              <button
+                className='controls-channels-device-button'
+                onTouchStart={() => triggerDevice('luzCuarto')}>
+              </button>
+          </li>
+        </ul>
       </div>
       }
     </div>
