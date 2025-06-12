@@ -50,13 +50,13 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           triggerDeviceStateParent={triggerDeviceState}
           triggerChannelCategoryParent={triggerChannelCategory}>
         </Levels>
-        {devicesState.hdmiSala.state === 'roku' &&
+        {devicesState.hdmiSala.state === 'roku' && deviceState == 'default' &&
         <Toolbar
           devicesState={devicesState}
           triggerControlParent={triggerControl}>
         </Toolbar>
         }
-        {devicesState.hdmiSala.state === 'roku' &&  
+        {devicesState.hdmiSala.state === 'roku' && deviceState == 'default' &&
         <Apps
           devicesState={devicesState}
           triggerControlParent={triggerControl}>
