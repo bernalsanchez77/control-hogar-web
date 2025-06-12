@@ -12,7 +12,6 @@ function LuzCuarto({devicesState, triggerDeviceParent}) {
     }
   }
   const triggerDeviceStart = (device) => {
-    triggerDevice(device);
     timeout3s.current = setTimeout(() => {
       if (navigator.vibrate) {
         navigator.vibrate([200]);
@@ -21,6 +20,7 @@ function LuzCuarto({devicesState, triggerDeviceParent}) {
     }, 1000);
   }
   const triggerDeviceEnd = (device) => {
+    triggerDevice(device);
     clearTimeout(timeout3s.current);
   }
 

@@ -12,7 +12,7 @@ import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
 import './devices.css';
 
-function Devices({credential, ownerCredential, devCredential, inRange, devicesState, loadingDevices, changeDeviceParent}) {
+function Devices({credential, ownerCredential, devCredential, inRange, devicesState, loadingDevices, deviceState, changeDeviceStateParent, changeDeviceParent}) {
   const triggerDevice = (device, key, value) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
@@ -26,6 +26,9 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
         }, 1000);
       }
     }
+  }
+  const triggerDeviceState = (state) => {
+    changeDeviceStateParent(state);
   }
 
   return (
@@ -91,6 +94,7 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
         <div className='devices-element'>
           <LuzCuarto
             devicesState={devicesState}
+            deviceState={deviceState}
             triggerDeviceParent={triggerDevice}>
           </LuzCuarto>
         </div>

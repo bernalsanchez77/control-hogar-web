@@ -22,6 +22,7 @@ function Main() {
   const updatesDisabledRef = useRef(updatesDisabled);
   const [credential, setCredential] = useState('');
   const [channelCategory, setChannelCategory] = useState(['default']);
+  const [deviceState, setDeviceState] = useState(['default']);
 
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
@@ -100,6 +101,10 @@ function Main() {
 
   const changeChannelCategory = (category) => {
     setChannelCategory(category);
+  }
+
+  const changeDeviceState = (state) => {
+    setChannelState(state);
   }
 
   const changeDevice = (device, key, value, save) => {
@@ -298,7 +303,9 @@ function Main() {
             loadingDevices={loadingDevices}
             screenSelected={screenSelected}
             channelCategory={channelCategory}
+            deviceState={deviceState}
             changeChannelCategoryParent={changeChannelCategory}
+            changeDeviceStateParent={changeDeviceState}
             changeControlParent={changeControl}>
           </Controls>
           <Devices
@@ -308,6 +315,8 @@ function Main() {
             inRange={inRange}
             devicesState={devicesState}
             loadingDevices={loadingDevices}
+            deviceState={deviceState}
+            changeDeviceStateParent={changeDeviceState}
             changeDeviceParent={changeDevice}>
           </Devices>
           {credential === devCredential.current &&
