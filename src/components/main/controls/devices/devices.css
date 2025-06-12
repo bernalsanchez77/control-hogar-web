@@ -23,7 +23,7 @@
   align-items: center;
 }
 .controls-device-button {
-  border: none;
+  border: 2px solid transparent;
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -36,7 +36,7 @@
   background-color: red;
 }
 .controls-device-button--selected {
-  border: 1px solid white;
+  border: 2px solid white;
 }
 button.controls-device-button:active {
   background-color: white;

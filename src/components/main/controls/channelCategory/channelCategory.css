@@ -27,7 +27,7 @@
 }
 .controls-channels-category-button {
   background-color: transparent;
-  border: none;
+  border: 1px solid transparent;
   padding: 0;
 }
 .controls-channels-category-button--selected {
