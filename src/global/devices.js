@@ -27,7 +27,9 @@ export const devicesOriginal = {
     luzCuarto: {
         state: 'off',
         label: 'Luz Cuarto',
-        id: 'luzCuarto'
+        id: 'luzCuarto',
+        color: '',
+        level: '',
     },
     luzEscalera: {
         state: 'off',

@@ -19,8 +19,9 @@ function Channels({devicesState, credential, channelCategory, deviceState, trigg
     triggerControlParent(device, ['selected'], [channel], true);
   }
 
-  const triggerDevice = (device) => {
-
+  const triggerDevice = (color) => {
+    const device = [{device: devicesState.luzCuarto.id, ifttt: devicesState.luzCuarto.id}];
+    triggerControlParent(device, ['color'], [color], true);
   }
 
   return (
