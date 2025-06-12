@@ -20,6 +20,9 @@ function LuzCuarto({devicesState, triggerDeviceParent}) {
       alert('ojo');
     }, 1000);
   }
+  const triggerDeviceEnd = (device) => {
+    clearTimeout(timeout3s.current);
+  }
 
   return (
     <div className="luzCuarto">
