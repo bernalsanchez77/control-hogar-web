@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import './levels.css';
 
-function Levels({devicesState, screenSelected, credential, channelCategory, deviceState, triggerControlParent, triggerDeviceStateParent, triggerChannelCategoryParent}) {
+function Levels({devicesState, screenSelected, channelCategory, deviceState, triggerControlParent, triggerDeviceStateParent, triggerChannelCategoryParent}) {
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
   const volumeChange = useRef('1');

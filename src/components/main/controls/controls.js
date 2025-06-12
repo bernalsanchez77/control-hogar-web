@@ -4,6 +4,7 @@ import Arrows from './arrows/arrows';
 import Levels from './levels/levels';
 import Toolbar from './toolbar/toolbar';
 import Channels from './channels/channels';
+import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
@@ -43,7 +44,6 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
         <Levels
           devicesState={devicesState}
           screenSelected={screenSelected}
-          credential={credential}
           channelCategory={channelCategory}
           deviceState={deviceState}
           triggerControlParent={triggerControl}
@@ -62,17 +62,25 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           triggerControlParent={triggerControl}>
         </Apps>
         }
-        {devicesState.hdmiSala.state === 'cable' &&
+        {devicesState.hdmiSala.state === 'cable' && deviceState == 'default' &&
         <div>
           <Channels
             devicesState={devicesState}
             credential={credential}
             channelCategory={channelCategory}
-            deviceState={deviceState}
             triggerControlParent={triggerControl}
-            triggerDeviceStateParent={triggerDeviceState}
             triggerCategoryParent={triggerChannelCategory}>
           </Channels>
+        </div>
+        }
+        {deviceState !== 'default' &&
+        <div>
+          <Devices
+            devicesState={devicesState}
+            deviceState={deviceState}
+            triggerControlParent={triggerControl}
+            triggerDeviceStateParent={triggerDeviceState}>
+          </Devices>
         </div>
         }
       </div>

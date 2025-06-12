@@ -1,7 +1,7 @@
 import React from 'react';
 import './channels.css';
 
-function Channels({devicesState, credential, channelCategory, deviceState, triggerControlParent, triggerDeviceStateParent, triggerCategoryParent}) {
+function Channels({devicesState, channelCategory, triggerControlParent, triggerCategoryParent}) {
   let selectedImg = '/imgs/channels/' + devicesState.channelsSala.selected + '.png';
   const triggerCategory = (category) => {
     if (navigator.vibrate) {
@@ -19,14 +19,9 @@ function Channels({devicesState, credential, channelCategory, deviceState, trigg
     triggerControlParent(device, ['selected'], [channel], true);
   }
 
-  const triggerDevice = (color) => {
-    const device = [{device: devicesState.luzCuarto.id, ifttt: devicesState.luzCuarto.id}];
-    triggerControlParent(device, ['color'], [color], true);
-  }
-
   return (
     <div>
-      {channelCategory.includes('default') && deviceState == 'default' &&
+      {channelCategory.includes('default') &&
       <div className='controls-channels'>
         <div className='controls-channels-row'>
           <div className='controls-channels-element  controls-channels-element--left'>
@@ -101,7 +96,7 @@ function Channels({devicesState, credential, channelCategory, deviceState, trigg
         </div>
       </div>
       }
-      {!channelCategory.includes('default') && deviceState == 'default' &&
+      {!channelCategory.includes('default') &&
       <div className='controls-channels-categories'>
         <ul className='controls-channels-categories-ul'>
           {
@@ -120,24 +115,6 @@ function Channels({devicesState, credential, channelCategory, deviceState, trigg
             ) : null
             )
           }
-        </ul>
-      </div>
-      }
-      {deviceState == 'luzCuarto' &&
-      <div className='controls-channels-devices'>
-        <ul className='controls-channels-devices-ul'>
-          <li className='controls-channels-device'>
-              <button
-                className='controls-channels-device-button controls-channels-device-button--white'
-                onTouchStart={() => triggerDevice('white')}>
-              </button>
-          </li>
-          <li className='controls-channels-device'>
-              <button
-                className='controls-channels-device-button controls-channels-device-button--red'
-                onTouchStart={() => triggerDevice('red')}>
-              </button>
-          </li>
         </ul>
       </div>
       }
