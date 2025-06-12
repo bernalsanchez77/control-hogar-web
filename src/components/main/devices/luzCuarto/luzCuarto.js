@@ -18,7 +18,6 @@ function LuzCuarto({devicesState, deviceState, triggerDeviceStateParent, trigger
       if (navigator.vibrate) {
         navigator.vibrate([200]);
       }
-      
     }, 1000);
   }
   const triggerDeviceEnd = (device) => {
