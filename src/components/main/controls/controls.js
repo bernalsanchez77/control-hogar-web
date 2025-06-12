@@ -62,7 +62,8 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           triggerControlParent={triggerControl}>
         </Apps>
         }
-        <div style={{ display: devicesState.hdmiSala.state === 'cable' ? 'block' : 'none' }}>
+        {devicesState.hdmiSala.state === 'cable' &&
+        <div>
           <Channels
             devicesState={devicesState}
             credential={credential}
@@ -73,6 +74,7 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
             triggerCategoryParent={triggerChannelCategory}>
           </Channels>
         </div>
+        }
       </div>
     </div>
   )
