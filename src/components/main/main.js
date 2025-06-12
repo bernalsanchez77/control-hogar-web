@@ -104,7 +104,7 @@ function Main() {
   }
 
   const changeDeviceState = (state) => {
-    setChannelState(state);
+    setDeviceState(state);
   }
 
   const changeDevice = (device, key, value, save) => {
