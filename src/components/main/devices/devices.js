@@ -95,6 +95,7 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
           <LuzCuarto
             devicesState={devicesState}
             deviceState={deviceState}
+            triggerDeviceStateParent={triggerDeviceState}
             triggerDeviceParent={triggerDevice}>
           </LuzCuarto>
         </div>
