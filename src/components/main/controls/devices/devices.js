@@ -14,13 +14,13 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
         <ul className='controls-devices-ul'>
           <li className='controls-device'>
               <button
-                className='controls-device-button controls-device-button--white'
+                className={`controls-device-button controls-device-button--white ${devicesState.luzCuarto.color === 'white' ? 'controls-device-button--selected' : ''}`}
                 onTouchStart={() => triggerDevice('white')}>
               </button>
           </li>
           <li className='controls-device'>
               <button
-                className='controls-device-button controls-device-button--red'
+                className={`controls-device-button controls-device-button--red ${devicesState.luzCuarto.color === 'red' ? 'controls-device-button--selected' : ''}`}
                 onTouchStart={() => triggerDevice('red')}>
               </button>
           </li>
