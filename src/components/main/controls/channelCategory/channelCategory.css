@@ -1,0 +1,39 @@
+.controls-channels-categories {
+  height: 150px;
+  position: relative;
+  width: 100%;
+}
+.controls-channels-category {
+  height: 50px;
+  padding: 0 10px;
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+}
+.controls-channels-categories-ul {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+  padding: 0 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0;
+}
+.controls-channels-category-img {
+  width: 40px;
+}
+.controls-channels-category-button {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+.controls-channels-category-button--selected {
+  border: 1px solid white;
+}
+button.controls-channels-category-button:active {
+  background-color: white;
+  transition: background-color 0.1s;
+}

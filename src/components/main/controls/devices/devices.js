@@ -1,7 +1,7 @@
 import React from 'react';
 import './devices.css';
 
-function Devices({devicesState, deviceState, triggerControlParent, triggerDeviceStateParent}) {
+function Devices({devicesState, deviceState, triggerControlParent}) {
   const triggerDevice = (color) => {
     const device = [{device: devicesState.luzCuarto.id, ifttt: devicesState.luzCuarto.id}];
     triggerControlParent(device, ['color'], [color], true);

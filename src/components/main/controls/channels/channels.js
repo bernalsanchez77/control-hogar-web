@@ -1,7 +1,7 @@
 import React from 'react';
 import './channels.css';
 
-function Channels({devicesState, channelCategory, triggerControlParent, triggerCategoryParent}) {
+function Channels({devicesState, triggerCategoryParent}) {
   let selectedImg = '/imgs/channels/' + devicesState.channelsSala.selected + '.png';
   const triggerCategory = (category) => {
     if (navigator.vibrate) {
@@ -10,18 +10,8 @@ function Channels({devicesState, channelCategory, triggerControlParent, triggerC
     triggerCategoryParent(category);
   }
 
-  const triggerChannel = (channel) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
-    const device = [{device: 'channelsSala', ifttt: 'channelsSala'}];
-    device[0].ifttt = device[0].ifttt + devicesState.channelsSala.channels[channel].ifttt;
-    triggerControlParent(device, ['selected'], [channel], true);
-  }
-
   return (
     <div>
-      {channelCategory.includes('default') &&
       <div className='controls-channels'>
         <div className='controls-channels-row'>
           <div className='controls-channels-element  controls-channels-element--left'>
@@ -95,29 +85,6 @@ function Channels({devicesState, channelCategory, triggerControlParent, triggerC
           </div>
         </div>
       </div>
-      }
-      {!channelCategory.includes('default') &&
-      <div className='controls-channels-categories'>
-        <ul className='controls-channels-categories-ul'>
-          {
-            Object.entries(devicesState.channelsSala.channels).map(([key, channel]) => channelCategory.includes(channel.category) ? (
-            <li key={key} className='controls-channels-category'>
-              <button
-                className={`controls-channels-category-button ${devicesState.channelsSala.selected === channel.id ? 'controls-channels-category-button--selected' : ''}`}
-                onTouchStart={() => triggerChannel(channel.id)}>
-                <img
-                  className='controls-channels-category-img'
-                  src={channel.img}
-                  alt="icono">
-                </img>
-              </button>
-            </li>
-            ) : null
-            )
-          }
-        </ul>
-      </div>
-      }
     </div>
   )
 }

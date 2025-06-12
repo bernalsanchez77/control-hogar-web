@@ -1,100 +1,46 @@
 .controls-channels {
-    display: inline-block;
-    height: 150px;
-  }
-  .controls-channels-row {
-    width: 350px;
-    display: inline-block;
-  }
-  .controls-channels-element {
-    float: left;
-    width: 40%;
-  }
-  .controls-channels-element--img {
-    width: 20%;
-    position: relative;
-    margin-top: 12px;
-  }
-  .controls-channels-element--left {
-    float: left;
-  }
-  .controls-channels-element--right {
-    float: right;
-  }
-  .controls-channels-img {
-    margin: 0;
-    width: 50px;
-    left: 10px;
-    top: -7px;
-    position: absolute;
-  }
-  .controls-channels-elements-button {
-    color: white;
-    text-align: center;
-    margin: 0;
-    border: none;
-    background: transparent;
-    border-radius: 5px;
-    user-select: none;
-    -webkit-user-select: none;
-    padding: 8.7px 5px;
-  }
-  button.controls-channels-element-button:active {
-    background-color: white;
-    transition: background-color 0.1s;
-  }
-  .controls-channels-categories,
-  .controls-channels-devices {
-    height: 150px;
-    position: relative;
-    width: 100%;
-  }
-  .controls-channels-category,
-  .controls-channels-device {
-    height: 50px;
-    padding: 0 10px;
-    list-style-type: none;
-    display: flex;
-    align-items: center;
-  }
-  .controls-channels-categories-ul,
-  .controls-channels-devices-ul {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    transform: translate(-50%, -50%);
-    padding: 0 10px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin: 0;
-  }
-  .controls-channels-category-img {
-    width: 40px;
-  }
-  .controls-channels-category-button {
-    background-color: transparent;
-    border: none;
-    padding: 0;
-  }
-  .controls-channels-device-button {
-    border: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    padding: 0;
-  }
-  .controls-channels-device-button--white {
-    background-color: white;
-  }
-  .controls-channels-device-button--red {
-    background-color: red;
-  }
-  .controls-channels-category-button--selected {
-    border: 1px solid white;
-  }
-  button.controls-channels-category-button:active {
-    background-color: white;
-    transition: background-color 0.1s;
-  }
+  display: inline-block;
+  height: 150px;
+}
+.controls-channels-row {
+  width: 350px;
+  display: inline-block;
+}
+.controls-channels-element {
+  float: left;
+  width: 40%;
+}
+.controls-channels-element--img {
+  width: 20%;
+  position: relative;
+  margin-top: 12px;
+}
+.controls-channels-element--left {
+  float: left;
+}
+.controls-channels-element--right {
+  float: right;
+}
+.controls-channels-img {
+  margin: 0;
+  width: 50px;
+  left: 10px;
+  top: -7px;
+  position: absolute;
+}
+.controls-channels-elements-button {
+  color: white;
+  text-align: center;
+  margin: 0;
+  border: none;
+  background: transparent;
+  border-radius: 5px;
+  user-select: none;
+  -webkit-user-select: none;
+  padding: 8.7px 5px;
+}
+button.controls-channels-element-button:active {
+  background-color: white;
+  transition: background-color 0.1s;
+}
+
