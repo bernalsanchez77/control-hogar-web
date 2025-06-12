@@ -79,9 +79,17 @@
     padding: 0;
   }
   .controls-channels-device-button {
-    background-color: transparent;
     border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     padding: 0;
+  }
+  .controls-channels-device-button--white {
+    background-color: white;
+  }
+  .controls-channels-device-button--red {
+    background-color: red;
   }
   .controls-channels-category-button--selected {
     border: 1px solid white;

@@ -127,8 +127,14 @@ function Channels({devicesState, credential, channelCategory, deviceState, trigg
         <ul className='controls-channels-devices-ul'>
           <li className='controls-channels-device'>
               <button
-                className='controls-channels-device-button'
-                onTouchStart={() => triggerDevice('luzCuarto')}>
+                className='controls-channels-device-button controls-channels-device-button--white'
+                onTouchStart={() => triggerDevice('white')}>
+              </button>
+          </li>
+          <li className='controls-channels-device'>
+              <button
+                className='controls-channels-device-button controls-channels-device-button--red'
+                onTouchStart={() => triggerDevice('red')}>
               </button>
           </li>
         </ul>
