@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import './levels.css';
 
-function Levels({devicesState, screenSelected, credential, channelCategory, triggerControlParent, triggerChannelCategoryParent}) {
+function Levels({devicesState, screenSelected, credential, channelCategory, deviceState, triggerControlParent, triggerDeviceStateParent, triggerChannelCategoryParent}) {
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
   const volumeChange = useRef('1');
@@ -111,6 +111,21 @@ function Levels({devicesState, screenSelected, credential, channelCategory, trig
     }
     triggerChannelCategoryParent(category);
   }
+
+  const backButtonTriggered = () => {
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
+    if (deviceState != 'default') {
+      triggerDeviceStateParent('default');
+    } else {
+      if (channelCategory == ['default']) {
+        triggerControl('back', false);
+      } else {
+        triggerChannelCategory('default');
+      }
+    }
+  }
       
   return (
     <div className='controls-levels'>
@@ -197,7 +212,7 @@ function Levels({devicesState, screenSelected, credential, channelCategory, trig
         <div className='controls-levels-element controls-levels-element--back'>
           <button
             className='controls-levels-button controls-levels-button--img'
-            onTouchStart={() => channelCategory == ['default'] ? triggerControl('back', false) : triggerChannelCategory('default')}>
+            onTouchStart={() => backButtonTriggered()}>
             <img
               className='controls-levels-img controls-levels-img--no-button'
               src="/imgs/back-50.png"

@@ -67,7 +67,9 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
             devicesState={devicesState}
             credential={credential}
             channelCategory={channelCategory}
+            deviceState={deviceState}
             triggerControlParent={triggerControl}
+            triggerDeviceStateParent={triggerDeviceState}
             triggerCategoryParent={triggerChannelCategory}>
           </Channels>
         </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import './channels.css';
 
-function Channels({devicesState, credential, channelCategory, triggerControlParent, triggerCategoryParent}) {
+function Channels({devicesState, credential, channelCategory, deviceState, triggerControlParent, triggerDeviceStateParent, triggerCategoryParent}) {
   let selectedImg = '/imgs/channels/' + devicesState.channelsSala.selected + '.png';
   const triggerCategory = (category) => {
     if (navigator.vibrate) {
@@ -20,7 +20,7 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
 
   return (
     <div>
-      {channelCategory.includes('default') &&
+      {channelCategory.includes('default') && deviceState == 'default' &&
       <div className='controls-channels'>
         <div className='controls-channels-row'>
           <div className='controls-channels-element  controls-channels-element--left'>
@@ -95,7 +95,7 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
         </div>
       </div>
       }
-      {!channelCategory.includes('default') &&
+      {!channelCategory.includes('default') && deviceState == 'default' &&
       <div className='controls-channels-categories'>
         <ul className='controls-channels-categories-ul'>
           {
@@ -115,6 +115,11 @@ function Channels({devicesState, credential, channelCategory, triggerControlPare
             )
           }
         </ul>
+      </div>
+      }
+      {deviceState == 'luzCuarto' &&
+      <div>
+        Luz Cuarto
       </div>
       }
     </div>
