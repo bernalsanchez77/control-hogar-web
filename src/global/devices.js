@@ -649,6 +649,16 @@ export const devicesOriginal = {
                 img: '/imgs/channels/curiosity.png',
                 category: 'science',
             },
+            cnnes: {
+                order: 49,
+                number: '202',
+                ifttt: '3',
+                label: 'Cnn Español',
+                id: 'cnnes',
+                info: '',
+                img: '/imgs/channels/cnnes.png',
+                category: 'news',
+            },
         }
     }
 };
