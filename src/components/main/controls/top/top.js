@@ -31,6 +31,9 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
     } else {
       if (devicesState[screenSelected].state === 'on') {
         triggerControlParent([{device: screenSelected, ifttt: screenSelected}], ['state'], ['off'], true);
+        setTimeout(() => {
+          triggerControlParent([{device: screenSelected, ifttt: screenSelected}], ['mute'], ['off'], true);
+        }, 2000);
       } else {
         triggerControlParent([{device: screenSelected, ifttt: screenSelected}], ['state'], ['on'], true);
       }
