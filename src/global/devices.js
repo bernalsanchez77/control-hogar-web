@@ -163,6 +163,11 @@ export const devicesOriginal = {
             label: 'Amazon',
             id: 'amazon',
             img: '/imgs/apps/amazon.png'
+          },
+          pluto: {
+            label: 'Pluto',
+            id: 'pluto',
+            img: '/imgs/apps/pluto.png'
           }
         }
     },
