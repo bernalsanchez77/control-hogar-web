@@ -41,6 +41,11 @@ export const devicesOriginal = {
         label: 'Chimenea Sala',
         id: 'chimeneaSala'
     },
+    ventiladorSala: {
+        state: 'off',
+        label: 'Ventilador Sala',
+        id: 'ventiladorSala'
+    },
     lamparasAbajo: {
         state: 'off',
         label: 'Lamparas Abajo',
