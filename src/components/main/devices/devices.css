@@ -28,5 +28,6 @@ button.devices-button:active {
   transition: background-color 0.1s;
 }
 .devices-button--on {
+  border: white 1px solid;
   opacity: 1;
 }
