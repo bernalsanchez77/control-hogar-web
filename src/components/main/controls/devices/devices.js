@@ -4,7 +4,10 @@ import './devices.css';
 function Devices({devicesState, deviceState, triggerControlParent}) {
   const triggerDevice = (color) => {
     const device = [{device: devicesState.luzCuarto.id, ifttt: devicesState.luzCuarto.id}];
-    triggerControlParent(device, ['color'], [color], true);
+    triggerControlParent(device, ['state'], ['on']);
+    setTimeout(() => {
+      triggerControlParent(device, ['color'], [color], true);
+    }, 5000);
   }
 
   return (
