@@ -21,6 +21,7 @@
   border-radius: 5px;
   user-select: none;
   -webkit-user-select: none;
+  opacity: 0.5;
 }
 button.screens-button:active {
   background-color: white;
@@ -28,4 +29,5 @@ button.screens-button:active {
 }
 .screens-button--on {
   border: yellow 1px solid;
+  opacity: 1;
 }

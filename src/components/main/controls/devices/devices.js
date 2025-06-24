@@ -9,7 +9,7 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
     }
     setTimeout(() => {
       triggerControlParent(device, ['color'], [color], true);
-    }, 2000);
+    }, 1000);
   }
 
   return (
