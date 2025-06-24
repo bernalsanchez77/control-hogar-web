@@ -7,6 +7,7 @@ import LuzCuarto from './luzCuarto/luzCuarto';
 import LuzEscalera from './luzEscalera/luzEscalera';
 import ChimeneaSala from './chimeneaSala/chimeneaSala';
 import ParlantesSala from './parlantesSala/parlantesSala';
+import VentiladorSala from './ventiladorSala/ventiladorSala';
 import CalentadorNegro from './calentadorNegro/calentadorNegro';
 import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
@@ -71,6 +72,12 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
             devicesState={devicesState}
             triggerDeviceParent={triggerDevice}>
           </ParlantesSala>
+        </div>
+        <div className='devices-element'>
+          <VentiladorSala
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </VentiladorSala>
         </div>
         {(credential === ownerCredential || credential === devCredential) &&
         <div className='devices-element'>
