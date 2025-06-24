@@ -29,5 +29,6 @@ button.screens-button:active {
 }
 .screens-button--on {
   border: white 1px solid;
+  background-color: rgb(71, 3, 3) ;
   opacity: 1;
 }

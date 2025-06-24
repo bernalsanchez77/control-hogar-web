@@ -20,6 +20,7 @@
     user-select: none;
     -webkit-user-select: none;
     position: relative;
+    opacity: 0.5;
   }
   .controls-apps-button--img {
     background-color: transparent;
@@ -35,7 +36,8 @@
       color: white
   }
   .controls-apps-button--on {
-    border: yellow 1px solid;
+    border: white 1px solid;
+    opacity: 1;
   }
   button.controls-apps-button:active {
     background-color: white;

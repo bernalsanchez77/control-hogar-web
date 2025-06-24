@@ -29,5 +29,6 @@ button.devices-button:active {
 }
 .devices-button--on {
   border: white 1px solid;
+  background-color: rgb(71, 3, 3) ;
   opacity: 1;
 }
