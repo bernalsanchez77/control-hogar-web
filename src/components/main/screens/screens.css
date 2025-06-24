@@ -28,6 +28,5 @@ button.screens-button:active {
   transition: background-color 0.1s;
 }
 .screens-button--on {
-  border: yellow 1px solid;
   opacity: 1;
 }
