@@ -28,6 +28,7 @@
   height: 30px;
   border-radius: 50%;
   padding: 0;
+  opacity: 0.5;
 }
 .controls-device-button--white {
   background-color: white;
@@ -36,7 +37,7 @@
   background-color: red;
 }
 .controls-device-button--selected {
-  border: 2px solid white;
+  opacity: 1;
 }
 button.controls-device-button:active {
   background-color: white;
