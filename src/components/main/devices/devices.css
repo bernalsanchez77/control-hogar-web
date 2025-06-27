@@ -25,11 +25,11 @@ button.devices-button:active {
   transition: background-color 0.1s;
 }
 .devices-button--on .devices-led {
-  background-color: green;
-  width: 5px;
+  background-color: #39FF14;
+  width: 30px;
   height: 5px;
   margin: 0 auto;
-  border-radius: 50%;  
+  border-radius: 10px;  
 }
 
 .devices-button-img {
