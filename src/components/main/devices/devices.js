@@ -59,19 +59,25 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
             triggerDeviceParent={triggerDevice}>
           </LamparaRotatoria>
         </div>
-      </div>
-      <div className='devices-row'>
         <div className='devices-element'>
           <ChimeneaSala
             devicesState={devicesState}
             triggerDeviceParent={triggerDevice}>
           </ChimeneaSala>
         </div>
+      </div>
+      <div className='devices-row'>
         <div className='devices-element'>
           <ParlantesSala
             devicesState={devicesState}
             triggerDeviceParent={triggerDevice}>
           </ParlantesSala>
+        </div>
+        <div className='devices-element'>
+          <VentiladorSala
+            devicesState={devicesState}
+            triggerDeviceParent={triggerDevice}>
+          </VentiladorSala>
         </div>
         {(credential === ownerCredential || credential === devCredential) &&
         <div className='devices-element'>
@@ -89,14 +95,14 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
           </CalentadorBlanco>
         </div>
         }
-      </div>
-      <div className='devices-row'>
         <div className='devices-element'>
-          <VentiladorSala
+          <LamparasAbajo
             devicesState={devicesState}
             triggerDeviceParent={triggerDevice}>
-          </VentiladorSala>
+          </LamparasAbajo>
         </div>
+      </div>
+      <div className='devices-row'>
         {(credential === ownerCredential || credential === devCredential) &&
         <div className='devices-element'>
           <LuzCuarto
@@ -115,12 +121,6 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
           </LuzEscalera>
         </div>
         }
-        <div className='devices-element'>
-          <LamparasAbajo
-            devicesState={devicesState}
-            triggerDeviceParent={triggerDevice}>
-          </LamparasAbajo>
-        </div>
       </div>
     </div>
   );
