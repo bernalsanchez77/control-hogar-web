@@ -16,7 +16,13 @@ function LamparaComedor({devicesState, triggerDeviceParent}) {
       <div>
         <button
           className={`devices-button ${devicesState.lamparaComedor.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => triggerDevice(devicesState.lamparaComedor.id)}>{devicesState.lamparaComedor.label}
+          onTouchStart={() => triggerDevice(devicesState.lamparaComedor.id)}>
+          <img
+            className='devices-button-img'
+            src={devicesState.lamparacomedor.img}
+            alt="icono">
+          </img>
+          <div className='devices-led'></div>
         </button>
       </div>
     </div>
