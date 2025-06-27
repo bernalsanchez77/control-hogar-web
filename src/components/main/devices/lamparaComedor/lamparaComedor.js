@@ -19,7 +19,7 @@ function LamparaComedor({devicesState, triggerDeviceParent}) {
           onTouchStart={() => triggerDevice(devicesState.lamparaComedor.id)}>
           <img
             className='devices-button-img'
-            src={devicesState.lamparacomedor.img}
+            src={devicesState.lamparaComedor.img}
             alt="icono">
           </img>
           <div className='devices-led'></div>
