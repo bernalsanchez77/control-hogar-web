@@ -59,7 +59,8 @@ export const devicesOriginal = {
     calentadorNegro: {
         state: 'off',
         label: 'Calentador Lizzie',
-        id: 'calentadorNegro'
+        id: 'calentadorNegro',
+        img: '/imgs/devices/calentadornegro.png',
     },
     calentadorBlanco: {
         state: 'off',

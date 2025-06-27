@@ -16,7 +16,12 @@ function CalentadorNegro({devicesState, triggerDeviceParent}) {
       <div>
         <button
           className={`devices-button ${devicesState.calentadorNegro.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => triggerDevice(devicesState.calentadorNegro.id)}>{devicesState.calentadorNegro.label}
+          onTouchStart={() => triggerDevice(devicesState.calentadorNegro.id)}>
+          <img
+            className='devices-button-img'
+            src={devicesState.calentadorNegro.img}
+            alt="icono">
+          </img>
         </button>
       </div>
     </div>
