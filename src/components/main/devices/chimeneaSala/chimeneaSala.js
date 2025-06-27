@@ -16,7 +16,13 @@ function ChimeneaSala({devicesState, triggerDeviceParent}) {
       <div>
         <button
           className={`devices-button ${devicesState.chimeneaSala.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => triggerDevice(devicesState.chimeneaSala.id)}>{devicesState.chimeneaSala.label}
+          onTouchStart={() => triggerDevice(devicesState.chimeneaSala.id)}>
+          <img
+            className='devices-button-img'
+            src={devicesState.chimeneaSala.img}
+            alt="icono">
+          </img>
+          <div className='devices-led'></div>
         </button>
       </div>
     </div>
