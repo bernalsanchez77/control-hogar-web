@@ -22,6 +22,7 @@ function CalentadorNegro({devicesState, triggerDeviceParent}) {
             src={devicesState.calentadorNegro.img}
             alt="icono">
           </img>
+          <div className='devices-led'></div>
         </button>
       </div>
     </div>

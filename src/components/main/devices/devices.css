@@ -24,8 +24,10 @@ button.devices-button:active {
   background-color: white;
   transition: background-color 0.1s;
 }
-.devices-button--on {
-
+.devices-button--on .devices-led {
+  background-color: green;
+  width: 3px;
+  border-radius: 50%;  
 }
 
 .devices-button-img {
