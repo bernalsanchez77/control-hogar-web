@@ -19,7 +19,7 @@ function CalentadorBlanco({devicesState, triggerDeviceParent}) {
           onTouchStart={() => triggerDevice(devicesState.calentadorBlanco.id)}>
           <img
             className='devices-button-img'
-            src={devicesState.calentadorblanco.img}
+            src={devicesState.calentadornegro.img}
             alt="icono">
           </img>
           <div className='devices-led'></div>
