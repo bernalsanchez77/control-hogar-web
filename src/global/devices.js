@@ -76,6 +76,7 @@ export const devicesOriginal = {
     calentadorBlanco: {
         state: 'off',
         label: 'Calentador Amy',
+        id: 'calentadorBlanco',
         img: '/imgs/devices/calentadorblanco.png',
     },
     hdmiSala: {
