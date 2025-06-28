@@ -57,14 +57,14 @@ function Channels({devicesState, triggerCategoryParent}) {
             <button
               className='controls-channels-elements-button'
               onTouchStart={() => triggerCategory(['science'])}>
-              Ciencia y Historia
+              Ciencia
             </button>
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
             <button
               className='controls-channels-elements-button'
               onTouchStart={() => triggerCategory(['movies'])}>
-              Peliculas y Series
+              Peliculas
             </button>
           </div>
         </div>
@@ -73,7 +73,7 @@ function Channels({devicesState, triggerCategoryParent}) {
             <button
               className='controls-channels-elements-button'
               onTouchStart={() => triggerCategory(['food', 'lifestyle'])}>
-              Gastronomia y Vida
+              Vida
             </button>
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
