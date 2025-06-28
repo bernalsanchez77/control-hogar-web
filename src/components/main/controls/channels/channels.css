@@ -38,7 +38,7 @@
   user-select: none;
   -webkit-user-select: none;
   padding: 6px 5px;
-  width: 110px;
+  width: 80px;
 }
 button.controls-channels-element-button:active {
   background-color: white;
