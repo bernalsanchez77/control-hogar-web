@@ -17,7 +17,7 @@ function ParlantesSala({devicesState, triggerDeviceParent}) {
         <button
           className={`devices-button ${devicesState.parlantesSala.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
           onTouchStart={() => triggerDevice(devicesState.parlantesSala.id)}>
-          {devicesState.parlantesSala.label}
+          parlante
         </button>
       </div>
     </div>
