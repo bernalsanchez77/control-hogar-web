@@ -922,6 +922,26 @@ export const devicesOriginal = {
                 img: '/imgs/channels/espn3.png',
                 category: 'sports',
             },
+            dreamworks: {
+                order: 74,
+                number: '272',
+                ifttt: '4',
+                label: 'Dreamworks',
+                id: 'dreamworks',
+                info: '',
+                img: '/imgs/channels/dreamworks.png',
+                category: 'movies',
+            },
+            sonymovies: {
+                order: 75,
+                number: '273',
+                ifttt: '4',
+                label: 'Sony Movies',
+                id: 'sonymovies',
+                info: '',
+                img: '/imgs/channels/sonymovies.png',
+                category: 'movies',
+            },
         }
     }
 };
