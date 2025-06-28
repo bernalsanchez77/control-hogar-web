@@ -942,6 +942,26 @@ export const devicesOriginal = {
                 img: '/imgs/channels/sonymovies.png',
                 category: 'movies',
             },
+            hbo: {
+                order: 76,
+                number: '274',
+                ifttt: '4',
+                label: 'Hbo',
+                id: 'hbo',
+                info: '',
+                img: '/imgs/channels/hbo.png',
+                category: 'movies',
+            },
+            universal: {
+                order: 76,
+                number: '275',
+                ifttt: '4',
+                label: 'Universal',
+                id: 'universal',
+                info: '',
+                img: '/imgs/channels/universal.png',
+                category: 'movies',
+            },
         }
     }
 };
