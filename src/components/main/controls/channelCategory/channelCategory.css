@@ -29,7 +29,7 @@
   background-color: transparent;
   border: 1px solid transparent;
   padding: 0;
-  opacity: 0.3;
+  opacity: 0.5;
 }
 .controls-channels-category-button--selected {
   opacity: 1;
