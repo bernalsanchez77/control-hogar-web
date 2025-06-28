@@ -65,14 +65,14 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
             triggerDeviceParent={triggerDevice}>
           </ChimeneaSala>
         </div>
-      </div>
-      <div className='devices-row'>
         <div className='devices-element'>
           <ParlantesSala
             devicesState={devicesState}
             triggerDeviceParent={triggerDevice}>
           </ParlantesSala>
-        </div>
+        </div> 
+      </div>
+      <div className='devices-row'>
         <div className='devices-element'>
           <VentiladorSala
             devicesState={devicesState}
@@ -101,9 +101,7 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
             triggerDeviceParent={triggerDevice}>
           </LamparasAbajo>
         </div>
-      </div>
-      <div className='devices-row'>
-        {(credential === ownerCredential || credential === devCredential) &&
+          {(credential === ownerCredential || credential === devCredential) &&
         <div className='devices-element'>
           <LuzCuarto
             devicesState={devicesState}
