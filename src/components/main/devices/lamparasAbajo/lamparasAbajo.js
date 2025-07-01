@@ -59,7 +59,11 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
         <button
           className={`devices-button ${state === 'on' ? "devices-button--on" : "devices-button-off"}`}
           onTouchStart={() => triggerDevice()}>
-          Lamps
+          <img
+            className='devices-button-img'
+            src='/imgs/devices/lamparasabajo.png'
+            alt="icono">
+          </img>
         </button>
       </div>
     </div>
