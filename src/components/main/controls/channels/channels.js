@@ -21,34 +21,18 @@ function Channels({devicesState, triggerCategoryParent}) {
               Nacionales
             </button>
           </div>
-          <div className='controls-channels-element controls-channels-element--right'>
+          <div className='controls-channels-element controls-channels-element--center'>
             <button
               className='controls-channels-elements-button'
               onTouchStart={() => triggerCategory(['news'])}>
               Noticias
             </button>
           </div>
-        </div>
-        <div className='controls-channels-row'>
-          <div className='controls-channels-element controls-channels-element--left'>
+          <div className='controls-channels-element controls-channels-element--right'>
             <button
               className='controls-channels-elements-button'
               onTouchStart={() => triggerCategory(['sports'])}>
               Deportes
-            </button>
-          </div>
-          <div className='controls-channels-element controls-channels-element--img'>
-              <img
-                  className='controls-channels-img'
-                  src={selectedImg}
-                  alt="icono">
-              </img>
-          </div>
-          <div className='controls-channels-element controls-channels-element--right'>
-            <button
-              className='controls-channels-elements-button'
-              onTouchStart={() => triggerCategory(['general'])}>
-              General
             </button>
           </div>
         </div>
@@ -59,6 +43,13 @@ function Channels({devicesState, triggerCategoryParent}) {
               onTouchStart={() => triggerCategory(['science'])}>
               Ciencia
             </button>
+          </div>
+          <div className='controls-channels-element controls-channels-element--img'>
+              <img
+                  className='controls-channels-img'
+                  src={selectedImg}
+                  alt="icono">
+              </img>
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
             <button
@@ -74,6 +65,13 @@ function Channels({devicesState, triggerCategoryParent}) {
               className='controls-channels-elements-button'
               onTouchStart={() => triggerCategory(['food', 'lifestyle'])}>
               Vida
+            </button>
+          </div>
+          <div className='controls-channels-element controls-channels-element--center'>
+            <button
+              className='controls-channels-elements-button'
+              onTouchStart={() => triggerCategory(['general'])}>
+              General
             </button>
           </div>
           <div className='controls-channels-element controls-channels-element--right'>
