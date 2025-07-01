@@ -17,7 +17,10 @@ function LuzEscalera({devicesState, triggerDeviceParent}) {
         <button
           className={`devices-button ${devicesState.luzEscalera.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
           onTouchStart={() => triggerDevice(devicesState.luzEscalera.id)}>
-          escale
+          <img
+            className='devices-button-img'
+            src={devicesState.luzEscalera.img}
+            alt="icono">
         </button>
       </div>
     </div>
