@@ -31,8 +31,16 @@
   border: 1px solid transparent;
   padding: 0;
 }
+@keyframes parpadeoSuave {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
 .controls-channels-category-button--selected {
-  opacity: 1;
+  animation: parpadeoSuave 2s ease-in-out infinite;
 }
 button.controls-channels-category-button:active {
   background-color: white;
