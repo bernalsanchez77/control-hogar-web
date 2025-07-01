@@ -1,46 +1,44 @@
 .controls-apps {
-    height: 100px;
-    display: inline-block;
-  }
-  .controls-apps-row {
-    display: inline-block;
-  }
-  .controls-apps-element {
-    float: left;
-    width: 60px;
-    margin: 3px 5px;
-  }
-  .controls-apps-button {
-    background-color: transparent;
-    font-size: 11px;
-    width: 100%;
-    border: gray 1px solid;
-    height: 35px;
-    border-radius: 5px;
-    user-select: none;
-    -webkit-user-select: none;
-    position: relative;
-    opacity: 0.5;
-  }
-  .controls-apps-button--img {
-    background-color: transparent;
-    border: none;
-  }
-  .controls-apps-img--button {
-    width: 40px;
-    position: absolute;
-    left: 10px;
-    top: -3px;
-  }
-  .controls-apps-span {
-      color: white
-  }
-  .controls-apps-button--on {
-    border: white 1px solid;
-    opacity: 1;
-  }
-  button.controls-apps-button:active {
-    background-color: white;
-    transition: background-color 0.1s;
-  }
-  
+  height: 100px;
+  display: inline-block;
+}
+.controls-apps-row {
+  display: inline-block;
+}
+.controls-apps-element {
+  float: left;
+  width: 60px;
+  margin: 3px 5px;
+}
+.controls-apps-button {
+  background-color: transparent;
+  font-size: 11px;
+  width: 100%;
+  border: gray 1px solid;
+  height: 35px;
+  border-radius: 5px;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+}
+.controls-apps-button--img {
+  background-color: transparent;
+  border: none;
+}
+.controls-apps-img--button {
+  width: 40px;
+  position: absolute;
+  left: 10px;
+  top: -3px;
+}
+.controls-apps-span {
+    color: white;
+}
+.controls-apps-button--on {
+  border: white 1px solid;
+  box-shadow: 0px 0px 10px white;
+}
+button.controls-apps-button:active {
+  background-color: white;
+  transition: background-color 0.1s;
+}
