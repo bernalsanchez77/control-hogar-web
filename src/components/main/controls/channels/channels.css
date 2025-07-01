@@ -4,6 +4,7 @@
 }
 .controls-channels-row {
   width: 350px;
+  height: 45px;
   display: inline-block;
 }
 .controls-channels-element {
