@@ -17,7 +17,11 @@ function ParlantesSala({devicesState, triggerDeviceParent}) {
         <button
           className={`devices-button ${devicesState.parlantesSala.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
           onTouchStart={() => triggerDevice(devicesState.parlantesSala.id)}>
-          bafles
+          <img
+            className='devices-button-img'
+            src={devicesState.parlantesSala.img}
+            alt="icono">
+          </img>
         </button>
       </div>
     </div>

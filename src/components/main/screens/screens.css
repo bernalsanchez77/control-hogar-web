@@ -29,5 +29,5 @@ button.screens-button:active {
 }
 .screens-button--on {
   border: white 1px solid;
-  background-color: #B22222CC;
+  box-shadow: 0 0 10px #fff;
 }
