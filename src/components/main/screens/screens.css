@@ -28,6 +28,6 @@ button.screens-button:active {
   transition: background-color 0.1s;
 }
 .screens-button--on {
-  border: #39FF14 1px solid;
-  background-color: rgb(71, 3, 3);
+  border: white 1px solid;
+  background-color: #B22222CC;
 }
