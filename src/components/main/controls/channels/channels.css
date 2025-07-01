@@ -25,6 +25,7 @@
   margin: 0;
   width: 40px;
   position: absolute;
+  top: -5px;
 }
 .controls-channels-elements-button {
   color: white;
