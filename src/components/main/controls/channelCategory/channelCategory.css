@@ -1,7 +1,8 @@
 .controls-channels-categories {
   height: 150px;
   position: relative;
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
 }
 .controls-channels-category {
   height: 50px;
@@ -23,7 +24,7 @@
   margin: 0;
 }
 .controls-channels-category-img {
-  width: 40px;
+  width: 35px;
 }
 .controls-channels-category-button {
   background-color: transparent;
