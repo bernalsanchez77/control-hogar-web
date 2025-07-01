@@ -37,7 +37,11 @@ function LuzCuarto({devicesState, deviceState, triggerDeviceStateParent, trigger
           className={`devices-button ${devicesState.luzCuarto.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
           onTouchStart={() => triggerDeviceStart(devicesState.luzCuarto.id)}
           onTouchEnd={() => triggerDeviceEnd(devicesState.luzCuarto.id)}>
-          cuarto
+          <img
+            className='devices-button-img'
+            src={devicesState.luzCuarto.img}
+            alt="icono">
+          </img>
         </button>
       </div>
     </div>
