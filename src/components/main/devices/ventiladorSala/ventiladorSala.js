@@ -17,7 +17,11 @@ function VentiladorSala({devicesState, triggerDeviceParent}) {
         <button
           className={`devices-button ${devicesState.ventiladorSala.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
           onTouchStart={() => triggerDevice(devicesState.ventiladorSala.id)}>
-          venti
+          <img
+            className='devices-button-img'
+            src={devicesState.ventiladorSala.img}
+            alt="icono">
+          </img>
         </button>
       </div>
     </div>
