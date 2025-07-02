@@ -953,7 +953,7 @@ export const devicesOriginal = {
                 category: 'movies',
             },
             universal: {
-                order: 76,
+                order: 77,
                 number: '275',
                 ifttt: '4',
                 label: 'Universal',
@@ -963,7 +963,7 @@ export const devicesOriginal = {
                 category: 'movies',
             },
             golden: {
-                order: 77,
+                order: 78,
                 number: '276',
                 ifttt: '4',
                 label: 'Golden',
@@ -973,7 +973,7 @@ export const devicesOriginal = {
                 category: 'movies',
             },
             cinelatino: {
-                order: 78,
+                order: 79,
                 number: '277',
                 ifttt: '4',
                 label: 'Cine Latino',
@@ -983,7 +983,7 @@ export const devicesOriginal = {
                 category: 'movies',
             },
             space: {
-                order: 79,
+                order: 80,
                 number: '278',
                 ifttt: '4',
                 label: 'Space',
@@ -993,9 +993,9 @@ export const devicesOriginal = {
                 category: 'movies',
             },
             cinecanal: {
-                order: 80,
+                order: 81,
                 number: '280',
-                ifttt: '4',
+                ifttt: '5',
                 label: 'Cinecanal',
                 id: 'cinecanal',
                 info: '',
@@ -1003,7 +1003,7 @@ export const devicesOriginal = {
                 category: 'movies',
             },
             cinemax: {
-                order: 81,
+                order: 82,
                 number: '281',
                 ifttt: '5',
                 label: 'cinemax',
@@ -1013,7 +1013,7 @@ export const devicesOriginal = {
                 category: 'movies',
             },
             tnt: {
-                order: 82,
+                order: 83,
                 number: '282',
                 ifttt: '5',
                 label: 'tnt',
