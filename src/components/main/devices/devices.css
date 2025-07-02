@@ -34,5 +34,7 @@ button.devices-button:active {
 
 .devices-button-img {
   width: 35px;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
