@@ -36,5 +36,9 @@ button.devices-button:active {
   width: 35px;
   user-select: none;
   -webkit-user-select: none;
+  -webkit-user-select: none;     /* Safari */
+  -webkit-touch-callout: none;   /* iOS Safari */
+  user-select: none;
+  pointer-events: none; 
 }
 
