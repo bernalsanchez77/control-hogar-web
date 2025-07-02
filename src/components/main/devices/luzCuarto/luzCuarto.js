@@ -42,6 +42,7 @@ function LuzCuarto({devicesState, deviceState, triggerDeviceStateParent, trigger
             src={devicesState.luzCuarto.img}
             alt="icono">
           </img>
+          <div className='devices-led'></div>
         </button>
       </div>
     </div>

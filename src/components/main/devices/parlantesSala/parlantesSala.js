@@ -22,6 +22,7 @@ function ParlantesSala({devicesState, triggerDeviceParent}) {
             src={devicesState.parlantesSala.img}
             alt="icono">
           </img>
+          <div className='devices-led'></div>
         </button>
       </div>
     </div>

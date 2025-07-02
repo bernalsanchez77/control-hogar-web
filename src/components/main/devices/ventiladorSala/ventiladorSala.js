@@ -22,6 +22,7 @@ function VentiladorSala({devicesState, triggerDeviceParent}) {
             src={devicesState.ventiladorSala.img}
             alt="icono">
           </img>
+          <div className='devices-led'></div>
         </button>
       </div>
     </div>

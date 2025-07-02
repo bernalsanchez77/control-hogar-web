@@ -64,6 +64,7 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
             src='/imgs/devices/lamparasabajo.png'
             alt="icono">
           </img>
+          <div className='devices-led'></div>
         </button>
       </div>
     </div>

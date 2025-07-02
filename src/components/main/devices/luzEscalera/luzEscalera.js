@@ -22,6 +22,7 @@ function LuzEscalera({devicesState, triggerDeviceParent}) {
             src={devicesState.luzEscalera.img}
             alt="icono">
           </img>
+          <div className='devices-led'></div>
         </button>
       </div>
     </div>
