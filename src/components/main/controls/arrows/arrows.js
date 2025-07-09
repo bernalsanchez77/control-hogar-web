@@ -9,7 +9,7 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
     }
     const device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
     //triggerControlParent(device, ['command'], [value], false);
-    fetch('http://192.168.86.28:8060/keypress/Lit_a');
+    fetch('http://192.168.86.28:8060/keypress/Home');
   }
 
   return (
