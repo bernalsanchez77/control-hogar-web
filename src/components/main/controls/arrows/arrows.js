@@ -2,7 +2,7 @@
 import React from 'react';
 import './arrows.css';
 
-function async Arrows({devicesState, screenSelected, triggerControlParent}) {
+async function Arrows({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
