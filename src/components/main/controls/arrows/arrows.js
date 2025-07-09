@@ -11,7 +11,7 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
     // triggerControlParent(device, ['command'], [value], false);
     // fetch('http://192.168.86.28:8060/keypress/Home');
     // window.AndroidRoku.sendCommand('Home');
-    fetch('https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=6e5f8a4d6ec6498c82c07956432ca3ab&deviceId=70244299129742a19649fd03cbb6a1ef&text=home');
+    fetch('https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=6e5f8a4d6ec6498c82c07956432ca3ab&deviceId=70244299129742a19649fd03cbb6a1ef&text=Home');
   }
 
   return (
