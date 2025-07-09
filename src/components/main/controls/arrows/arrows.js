@@ -2,14 +2,14 @@
 import React from 'react';
 import './arrows.css';
 
-async function Arrows({devicesState, screenSelected, triggerControlParent}) {
+function Arrows({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
     const device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
     //triggerControlParent(device, ['command'], [value], false);
-    await fetch('http://192.168.86.28:8060/keypress/Lit_a');
+    fetch('http://192.168.86.28:8060/keypress/Lit_a');
   }
 
   return (
