@@ -186,7 +186,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
       <div className='controls-levels-row'>
         <div className='controls-levels-element controls-levels-element--no-margin'>
           <span className='controls-levels-span'>
-            vo {devicesState[screenSelected].volume}
+            vol {devicesState[screenSelected].volume}
           </span>
         </div>
         <div className='controls-levels-element controls-levels-element--right controls-levels-element--no-margin'>
