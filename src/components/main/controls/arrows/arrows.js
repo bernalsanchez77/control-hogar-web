@@ -1,18 +1,28 @@
 
 import React from 'react';
 import './arrows.css';
-import { Http } from '@capacitor-community/http';
+import { Capacitor } from '@capacitor/core';
 
 async function sendRokuCommand(command = 'Home') {
-  try {
-    const options = {
-      url: `http://192.168.86.28:8060/keypress/${command}`,
-      method: 'POST'
-    };
-    const response = await Http.request(options);
-    console.log('Comando enviado, respuesta:', response);
-  } catch (error) {
-    console.error('Error al enviar comando:', error);
+  const url = `http://192.168.86.28:8060/keypress/${command}`;
+
+  if (Capacitor.getPlatform() === 'web') {
+    // En navegador: usa fetch
+    try {
+      await fetch(url, { method: 'POST' });
+      console.log('Comando enviado vía fetch');
+    } catch (err) {
+      console.error('Error en fetch:', err);
+    }
+  } else {
+    // En app móvil: usa plugin HTTP
+    const { Http } = await import('@capacitor-community/http');
+    try {
+      await Http.request({ url, method: 'POST' });
+      console.log('Comando enviado vía plugin HTTP');
+    } catch (err) {
+      console.error('Error plugin HTTP:', err);
+    }
   }
 }
 
