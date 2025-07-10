@@ -4,9 +4,10 @@ import './arrows.css';
 
 async function sendRokuCommand(command = "Home") {
   const url = 'http://192.168.86.28:8060/keypress/' + command;
-  const isMobileApp = !!window.Capacitor;
+  const isMobileApp = !!window.Capacitor && !!window.Capacitor.isNativePlatform;
 
   if (!isMobileApp) {
+    // Web: fetch normal (puede fallar por CORS, pero no romperá la app)
     try {
       await fetch(url, { method: 'POST' });
       console.log('Comando enviado vía fetch');
@@ -14,23 +15,21 @@ async function sendRokuCommand(command = "Home") {
       console.error('Error con fetch:', err);
     }
   } else {
+    // App móvil: usa el plugin ya disponible en window.Capacitor.Plugins.Http
     try {
-      const mod = await import('@capacitor-community/http');
-      const { Http } = mod;
+      const Http = window.Capacitor.Plugins.Http;
+      if (!Http) throw new Error('Plugin HTTP no disponible');
 
       await Http.request({
         method: 'POST',
-        url: url,
+        url,
       });
-
       console.log('Comando enviado vía Capacitor HTTP');
     } catch (err) {
       console.error('Error con plugin HTTP:', err);
     }
   }
 }
-
-
 
 function Arrows({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
