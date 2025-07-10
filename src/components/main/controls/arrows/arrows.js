@@ -4,11 +4,9 @@ import './arrows.css';
 
 async function sendRokuCommand(command = "Home") {
   const url = 'http://192.168.86.28:8060/keypress/' + command;
-
   const isMobileApp = !!window.Capacitor;
 
   if (!isMobileApp) {
-    // Web: usar fetch
     try {
       await fetch(url, { method: 'POST' });
       console.log('Comando enviado vía fetch');
@@ -16,30 +14,22 @@ async function sendRokuCommand(command = "Home") {
       console.error('Error con fetch:', err);
     }
   } else {
-    // App móvil: usar plugin HTTP sin importar estáticamente
     try {
-      let Http;
-      if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Http) {
-        Http = window.Capacitor.Plugins.Http;
-      } else {
-        // Import dinámico y usar la propiedad Http del módulo importado
-        const mod = await import('@capacitor/http');
-        Http = mod.Http;
-      }
+      const mod = await import('@capacitor-community/http');
+      const { Http } = mod;
 
       await Http.request({
-        url: url,
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
+        url: url,
       });
+
       console.log('Comando enviado vía Capacitor HTTP');
     } catch (err) {
       console.error('Error con plugin HTTP:', err);
     }
   }
 }
+
 
 
 function Arrows({devicesState, screenSelected, triggerControlParent}) {
