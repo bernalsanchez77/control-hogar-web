@@ -9,8 +9,19 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
     }
     const device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
     // triggerControlParent(device, ['command'], [value], false);
+
     fetch('http://192.168.86.28:8060/keypress/Home', {
       method: 'POST'
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log('Comando enviado correctamente');
+      } else {
+        console.error('Error en la respuesta de Roku');
+      }
+    })
+    .catch(error => {
+      console.error('Error al conectar con Roku:', error);
     });
     // fetch('http://192.168.86.28:8060/keypress/Home');
     // window.AndroidRoku.sendCommand('Home');
