@@ -2,7 +2,7 @@
 import React from 'react';
 import './arrows.css';
 
-async function sendRokuCommand(command) {
+async function sendRokuCommand(command = "Home") {
   const url = 'http://192.168.86.28:8060/keypress/' + command;
 
   const isMobileApp = !!window.Capacitor;
