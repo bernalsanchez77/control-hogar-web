@@ -2,13 +2,13 @@
 import React from 'react';
 import './arrows.css';
 
-async function sendRokuCommand(command = 'Home') {
+async function sendRokuCommand(command) {
   const url = 'http://192.168.86.28:8060/keypress/' + command;
 
   const isMobileApp = !!window.Capacitor;
 
   if (!isMobileApp) {
-    // Web (Vercel): usar fetch
+    // Web: usar fetch
     try {
       await fetch(url, { method: 'POST' });
       console.log('Comando enviado vía fetch');
@@ -16,11 +16,16 @@ async function sendRokuCommand(command = 'Home') {
       console.error('Error con fetch:', err);
     }
   } else {
-    // App nativa: usar plugin HTTP
+    // App móvil: usar Capacitor HTTP sin importar estáticamente
     try {
-      const { Http } = await import('@capacitor-community/http');
-      await Http.request({ url: url, method: 'POST' });
-      console.log('Comando enviado vía plugin HTTP');
+      // Requiere acceso desde window o globalThis
+      const Http = window.Capacitor.Plugins.Http || (await import('@capacitor-community/http')).Http;
+
+      await Http.request({
+        url: url,
+        method: 'POST',
+      });
+      console.log('Comando enviado vía Capacitor HTTP');
     } catch (err) {
       console.error('Error con plugin HTTP:', err);
     }
