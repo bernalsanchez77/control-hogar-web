@@ -16,14 +16,23 @@ async function sendRokuCommand(command = "Home") {
       console.error('Error con fetch:', err);
     }
   } else {
-    // App móvil: usar Capacitor HTTP sin importar estáticamente
+    // App móvil: usar plugin HTTP sin importar estáticamente
     try {
-      // Requiere acceso desde window o globalThis
-      const Http = window.Capacitor.Plugins.Http || (await import('@capacitor/http'));
+      let Http;
+      if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Http) {
+        Http = window.Capacitor.Plugins.Http;
+      } else {
+        // Import dinámico y usar la propiedad Http del módulo importado
+        const mod = await import('@capacitor/http');
+        Http = mod.Http;
+      }
 
       await Http.request({
         url: url,
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
       });
       console.log('Comando enviado vía Capacitor HTTP');
     } catch (err) {
@@ -31,6 +40,7 @@ async function sendRokuCommand(command = "Home") {
     }
   }
 }
+
 
 function Arrows({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
