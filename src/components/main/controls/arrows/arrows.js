@@ -19,7 +19,7 @@ async function sendRokuCommand(command = "Home") {
     // App móvil: usar Capacitor HTTP sin importar estáticamente
     try {
       // Requiere acceso desde window o globalThis
-      const Http = window.Capacitor.Plugins.Http || (await import('@capacitor/http')).Http;
+      const Http = window.Capacitor.Plugins.Http || (await import('@capacitor/http'));
 
       await Http.request({
         url: url,
