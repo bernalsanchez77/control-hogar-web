@@ -6,27 +6,22 @@ async function sendRokuCommand(command) {
   const rokuIP = '192.168.86.28';
   const url = `http://${rokuIP}:8060/keypress/${command}`;
 
-  // Only run on Android app
-  const isNative = window?.Capacitor?.isNativePlatform?.();
-  const platform = window?.Capacitor?.getPlatform?.();
-
-  if (!isNative || platform !== 'android') {
-    console.warn('Not running inside the Android app. Skipping Roku command.');
+  if (!(window?.Capacitor?.isNativePlatform?.())) {
+    console.warn('Not running inside native app. Skipping Roku command.');
     return;
   }
 
   try {
-    const response = await fetch(url, {
+    const { Http } = await import('@capacitor-community/http');
+
+    const response = await Http.request({
       method: 'POST',
+      url: url,
     });
 
-    if (response.ok) {
-      console.log(`Roku command "${command}" sent successfully.`);
-    } else {
-      console.error(`Roku command failed with status: ${response.status}`);
-    }
-  } catch (error) {
-    console.error(`Error sending Roku command "${command}":`, error);
+    console.log(`Command sent: ${command}`, response);
+  } catch (e) {
+    console.error('Error sending Roku command:', e);
   }
 }
 
