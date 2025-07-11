@@ -2,33 +2,35 @@
 import React from 'react';
 import './arrows.css';
 
-async function sendRokuCommand(command = "Home") {
-  const url = 'http://192.168.86.28:8060/keypress/' + command;
-  const isMobileApp = !!window.Capacitor && !!window.Capacitor.isNativePlatform;
+async function sendRokuCommand(command) {
+    // Hardcoded Roku IP address as requested
+    const ROKU_IP_ADDRESS = '192.168.86.28';
 
-  if (!isMobileApp) {
-    // Web: fetch normal (puede fallar por CORS, pero no romperá la app)
-    try {
-      await fetch(url, { method: 'POST' });
-      console.log('Comando enviado vía fetch');
-    } catch (err) {
-      console.error('Error con fetch:', err);
-    }
-  } else {
-    // App móvil: usa el plugin ya disponible en window.Capacitor.Plugins.Http
-    try {
-      const Http = window.Capacitor.Plugins.Http;
-      if (!Http) throw new Error('Plugin HTTP no disponible');
+    // Assuming 'responseDisplay' is an element defined elsewhere in your HTML
+    // (e.g., const responseDisplay = document.getElementById('response');)
+    const responseDisplay = document.getElementById('response');
 
-      await Http.request({
-        method: 'POST',
-        url,
-      });
-      console.log('Comando enviado vía Capacitor HTTP');
-    } catch (err) {
-      console.error('Error con plugin HTTP:', err);
+    const url = `http://${ROKU_IP_ADDRESS}:8060/keypress/${command}`;
+    responseDisplay.textContent = `Sending ${command} to ${url}...`;
+    responseDisplay.className = '';
+
+    try {
+        const res = await fetch(url, {
+            method: 'POST',
+        });
+
+        if (res.ok) {
+            responseDisplay.className = 'success';
+            responseDisplay.textContent = `Command "${command}" sent successfully! Status: ${res.status} ${res.statusText}`;
+        } else {
+            responseDisplay.className = 'error';
+            responseDisplay.textContent = `Failed to send command "${command}". Status: ${res.status} ${res.statusText}\n${await res.text()}`;
+        }
+    } catch (error) {
+        responseDisplay.className = 'error';
+        responseDisplay.textContent = `Network error sending "${command}":\n${error.message}\nEnsure Roku is on and on the same local network as your phone (${ROKU_IP_ADDRESS}).`;
+        console.error('Fetch error:', error);
     }
-  }
 }
 
 function Arrows({devicesState, screenSelected, triggerControlParent}) {
