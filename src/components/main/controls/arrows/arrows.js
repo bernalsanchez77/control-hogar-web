@@ -8,11 +8,8 @@ async function sendRokuCommand(command) {
 
     // Assuming 'responseDisplay' is an element defined elsewhere in your HTML
     // (e.g., const responseDisplay = document.getElementById('response');)
-    const responseDisplay = document.getElementById('response');
 
     const url = `http://${ROKU_IP_ADDRESS}:8060/keypress/${command}`;
-    responseDisplay.textContent = `Sending ${command} to ${url}...`;
-    responseDisplay.className = '';
 
     try {
         const res = await fetch(url, {
@@ -20,15 +17,15 @@ async function sendRokuCommand(command) {
         });
 
         if (res.ok) {
-            responseDisplay.className = 'success';
-            responseDisplay.textContent = `Command "${command}" sent successfully! Status: ${res.status} ${res.statusText}`;
+            console.log('success');
+            console.log(`Command "${command}" sent successfully! Status: ${res.status} ${res.statusText}`);
         } else {
-            responseDisplay.className = 'error';
-            responseDisplay.textContent = `Failed to send command "${command}". Status: ${res.status} ${res.statusText}\n${await res.text()}`;
+            console.log('error');
+            console.log(`Failed to send command "${command}". Status: ${res.status} ${res.statusText}\n${await res.text()}`);
         }
     } catch (error) {
-        responseDisplay.className = 'error';
-        responseDisplay.textContent = `Network error sending "${command}":\n${error.message}\nEnsure Roku is on and on the same local network as your phone (${ROKU_IP_ADDRESS}).`;
+        console.log('error');
+        console.log(`Network error sending "${command}":\n${error.message}\nEnsure Roku is on and on the same local network as your phone (${ROKU_IP_ADDRESS}).`);
         console.error('Fetch error:', error);
     }
 }
