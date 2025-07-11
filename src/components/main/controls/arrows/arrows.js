@@ -6,25 +6,24 @@ async function sendRokuCommand(command) {
   const rokuIP = '192.168.86.28';
   const url = `http://${rokuIP}:8060/keypress/${command}`;
 
-  // Check if running inside Capacitor
-  const isNative = window.Capacitor?.isNativePlatform?.();
+  const isNative = window?.Capacitor?.isNativePlatform?.();
 
   if (!isNative) {
-    console.warn('Not running inside Capacitor. Skipping Roku command.');
+    console.warn('Not running in Capacitor. Skipping Roku command.');
     return;
   }
 
-  // Dynamically import only if native
-  const { Http } = await import('@capacitor-community/http');
-
   try {
+    const { Http } = await import('@capacitor-community/http');
+    
     const response = await Http.request({
       method: 'POST',
       url: url,
     });
-    console.log(`Command "${command}" sent to Roku successfully.`, response);
-  } catch (error) {
-    console.error(`Failed to send command "${command}" to Roku:`, error);
+
+    console.log(`Command "${command}" sent successfully.`, response);
+  } catch (err) {
+    console.error('Failed to send command to Roku:', err);
   }
 }
 
