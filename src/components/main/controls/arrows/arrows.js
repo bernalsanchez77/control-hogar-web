@@ -3,31 +3,29 @@ import React from 'react';
 import './arrows.css';
 
 async function sendRokuCommand(command) {
-    // Hardcoded Roku IP address as requested
-    const ROKU_IP_ADDRESS = '192.168.86.28';
+  const rokuIP = '192.168.86.28';
+  const url = `http://${rokuIP}:8060/keypress/${command}`;
 
-    // Assuming 'responseDisplay' is an element defined elsewhere in your HTML
-    // (e.g., const responseDisplay = document.getElementById('response');)
+  // Check if running inside Capacitor
+  const isNative = window.Capacitor?.isNativePlatform?.();
 
-    const url = `http://${ROKU_IP_ADDRESS}:8060/keypress/${command}`;
+  if (!isNative) {
+    console.warn('Not running inside Capacitor. Skipping Roku command.');
+    return;
+  }
 
-    try {
-        const res = await fetch(url, {
-            method: 'POST',
-        });
+  // Dynamically import only if native
+  const { Http } = await import('@capacitor-community/http');
 
-        if (res.ok) {
-            console.log('success');
-            console.log(`Command "${command}" sent successfully! Status: ${res.status} ${res.statusText}`);
-        } else {
-            console.log('error');
-            console.log(`Failed to send command "${command}". Status: ${res.status} ${res.statusText}\n${await res.text()}`);
-        }
-    } catch (error) {
-        console.log('error');
-        console.log(`Network error sending "${command}":\n${error.message}\nEnsure Roku is on and on the same local network as your phone (${ROKU_IP_ADDRESS}).`);
-        console.error('Fetch error:', error);
-    }
+  try {
+    const response = await Http.request({
+      method: 'POST',
+      url: url,
+    });
+    console.log(`Command "${command}" sent to Roku successfully.`, response);
+  } catch (error) {
+    console.error(`Failed to send command "${command}" to Roku:`, error);
+  }
 }
 
 function Arrows({devicesState, screenSelected, triggerControlParent}) {
