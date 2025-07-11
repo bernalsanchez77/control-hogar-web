@@ -2,29 +2,37 @@
 import React from 'react';
 import './arrows.css';
 
-async function sendRokuCommand(command) {
-  const rokuIP = '192.168.86.28';
-  const url = `http://${rokuIP}:8060/keypress/${command}`;
+async function sendRokuCommand(command = "Home") {
+  const url = 'http://192.168.86.28:8060/keypress/' + command;
+  const isMobileApp = !!window.Capacitor && !!window.Capacitor.isNativePlatform;
 
-  if (!(window?.Capacitor?.isNativePlatform?.())) {
-    console.warn('Not running inside native app. Skipping Roku command.');
-    return;
-  }
+  if (!isMobileApp) {
+    // Web: fetch normal (puede fallar por CORS, pero no romperá la app)
+    try {
+      await fetch(url, { method: 'POST' });
+      console.log('Comando enviado vía fetch');
+    } catch (err) {
+      console.error('Error con fetch:', err);
+    }
+  } else {
+    // App móvil: usa el plugin ya disponible en window.Capacitor.Plugins.Http
+    try {
+      const Http = window.Capacitor.Plugins.Http;
+      if (!Http) throw new Error('Plugin HTTP no disponible');
 
-  try {
-    const { Http } = await import('@capacitor-community/http');
-
-    const response = await Http.request({
-      method: 'POST',
-      url: url,
-    });
-
-    console.log(`Command sent: ${command}`, response);
-  } catch (e) {
-    console.error('Error sending Roku command:', e);
+      await Http.request({
+        method: 'POST',
+        url,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded', // Or appropriate content type
+        },
+      });
+      console.log('Comando enviado vía Capacitor HTTP');
+    } catch (err) {
+      console.error('Error con plugin HTTP:', err);
+    }
   }
 }
-
 
 function Arrows({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
@@ -58,7 +66,7 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
         <div className='controls-arrows-element'>
           <button
             className="controls-arrows-button"
-            onTouchStart={() => sendRokuCommand('Home')}>
+            onTouchStart={() => triggerControl('up')}>
               &#9650;
           </button>
         </div>
