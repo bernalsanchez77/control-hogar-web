@@ -13,13 +13,11 @@ async function sendRokuCommand(command) {
     console.log(`[RokuCommand] Attempting to send '${command}' command to ${url}`);
 
     try {
-        // Check if running in a native Capacitor environment (no imports needed at top level)
-        if (window.Capacitor && window.Capacitor.isNative) {
+        // *** CRITICAL CHANGE HERE: Calling isNativePlatform() as a function ***
+        if (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform()) {
             console.log('[RokuCommand] Running in native Capacitor environment. Using native HTTP.');
 
             // Dynamically import the built-in CapacitorHttp plugin
-            // This import will only execute when window.Capacitor.isNative is true,
-            // preventing Vercel build errors.
             const { CapacitorHttp } = await import('@capacitor/core');
 
             // Make the native HTTP POST request
