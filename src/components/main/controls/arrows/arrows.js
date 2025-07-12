@@ -1,6 +1,7 @@
 
 import React from 'react';
 import './arrows.css';
+import { Capacitor } from '@capacitor/core';
 
 async function sendRokuCommand(command = "Home") {
   const url = 'http://192.168.86.28:8060/keypress/' + command;
