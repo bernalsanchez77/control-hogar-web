@@ -13,15 +13,16 @@ async function sendRokuCommand(command) {
     console.log(`[RokuCommand] Attempting to send '${command}' command to ${url}`);
 
     try {
-        // *** CRITICAL CHANGE HERE: Calling isNativePlatform() as a function ***
+        // Check if running in a native Capacitor environment (using the correct function check)
         if (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform()) {
             console.log('[RokuCommand] Running in native Capacitor environment. Using native HTTP.');
 
-            // Dynamically import the built-in CapacitorHttp plugin
-            const { CapacitorHttp } = await import('@capacitor/core');
+            // *** CRITICAL CHANGE: Access CapacitorHttp directly from window.Capacitor ***
+            // We removed the 'await import('@capacitor/core');' line
+            const nativeHttp = window.Capacitor.CapacitorHttp; // Directly access it from the global object
 
-            // Make the native HTTP POST request
-            const res = await CapacitorHttp.post({ url: url });
+            // Make the native HTTP POST request using the directly accessed object
+            const res = await nativeHttp.post({ url: url });
 
             // Log the native response
             if (res.status >= 200 && res.status < 300) {
