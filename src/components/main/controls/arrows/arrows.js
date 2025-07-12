@@ -74,7 +74,7 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
         <div className='controls-arrows-element'>
           <button
             className="controls-arrows-button"
-            onTouchStart={() => triggerControl('up')}>
+            onTouchStart={() => sendRokuCommand('Home')}>
               &#9650;
           </button>
         </div>
