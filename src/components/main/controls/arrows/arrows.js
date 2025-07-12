@@ -1,38 +1,45 @@
 
 import React from 'react';
 import './arrows.css';
-import { Capacitor } from '@capacitor/core';
 
-async function sendRokuCommand(command = "Home") {
-  const url = 'http://192.168.86.28:8060/keypress/' + command;
-  const isMobileApp = !!window.Capacitor && !!window.Capacitor.isNativePlatform;
+async function sendRokuCommand(command) {
+    // Roku IP Address defined directly within the function
+    const ROKU_IP_ADDRESS = '192.168.86.28';
 
-  if (!isMobileApp) {
-    // Web: fetch normal (puede fallar por CORS, pero no romperá la app)
+    // The URL for the Roku ECP command
+    const url = `http://${ROKU_IP_ADDRESS}:8060/keypress/${command}`;
+
+    // Log the action to the console
+    console.log(`[RokuCommand] Attempting to send '${command}' command to ${url}`);
+
     try {
-      await fetch(url, { method: 'POST' });
-      console.log('Comando enviado vía fetch');
-    } catch (err) {
-      console.error('Error con fetch:', err);
-    }
-  } else {
-    // App móvil: usa el plugin ya disponible en window.Capacitor.Plugins.Http
-    try {
-      const Http = window.Capacitor.Plugins.Http;
-      if (!Http) throw new Error('Plugin HTTP no disponible');
+        // Check if running in a native Capacitor environment (no imports needed)
+        if (window.Capacitor && window.Capacitor.isNative) {
+            console.log('[RokuCommand] Running in native Capacitor environment. Using native HTTP.');
 
-      await Http.request({
-        method: 'POST',
-        url,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded', // Or appropriate content type
-        },
-      });
-      console.log('Comando enviado vía Capacitor HTTP');
-    } catch (err) {
-      console.error('Error con plugin HTTP:', err);
+            // Dynamically import the plugin to avoid Vercel build issues
+            const { CapacitorHttp } = await import('@capacitor-community/http');
+
+            // Make the native HTTP POST request
+            const res = await CapacitorHttp.post({ url: url });
+
+            // Log the native response
+            if (res.status >= 200 && res.status < 300) {
+                console.log(`[RokuCommand Success] Command '${command}' sent successfully! Status: ${res.status} ${res.statusText}`);
+            } else {
+                console.error(`[RokuCommand Failed] Command '${command}' failed. Status: ${res.status} ${res.statusText}. Response Data:`, res.data);
+            }
+        } else {
+            // Log a warning if not in the native app
+            console.warn('[RokuCommand] Not in native app environment. Cannot send command to Roku directly from web browser.');
+            console.log('[RokuCommand] To test, please build and run the Android APK on your phone.');
+        }
+    } catch (error) {
+        // Log any network or other errors during the process
+        console.error(`[RokuCommand Error] Network error for command '${command}':`, error.message);
+        console.error('[RokuCommand Error] Make sure Roku is on, its IP is correct, and it is on the same local network as your phone.');
+        console.error('Full error object:', error);
     }
-  }
 }
 
 function Arrows({devicesState, screenSelected, triggerControlParent}) {
