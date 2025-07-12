@@ -13,12 +13,14 @@ async function sendRokuCommand(command) {
     console.log(`[RokuCommand] Attempting to send '${command}' command to ${url}`);
 
     try {
-        // Check if running in a native Capacitor environment (no imports needed)
+        // Check if running in a native Capacitor environment (no imports needed at top level)
         if (window.Capacitor && window.Capacitor.isNative) {
             console.log('[RokuCommand] Running in native Capacitor environment. Using native HTTP.');
 
-            // Dynamically import the plugin to avoid Vercel build issues
-            const { CapacitorHttp } = await import('@capacitor-community/http');
+            // Dynamically import the built-in CapacitorHttp plugin
+            // This import will only execute when window.Capacitor.isNative is true,
+            // preventing Vercel build errors.
+            const { CapacitorHttp } = await import('@capacitor/core');
 
             // Make the native HTTP POST request
             const res = await CapacitorHttp.post({ url: url });
@@ -30,7 +32,7 @@ async function sendRokuCommand(command) {
                 console.error(`[RokuCommand Failed] Command '${command}' failed. Status: ${res.status} ${res.statusText}. Response Data:`, res.data);
             }
         } else {
-            // Log a warning if not in the native app
+            // Log a warning if not in the native app environment
             console.warn('[RokuCommand] Not in native app environment. Cannot send command to Roku directly from web browser.');
             console.log('[RokuCommand] To test, please build and run the Android APK on your phone.');
         }
