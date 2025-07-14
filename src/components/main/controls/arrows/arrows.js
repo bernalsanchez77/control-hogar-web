@@ -3,44 +3,19 @@ import React from 'react';
 import './arrows.css';
 
 async function sendRokuCommand(command) {
-    // Roku IP Address defined directly within the function
-    const ROKU_IP_ADDRESS = '192.168.86.28';
-
-    // The URL for the Roku ECP command
-    const url = `http://${ROKU_IP_ADDRESS}:8060/keypress/${command}`;
-
-    // Log the action to the console
-    console.log(`[RokuCommand] Attempting to send '${command}' command to ${url}`);
-
-    try {
-        // Check if running in a native Capacitor environment (using the correct function check)
-        if (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform()) {
-            console.log('[RokuCommand] Running in native Capacitor environment. Using native HTTP.');
-
-            // *** CRITICAL CHANGE: Access CapacitorHttp directly from window.Capacitor ***
-            // We removed the 'await import('@capacitor/core');' line
-            const nativeHttp = window.Capacitor.CapacitorHttp; // Directly access it from the global object
-
-            // Make the native HTTP POST request using the directly accessed object
-            const res = await nativeHttp.post({ url: url });
-
-            // Log the native response
-            if (res.status >= 200 && res.status < 300) {
-                console.log(`[RokuCommand Success] Command '${command}' sent successfully! Status: ${res.status} ${res.statusText}`);
-            } else {
-                console.error(`[RokuCommand Failed] Command '${command}' failed. Status: ${res.status} ${res.statusText}. Response Data:`, res.data);
-            }
-        } else {
-            // Log a warning if not in the native app environment
-            console.warn('[RokuCommand] Not in native app environment. Cannot send command to Roku directly from web browser.');
-            console.log('[RokuCommand] To test, please build and run the Android APK on your phone.');
-        }
-    } catch (error) {
-        // Log any network or other errors during the process
-        console.error(`[RokuCommand Error] Network error for command '${command}':`, error.message);
-        console.error('[RokuCommand Error] Make sure Roku is on, its IP is correct, and it is on the same local network as your phone.');
-        console.error('Full error object:', error);
+  fetch("http://192.168.86.28:8060/keypress/Home", {
+    method: "POST",
+  })
+  .then(response => {
+    if (response.ok) {
+      console.log("Command sent to Roku");
+    } else {
+      console.error("Roku responded with error:", response.status);
     }
+  })
+  .catch(error => {
+    console.error("Failed to send request to Roku:", error);
+  });
 }
 
 function Arrows({devicesState, screenSelected, triggerControlParent}) {
