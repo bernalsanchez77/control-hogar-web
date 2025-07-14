@@ -3,7 +3,8 @@ export default async function handler(req, res) {
       return res.status(405).json({ error: 'Method Error' });
     }
     try {
-      const key = process.env.REACT_APP_STATES_KEY;
+      const key = 'https://ifttt.massmedia.stream/api/v1/bersanesp/data2';
+      // const key = process.env.REACT_APP_STATES_KEY;
       const response = await fetch(key);
       const raw = await response.text();
       const cleaned = raw.trim().replace(/^[^\[{]+/, '');
