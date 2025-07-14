@@ -3,19 +3,10 @@ import React from 'react';
 import './arrows.css';
 
 async function sendRokuCommand(command) {
-  fetch("http://192.168.86.28:8060/keypress/Home", {
-    method: "POST",
-  })
-  .then(response => {
-    if (response.ok) {
-      console.log("Command sent to Roku");
-    } else {
-      console.error("Roku responded with error:", response.status);
-    }
-  })
-  .catch(error => {
-    console.error("Failed to send request to Roku:", error);
-  });
+fetch("http://192.168.86.28:8060/query/device-info")
+  .then(r => r.text())
+  .then(console.log)
+  .catch(console.error);
 }
 
 function Arrows({devicesState, screenSelected, triggerControlParent}) {
