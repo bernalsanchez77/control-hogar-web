@@ -51,7 +51,7 @@ function Main() {
           }
         );
       } else {
-        fetch(text);
+        fetch(text + '?device=' + params.device + '&key=' + params.key + '&value=' + params.value);
       }
 
     }
