@@ -187,6 +187,7 @@ function Main() {
   }, [user]);
 
   const init = useCallback(async () => {
+    resetDevices();
     const localStorageScreen = localStorage.getItem('screen');
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
