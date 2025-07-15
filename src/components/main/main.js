@@ -227,7 +227,7 @@ function Main() {
   }, [devicesState, credential]);
 
   const resetDevices = () => {
-    fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
+    fetch('/api/setDevices2', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
   }
 
   const disableIfttt = () => {
