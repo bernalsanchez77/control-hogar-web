@@ -36,20 +36,20 @@ function Main() {
   const fetchIfttt = (text, params) => {
     if (!iftttDisabled) {
       if (window.cordova) {
-        // window.cordova.plugin.http.sendRequest(
-        //   text,
-        //   {
-        //     method: 'get',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     params: params
-        //   },
-        //   function (response) {
-        //     console.log('Success:', response.status, response.data);
-        //   },
-        //   function (error) {
-        //     console.error('Request failed:', error);
-        //   }
-        // );
+        window.cordova.plugin.http.sendRequest(
+          text,
+          {
+            method: 'get',
+            headers: { 'Content-Type': 'application/json' },
+            params: params
+          },
+          function (response) {
+            console.log('Success:', response.status, response.data);
+          },
+          function (error) {
+            console.error('Request failed:', error);
+          }
+        );
       } else {
         fetch(text);
       }
@@ -330,7 +330,7 @@ function Main() {
   useEffect(() => {
     if (credential === devCredential.current) {
       eruda.init();
-      console.log('version 1');
+      console.log('version 2');
     }
     devicesStateUpdated.current = devicesState;
   }, [devicesState, credential]);
