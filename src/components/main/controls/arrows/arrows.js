@@ -2,20 +2,35 @@
 import React from 'react';
 import './arrows.css';
 
-async function sendRokuCommand(command) {
-fetch("http://192.168.86.28:8060/query/device-info")
-  .then(r => r.text())
-  .then(console.log)
-  .catch(console.error);
-}
 
 function Arrows({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
-    triggerControlParent(device, ['command'], [value], false);
+    if (window.cordova) {
+      window.cordova.plugin.http.sendRequest(
+        "http://192.168.86.28:8060/query/device-info",
+        {
+          method: "get",
+          headers: {
+            Accept: "*/*"
+          },
+          responseType: "text"
+        },
+        (response) => {
+          console.log("Roku device info:", response.data);
+        },
+        (error) => {
+          console.error("Error fetching Roku device info:", error);
+        }
+      );
+    } else {
+      const device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
+      triggerControlParent(device, ['command'], [value], false);
+    }
+
+
 
     // fetch('http://192.168.86.28:8060/keypress/Home', {
     //   method: 'POST'

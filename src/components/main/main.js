@@ -33,9 +33,27 @@ function Main() {
   const devCredential = useRef('dev');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
-  const fetchIfttt = (text) => {
+  const fetchIfttt = (text, params) => {
     if (!iftttDisabled) {
-      fetch(text);
+      if (window.cordova) {
+        // window.cordova.plugin.http.sendRequest(
+        //   text,
+        //   {
+        //     method: 'get',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     params: params
+        //   },
+        //   function (response) {
+        //     console.log('Success:', response.status, response.data);
+        //   },
+        //   function (error) {
+        //     console.error('Request failed:', error);
+        //   }
+        // );
+      } else {
+        fetch(text);
+      }
+
     }
   }
 
@@ -51,7 +69,10 @@ function Main() {
         saveState = false;
       }
       if (send) {
-        fetchIfttt('/api/sendIfttt?device=' + item + '&key=' + key[0] + '&value=' + value[0]);
+        fetchIfttt(
+          'https://control-hogar-psi.vercel.app/api/sendIfttt',
+          {device: item, key: key[0], value: value[0]}
+        );
       }
       if (saveChange) {
         if (key[1]) {
@@ -64,7 +85,25 @@ function Main() {
     if (saveChange) {
       setDevicesState(devices);
       if (saveState) {
-        fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
+        if (window.cordova) {
+          window.cordova.plugin.http.sendRequest(
+            "https://control-hogar-psi.vercel.app/api/setDevices2",
+            {
+              method: "put",
+              headers: { "Content-Type": "application/json" },
+              data: devices,
+              serializer: 'json'
+            },
+            function onSuccess(response) {
+              console.log('sucess: ', response);
+            },
+            function onError(error) {
+              console.error("Error:", error);
+            }
+          );
+        } else {
+          fetch('https://control-hogar-psi.vercel.app/api/setDevices',{method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
+        }
       }
     }
   }
@@ -81,7 +120,10 @@ function Main() {
         saveState = false;
       }
       if (send) {
-        fetchIfttt('/api/sendIfttt?device=' + item.ifttt + '&key=' + key[0] + '&value=' + value[0]);
+        fetchIfttt(
+          'https://control-hogar-psi.vercel.app/api/sendIfttt',
+          {device: item.ifttt, key: key[0], value: value[0]}
+        );
       }
       if (saveChange) {
         if (key[1]) {
@@ -94,7 +136,25 @@ function Main() {
     if (saveChange) {
       setDevicesState(devices);
       if (saveState) {
-        fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
+        if (window.cordova) {
+          window.cordova.plugin.http.sendRequest(
+            "https://control-hogar-psi.vercel.app/api/setDevices2",
+            {
+              method: "put",
+              headers: { "Content-Type": "application/json" },
+              data: devices,
+              serializer: 'json'
+            },
+            function onSuccess(response) {
+              console.log('sucess: ', response);
+            },
+            function onError(error) {
+              console.error("Error:", error);
+            }
+          );
+        } else {
+          fetch('https://control-hogar-psi.vercel.app/api/setDevices',{method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
+        }
       }
     }
   }
@@ -125,19 +185,46 @@ function Main() {
       localStorage.setItem('user', userCredential);
       setCredential(userCredential);
     } else {
-      const res = await fetch("/api/validateCredentials", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({key: userCredential}),
-      });
-      const data = await res.json();
-      if (data.success) {
-        if (data.dev) {
-          localStorage.setItem('user', data.dev);
-          setCredential(devCredential.current);
-        } else {
-          localStorage.setItem('user', ownerCredential.current);
-          setCredential(ownerCredential.current);
+      if (window.cordova) {
+        window.cordova.plugin.http.sendRequest(
+          "https://control-hogar-psi.vercel.app/api/validateCredentials",
+          {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            data: {key: userCredential}
+          },
+          function onSuccess(response) {
+            console.log('sucess: ', response);
+            const data = JSON.parse(response.data);
+            if (data.success) {
+              if (data.dev) {
+                localStorage.setItem('user', data.dev);
+                setCredential(devCredential.current);
+              } else {
+                localStorage.setItem('user', ownerCredential.current);
+                setCredential(ownerCredential.current);
+              }
+            }
+          },
+          function onError(error) {
+            console.error("Error:", error);
+          }
+        );
+      } else {
+        const res = await fetch("https://control-hogar-psi.vercel.app/api/validateCredentials", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({key: userCredential}),
+        });
+        const data = await res.json();
+        if (data.success) {
+          if (data.dev) {
+            localStorage.setItem('user', data.dev);
+            setCredential(devCredential.current);
+          } else {
+            localStorage.setItem('user', ownerCredential.current);
+            setCredential(ownerCredential.current);
+          }
         }
       }
     }
@@ -150,12 +237,34 @@ function Main() {
     }
     if (userActive.current && updatesEnabled) {
       loadingDevices.current = true;
-      fetch('/api/getDevices').then(res => res.json()).then(
-        devices => {
-          setDevicesState(devices);
-          loadingDevices.current = false;
-        }
-      ).catch(err => {});
+      if (window.cordova) {
+        window.cordova.plugin.http.sendRequest(
+          'https://control-hogar-psi.vercel.app/api/getDevices2',
+          {
+            method: 'get',
+            headers: { 'Content-Type': 'application/json' }
+          },
+          function (response) {
+            try {
+              const devices = JSON.parse(response.data);
+              setDevicesState(devices);
+              loadingDevices.current = false;
+            } catch (e) {
+              console.error('Failed to parse JSON:', e);
+            }
+          },
+          function (error) {
+            console.error('Request failed:', error);
+          }
+        );
+      } else {
+        fetch('/api/getDevices').then(res => res.json()).then(
+          devices => {
+            setDevicesState(devices);
+            loadingDevices.current = false;
+          }
+        ).catch(err => {});
+      }
     }
   }, []);
 
@@ -187,7 +296,6 @@ function Main() {
   }, [user]);
 
   const init = useCallback(async () => {
-    // resetDevices();
     const localStorageScreen = localStorage.getItem('screen');
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
@@ -222,12 +330,31 @@ function Main() {
   useEffect(() => {
     if (credential === devCredential.current) {
       eruda.init();
+      console.log('version 1');
     }
     devicesStateUpdated.current = devicesState;
   }, [devicesState, credential]);
 
   const resetDevices = () => {
-    fetch('/api/setDevices2', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
+    if (window.cordova) {
+      window.cordova.plugin.http.sendRequest(
+        "https://control-hogar-psi.vercel.app/api/setDevices2",
+        {
+          method: "put",
+          headers: { "Content-Type": "application/json" },
+          data: devicesOriginal,
+          serializer: 'json'
+        },
+        function onSuccess(response) {
+          console.log('sucess: ', response);
+        },
+        function onError(error) {
+          console.error("Error:", error);
+        }
+      );
+    } else {
+      fetch('https://control-hogar-psi.vercel.app/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
+    }
   }
 
   const disableIfttt = () => {

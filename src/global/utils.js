@@ -81,11 +81,28 @@ class Utils {
         return inRange;
     }
     sendLogs(message) {
-      fetch('/api/sendLogs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({message: message}),
-      });
+      if (window.cordova) {
+        window.cordova.plugin.http.sendRequest(
+          "https://control-hogar-psi.vercel.app/api/sendLogs",
+          {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            data: { message: message }
+          },
+          function onSuccess(response) {
+            console.log("Success:", response);
+          },
+          function onError(error) {
+            console.error("Error:", error);
+          }
+        );
+      } else {
+        fetch('/api/sendLogs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({message: message}),
+        });
+      }
     }
     getUser(screenSize) {
       if (screenSize === '393x873') {

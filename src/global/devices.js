@@ -157,36 +157,36 @@ export const devicesOriginal = {
         id: 'rokuSala',
         app: 'none',
         apps: {
-          netflix: {
-            label: 'Netflix',
-            id: 'netflix',
-            img: '/imgs/apps/netflix.png'
-          },
-          disney: {
-            label: 'Disney',
-            id: 'disney',
-            img: '/imgs/apps/disney.png'
-          },
-          youtube: {
-            label: 'Youtube',
-            id: 'youtube',
-            img: '/imgs/apps/youtube.png'
-          },
-          max: {
-            label: 'Max',
-            id: 'max',
-            img: '/imgs/apps/max.png'
-          },
-          amazon: {
-            label: 'Amazon',
-            id: 'amazon',
-            img: '/imgs/apps/amazon.png'
-          },
-          pluto: {
-            label: 'Pluto',
-            id: 'pluto',
-            img: '/imgs/apps/pluto.png'
-          }
+            netflix: {
+                label: 'Netflix',
+                id: 'netflix',
+                img: '/imgs/apps/netflix.png'
+            },
+            disney: {
+                label: 'Disney',
+                id: 'disney',
+                img: '/imgs/apps/disney.png'
+            },
+            youtube: {
+                label: 'Youtube',
+                id: 'youtube',
+                img: '/imgs/apps/youtube.png'
+            },
+            max: {
+                label: 'Max',
+                id: 'max',
+                img: '/imgs/apps/max.png'
+            },
+            amazon: {
+                label: 'Amazon',
+                id: 'amazon',
+                img: '/imgs/apps/amazon.png'
+            },
+            pluto: {
+                label: 'Pluto',
+                id: 'pluto',
+                img: '/imgs/apps/pluto.png'
+            }
         }
     },
     channelsSala: {
@@ -751,7 +751,7 @@ export const devicesOriginal = {
                 info: '',
                 img: '/imgs/channels/rt.png',
                 category: 'news',
-            },  
+            },
             headlinenews: {
                 order: 57,
                 number: '211',
@@ -772,7 +772,7 @@ export const devicesOriginal = {
                 img: '/imgs/channels/calaweather.png',
                 category: 'news',
             },
-              ticavision: {
+            ticavision: {
                 order: 59,
                 number: '213',
                 ifttt: '3',
