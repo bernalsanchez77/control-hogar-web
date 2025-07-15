@@ -5,17 +5,10 @@ export default function handler(req, res) {
     }
     let validKey = false;
     let dev = false;
-    // if (key === process.env.REACT_APP_CREDENTIALS_KEY) {
-    //   validKey = true;
-    // }
-    // if (key === process.env.REACT_APP_DEV_CREDENTIALS_KEY) {
-    //   validKey = true;
-    //   dev = 'dev';
-    // }
-    if (key === 'Momo') {
+    if (key === process.env.REACT_APP_CREDENTIALS_KEY) {
       validKey = true;
     }
-    if (key === 'Moma') {
+    if (key === process.env.REACT_APP_DEV_CREDENTIALS_KEY) {
       validKey = true;
       dev = 'dev';
     }
