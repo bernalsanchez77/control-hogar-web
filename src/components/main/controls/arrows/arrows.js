@@ -10,19 +10,20 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
     }
     if (window.cordova) {
       window.cordova.plugin.http.sendRequest(
-        "http://192.168.86.28:8060/query/device-info",
+        "http://192.168.86.28:8060/keypress/" + value.charAt(0).toUpperCase() + value.slice(1),
         {
-          method: "get",
+          method: 'post',
           headers: {
-            Accept: "*/*"
+            'Content-Type': 'application/x-www-form-urlencoded'
           },
-          responseType: "text"
+          data: {}, // must be present even if empty
+          serializer: 'urlencoded'
         },
         (response) => {
-          console.log("Roku device info:", response.data);
+          console.log("Roku response:", response.status);
         },
         (error) => {
-          console.error("Error fetching Roku device info:", error);
+          console.error("Error from Roku:", error);
         }
       );
     } else {
