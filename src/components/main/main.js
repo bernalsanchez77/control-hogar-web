@@ -87,7 +87,7 @@ function Main() {
       if (saveState) {
         if (window.cordova) {
           window.cordova.plugin.http.sendRequest(
-            "https://control-hogar-psi.vercel.app/api/setDevices2",
+            "https://control-hogar-psi.vercel.app/api/setDevices",
             {
               method: "put",
               headers: { "Content-Type": "application/json" },
@@ -138,7 +138,7 @@ function Main() {
       if (saveState) {
         if (window.cordova) {
           window.cordova.plugin.http.sendRequest(
-            "https://control-hogar-psi.vercel.app/api/setDevices2",
+            "https://control-hogar-psi.vercel.app/api/setDevices",
             {
               method: "put",
               headers: { "Content-Type": "application/json" },
@@ -338,7 +338,7 @@ function Main() {
   const resetDevices = () => {
     if (window.cordova) {
       window.cordova.plugin.http.sendRequest(
-        "https://control-hogar-psi.vercel.app/api/setDevices2",
+        "https://control-hogar-psi.vercel.app/api/setDevices",
         {
           method: "put",
           headers: { "Content-Type": "application/json" },
