@@ -230,7 +230,7 @@ function Main() {
           }
         );
       } else {
-        const res = await fetch("https://control-hogar-psi.vercel.app/api/validateCredentials", {
+        const res = await fetch("/api/validateCredentials", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({key: userCredential}),
