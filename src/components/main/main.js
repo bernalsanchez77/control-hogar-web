@@ -277,7 +277,7 @@ function Main() {
           }
         );
       } else {
-        fetch('/api/getDevices').then(res => res.json()).then(
+        fetch('https://control-hogar-psi.vercel.app/api/getDevices').then(res => res.json()).then(
           devices => {
             setDevicesState(devices);
             loadingDevices.current = false;
