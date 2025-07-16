@@ -8,30 +8,8 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    if (window.cordova) {
-      window.cordova.plugin.http.sendRequest(
-        "http://192.168.86.28:8060/keypress/" + value.charAt(0).toUpperCase() + value.slice(1),
-        {
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          data: {}, // must be present even if empty
-          serializer: 'urlencoded'
-        },
-        (response) => {
-          console.log("Roku response:", response.status);
-        },
-        (error) => {
-          console.error("Error from Roku:", error);
-        }
-      );
-    } else {
-      const device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
-      triggerControlParent(device, ['command'], [value], false);
-    }
-
-
+    const device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
+    triggerControlParent(device, ['command'], [value], false);
 
     // fetch('http://192.168.86.28:8060/keypress/Home', {
     //   method: 'POST'
