@@ -124,7 +124,7 @@ function Main() {
             }
           );
         } else {
-          fetch('https://control-hogar-psi.vercel.app/api/setDevices',{method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
+          fetch('/api/setDevices',{method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then().catch();
         }
       }
     }
@@ -172,7 +172,7 @@ function Main() {
             }
           );
         } else {
-          fetch('https://control-hogar-psi.vercel.app/api/setDevices',{method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then(data => {}).catch(err => {});
+          fetch('/api/setDevices',{method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then().catch();
         }
       }
     }
@@ -277,12 +277,12 @@ function Main() {
           }
         );
       } else {
-        fetch('https://control-hogar-psi.vercel.app/api/getDevices').then(res => res.json()).then(
+        fetch('/api/getDevices').then(res => res.json()).then(
           devices => {
             setDevicesState(devices);
             loadingDevices.current = false;
           }
-        ).catch(err => {});
+        ).catch();
       }
     }
   }, []);
@@ -298,10 +298,9 @@ function Main() {
 
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = () => {
-      let message = '';
+      let message = ' regreso';
       if (document.visibilityState === 'visible') {
         userActive.current = true;
-        message = user.current + ' regreso';
       } else {
         userActive.current = false;
         message = user.current + ' salio';
@@ -372,7 +371,7 @@ function Main() {
         }
       );
     } else {
-      fetch('https://control-hogar-psi.vercel.app/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
+      fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
     }
   }
 
