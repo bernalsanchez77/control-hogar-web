@@ -239,7 +239,7 @@ function Main() {
       loadingDevices.current = true;
       if (window.cordova) {
         window.cordova.plugin.http.sendRequest(
-          'https://control-hogar-psi.vercel.app/api/getDevices2',
+          'https://control-hogar-psi.vercel.app/api/getDevices',
           {
             method: 'get',
             headers: { 'Content-Type': 'application/json' }
