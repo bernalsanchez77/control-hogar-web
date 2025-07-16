@@ -57,7 +57,6 @@ function Main() {
       } else {
         fetch('/api/sendIfttt?device=' + params.device + '&key=' + params.key + '&value=' + params.value);
       }
-
     }
   }
 
@@ -81,7 +80,7 @@ function Main() {
       );
   }
 
-  const changeControlHogarData = (device, key, value, saveChange = true) => {
+  const changeControlHogarDevice = (device, key, value, saveChange = true) => {
     const devices = {...devicesStateUpdated.current};
     let saveState = true;
     device.forEach(item => {
@@ -129,7 +128,7 @@ function Main() {
     }
   }
 
-  const changeControlHogarData2 = (device, key, value, saveChange = true) => {
+  const changeControlHogarData = (device, key, value, saveChange = true) => {
     const devices = {...devicesStateUpdated.current};
     let saveState = true;
     device.forEach(item => {
@@ -186,11 +185,11 @@ function Main() {
   }
 
   const changeDevice = (device, key, value, save) => {
-    changeControlHogarData(device, key, value, save);
+    changeControlHogarDevice(device, key, value, save);
   }
 
   const changeControl = (device, key, value, save) => {
-    changeControlHogarData2(device, key, value, save);
+    changeControlHogarData(device, key, value, save);
   }
 
   const changeScreen = (screen) => {
@@ -347,7 +346,7 @@ function Main() {
   useEffect(() => {
     if (credential === devCredential.current) {
       eruda.init();
-      console.log('version 3');
+      console.log('version 4');
     }
     devicesStateUpdated.current = devicesState;
   }, [devicesState, credential]);
