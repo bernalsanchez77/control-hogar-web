@@ -57,6 +57,28 @@ function Main() {
     }
   }
 
+  const fetchRoku = (value) => {
+    if (window.cordova) {
+      window.cordova.plugin.http.sendRequest(
+        "http://192.168.86.28:8060/keypress/" + value.charAt(0).toUpperCase() + value.slice(1),
+        {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          data: {},
+          serializer: 'urlencoded'
+        },
+        (response) => {
+          console.log("Roku response:", response.status);
+        },
+        (error) => {
+          console.error("Error from Roku:", error);
+        }
+      );
+    }
+  }
+
   const changeControlHogarData = (device, key, value, saveChange = true) => {
     const devices = {...devicesStateUpdated.current};
     let saveState = true;
