@@ -41,7 +41,7 @@ function Main() {
           fetchRoku(params.value);
         } else {
           window.cordova.plugin.http.sendRequest(
-          text,
+          url,
           {
             method: 'get',
             headers: { 'Content-Type': 'application/json' },
@@ -56,7 +56,7 @@ function Main() {
           );        
         }
       } else {
-        fetch(text + '?device=' + params.device + '&key=' + params.key + '&value=' + params.value);
+        fetch(url + '?device=' + params.device + '&key=' + params.key + '&value=' + params.value);
       }
 
     }
