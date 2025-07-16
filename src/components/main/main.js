@@ -34,14 +34,13 @@ function Main() {
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
   const fetchChange = (params) => {
-    const url = 'https://control-hogar-psi.vercel.app/api/sendIfttt';
     if (!iftttDisabled) {
       if (window.cordova) {
         if (params.device === 'rokuSala') {
           fetchRoku(params.value);
         } else {
           window.cordova.plugin.http.sendRequest(
-          url,
+          'https://control-hogar-psi.vercel.app/api/sendIfttt',
           {
             method: 'get',
             headers: { 'Content-Type': 'application/json' },
@@ -56,7 +55,7 @@ function Main() {
           );        
         }
       } else {
-        fetch(url + '?device=' + params.device + '&key=' + params.key + '&value=' + params.value);
+        fetch('/api/sendIfttt?device=' + params.device + '&key=' + params.key + '&value=' + params.value);
       }
 
     }
