@@ -2,6 +2,7 @@
   "name": "control-hogar",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://control-hogar-psi.vercel.app",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
