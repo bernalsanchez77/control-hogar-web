@@ -116,10 +116,10 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    if (deviceState != 'default') {
+    if (deviceState !== 'default') {
       triggerDeviceStateParent('default');
     } else {
-      if (channelCategory == ['default']) {
+      if (channelCategory === ['default']) {
         triggerControl('back', false);
       } else {
         triggerChannelCategory('default');

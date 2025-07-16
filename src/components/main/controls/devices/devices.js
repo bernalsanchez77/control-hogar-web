@@ -17,7 +17,7 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
 
   return (
     <div>
-      {deviceState == 'luzCuarto' &&
+      {deviceState === 'luzCuarto' &&
       <div className='controls-devices'>
         <ul className='controls-devices-ul'>
           <li className='controls-device'>

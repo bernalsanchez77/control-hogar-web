@@ -51,19 +51,19 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           triggerDeviceStateParent={triggerDeviceState}
           triggerChannelCategoryParent={triggerChannelCategory}>
         </Levels>
-        {devicesState.hdmiSala.state === 'roku' && deviceState == 'default' &&
+        {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
         <Toolbar
           devicesState={devicesState}
           triggerControlParent={triggerControl}>
         </Toolbar>
         }
-        {devicesState.hdmiSala.state === 'roku' && deviceState == 'default' &&
+        {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
         <Apps
           devicesState={devicesState}
           triggerControlParent={triggerControl}>
         </Apps>
         }
-        {devicesState.hdmiSala.state === 'cable' && channelCategory.includes('default') && deviceState == 'default' &&
+        {devicesState.hdmiSala.state === 'cable' && channelCategory.includes('default') && deviceState === 'default' &&
         <div>
           <Channels
             devicesState={devicesState}
@@ -71,7 +71,7 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           </Channels>
         </div>
         }
-        {devicesState.hdmiSala.state === 'cable' && !channelCategory.includes('default') && deviceState == 'default' &&
+        {devicesState.hdmiSala.state === 'cable' && !channelCategory.includes('default') && deviceState === 'default' &&
         <div>
           <ChannelCategory
             devicesState={devicesState}
