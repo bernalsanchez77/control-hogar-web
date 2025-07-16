@@ -349,7 +349,7 @@ function Main() {
   useEffect(() => {
     if (credential === devCredential.current) {
       eruda.init();
-      console.log('version 2');
+      console.log('version 3');
     }
     devicesStateUpdated.current = devicesState;
   }, [devicesState, credential]);
