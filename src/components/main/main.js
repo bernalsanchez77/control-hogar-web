@@ -33,10 +33,14 @@ function Main() {
   const devCredential = useRef('dev');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
-  const fetchIfttt = (text, params) => {
+  const fetchChange = (params) => {
+    const url = 'https://control-hogar-psi.vercel.app/api/sendIfttt';
     if (!iftttDisabled) {
       if (window.cordova) {
-        window.cordova.plugin.http.sendRequest(
+        if (params.device === 'rokuSala') {
+          fetchRoku(params.value);
+        } else {
+          window.cordova.plugin.http.sendRequest(
           text,
           {
             method: 'get',
@@ -49,7 +53,8 @@ function Main() {
           function (error) {
             console.error('Request failed:', error);
           }
-        );
+          );        
+        }
       } else {
         fetch(text + '?device=' + params.device + '&key=' + params.key + '&value=' + params.value);
       }
@@ -58,7 +63,6 @@ function Main() {
   }
 
   const fetchRoku = (value) => {
-    if (window.cordova) {
       window.cordova.plugin.http.sendRequest(
         "http://192.168.86.28:8060/keypress/" + value.charAt(0).toUpperCase() + value.slice(1),
         {
@@ -76,7 +80,6 @@ function Main() {
           console.error("Error from Roku:", error);
         }
       );
-    }
   }
 
   const changeControlHogarData = (device, key, value, saveChange = true) => {
@@ -91,10 +94,7 @@ function Main() {
         saveState = false;
       }
       if (send) {
-        fetchIfttt(
-          'https://control-hogar-psi.vercel.app/api/sendIfttt',
-          {device: item, key: key[0], value: value[0]}
-        );
+        fetchChange({device: item, key: key[0], value: value[0]});
       }
       if (saveChange) {
         if (key[1]) {
@@ -142,10 +142,7 @@ function Main() {
         saveState = false;
       }
       if (send) {
-        fetchIfttt(
-          'https://control-hogar-psi.vercel.app/api/sendIfttt',
-          {device: item.ifttt, key: key[0], value: value[0]}
-        );
+        fetchChange({device: item.ifttt, key: key[0], value: value[0]});
       }
       if (saveChange) {
         if (key[1]) {
