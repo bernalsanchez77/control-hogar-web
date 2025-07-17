@@ -27,7 +27,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
     } else {
       device = [{device: 'cableSala', ifttt: 'cableSala'}];
     }
-    triggerControlParent(device, ['command'], [value], saveChange);
+    triggerControlParent(device, ['keypress'], [value], saveChange);
   }
 
   const triggerChannel = (value) => {

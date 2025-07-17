@@ -32,90 +32,39 @@ function Main() {
   const guestCredential = useRef('guest');
   const devCredential = useRef('dev');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
+  
+  const apiUrl = 'https://control-hogar-psi.vercel.app/api/';
+  const contentTypeJson = {'Content-Type':'application/json'};
+  const contentTypeX = {'Content-Type':'application/x-www-form-urlencoded'};
+  const rokuIp = 'http://192.168.86.28:8060/';
 
-  const fetchChange = (params) => {
-    if (!iftttDisabled) {
-      if (window.cordova) {
-        if (params.device === 'rokuSala') {
-          fetchRoku(params.value);
-        } else {
-          window.cordova.plugin.http.sendRequest(
-          'https://control-hogar-psi.vercel.app/api/sendIfttt',
-          {
-            method: 'get',
-            headers: { 'Content-Type': 'application/json' },
-            params: params
-          },
-          function (response) {
-            console.log('Success:', response.status, response.data);
-          },
-          function (error) {
-            console.error('Request failed:', error);
-          }
-          );        
-        }
-      } else {
-        fetch('/api/sendIfttt?device=' + params.device + '&key=' + params.key + '&value=' + params.value);
-      }
-    }
-  }
-
-  const fetchRoku2 = (value) => {
-      window.cordova.plugin.http.sendRequest(
-        "http://192.168.86.28:8060/keypress/" + value.charAt(0).toUpperCase() + value.slice(1),
-        {
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          data: {},
-          serializer: 'urlencoded'
-        },
-        (response) => {
-          console.log("Roku response:", response.status);
-        },
-        (error) => {
-          console.error("Error from Roku:", error);
-        }
-      );
-  }
-
-const fetchRoku = (value) => {
-  const key = value.charAt(0).toUpperCase() + value.slice(1);
-  const url = `http://192.168.86.28:8060/keypress/${key}`;
-
-  const sendRequestPromise = new Promise((resolve, reject) => {
+  const fetchIftttFromCordova = (params) => {
     window.cordova.plugin.http.sendRequest(
-      url,
-      {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        data: {},
-        serializer: 'urlencoded'
-      },
-      (response) => {
-        console.log("Roku response:", response.status);
-        resolve(true);
-      },
-      (error) => {
-        console.error("Error from Roku:", error);
-        reject(error);
-      }
+      apiUrl + 'sendIfttt',
+      {method: 'get', headers: contentTypeJson, params: params},
+      function () {console.log('Request to IFTTT succeeded');},
+      function (error) {console.error('Request to IFTTT failed: ', error);}
     );
-  });
-  const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Roku not responding")), 500)
-  );
+  }
 
-  Promise.race([sendRequestPromise, timeoutPromise])
-    .then(() => {
-      console.log("Roku responded in time.");
-    })
-    .catch((err) => {
-      console.warn("Fallback triggered:", err.message);
-      alert("Roku is not responding or not connected.");
+  const fetchRoku = (params) => {
+    const url = `${rokuIp}${params.key}/${utils.current.firstCharToUpperCase(params.value)}`;
+    const sendRequestPromise = new Promise((resolve, reject) => {
+      window.cordova.plugin.http.sendRequest(
+        url,
+        {method: 'post', headers: contentTypeX, data: {}, serializer: 'urlencoded'},
+        () => {resolve(true);},
+        (error) => {reject(error);}
+      );
+    });
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Roku not responding")), 500)
+    );
+    Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
+      console.log('Request to Roku succeeded');
+    }).catch(() => {
+      console.log('Request to Roku failed');
+      fetchIftttFromCordova(params);
     });
   }
 
@@ -126,12 +75,18 @@ const fetchRoku = (value) => {
       let send = true;
       if (iftttDisabled) {
         send = false;
-      } else if (channelsDisabled && item === 'hdmiSala') {
+      } else if (channelsDisabled && item === devicesState.hdmiSala.id) {
         send = false;
         saveState = false;
       }
       if (send) {
-        fetchChange({device: item, key: key[0], value: value[0]});
+        if (!iftttDisabled) {
+          if (window.cordova) {
+            fetchIftttFromCordova({device: item, key: key[0], value: value[0]});
+          } else {
+            fetch(`/api/sendIfttt?device=${item}&key=${key[0]}&value=${value[0]}`);
+          }
+        }
       }
       if (saveChange) {
         if (key[1]) {
@@ -146,22 +101,13 @@ const fetchRoku = (value) => {
       if (saveState) {
         if (window.cordova) {
           window.cordova.plugin.http.sendRequest(
-            "https://control-hogar-psi.vercel.app/api/setDevices",
-            {
-              method: "put",
-              headers: { "Content-Type": "application/json" },
-              data: devices,
-              serializer: 'json'
-            },
-            function onSuccess(response) {
-              console.log('sucess: ', response);
-            },
-            function onError(error) {
-              console.error("Error:", error);
-            }
+            apiUrl + 'setDevices',
+            {method: "put", headers: contentTypeJson, data: devices, serializer: 'json'},
+            function onSuccess(response) {console.log('Request to Massmedia succeeded');},
+            function onError(error) {console.error('Request to Massmedia failed: ', error);}
           );
         } else {
-          fetch('/api/setDevices',{method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then().catch();
+          fetch('/api/setDevices',{method: 'PUT', headers: contentTypeJson, body: JSON.stringify(devices)}).then(res => res.json()).then().catch();
         }
       }
     }
@@ -174,12 +120,24 @@ const fetchRoku = (value) => {
       let send = true;
       if (iftttDisabled) {
         send = false;
-      } else if (channelsDisabled && item.device === 'hdmiSala') {
+      } else if (channelsDisabled && item.device === devicesState.hdmiSala.id) {
         send = false;
         saveState = false;
       }
       if (send) {
-        fetchChange({device: item.ifttt, key: key[0], value: value[0]});
+        const params = {device: item.ifttt, key: key[0], value: value[0]};
+        if (!iftttDisabled) {
+          if (window.cordova) {
+            if (item.ifttt === devicesState.rokuSala.id) {
+              fetchRoku(params);
+            } else {
+              fetchIftttFromCordova(params);   
+            }
+          } else {
+            fetch(`/api/sendIfttt?device=${item.ifttt}&key=${key[0]}&value=${value[0]}`);
+          }
+        }
+
       }
       if (saveChange) {
         if (key[1]) {
@@ -194,22 +152,18 @@ const fetchRoku = (value) => {
       if (saveState) {
         if (window.cordova) {
           window.cordova.plugin.http.sendRequest(
-            "https://control-hogar-psi.vercel.app/api/setDevices",
-            {
-              method: "put",
-              headers: { "Content-Type": "application/json" },
-              data: devices,
-              serializer: 'json'
-            },
-            function onSuccess(response) {
-              console.log('sucess: ', response);
-            },
-            function onError(error) {
-              console.error("Error:", error);
-            }
+            apiUrl + 'setDevices',
+            {method: "put", headers: contentTypeJson, data: devices, serializer: 'json'},
+            function onSuccess() {console.log('Request to set Massmedia succeeded');},
+            function onError(error) {console.error('Request to set Massmedia failed: ', error);}
           );
         } else {
-          fetch('/api/setDevices',{method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devices)}).then(res => res.json()).then().catch();
+          fetch('/api/setDevices',{method: 'PUT', headers: contentTypeJson, body: JSON.stringify(devices)})
+          .then(res => res.json()).then((res) => {
+            console.log(res);
+          }).catch(() => {
+            console.log('set devices failed');
+          });
         }
       }
     }
@@ -243,14 +197,10 @@ const fetchRoku = (value) => {
     } else {
       if (window.cordova) {
         window.cordova.plugin.http.sendRequest(
-          "https://control-hogar-psi.vercel.app/api/validateCredentials",
-          {
-            method: "post",
-            headers: { "Content-Type": "application/json" },
-            data: {key: userCredential}
-          },
+          apiUrl + 'validateCredentials',
+          {method: "post", headers: contentTypeJson, data: {key: userCredential}},
           function onSuccess(response) {
-            console.log('sucess: ', response);
+            console.log('Request to ValidateCredentials succeeded');
             const data = JSON.parse(response.data);
             if (data.success) {
               if (data.dev) {
@@ -263,15 +213,11 @@ const fetchRoku = (value) => {
             }
           },
           function onError(error) {
-            console.error("Error:", error);
+            console.error('Request to ValidateCredentials failed: ', error);
           }
         );
       } else {
-        const res = await fetch("/api/validateCredentials", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({key: userCredential}),
-        });
+        const res = await fetch("/api/validateCredentials", {method: "POST", headers: contentTypeJson, body: JSON.stringify({key: userCredential})});
         const data = await res.json();
         if (data.success) {
           if (data.dev) {
@@ -295,12 +241,10 @@ const fetchRoku = (value) => {
       loadingDevices.current = true;
       if (window.cordova) {
         window.cordova.plugin.http.sendRequest(
-          'https://control-hogar-psi.vercel.app/api/getDevices',
-          {
-            method: 'get',
-            headers: { 'Content-Type': 'application/json' }
-          },
+          apiUrl + 'getDevices',
+          {method: 'get', headers: contentTypeJson},
           function (response) {
+            console.log('Request to to get Massmedia succeeded');
             try {
               const devices = JSON.parse(response.data);
               setDevicesState(devices);
@@ -310,7 +254,7 @@ const fetchRoku = (value) => {
             }
           },
           function (error) {
-            console.error('Request failed:', error);
+            console.log('Request to to get Massmedia failed: ', error);
           }
         );
       } else {
@@ -387,8 +331,11 @@ const fetchRoku = (value) => {
       eruda.init();
       console.log('version 4');
     }
+  }, [credential]);
+
+  useEffect(() => {
     devicesStateUpdated.current = devicesState;
-  }, [devicesState, credential]);
+  }, [devicesState]);
 
   const resetDevices = () => {
     if (window.cordova) {

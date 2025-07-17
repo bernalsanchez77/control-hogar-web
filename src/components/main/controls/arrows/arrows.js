@@ -9,7 +9,7 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
       navigator.vibrate([100]);
     }
     const device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
-    triggerControlParent(device, ['command'], [value], false);
+    triggerControlParent(device, ['keypress'], [value], false);
 
     // fetch('http://192.168.86.28:8060/keypress/Home', {
     //   method: 'POST'
@@ -51,7 +51,7 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
         <div className='controls-arrows-element'>
           <button
             className="controls-arrows-button controls-arrows-button--circle"
-            onTouchStart={() => triggerControl('enter')}>
+            onTouchStart={() => triggerControl('select')}>
               ok
           </button>
         </div>
