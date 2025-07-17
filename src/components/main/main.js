@@ -60,7 +60,7 @@ function Main() {
     }
   }
 
-  const fetchRoku = (value) => {
+  const fetchRoku2 = (value) => {
       window.cordova.plugin.http.sendRequest(
         "http://192.168.86.28:8060/keypress/" + value.charAt(0).toUpperCase() + value.slice(1),
         {
@@ -78,6 +78,45 @@ function Main() {
           console.error("Error from Roku:", error);
         }
       );
+  }
+
+const fetchRoku = (value) => {
+  const key = value.charAt(0).toUpperCase() + value.slice(1);
+  const url = `http://192.168.86.28:8060/keypress/${key}`;
+
+  const sendRequestPromise = new Promise((resolve, reject) => {
+    window.cordova.plugin.http.sendRequest(
+      url,
+      {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: {},
+        serializer: 'urlencoded'
+      },
+      (response) => {
+        console.log("Roku response:", response.status);
+        resolve(true);
+      },
+      (error) => {
+        console.error("Error from Roku:", error);
+        reject(error);
+      }
+    );
+  });
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Roku not responding")), 500)
+  );
+
+  Promise.race([sendRequestPromise, timeoutPromise])
+    .then(() => {
+      console.log("Roku responded in time.");
+    })
+    .catch((err) => {
+      console.warn("Fallback triggered:", err.message);
+      alert("Roku is not responding or not connected.");
+    });
   }
 
   const changeControlHogarDevice = (device, key, value, saveChange = true) => {
