@@ -14,7 +14,7 @@ function Toolbar({devicesState, triggerControlParent}) {
         triggerControlParent(device, ['state'], ['play'], true);
       }
     } else {
-      triggerControlParent(device, ['command'], [value], false);
+      triggerControlParent(device, ['keypress'], [value], false);
     }
 
   }
@@ -25,7 +25,7 @@ function Toolbar({devicesState, triggerControlParent}) {
         <div className='controls-toolbar-element controls-toolbar-element--left'>
           <button
             className='controls-toolbar-button'
-            onTouchStart={() => triggerControl('rewind')}>
+            onTouchStart={() => triggerControl('rev')}>
             <img
               className='controls-toolbar-img controls-toolbar-img--button'
               src="/imgs/rewind-50.png"
@@ -56,7 +56,7 @@ function Toolbar({devicesState, triggerControlParent}) {
         <div className='controls-toolbar-element controls-toolbar-element--right'>
         <button
             className={'controls-toolbar-button'}
-            onTouchStart={() => triggerControl('forward')}>
+            onTouchStart={() => triggerControl('fwd')}>
             <img
               className='controls-toolbar-img controls-toolbar-img--button'
               src="/imgs/forward-50.png"

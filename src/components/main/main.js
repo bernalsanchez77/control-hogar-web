@@ -17,7 +17,6 @@ function Main() {
   const userActive = useRef(true);
 
   const [iftttDisabled, setIftttDisabled] = useState(false);
-  const [channelsDisabled, setChannelsDisabled] = useState(false);
   const [updatesDisabled, setUpdatesDisabled] = useState(false);
   const updatesDisabledRef = useRef(updatesDisabled);
   const [credential, setCredential] = useState('');
@@ -70,22 +69,12 @@ function Main() {
 
   const changeControlHogarDevice = (device, key, value, saveChange = true) => {
     const devices = {...devicesStateUpdated.current};
-    let saveState = true;
     device.forEach(item => {
-      let send = true;
-      if (iftttDisabled) {
-        send = false;
-      } else if (channelsDisabled && item === devicesState.hdmiSala.id) {
-        send = false;
-        saveState = false;
-      }
-      if (send) {
-        if (!iftttDisabled) {
-          if (window.cordova) {
-            fetchIftttFromCordova({device: item, key: key[0], value: value[0]});
-          } else {
-            fetch(`/api/sendIfttt?device=${item}&key=${key[0]}&value=${value[0]}`);
-          }
+      if (!iftttDisabled) {
+        if (window.cordova) {
+          fetchIftttFromCordova({device: item, key: key[0], value: value[0]});
+        } else {
+          fetch(`/api/sendIfttt?device=${item}&key=${key[0]}&value=${value[0]}`);
         }
       }
       if (saveChange) {
@@ -98,46 +87,33 @@ function Main() {
     });
     if (saveChange) {
       setDevicesState(devices);
-      if (saveState) {
-        if (window.cordova) {
-          window.cordova.plugin.http.sendRequest(
-            apiUrl + 'setDevices',
-            {method: "put", headers: contentTypeJson, data: devices, serializer: 'json'},
-            function onSuccess(response) {console.log('Request to Massmedia succeeded');},
-            function onError(error) {console.error('Request to Massmedia failed: ', error);}
-          );
-        } else {
-          fetch('/api/setDevices',{method: 'PUT', headers: contentTypeJson, body: JSON.stringify(devices)}).then(res => res.json()).then().catch();
-        }
+      if (window.cordova) {
+        window.cordova.plugin.http.sendRequest(
+          apiUrl + 'setDevices',
+          {method: "put", headers: contentTypeJson, data: devices, serializer: 'json'},
+          function onSuccess(response) {console.log('Request to Massmedia succeeded');},
+          function onError(error) {console.error('Request to Massmedia failed: ', error);}
+        );
+      } else {
+        fetch('/api/setDevices',{method: 'PUT', headers: contentTypeJson, body: JSON.stringify(devices)}).then(res => res.json()).then().catch();
       }
     }
   }
 
   const changeControlHogarData = (device, key, value, saveChange = true) => {
     const devices = {...devicesStateUpdated.current};
-    let saveState = true;
     device.forEach(item => {
-      let send = true;
-      if (iftttDisabled) {
-        send = false;
-      } else if (channelsDisabled && item.device === devicesState.hdmiSala.id) {
-        send = false;
-        saveState = false;
-      }
-      if (send) {
-        const params = {device: item.ifttt, key: key[0], value: value[0]};
-        if (!iftttDisabled) {
-          if (window.cordova) {
-            if (item.ifttt === devicesState.rokuSala.id) {
-              fetchRoku(params);
-            } else {
-              fetchIftttFromCordova(params);   
-            }
+      const params = {device: item.ifttt, key: key[0], value: value[0]};
+      if (!iftttDisabled) {
+        if (window.cordova) {
+          if (item.ifttt === devicesState.rokuSala.id) {
+            fetchRoku(params);
           } else {
-            fetch(`/api/sendIfttt?device=${item.ifttt}&key=${key[0]}&value=${value[0]}`);
+            fetchIftttFromCordova(params);   
           }
+        } else {
+          fetch(`/api/sendIfttt?device=${item.ifttt}&key=${key[0]}&value=${value[0]}`);
         }
-
       }
       if (saveChange) {
         if (key[1]) {
@@ -149,22 +125,20 @@ function Main() {
     });
     if (saveChange) {
       setDevicesState(devices);
-      if (saveState) {
-        if (window.cordova) {
-          window.cordova.plugin.http.sendRequest(
-            apiUrl + 'setDevices',
-            {method: "put", headers: contentTypeJson, data: devices, serializer: 'json'},
-            function onSuccess() {console.log('Request to set Massmedia succeeded');},
-            function onError(error) {console.error('Request to set Massmedia failed: ', error);}
-          );
-        } else {
-          fetch('/api/setDevices',{method: 'PUT', headers: contentTypeJson, body: JSON.stringify(devices)})
-          .then(res => res.json()).then((res) => {
-            console.log(res);
-          }).catch(() => {
-            console.log('set devices failed');
-          });
-        }
+      if (window.cordova) {
+        window.cordova.plugin.http.sendRequest(
+          apiUrl + 'setDevices',
+          {method: "put", headers: contentTypeJson, data: devices, serializer: 'json'},
+          function onSuccess() {console.log('Request to set Massmedia succeeded');},
+          function onError(error) {console.error('Request to set Massmedia failed: ', error);}
+        );
+      } else {
+        fetch('/api/setDevices',{method: 'PUT', headers: contentTypeJson, body: JSON.stringify(devices)})
+        .then(res => res.json()).then((res) => {
+          console.log(res);
+        }).catch(() => {
+          console.log('set devices failed');
+        });
       }
     }
   }
@@ -321,7 +295,6 @@ function Main() {
 
   useEffect(() => {
     if (credential === 'dev') {
-      setChannelsDisabled(true);
       setUpdatesDisabled(true);
     }
   }, [credential]);
@@ -329,7 +302,7 @@ function Main() {
   useEffect(() => {
     if (credential === devCredential.current) {
       eruda.init();
-      console.log('version 4');
+      console.log('version 5');
     }
   }, [credential]);
 
@@ -379,16 +352,6 @@ function Main() {
     localStorage.setItem('user', '');
   }
 
-  const disableChannels = () => {
-    if (channelsDisabled === true) {
-      setChannelsDisabled(false);
-      setUpdatesDisabled(false);
-    } else {
-      setChannelsDisabled(true);
-      setUpdatesDisabled(true);
-    }
-  }
-
   const changeDev = (name) => {
     const fn = devActions[name];
     if (typeof fn === 'function') {
@@ -400,7 +363,6 @@ function Main() {
     resetDevices,
     disableIfttt,
     removeStorage,
-    disableChannels,
     disableUpdates
   };
 
@@ -452,7 +414,6 @@ function Main() {
           {credential === devCredential.current &&
           <Dev
             iftttDisabled={iftttDisabled}
-            channelsDisabled={channelsDisabled}
             updatesDisabled={updatesDisabled}
             changeDevParent={changeDev}>
           </Dev>
