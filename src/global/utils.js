@@ -86,14 +86,14 @@ class Utils {
           "https://control-hogar-psi.vercel.app/api/sendLogs",
           {
             method: "post",
-            headers: { "Content-Type": "application/json" },
+            headers: {"Content-Type":"application/json"},
             data: { message: message }
           },
           function onSuccess(response) {
-            console.log("Success:", response);
+            console.log('Request to send logs succeeded');
           },
           function onError(error) {
-            console.error("Error:", error);
+            console.error('Request to send logs failed: ', error);
           }
         );
       } else {
