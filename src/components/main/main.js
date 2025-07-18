@@ -92,7 +92,7 @@ function Main() {
           apiUrl + 'setDevices',
           {method: "put", headers: contentTypeJson, data: devices, serializer: 'json'},
           function onSuccess(response) {console.log('Request to Massmedia succeeded');},
-          function onError(error) {console.error('Request to Massmedia failed: ', error);}
+          function onError(error) {console.error('Request to Massmedia failed');}
         );
       } else {
         fetch('/api/setDevices',{method: 'PUT', headers: contentTypeJson, body: JSON.stringify(devices)}).then(res => res.json()).then().catch();
@@ -130,7 +130,7 @@ function Main() {
           apiUrl + 'setDevices',
           {method: "put", headers: contentTypeJson, data: devices, serializer: 'json'},
           function onSuccess() {console.log('Request to set Massmedia succeeded');},
-          function onError(error) {console.error('Request to set Massmedia failed: ', error);}
+          function onError(error) {console.error('Request to set Massmedia failed');}
         );
       } else {
         fetch('/api/setDevices',{method: 'PUT', headers: contentTypeJson, body: JSON.stringify(devices)})
@@ -313,7 +313,7 @@ function Main() {
   const resetDevices = () => {
     if (window.cordova) {
       window.cordova.plugin.http.sendRequest(
-        "https://control-hogar-psi.vercel.app/api/setDevices",
+        apiUrl + 'setDevices',
         {
           method: "put",
           headers: { "Content-Type": "application/json" },
@@ -328,7 +328,7 @@ function Main() {
         }
       );
     } else {
-      fetch('/api/setDevices', {method: 'PUT',headers: {'Content-Type': 'application/json',}, body: JSON.stringify(devicesOriginal)});
+      fetch('/api/setDevices', {method: 'PUT',headers: contentTypeJson, body: JSON.stringify(devicesOriginal)});
     }
   }
 
