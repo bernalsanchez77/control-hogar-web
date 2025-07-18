@@ -27,15 +27,18 @@ class Requests {
   // }
   async normalApiRequest(api, params, method = 'get') {
     let url = shortApiUrl + api;
-    let info = {headers: contentTypeJson};
-    if (method === 'get' && params) {
-      params = new URLSearchParams(params);
-      url = `${url}?${params.toString()}`;
+    let response = '';
+    if (method === 'get') {
+      if (params) {
+        params = new URLSearchParams(params);
+        response = await axios.get(`${url}?${params.toString()}`, {headers: contentTypeJson});
+      } else {
+        response = await axios.get(url, {headers: contentTypeJson});
+      }
     }
     if (method === 'post') {
-      info.body = JSON.stringify(params);
+      response = await axios.post(url, params, {headers: contentTypeJson});
     }
-    const response = await axios[method](url, info.body, info.headers);
     if (response.status === 200) {
       console.log(`${method} request to ${api} succeeded`);
       return response;
