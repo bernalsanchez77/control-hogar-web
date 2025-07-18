@@ -34,51 +34,12 @@ function Main() {
   const guestCredential = useRef('guest');
   const devCredential = useRef('dev');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
-  
-  const apiUrl = 'https://control-hogar-psi.vercel.app/api/';
-  const contentTypeJson = {'Content-Type':'application/json'};
-  const contentTypeX = {'Content-Type':'application/x-www-form-urlencoded'};
-  const rokuIp = 'http://192.168.86.28:8060/';
-
-  const fetchIftttFromCordova = (params) => {
-    window.cordova.plugin.http.sendRequest(
-      apiUrl + 'sendIfttt',
-      {method: 'get', headers: contentTypeJson, params: params},
-      function () {console.log('Request to IFTTT succeeded');},
-      function (error) {console.error('Request to IFTTT failed: ', error);}
-    );
-  }
-
-  const fetchRoku = (params) => {
-    const url = `${rokuIp}${params.key}/${utils.current.firstCharToUpperCase(params.value)}`;
-    const sendRequestPromise = new Promise((resolve, reject) => {
-      window.cordova.plugin.http.sendRequest(
-        url,
-        {method: 'post', headers: contentTypeX, data: {}, serializer: 'urlencoded'},
-        () => {resolve(true);},
-        (error) => {reject(error);}
-      );
-    });
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Roku not responding")), 500)
-    );
-    Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
-      console.log('Request to Roku succeeded');
-    }).catch(() => {
-      console.log('Request to Roku failed');
-      fetchIftttFromCordova(params);
-    });
-  }
 
   const changeControlHogarDevice = (device, key, value, saveChange = true) => {
     const devices = {...devicesStateUpdated.current};
     device.forEach(item => {
       if (!iftttDisabled) {
-        if (window.cordova) {
-          fetchIftttFromCordova({device: item, key: key[0], value: value[0]});
-        } else {
-          fetch(`/api/sendIfttt?device=${item}&key=${key[0]}&value=${value[0]}`);
-        }
+        requests.current.sendIfttt({device: item, key: key[0], value: value[0]});
       }
       if (saveChange) {
         if (key[1]) {
@@ -90,33 +51,15 @@ function Main() {
     });
     if (saveChange) {
       setDevicesState(devices);
-      if (window.cordova) {
-        window.cordova.plugin.http.sendRequest(
-          apiUrl + 'setDevices',
-          {method: "put", headers: contentTypeJson, data: devices, serializer: 'json'},
-          function onSuccess(response) {console.log('Request to Massmedia succeeded');},
-          function onError(error) {console.error('Request to Massmedia failed');}
-        );
-      } else {
-        fetch('/api/setDevices',{method: 'PUT', headers: contentTypeJson, body: JSON.stringify(devices)}).then(res => res.json()).then().catch();
-      }
+      requests.current.setDevices(devices);
     }
   }
 
   const changeControlHogarData = (device, key, value, saveChange = true) => {
     const devices = {...devicesStateUpdated.current};
     device.forEach(item => {
-      const params = {device: item.ifttt, key: key[0], value: value[0]};
       if (!iftttDisabled) {
-        if (window.cordova) {
-          if (item.ifttt === devicesState.rokuSala.id) {
-            fetchRoku(params);
-          } else {
-            fetchIftttFromCordova(params);   
-          }
-        } else {
-          fetch(`/api/sendIfttt?device=${item.ifttt}&key=${key[0]}&value=${value[0]}`);
-        }
+        requests.current.sendControl({device: item.ifttt, key: key[0], value: value[0]}, devicesState.rokuSala.id);
       }
       if (saveChange) {
         if (key[1]) {
@@ -128,21 +71,7 @@ function Main() {
     });
     if (saveChange) {
       setDevicesState(devices);
-      if (window.cordova) {
-        window.cordova.plugin.http.sendRequest(
-          apiUrl + 'setDevices',
-          {method: "put", headers: contentTypeJson, data: devices, serializer: 'json'},
-          function onSuccess() {console.log('Request to set Massmedia succeeded');},
-          function onError(error) {console.error('Request to set Massmedia failed');}
-        );
-      } else {
-        fetch('/api/setDevices',{method: 'PUT', headers: contentTypeJson, body: JSON.stringify(devices)})
-        .then(res => res.json()).then((res) => {
-          console.log(res);
-        }).catch(() => {
-          console.log('set devices failed');
-        });
-      }
+      requests.current.setDevices(devices);
     }
   }
 
@@ -182,40 +111,6 @@ function Main() {
           setCredential(ownerCredential.current);
         }
       }
-      // if (window.cordova) {
-      //   window.cordova.plugin.http.sendRequest(
-      //     apiUrl + 'validateCredentials',
-      //     {method: "post", headers: contentTypeJson, data: {key: userCredential}},
-      //     function onSuccess(response) {
-      //       console.log('Request to ValidateCredentials succeeded');
-      //       const data = JSON.parse(response.data);
-      //       if (data.success) {
-      //         if (data.dev) {
-      //           localStorage.setItem('user', data.dev);
-      //           setCredential(devCredential.current);
-      //         } else {
-      //           localStorage.setItem('user', ownerCredential.current);
-      //           setCredential(ownerCredential.current);
-      //         }
-      //       }
-      //     },
-      //     function onError(error) {
-      //       console.error('Request to ValidateCredentials failed: ', error);
-      //     }
-      //   );
-      // } else {
-      //   const res = await fetch("/api/validateCredentials", {method: "POST", headers: contentTypeJson, body: JSON.stringify({key: userCredential})});
-      //   const data = await res.json();
-      //   if (data.success) {
-      //     if (data.dev) {
-      //       localStorage.setItem('user', data.dev);
-      //       setCredential(devCredential.current);
-      //     } else {
-      //       localStorage.setItem('user', ownerCredential.current);
-      //       setCredential(ownerCredential.current);
-      //     }
-      //   }
-      // }
     }
   }
 
@@ -228,8 +123,7 @@ function Main() {
       loadingDevices.current = true;
       const response = await requests.current.getStates();
       if (response.status === 200) {
-        const devices = response.data;
-        setDevicesState(devices);
+        setDevicesState(response.data);
         loadingDevices.current = false;
       }
     }
@@ -299,8 +193,8 @@ function Main() {
 
   useEffect(() => {
     if (credential === devCredential.current) {
-      eruda.init();
-      console.log('version 6');
+        eruda.init();
+        console.log('version 14');
     }
   }, [credential]);
 
@@ -308,26 +202,8 @@ function Main() {
     devicesStateUpdated.current = devicesState;
   }, [devicesState]);
 
-  const resetDevices = () => {
-    if (window.cordova) {
-      window.cordova.plugin.http.sendRequest(
-        apiUrl + 'setDevices',
-        {
-          method: "put",
-          headers: { "Content-Type": "application/json" },
-          data: devicesOriginal,
-          serializer: 'json'
-        },
-        function onSuccess(response) {
-          console.log('sucess: ', response);
-        },
-        function onError(error) {
-          console.error("Error:", error);
-        }
-      );
-    } else {
-      fetch('/api/setDevices', {method: 'PUT',headers: contentTypeJson, body: JSON.stringify(devicesOriginal)});
-    }
+  const resetDevices = async () => {
+    await requests.current.setDevices(devicesOriginal);
   }
 
   const disableIfttt = () => {
