@@ -35,7 +35,7 @@ class Requests {
     if (method === 'post') {
       info.body = JSON.stringify(params);
     }
-    const response = await axios[method](url, info);
+    const response = await axios[method](url, info.body, info.headers);
     if (response.status === 200) {
       console.log(`${method} request to ${api} succeeded`);
       return response;
