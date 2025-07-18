@@ -5,9 +5,9 @@ export default async function handler(req, res) {
       let response = '';
       console.log('ifttt: ', 'https://maker.ifttt.com/trigger/' + device + '/with/key/' + token + '?value1=' + key + '&value2=' + value);
       response = await fetch('https://maker.ifttt.com/trigger/' + device + '/with/key/' + token + '?value1=' + key + '&value2=' + value);
-      res.status(200).json(response);
+      res.status(200).json({status: 200});
     } catch (err) {
-      res.status(500).json({ error: 'Error al obtener datos', details: err.message });
+      res.status(500).json(err);
     }
   }
   
