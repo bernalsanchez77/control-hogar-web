@@ -1,9 +1,7 @@
-// api/putProxy.js
 export default async function handler(req, res) {
   try {
     const key = process.env.REACT_APP_STATES_KEY;
     const body = req.body;
-    console.log(body);
     const response = await fetch(key, {
       method: 'PUT',
       headers: {
@@ -11,10 +9,8 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify(body),
     });
-    const data = await response.json();
-    res.status(200).json(data);
+    res.status(200).json(response);
   } catch (err) {
-    console.log(err);
-    res.status(500).json({error: 'Error:', details: err.message});
+    res.status(500).json(err);
   }
 }
