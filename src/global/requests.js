@@ -106,7 +106,6 @@ class Requests {
     // }
   }
   async fetchRoku(params) {
-    // const url = `${rokuIp}${params.key}/${Utils.firstCharToUpperCase(params.value)}`;
     const url = `${rokuIp}${params.key}/${params.value.charAt(0).toUpperCase() + params.value.slice(1)}`;
     const sendRequestPromise = new Promise((resolve, reject) => {
       window.cordova.plugin.http.sendRequest(
