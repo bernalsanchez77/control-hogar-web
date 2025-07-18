@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Utils from './utils';
 
 const longApiUrl = 'https://control-hogar-psi.vercel.app/api/';
 const shortApiUrl = '/api/';
@@ -32,15 +33,7 @@ class Requests {
     }
   }
   async cordovaApiRequest(api, params, method, serializer) {
-    let info = {method};
-    let url = longApiUrl + api;
-    if (api === 'roku') {
-      url = `${rokuIp}${params.key}/${params.value.charAt(0).toUpperCase() + params.value.slice(1)}`;
-      info.headers = contentTypeX;
-      params = {};
-    } else {
-      info.headers = contentTypeJson;
-    }
+    let info = { method, headers: contentTypeJson };
     if (method === 'get') {
       info.params = params || {};
     }
@@ -52,7 +45,7 @@ class Requests {
     }
     return new Promise((resolve, reject) => {
       window.cordova.plugin.http.sendRequest(
-        url,
+        longApiUrl + api,
         info,
         function onSuccess(response) {
           console.log(`${method} request to ${api} succeeded`);
@@ -102,33 +95,35 @@ class Requests {
     }
   }
   async sendControl(params, id) {
-    if (window.cordova) {
+    // if (window.cordova) {
       if (params.device === id) {
-        return await this.cordovaApiRequest('roku', params, 'post', 'urlencoded');
+        this.fetchRoku(params);
       } else {
         return await this.cordovaApiRequest('sendIfttt', params, 'get');
       }
-    } else {
-      return await this.normalApiRequest('sendIfttt', params, 'get');
-    }
+    // } else {
+    //   return await this.normalApiRequest('sendIfttt', params, 'get');
+    // }
   }
   async fetchRoku(params) {
-    // const sendRequestPromise = new Promise((resolve, reject) => {
-    //   window.cordova.plugin.http.sendRequest(
-    //     url,
-    //     {method: 'post', headers: contentTypeX, data: {}, serializer: 'urlencoded'},
-    //     () => {resolve(true);},
-    //     (error) => {reject(error);}
-    //   );
-    // });
-    // const timeoutPromise = new Promise((_, reject) =>
-    //   setTimeout(() => reject(new Error("Roku not responding")), 500)
-    // );
-    // Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
-    //   console.log('Request to Roku succeeded');
-    // }).catch(async() => {
-    //   return await this.cordovaApiRequest('sendIfttt', params, 'get');
-    // });
+    // const url = `${rokuIp}${params.key}/${Utils.firstCharToUpperCase(params.value)}`;
+    const url = `${rokuIp}${params.key}/${params.value.charAt(0).toUpperCase() + params.value.slice(1)}`;
+    const sendRequestPromise = new Promise((resolve, reject) => {
+      window.cordova.plugin.http.sendRequest(
+        url,
+        {method: 'post', headers: contentTypeX, data: {}, serializer: 'urlencoded'},
+        () => {resolve(true);},
+        (error) => {reject(error);}
+      );
+    });
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Roku not responding")), 500)
+    );
+    Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
+      console.log('Request to Roku succeeded');
+    }).catch(async() => {
+      return await this.cordovaApiRequest('sendIfttt', params, 'get');
+    });
   }
 }
 export default Requests;
