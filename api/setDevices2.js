@@ -12,9 +12,10 @@ export default async function handler(req, res) {
       body: JSON.stringify(body),
     });
     const data = await response.json();
+    console.log('reset success: ', data);
     res.status(200).json(data);
   } catch (err) {
-    console.log(err);
+    console.log('reset error: ', err);
     res.status(500).json({error: 'Error:', details: err.message});
   }
 }
