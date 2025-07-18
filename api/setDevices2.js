@@ -9,11 +9,9 @@ export default async function handler(req, res) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: body,
+      body: JSON.stringify(body),
     });
-    const data = await response.json();
-    console.log('reset success: ', data);
-    res.status(200).json(data);
+    res.status(200).json({status: 200});
   } catch (err) {
     console.log('reset error: ', err);
     res.status(500).json({error: 'Error:', details: err.message});
