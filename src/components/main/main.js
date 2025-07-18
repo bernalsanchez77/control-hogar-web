@@ -7,11 +7,14 @@ import Credentials from './credentials/credentials';
 import Dev from './dev/dev';
 import { devicesOriginal } from '../../global/devices';
 import Utils from '../../global/utils';
+import Requests from '../../global/requests';
 import './main.css';
 
 function Main() {
   const utils = useRef({});
   utils.current = new Utils();
+  const requests = useRef({});
+  requests.current = new Requests();
   const loadingDevices = useRef(false);
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
@@ -169,40 +172,50 @@ function Main() {
       localStorage.setItem('user', userCredential);
       setCredential(userCredential);
     } else {
-      if (window.cordova) {
-        window.cordova.plugin.http.sendRequest(
-          apiUrl + 'validateCredentials',
-          {method: "post", headers: contentTypeJson, data: {key: userCredential}},
-          function onSuccess(response) {
-            console.log('Request to ValidateCredentials succeeded');
-            const data = JSON.parse(response.data);
-            if (data.success) {
-              if (data.dev) {
-                localStorage.setItem('user', data.dev);
-                setCredential(devCredential.current);
-              } else {
-                localStorage.setItem('user', ownerCredential.current);
-                setCredential(ownerCredential.current);
-              }
-            }
-          },
-          function onError(error) {
-            console.error('Request to ValidateCredentials failed: ', error);
-          }
-        );
-      } else {
-        const res = await fetch("/api/validateCredentials", {method: "POST", headers: contentTypeJson, body: JSON.stringify({key: userCredential})});
-        const data = await res.json();
-        if (data.success) {
-          if (data.dev) {
-            localStorage.setItem('user', data.dev);
-            setCredential(devCredential.current);
-          } else {
-            localStorage.setItem('user', ownerCredential.current);
-            setCredential(ownerCredential.current);
-          }
+      const response = await requests.current.setCredentials(userCredential);
+      if (response.status === 200 && response.data.validUser) {
+        if (response.data.dev) {
+          localStorage.setItem('user', response.data.dev);
+          setCredential(devCredential.current);
+        } else {
+          localStorage.setItem('user', ownerCredential.current);
+          setCredential(ownerCredential.current);
         }
       }
+      // if (window.cordova) {
+      //   window.cordova.plugin.http.sendRequest(
+      //     apiUrl + 'validateCredentials',
+      //     {method: "post", headers: contentTypeJson, data: {key: userCredential}},
+      //     function onSuccess(response) {
+      //       console.log('Request to ValidateCredentials succeeded');
+      //       const data = JSON.parse(response.data);
+      //       if (data.success) {
+      //         if (data.dev) {
+      //           localStorage.setItem('user', data.dev);
+      //           setCredential(devCredential.current);
+      //         } else {
+      //           localStorage.setItem('user', ownerCredential.current);
+      //           setCredential(ownerCredential.current);
+      //         }
+      //       }
+      //     },
+      //     function onError(error) {
+      //       console.error('Request to ValidateCredentials failed: ', error);
+      //     }
+      //   );
+      // } else {
+      //   const res = await fetch("/api/validateCredentials", {method: "POST", headers: contentTypeJson, body: JSON.stringify({key: userCredential})});
+      //   const data = await res.json();
+      //   if (data.success) {
+      //     if (data.dev) {
+      //       localStorage.setItem('user', data.dev);
+      //       setCredential(devCredential.current);
+      //     } else {
+      //       localStorage.setItem('user', ownerCredential.current);
+      //       setCredential(ownerCredential.current);
+      //     }
+      //   }
+      // }
     }
   }
 
@@ -213,31 +226,11 @@ function Main() {
     }
     if (userActive.current && updatesEnabled) {
       loadingDevices.current = true;
-      if (window.cordova) {
-        window.cordova.plugin.http.sendRequest(
-          apiUrl + 'getDevices',
-          {method: 'get', headers: contentTypeJson},
-          function (response) {
-            console.log('Request to to get Massmedia succeeded');
-            try {
-              const devices = JSON.parse(response.data);
-              setDevicesState(devices);
-              loadingDevices.current = false;
-            } catch (e) {
-              console.error('Failed to parse JSON:', e);
-            }
-          },
-          function (error) {
-            console.log('Request to to get Massmedia failed: ', error);
-          }
-        );
-      } else {
-        fetch('/api/getDevices').then(res => res.json()).then(
-          devices => {
-            setDevicesState(devices);
-            loadingDevices.current = false;
-          }
-        ).catch();
+      const response = await requests.current.getStates();
+      if (response.status === 200) {
+        const devices = response.data;
+        setDevicesState(devices);
+        loadingDevices.current = false;
       }
     }
   }, []);
@@ -253,14 +246,15 @@ function Main() {
 
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = () => {
-      let message = ' regreso';
+      let message = '';
       if (document.visibilityState === 'visible') {
         userActive.current = true;
+        message = user.current + ' regreso';
       } else {
         userActive.current = false;
         message = user.current + ' salio';
       }
-      utils.current.sendLogs(message);
+      requests.current.sendLogs(message);
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => {
@@ -276,12 +270,16 @@ function Main() {
     setCredential(localStorage.getItem('user'));
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
-    getStates(true);
+    if (localStorage.getItem('user')) {
+      getStates(true);
+    }
     setInterval(() => {
-      getStates();
+      if (localStorage.getItem('user')) {
+        getStates();
+      }
     }, 5000);
     setInterval(() => {getPosition();}, 300000);
-    utils.current.sendLogs(user.current + ' entro');
+    requests.current.sendLogs(user.current + ' entro');
     getVisibility();
   }, [getStates, getPosition, getVisibility, user]);
 
@@ -302,7 +300,7 @@ function Main() {
   useEffect(() => {
     if (credential === devCredential.current) {
       eruda.init();
-      console.log('version 5');
+      console.log('version 6');
     }
   }, [credential]);
 
