@@ -119,7 +119,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
     if (deviceState !== 'default') {
       triggerDeviceStateParent('default');
     } else {
-      if (channelCategory === ['default']) {
+      if (channelCategory === 'default') {
         triggerControl('back', false);
       } else {
         triggerChannelCategory('default');
