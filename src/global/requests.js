@@ -95,15 +95,15 @@ class Requests {
     }
   }
   async sendControl(params, id) {
-    // if (window.cordova) {
+    if (window.cordova) {
       if (params.device === id) {
         this.fetchRoku(params);
       } else {
         return await this.cordovaApiRequest('sendIfttt', params, 'get');
       }
-    // } else {
-    //   return await this.normalApiRequest('sendIfttt', params, 'get');
-    // }
+    } else {
+      return await this.normalApiRequest('sendIfttt', params, 'get');
+    }
   }
   async fetchRoku(params) {
     const url = `${rokuIp}${params.key}/${params.value.charAt(0).toUpperCase() + params.value.slice(1)}`;
