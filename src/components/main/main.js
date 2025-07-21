@@ -84,6 +84,7 @@ function Main() {
   }
 
   const changeControl2 = (params) => {
+    console.log(params)
     const devices = {...devicesStateUpdated.current};
     if (!sendDisabled) {
       console.log(params)
