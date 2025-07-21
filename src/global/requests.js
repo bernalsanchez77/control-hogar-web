@@ -107,34 +107,36 @@ class Requests {
   }
   async sendControl2(ifttt, roku) {
     ifttt.forEach(device => {
-      if (device.rokuSala) {
-        if (!window.cordova) {
-          device[Object.keys(device)].forEach(el => {
-            this.sendIfttt({
+      device.forEach(el => {
+        if (el.device === 'rokuSala') {
+          if (!window.cordova) {
+              this.sendIfttt({
+                device: el.device,
+                key: el.key,
+                value: el.value
+              });
+          }
+        } else {
+          this.sendIfttt({
+            device: el.device,
+            key: el.key,
+            value: el.value
+          });
+        }
+      });
+    });
+    if (roku) {
+      roku.forEach(device => {
+        device.forEach(el => {
+          if (window.cordova) {
+            this.fetchRoku({
               key: el.key,
               value: el.value
             });
-          });
-        }
-      } else {
-        device[Object.keys(device)].forEach(el => {
-          this.sendIfttt({
-            key: el.key,
-            value: el.value
-          });
+          }
         });
-      }
-    });
-    roku.forEach(device => {
-      if (window.cordova) {
-        device[Object.keys(device)].forEach(el => {
-          this.fetchRoku({
-            key: el.key,
-            value: el.value
-          });
-        });
-      }
-    });
+      });
+    }
   }
   async fetchRoku(params) {
     const url = `${rokuIp}${params.key}/${params.value.charAt(0).toUpperCase() + params.value.slice(1)}`;

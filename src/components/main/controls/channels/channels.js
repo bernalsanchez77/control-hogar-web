@@ -1,4 +1,3 @@
-import React from 'react';
 import './channels.css';
 
 function Channels({devicesState, triggerCategoryParent}) {

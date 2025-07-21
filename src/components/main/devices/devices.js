@@ -13,7 +13,7 @@ import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
 import './devices.css';
 
-function Devices({credential, ownerCredential, devCredential, inRange, devicesState, loadingDevices, deviceState, changeDeviceStateParent, changeDeviceParent}) {
+function Devices({credential, ownerCredential, devCredential, inRange, devicesState, loadingDevices, deviceState, changeDeviceStateParent, changeDeviceParent, changeControlParent}) {
   const triggerDevice = (device, key, value) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
@@ -24,6 +24,20 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
       } else {
         setTimeout(() => {
             triggerDevice(device, key, value);
+        }, 1000);
+      }
+    }
+  }
+  const triggerControl = (device, key, value) => {
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
+    if (inRange || (credential === ownerCredential || credential === devCredential)) {
+      if (!loadingDevices.current) {
+        changeControlParent(device, key, value);
+      } else {
+        setTimeout(() => {
+            triggerControl(device, key, value);
         }, 1000);
       }
     }
@@ -91,7 +105,7 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
         <div className='devices-element'>
           <CalentadorBlanco
             devicesState={devicesState}
-            triggerDeviceParent={triggerDevice}>
+            triggerControlParent={triggerControl}>
           </CalentadorBlanco>
         </div>
         }

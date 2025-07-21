@@ -1,13 +1,12 @@
-import React from 'react';
 import './calentadorBlanco.css';
 
-function CalentadorBlanco({devicesState, triggerDeviceParent}) {
+function CalentadorBlanco({devicesState, triggerControlParent}) {
   const triggerDevice = (device) => {
     if (devicesState[device].state === 'on') {
-      triggerDeviceParent([device], ['state'], ['off']);
+      triggerControlParent({ifttt: [[{device, key: 'state', value: 'off'}]]});
     }
     if (devicesState[device].state === 'off') {
-      triggerDeviceParent([device], ['state'], ['on']);
+      triggerControlParent({ifttt: [[{device, key: 'state', value: 'on'}]]});
     }
   }
 

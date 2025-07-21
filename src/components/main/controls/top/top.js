@@ -1,41 +1,48 @@
 import React from 'react';
 import './top.css';
 
-function Controls({devicesState, screenSelected, triggerControlParent, triggerControlParent2}) {
+function Controls({devicesState, screenSelected, triggerControlParent}) {
   const triggerPower = () => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
     if (screenSelected === devicesState.proyectorSala.id) {
       if (devicesState[screenSelected].state === 'on') {
-        triggerControlParent([
-          {device: screenSelected, ifttt: screenSelected},
-          {device: devicesState.parlantesSala.id, ifttt: devicesState.parlantesSala.id},
-          {device: devicesState.lamparaSala.id, ifttt: devicesState.lamparaSala.id},
-          {device: devicesState.lamparaComedor.id, ifttt: devicesState.lamparaComedor.id}
-        ], ['state'], ['off'], true);
+        triggerControlParent({
+          ifttt: [
+            [{device: screenSelected, key: 'state', value: 'off'}],
+            [{device: devicesState.parlantesSala.id, key: 'state', value: 'off'}],
+            [{device: devicesState.lamparaSala.id, key: 'state', value: 'off'}],
+            [{device: devicesState.lamparaComedor.id, key: 'state', value: 'off'}],
+          ]
+        });
         setTimeout(() => {
-          triggerControlParent([{device: devicesState.proyectorSwitchSala.id, ifttt: devicesState.proyectorSwitchSala.id}], ['state'], ['off'], true);
+          triggerControlParent({
+            ifttt: [[{device: devicesState.proyectorSwitchSala.id, key: 'state', value: 'off'}]],
+          });
         }, 60000);
       } else {
-        triggerControlParent([
-          {device: devicesState.proyectorSwitchSala.id, ifttt: devicesState.proyectorSwitchSala.id},
-          {device: devicesState.parlantesSala.id, ifttt: devicesState.parlantesSala.id},
-          {device: devicesState.lamparaSala.id, ifttt: devicesState.lamparaSala.id},
-          {device: devicesState.lamparaComedor.id, ifttt: devicesState.lamparaComedor.id}
-        ], ['state'], ['on'], true);
+        triggerControlParent({
+          ifttt: [
+            [{device: devicesState.proyectorSwitchSala.id, key: 'state', value: 'on'}],
+            [{device: devicesState.parlantesSala.id, key: 'state', value: 'on'}],
+            [{device: devicesState.lamparaSala.id, key: 'state', value: 'on'}],
+            [{device: devicesState.lamparaComedor.id, key: 'state', value: 'on'}],
+          ]
+        });
+
         setTimeout(() => {
-          triggerControlParent([{device: screenSelected, ifttt: screenSelected}], ['state'], ['on'], true);
+          triggerControlParent({ifttt: [[{device: screenSelected, key: 'state', value: 'on'}]]});
         }, 5000);
       }
     } else {
       if (devicesState[screenSelected].state === 'on') {
-        triggerControlParent([{device: screenSelected, ifttt: screenSelected}], ['state'], ['off'], true);
+        triggerControlParent({ifttt: [[{device: screenSelected, key: 'state', value: 'off'}]]});
         setTimeout(() => {
-          // triggerControlParent([{device: screenSelected, ifttt: screenSelected}], ['mute'], ['off'], true);
+          // triggerControlParent({ifttt: [[{device: screenSelected, key: 'mute', value: 'off'}]]});
         }, 2000);
       } else {
-        triggerControlParent([{device: screenSelected, ifttt: screenSelected}], ['state'], ['on'], true);
+        triggerControlParent({ifttt: [[{device: screenSelected, key: 'state', value: 'on'}]]});
       }
     }
   }
@@ -43,92 +50,29 @@ function Controls({devicesState, screenSelected, triggerControlParent, triggerCo
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = [{device: devicesState.hdmiSala.id, ifttt: devicesState.hdmiSala.id}];
+    const device = devicesState.hdmiSala.id;
     if (devicesState[devicesState.hdmiSala.id].state === 'roku') {
-      triggerControlParent(device, ['state'], ['cable'], true);
+      triggerControlParent({ifttt: [[{device, key: 'state', value: 'cable'}]]});
     }
     if (devicesState[devicesState.hdmiSala.id].state === 'cable') {
-      triggerControlParent(device, ['state'], ['roku'], true);
+      triggerControlParent({ifttt: [[{device, key: 'state', value: 'roku'}]]});
     }
   }
   const triggerInput = () => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = [{device: devicesState[screenSelected].id, ifttt: devicesState[screenSelected].id}];
-    if (screenSelected === devicesState.teleSala.id) {
-      if (devicesState[screenSelected].input.state === 'hdmi1') {
-        triggerControlParent(device, ['input','state'], ['hdmi2'], true);
-      } else {
-        triggerControlParent(device, ['input','state'], ['hdmi1'], true);
-      }
-    }
-    if (screenSelected === devicesState.teleCocina.id) {
-      if (devicesState[screenSelected].input.state === 'hdmi1') {
-        triggerControlParent(device, ['input','state'], ['hdmi2'], true);
-      } else {
-        triggerControlParent(device, ['input','state'], ['hdmi1'], true);
-      }
-    }
-    if (screenSelected === devicesState.proyectorSala.id) {
-      if (devicesState[screenSelected].input.state === 'hdmi1') {
-        triggerControlParent(device, ['input','state'], ['hdmi2'], true);
-      } else {
-        triggerControlParent(device, ['input','state'], ['hdmi1'], true);
-      }
-    }
-    if (screenSelected === devicesState.teleCuarto.id) {
-      if (devicesState[screenSelected].input.state === 'hdmi1') {
-        triggerControlParent2(
-          [
-            {[devicesState[screenSelected].id]:
-              [
-                {
-                  key: 'input',
-                  value: 'hdmi2'
-                }
-              ]
-            }
-          ],
-          [
-          ],
-          [
-            {[devicesState[screenSelected].id]:
-              [
-                {
-                  key: ['input', 'state'],
-                  value: 'hdmi2'
-                }
-              ]
-            }
-          ]
-        )
-      } else {
-        triggerControlParent2(
-          [
-            {[devicesState[screenSelected].id]:
-              [
-                {
-                  key: 'input',
-                  value: 'hdmi1'
-                }
-              ]
-            }
-          ],
-          [
-          ],
-          [
-            {[devicesState[screenSelected].id]:
-              [
-                {
-                  key: ['input', 'state'],
-                  value: 'hdmi1'
-                }
-              ]
-            }
-          ]
-        )
-      }
+    const device = devicesState[screenSelected].id;
+    if (devicesState[screenSelected].input.state === 'hdmi1') {
+      triggerControlParent({
+        ifttt: [[{device: device, key: 'input', value: 'hdmi2'}]],
+        massMedia: [[{device, key: ['input', 'state'], value: 'hdmi2'}]]
+      })
+    } else {
+      triggerControlParent({
+        ifttt: [[{device, key: 'input', value: 'hdmi1'}]],
+        massMedia: [[{device: device, key: ['input', 'state'], value: 'hdmi1'}]]
+      })
     }
   }
   return (

@@ -1,7 +1,7 @@
 import React from 'react';
 import './dev.css';
 
-function Dev({ iftttDisabled, updatesDisabled, changeDevParent }) {
+function Dev({ sendDisabled, updatesDisabled, changeDevParent }) {
   const changeDev = (fn) => {
     navigator.vibrate([100]);
     changeDevParent(fn);
@@ -21,7 +21,7 @@ function Dev({ iftttDisabled, updatesDisabled, changeDevParent }) {
         <div className='dev-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className={`dev-button ${iftttDisabled ? "dev-button--on" : "dev-button-off"}`}
+            className={`dev-button ${sendDisabled ? "dev-button--on" : "dev-button-off"}`}
             onClick={() => changeDev('disableIfttt')}>
               Disable IFTTT
             </button>

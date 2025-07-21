@@ -1,84 +1,30 @@
 import './toolbar.css';
 
-function Toolbar({devicesState, triggerControlParent, triggerControlParent2}) {
+function Toolbar({devicesState, triggerControlParent}) {
   const triggerControl = (value) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = [{device: devicesState.rokuSala.id, ifttt: devicesState.rokuSala.id}];
+    const device = devicesState.rokuSala.id;
     if (value === 'play') {
       if (devicesState.rokuSala.state === 'play') {
-        triggerControlParent2(
-          [
-            {[devicesState.rokuSala.id]:
-              [
-                {
-                  key: 'state',
-                  value: 'pause'
-                }
-              ]
-            }
-          ],
-          [
-            {[devicesState.rokuSala.id]:
-              [
-                {
-                  key: 'keypress',
-                  value: 'Play'
-
-                }
-              ]
-            }
-          ],
-          [
-            {[devicesState.rokuSala.id]:
-              [
-                {
-                  key: ['state'],
-                  value: 'pause'
-                }
-              ]
-            }
-          ]
-        );
+        triggerControlParent({
+          ifttt: [[{device, key: 'state', value: 'pause'}]],
+          roku: [[{device: device, key: 'keypress', value: 'Play'}]]
+        });
       } else {
-        triggerControlParent2(
-          [
-            {[devicesState.rokuSala.id]:
-              [
-                {
-                  key: 'state',
-                  value: 'play'
-                }
-              ]
-            }
-          ],
-          [
-            {[devicesState.rokuSala.id]:
-              [
-                {
-                  key: 'keypress',
-                  value: 'Play'
-                }
-              ]
-            }
-          ],
-          [
-            {[devicesState.rokuSala.id]:
-              [
-                {
-                  key: ['state'],
-                  value: 'play'
-                }
-              ]
-            }
-          ]
-        );
+        triggerControlParent({
+          ifttt: [[{device: device, key: 'state', value: 'play'}]],
+          roku: [[{device: device, key: 'keypress', value: 'Play'}]]
+        });
       }
     } else {
-      triggerControlParent(device, ['keypress'], [value], false);
+      triggerControlParent({
+        ifttt: [[{device: device, key: 'command', value: value}]],
+        roku: [[{device: device, key: 'keypress', value: value.charAt(0).toUpperCase() + value.slice(1)}]],
+        massMedia: []
+      });
     }
-
   }
 
   return (

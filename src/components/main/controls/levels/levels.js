@@ -9,25 +9,24 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = [{device: screenSelected, ifttt: screenSelected}];
+    const device = screenSelected;
     if (devicesState[screenSelected].mute === 'on') {
-      triggerControlParent(device, ['mute'], ['off'], true);
+      triggerControlParent({ifttt: [[{device, key: 'mute', value: 'off'}]]});
     }
     if (devicesState[screenSelected].mute === 'off') {
-      triggerControlParent(device, ['mute'], ['on'], true);
+      triggerControlParent({ifttt: [[{device, key: 'mute', value: 'on'}]]});
     }
   }
   const triggerControl = (value, saveChange = true) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    let device = [];
-    if (devicesState.hdmiSala.state === 'roku') {
-      device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
+    const device = devicesState.hdmiSala.state === 'roku' ? 'rokuSala' : 'cableSala';
+    if (saveChange) {
+      triggerControlParent({ifttt: [[{device, key: 'keypress', value}]]});
     } else {
-      device = [{device: 'cableSala', ifttt: 'cableSala'}];
+      triggerControlParent({ifttt: [[{device, key: 'keypress', value}]], massMedia: []});
     }
-    triggerControlParent(device, ['keypress'], [value], saveChange);
   }
 
   const triggerChannel = (value) => {
@@ -35,7 +34,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
       navigator.vibrate([100]);
     }
     let newChannel = {};
-    const device = [{device: 'channelsSala', ifttt: 'channelsSala'}];
+    const device = 'channelsSala';
     let newChannelOrder = 0;
     const channelIdSelected = devicesState.channelsSala.selected;
     const channelOrderSelected = devicesState.channelsSala.channels[channelIdSelected].order;
@@ -53,29 +52,41 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
         newChannel = Object.values(devicesState.channelsSala.channels)[Object.values(devicesState.channelsSala.channels).length - 1];
       }     
     }
-    device[0].ifttt = device[0].ifttt + newChannel.ifttt;
-    triggerControlParent(device, ['selected'], [newChannel.id], true);
+    triggerControlParent({
+      ifttt: [[{device: device + newChannel.ifttt, key: 'selected', value: newChannel.id}]],
+      massMedia: [[{device, key: 'selected', value: newChannel.id}]]
+    });
   }
 
   const triggerVolume = (vol, button, vib = true) => {
     if (vib && navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = [{device: screenSelected, ifttt: screenSelected}];
+    const device = screenSelected;
     let newVol = 0;
     if (button === 'up') {
       newVol = parseInt(devicesState[screenSelected].volume) + parseInt(vol);
-      triggerControlParent(device, ['volume'], [button + vol, newVol.toString()], true);
+      triggerControlParent({
+        ifttt: [[{device, key: 'volume', value: button + vol}]],
+        massMedia: [[{device, key: 'volume', value: newVol.toString()}]]
+      });
+
     } else if (devicesState[screenSelected].volume !== '0') {
       if (parseInt(devicesState[screenSelected].volume) - parseInt(vol) >= 0) {
         newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
-        triggerControlParent(device, ['volume'], [button + vol, newVol.toString()], true);
+        triggerControlParent({
+          ifttt: [[{device, key: 'volume', value: button + vol}]],
+          massMedia: [[{device, key: 'volume', value: newVol.toString()}]]
+        });
       } else {
         newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
-        triggerControlParent(device, ['volume'], [button + vol, '0'], true);
+        triggerControlParent({
+          ifttt: [[{device, key: 'volume', value: button + vol}]],
+          massMedia: [[{device, key: 'volume', value: '0'}]]
+        });
       }
     } else {
-      triggerControlParent(device, ['volume'], [button + vol], false);      
+      triggerControlParent({ifttt: [[{device, key: 'volume', value: button + vol}]], massMedia: []}); 
     }
   }
 

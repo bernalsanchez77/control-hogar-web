@@ -6,9 +6,11 @@ function ChannelCategory({devicesState, channelCategory, triggerControlParent}) 
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = [{device: 'channelsSala', ifttt: 'channelsSala'}];
-    device[0].ifttt = device[0].ifttt + devicesState.channelsSala.channels[channel].ifttt;
-    triggerControlParent(device, ['selected'], [channel], true);
+    const device = 'channelsSala';
+    triggerControlParent({
+      ifttt: [[{device: device + devicesState.channelsSala.channels[channel].ifttt, key: 'selected', value: channel}]],
+      massMedia: [[{device: device, key: 'selected', value: channel}]],
+    });
   }
 
   return (

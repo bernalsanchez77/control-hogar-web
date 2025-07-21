@@ -45,28 +45,26 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
         <Top
           devicesState={devicesState}
           screenSelected={screenSelected}
-          triggerControlParent={triggerControl}
-          triggerControlParent2={triggerControl2}>
+          triggerControlParent={triggerControl2}>
         </Top>
         <Arrows
           devicesState={devicesState}
           screenSelected={screenSelected}
-          triggerControlParent={triggerControl}>
+          triggerControlParent={triggerControl2}>
         </Arrows>
         <Levels
           devicesState={devicesState}
           screenSelected={screenSelected}
           channelCategory={channelCategory}
           deviceState={deviceState}
-          triggerControlParent={triggerControl}
+          triggerControlParent={triggerControl2}
           triggerDeviceStateParent={triggerDeviceState}
           triggerChannelCategoryParent={triggerChannelCategory}>
         </Levels>
         {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
         <Toolbar
           devicesState={devicesState}
-          triggerControlParent={triggerControl}
-          triggerControlParent2={triggerControl2}>
+          triggerControlParent={triggerControl2}>
         </Toolbar>
         }
         {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
@@ -88,7 +86,7 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           <ChannelCategory
             devicesState={devicesState}
             channelCategory={channelCategory}
-            triggerControlParent={triggerControl}>
+            triggerControlParent={triggerControl2}>
           </ChannelCategory>
         </div>
         }
@@ -97,7 +95,7 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           <Devices
             devicesState={devicesState}
             deviceState={deviceState}
-            triggerControlParent={triggerControl}>
+            triggerControlParent={triggerControl2}>
           </Devices>
         </div>
         }

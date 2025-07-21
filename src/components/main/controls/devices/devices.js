@@ -6,12 +6,12 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = [{device: devicesState[deviceState].id, ifttt: devicesState[deviceState].id}];
+    const device = devicesState[deviceState].id;
     if (devicesState[deviceState].state === 'off') {
-      triggerControlParent(device, ['state'], ['on']);
+      triggerControlParent({ifttt: [[{device, key: 'state', value: 'on'}]]});
     }
     setTimeout(() => {
-      triggerControlParent(device, ['color'], [color], true);
+      triggerControlParent({ifttt: [[{device, key: 'color', value: color}]]});
     }, 1000);
   }
 

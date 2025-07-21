@@ -83,17 +83,22 @@ function Main() {
     }
   }
 
-  const changeControl2 = (ifttt, roku, massMedia) => {
+  const changeControl2 = (params) => {
     const devices = {...devicesStateUpdated.current};
     if (!sendDisabled) {
-      requests.current.sendControl2(ifttt, roku);
+      if (params.roku) {
+      requests.current.sendControl2(params.ifttt, params.roku);
+      } else {
+      requests.current.sendControl2(params.ifttt);
+      }
     }
-    massMedia.forEach(device => {
-      device[Object.keys(device)].forEach(el => {
-        if (el.key[1]) {
-          devices[Object.keys(device)[0]][el.key[0]] = {...devices[Object.keys(device)[0]][el.key[0]], [el.key[1]]: el.value};
+    const media = params.massMedia || params.ifttt;
+    media.forEach(device => {
+      device.forEach(el => {
+        if (Array.isArray(el.key)) {
+          devices[el.device][el.key[0]] = {...devices[el.device][el.key[0]], [el.key[1]]: el.value};
         } else {
-          devices[Object.keys(device)[0]] = {...devices[Object.keys(device)[0]], [el.key[0]]: el.value};
+          devices[el.device] = {...devices[el.device], [el.key]: el.value};
         }
       });
     });
@@ -294,7 +299,8 @@ function Main() {
             loadingDevices={loadingDevices}
             deviceState={deviceState}
             changeDeviceStateParent={changeDeviceState}
-            changeDeviceParent={changeDevice}>
+            changeDeviceParent={changeDevice}
+            changeControlParent={changeControl2}>
           </Devices>
           {credential === devCredential.current &&
           <Dev
