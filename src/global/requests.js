@@ -105,6 +105,37 @@ class Requests {
       return await this.normalApiRequest('sendIfttt', params, 'get');
     }
   }
+  async sendControl2(ifttt, roku) {
+    ifttt.forEach(device => {
+      if (device.rokuSala) {
+        if (!window.cordova) {
+          device[Object.keys(device)].forEach(el => {
+            this.sendIfttt({
+              key: el.key,
+              value: el.value
+            });
+          });
+        }
+      } else {
+        device[Object.keys(device)].forEach(el => {
+          this.sendIfttt({
+            key: el.key,
+            value: el.value
+          });
+        });
+      }
+    });
+    roku.forEach(device => {
+      if (window.cordova) {
+        device[Object.keys(device)].forEach(el => {
+          this.fetchRoku({
+            key: el.key,
+            value: el.value
+          });
+        });
+      }
+    });
+  }
   async fetchRoku(params) {
     const url = `${rokuIp}${params.key}/${params.value.charAt(0).toUpperCase() + params.value.slice(1)}`;
     const sendRequestPromise = new Promise((resolve, reject) => {

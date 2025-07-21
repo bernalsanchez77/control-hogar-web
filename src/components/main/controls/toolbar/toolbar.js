@@ -1,7 +1,6 @@
-import React from 'react';
 import './toolbar.css';
 
-function Toolbar({devicesState, triggerControlParent}) {
+function Toolbar({devicesState, triggerControlParent, triggerControlParent2}) {
   const triggerControl = (value) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
@@ -9,9 +8,72 @@ function Toolbar({devicesState, triggerControlParent}) {
     const device = [{device: devicesState.rokuSala.id, ifttt: devicesState.rokuSala.id}];
     if (value === 'play') {
       if (devicesState.rokuSala.state === 'play') {
-        triggerControlParent(device, ['state'], ['pause'], true);
+        triggerControlParent2(
+          [
+            {[devicesState.rokuSala.id]:
+              [
+                {
+                  key: 'state',
+                  value: 'pause'
+                }
+              ]
+            }
+          ],
+          [
+            {[devicesState.rokuSala.id]:
+              [
+                {
+                  key: 'keypress',
+                  value: 'Play'
+
+                }
+              ]
+            }
+          ],
+          [
+            {[devicesState.rokuSala.id]:
+              [
+                {
+                  key: ['state'],
+                  value: 'pause'
+                }
+              ]
+            }
+          ]
+        );
       } else {
-        triggerControlParent(device, ['state'], ['play'], true);
+        triggerControlParent2(
+          [
+            {[devicesState.rokuSala.id]:
+              [
+                {
+                  key: 'state',
+                  value: 'play'
+                }
+              ]
+            }
+          ],
+          [
+            {[devicesState.rokuSala.id]:
+              [
+                {
+                  key: 'keypress',
+                  value: 'Play'
+                }
+              ]
+            }
+          ],
+          [
+            {[devicesState.rokuSala.id]:
+              [
+                {
+                  key: ['state'],
+                  value: 'play'
+                }
+              ]
+            }
+          ]
+        );
       }
     } else {
       triggerControlParent(device, ['keypress'], [value], false);

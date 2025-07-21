@@ -1,4 +1,3 @@
-import React from 'react';
 import Top from './top/top';
 import Arrows from './arrows/arrows';
 import Levels from './levels/levels';
@@ -9,7 +8,7 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, channelCategory, deviceState, changeControlParent, changeDeviceStateParent, changeChannelCategoryParent}) {
+function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, channelCategory, deviceState, changeControlParent, changeControlParent2, changeDeviceStateParent, changeChannelCategoryParent}) {
   const triggerControl = (control, key, value, save) => {
     if (inRange || (credential === ownerCredential)) {
       if (!loadingDevices.current) {
@@ -17,6 +16,17 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
       } else {
         setTimeout(() => {
             triggerControl(control, key, value, save);
+        }, 1000);
+      }
+    }
+  }
+  const triggerControl2 = (control, key, value, save) => {
+    if (inRange || (credential === ownerCredential)) {
+      if (!loadingDevices.current) {
+        changeControlParent2(control, key, value, save);
+      } else {
+        setTimeout(() => {
+            triggerControl2(control, key, value, save);
         }, 1000);
       }
     }
@@ -35,7 +45,8 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
         <Top
           devicesState={devicesState}
           screenSelected={screenSelected}
-          triggerControlParent={triggerControl}>
+          triggerControlParent={triggerControl}
+          triggerControlParent2={triggerControl2}>
         </Top>
         <Arrows
           devicesState={devicesState}
@@ -54,7 +65,8 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
         {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
         <Toolbar
           devicesState={devicesState}
-          triggerControlParent={triggerControl}>
+          triggerControlParent={triggerControl}
+          triggerControlParent2={triggerControl2}>
         </Toolbar>
         }
         {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&

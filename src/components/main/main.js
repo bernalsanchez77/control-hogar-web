@@ -19,7 +19,7 @@ function Main() {
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
 
-  const [iftttDisabled, setIftttDisabled] = useState(false);
+  const [sendDisabled, setSendDisabled] = useState(false);
   const [updatesDisabled, setUpdatesDisabled] = useState(false);
   const updatesDisabledRef = useRef(updatesDisabled);
   const [credential, setCredential] = useState('');
@@ -35,10 +35,18 @@ function Main() {
   const devCredential = useRef('dev');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
-  const changeControlHogarDevice = (device, key, value, saveChange = true) => {
+  const changeChannelCategory = (category) => {
+    setChannelCategory(category);
+  }
+
+  const changeDeviceState = (state) => {
+    setDeviceState(state);
+  }
+
+  const changeDevice = (device, key, value, saveChange) => {
     const devices = {...devicesStateUpdated.current};
     device.forEach(item => {
-      if (!iftttDisabled) {
+      if (!sendDisabled) {
         requests.current.sendIfttt({device: item, key: key[0], value: value[0]});
       }
       if (saveChange) {
@@ -55,10 +63,10 @@ function Main() {
     }
   }
 
-  const changeControlHogarData = (device, key, value, saveChange = true) => {
+  const changeControl = (device, key, value, saveChange) => {
     const devices = {...devicesStateUpdated.current};
     device.forEach(item => {
-      if (!iftttDisabled) {
+      if (!sendDisabled) {
         requests.current.sendControl({device: item.ifttt, key: key[0], value: value[0]}, devicesState.rokuSala.id);
       }
       if (saveChange) {
@@ -75,20 +83,22 @@ function Main() {
     }
   }
 
-  const changeChannelCategory = (category) => {
-    setChannelCategory(category);
-  }
-
-  const changeDeviceState = (state) => {
-    setDeviceState(state);
-  }
-
-  const changeDevice = (device, key, value, save) => {
-    changeControlHogarDevice(device, key, value, save);
-  }
-
-  const changeControl = (device, key, value, save) => {
-    changeControlHogarData(device, key, value, save);
+  const changeControl2 = (ifttt, roku, massMedia) => {
+    const devices = {...devicesStateUpdated.current};
+    if (!sendDisabled) {
+      requests.current.sendControl2(ifttt, roku);
+    }
+    massMedia.forEach(device => {
+      device[Object.keys(device)].forEach(el => {
+        if (el.key[1]) {
+          devices[Object.keys(device)[0]][el.key[0]] = {...devices[Object.keys(device)[0]][el.key[0]], [el.key[1]]: el.value};
+        } else {
+          devices[Object.keys(device)[0]] = {...devices[Object.keys(device)[0]], [el.key[0]]: el.value};
+        }
+      });
+    });
+    setDevicesState(devices);
+    requests.current.setDevices(devices);
   }
 
   const changeScreen = (screen) => {
@@ -207,10 +217,10 @@ function Main() {
   }
 
   const disableIfttt = () => {
-    if (iftttDisabled === true) {
-      setIftttDisabled(false);
+    if (sendDisabled === true) {
+      setSendDisabled(false);
     } else {
-      setIftttDisabled(true);
+      setSendDisabled(true);
     }
   }
 
@@ -272,7 +282,8 @@ function Main() {
             deviceState={deviceState}
             changeChannelCategoryParent={changeChannelCategory}
             changeDeviceStateParent={changeDeviceState}
-            changeControlParent={changeControl}>
+            changeControlParent={changeControl}
+            changeControlParent2={changeControl2}>
           </Controls>
           <Devices
             credential={credential}
@@ -287,7 +298,7 @@ function Main() {
           </Devices>
           {credential === devCredential.current &&
           <Dev
-            iftttDisabled={iftttDisabled}
+            sendDisabled={sendDisabled}
             updatesDisabled={updatesDisabled}
             changeDevParent={changeDev}>
           </Dev>

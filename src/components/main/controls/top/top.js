@@ -1,7 +1,7 @@
 import React from 'react';
 import './top.css';
 
-function Controls({devicesState, screenSelected, triggerControlParent}) {
+function Controls({devicesState, screenSelected, triggerControlParent, triggerControlParent2}) {
   const triggerPower = () => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
@@ -79,9 +79,55 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
     }
     if (screenSelected === devicesState.teleCuarto.id) {
       if (devicesState[screenSelected].input.state === 'hdmi1') {
-        triggerControlParent(device, ['input','state'], ['hdmi2'], true);
+        triggerControlParent2(
+          [
+            {[devicesState[screenSelected].id]:
+              [
+                {
+                  key: 'input',
+                  value: 'hdmi2'
+                }
+              ]
+            }
+          ],
+          [
+          ],
+          [
+            {[devicesState[screenSelected].id]:
+              [
+                {
+                  key: ['input', 'state'],
+                  value: 'hdmi2'
+                }
+              ]
+            }
+          ]
+        )
       } else {
-        triggerControlParent(device, ['input','state'], ['hdmi1'], true);
+        triggerControlParent2(
+          [
+            {[devicesState[screenSelected].id]:
+              [
+                {
+                  key: 'input',
+                  value: 'hdmi1'
+                }
+              ]
+            }
+          ],
+          [
+          ],
+          [
+            {[devicesState[screenSelected].id]:
+              [
+                {
+                  key: ['input', 'state'],
+                  value: 'hdmi1'
+                }
+              ]
+            }
+          ]
+        )
       }
     }
   }
