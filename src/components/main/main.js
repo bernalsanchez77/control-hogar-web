@@ -86,6 +86,7 @@ function Main() {
   const changeControl2 = (params) => {
     const devices = {...devicesStateUpdated.current};
     if (!sendDisabled) {
+      console.log(params)
       if (params.roku) {
       requests.current.sendControl2(params.ifttt, params.roku);
       } else {
