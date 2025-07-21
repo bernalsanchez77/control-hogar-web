@@ -289,8 +289,7 @@ function Main() {
             deviceState={deviceState}
             changeChannelCategoryParent={changeChannelCategory}
             changeDeviceStateParent={changeDeviceState}
-            changeControlParent={changeControl}
-            changeControlParent2={changeControl2}>
+            changeControlParent={changeControl2}>
           </Controls>
           <Devices
             credential={credential}
