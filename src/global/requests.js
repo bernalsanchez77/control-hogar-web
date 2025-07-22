@@ -119,18 +119,7 @@ class Requests {
       return await this.normalApiRequest('sendIfttt', params, 'get');
     }
   }
-  async sendControl(params, id) {
-    if (window.cordova) {
-      if (params.device === id) {
-        this.fetchRoku(params);
-      } else {
-        return await this.cordovaApiRequest('sendIfttt', params, 'get');
-      }
-    } else {
-      return await this.normalApiRequest('sendIfttt', params, 'get');
-    }
-  }
-  async sendControl2(ifttt, roku) {
+  async sendControl(ifttt, roku) {
     ifttt.forEach(device => {
       device.forEach(el => {
         if (el.device === 'rokuSala') {

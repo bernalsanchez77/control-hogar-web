@@ -47,9 +47,9 @@ function Main() {
     const devices = {...devicesStateUpdated.current};
     if (!sendDisabled) {
       if (params.roku) {
-      requests.current.sendControl2(params.ifttt, params.roku);
+      requests.current.sendControl(params.ifttt, params.roku);
       } else {
-      requests.current.sendControl2(params.ifttt);
+      requests.current.sendControl(params.ifttt);
       }
     }
     const media = params.massMedia || params.ifttt;
@@ -126,6 +126,7 @@ function Main() {
       const response = await requests.current.getRokuData('active-app');
       if (response && response.status === 200) {
         console.log('Roku data received:', response);
+
       }
     }
   }, []);
