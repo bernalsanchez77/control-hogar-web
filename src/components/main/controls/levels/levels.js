@@ -5,6 +5,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
   const volumeChange = useRef('1');
+
   const triggerMute = () => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
@@ -23,9 +24,16 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
     }
     const device = devicesState.hdmiSala.state === 'roku' ? 'rokuSala' : 'cableSala';
     if (saveChange) {
-      triggerControlParent({ifttt: [[{device, key: 'keypress', value}]]});
+      triggerControlParent({
+        ifttt: [[{device, key: 'command', value}]],
+        roku: [[{device, key: 'keypress', value}]]
+      });
     } else {
-      triggerControlParent({ifttt: [[{device, key: 'keypress', value}]], massMedia: []});
+      triggerControlParent({
+        ifttt: [[{device, key: 'command', value}]],
+        roku: [[{device, key: 'keypress', value}]],
+        massMedia: []
+      });
     }
   }
 

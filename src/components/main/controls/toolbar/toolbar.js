@@ -10,18 +10,18 @@ function Toolbar({devicesState, triggerControlParent}) {
       if (devicesState.rokuSala.state === 'play') {
         triggerControlParent({
           ifttt: [[{device, key: 'state', value: 'pause'}]],
-          roku: [[{device: device, key: 'keypress', value: 'Play'}]]
+          roku: [[{device, key: 'keypress', value: 'Play'}]]
         });
       } else {
         triggerControlParent({
-          ifttt: [[{device: device, key: 'state', value: 'play'}]],
-          roku: [[{device: device, key: 'keypress', value: 'Play'}]]
+          ifttt: [[{device, key: 'state', value: 'play'}]],
+          roku: [[{device, key: 'keypress', value: 'Play'}]]
         });
       }
     } else {
       triggerControlParent({
-        ifttt: [[{device: device, key: 'command', value: value}]],
-        roku: [[{device: device, key: 'keypress', value: value.charAt(0).toUpperCase() + value.slice(1)}]],
+        ifttt: [[{device, key: 'command', value}]],
+        roku: [[{device, key: 'keypress', value: value.charAt(0).toUpperCase() + value.slice(1)}]],
         massMedia: []
       });
     }
