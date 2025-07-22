@@ -63,31 +63,9 @@ function Main() {
     }
   }
 
-  const changeControl = (device, key, value, saveChange) => {
-    const devices = {...devicesStateUpdated.current};
-    device.forEach(item => {
-      if (!sendDisabled) {
-        requests.current.sendControl({device: item.ifttt, key: key[0], value: value[0]}, devicesState.rokuSala.id);
-      }
-      if (saveChange) {
-        if (key[1]) {
-          devices[item.device][key[0]] = {...devices[item.device][key[0]], [key[1]]: value[1] || value[0]};
-        } else {
-          devices[item.device] = {...devices[item.device], [key[0]]: value[1] || value[0]};
-        }
-      }
-    });
-    if (saveChange) {
-      setDevicesState(devices);
-      requests.current.setDevices(devices);
-    }
-  }
-
-  const changeControl2 = (params) => {
-    console.log(params)
+  const changeControl = (params) => {
     const devices = {...devicesStateUpdated.current};
     if (!sendDisabled) {
-      console.log(params)
       if (params.roku) {
       requests.current.sendControl2(params.ifttt, params.roku);
       } else {
@@ -289,7 +267,7 @@ function Main() {
             deviceState={deviceState}
             changeChannelCategoryParent={changeChannelCategory}
             changeDeviceStateParent={changeDeviceState}
-            changeControlParent2={changeControl2}>
+            changeControlParent={changeControl}>
           </Controls>
           <Devices
             credential={credential}
@@ -301,7 +279,7 @@ function Main() {
             deviceState={deviceState}
             changeDeviceStateParent={changeDeviceState}
             changeDeviceParent={changeDevice}
-            changeControlParent={changeControl2}>
+            changeControlParent={changeControl}>
           </Devices>
           {credential === devCredential.current &&
           <Dev

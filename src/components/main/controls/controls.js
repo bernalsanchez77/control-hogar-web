@@ -8,25 +8,14 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, channelCategory, deviceState, changeControlParent, changeControlParent2, changeDeviceStateParent, changeChannelCategoryParent}) {
-  const triggerControl = (control, key, value, save) => {
+function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, channelCategory, deviceState, changeControlParent, changeDeviceStateParent, changeChannelCategoryParent}) {
+  const triggerControl = (params) => {
     if (inRange || (credential === ownerCredential)) {
       if (!loadingDevices.current) {
-        changeControlParent(control, key, value, save);
+        changeControlParent(params);
       } else {
         setTimeout(() => {
-            triggerControl(control, key, value, save);
-        }, 1000);
-      }
-    }
-  }
-  const triggerControl2 = (control, key, value, save) => {
-    if (inRange || (credential === ownerCredential)) {
-      if (!loadingDevices.current) {
-        changeControlParent2(control, key, value, save);
-      } else {
-        setTimeout(() => {
-            triggerControl2(control, key, value, save);
+            triggerControl(params);
         }, 1000);
       }
     }
@@ -45,26 +34,26 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
         <Top
           devicesState={devicesState}
           screenSelected={screenSelected}
-          triggerControlParent={triggerControl2}>
+          triggerControlParent={triggerControl}>
         </Top>
         <Arrows
           devicesState={devicesState}
           screenSelected={screenSelected}
-          triggerControlParent={triggerControl2}>
+          triggerControlParent={triggerControl}>
         </Arrows>
         <Levels
           devicesState={devicesState}
           screenSelected={screenSelected}
           channelCategory={channelCategory}
           deviceState={deviceState}
-          triggerControlParent={triggerControl2}
+          triggerControlParent={triggerControl}
           triggerDeviceStateParent={triggerDeviceState}
           triggerChannelCategoryParent={triggerChannelCategory}>
         </Levels>
         {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
         <Toolbar
           devicesState={devicesState}
-          triggerControlParent={triggerControl2}>
+          triggerControlParent={triggerControl}>
         </Toolbar>
         }
         {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
@@ -86,7 +75,7 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           <ChannelCategory
             devicesState={devicesState}
             channelCategory={channelCategory}
-            triggerControlParent={triggerControl2}>
+            triggerControlParent={triggerControl}>
           </ChannelCategory>
         </div>
         }
@@ -95,7 +84,7 @@ function Controls({credential, ownerCredential, inRange, devicesState, loadingDe
           <Devices
             devicesState={devicesState}
             deviceState={deviceState}
-            triggerControlParent={triggerControl2}>
+            triggerControlParent={triggerControl}>
           </Devices>
         </div>
         }
