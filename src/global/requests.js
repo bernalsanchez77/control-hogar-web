@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { XMLParser } from 'fast-xml-parser';
 import Utils from './utils';
 
 const longApiUrl = 'https://control-hogar-psi.vercel.app/api/';
@@ -6,6 +7,7 @@ const shortApiUrl = '/api/';
 const contentTypeJson = {'Content-Type':'application/json'};
 const contentTypeX = {'Content-Type':'application/x-www-form-urlencoded'};
 const rokuIp = 'http://192.168.86.28:8060/';
+const xmlParser = new XMLParser();
 class Requests {
   async normalApiRequest(api, params, method = 'get') {
     let url = shortApiUrl + api;
@@ -49,8 +51,7 @@ class Requests {
         info,
         function onSuccess(response) {
           console.log(`${method} request to ${api} succeeded`);
-          const parsedData = JSON.parse(response.data);
-          resolve({status: response.status, data: parsedData});
+          resolve({status: response.status, data: JSON.parse(response.data)});
         },
         function onError(error) {
           console.error(`${method} request to ${api} failed: `, error);
@@ -66,11 +67,35 @@ class Requests {
       return await this.normalApiRequest('sendLogs', {message: message}, 'post');
     }
   }
-  async getStates() {
+  async getMassMediaData() {
     if (window.cordova) {
       return await this.cordovaApiRequest('getDevices', null, 'get');
     } else {
       return await this.normalApiRequest('getDevices', null, 'get');
+    }
+  }
+  async getRokuData(param) {
+    if (window.cordova) {
+      return new Promise((resolve, reject) => {
+        window.cordova.plugin.http.sendRequest(
+          `${rokuIp}query/${param}`,
+          {
+            method: 'get',
+            headers: {},
+            params: {}
+          },
+          function onSuccess(response) {
+            console.log(`get request to roku succeeded`);
+            resolve({status: response.status, data: xmlParser.parse(response.data)});
+          },
+          function onError(error) {
+            console.error(`get request to roku failed: `, error);
+            reject(error);
+          }
+        );
+      });
+    } else {
+      return null;
     }
   }
   async setCredentials(userCredential) {

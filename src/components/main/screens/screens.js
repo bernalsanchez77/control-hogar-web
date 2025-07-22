@@ -1,19 +1,10 @@
 import React from 'react';
 import './screens.css';
 
-function Screens({credential, ownerCredential, devCredential,  inRange, devicesState, loadingDevices, screenSelected, changeScreenParent}) {
+function Screens({credential, ownerCredential, devCredential, devicesState, screenSelected, changeScreenParent}) {
   const triggerScreen = (screen) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
-    if (inRange || (credential === ownerCredential && screenSelected !== screen)) {
-      if (!loadingDevices.current) {
-        changeScreenParent(screen);
-      } else {
-        setTimeout(() => {
-          changeScreenParent(screen);
-        }, 1000);
-      }
+    if (screenSelected !== screen) {
+      changeScreenParent(screen);
     }
   }
   return (

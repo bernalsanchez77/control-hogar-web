@@ -70,7 +70,7 @@ function Main() {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    if (inRange || (credential === ownerCredential.current || credential === devCredential.current)) {
+    if (validateRangeAndCredential) {
       if (!loadingDevices.current) {
         changeControl(params);
       } else {
@@ -82,8 +82,21 @@ function Main() {
   }
 
   const changeScreen = (screen) => {
-    setScreenSelected(screen);
-    localStorage.setItem('screen', screen);
+    if (validateRangeAndCredential) {
+      if (!loadingDevices.current) {
+        setScreenSelected(screen);
+        localStorage.setItem('screen', screen);
+      } else {
+        setTimeout(() => {
+          setScreenSelected(screen);
+          localStorage.setItem('screen', screen);
+        }, 1000);
+      }
+    }
+  }
+
+  const validateRangeAndCredential = () => {
+    return inRange || (credential === ownerCredential.current || credential === devCredential.current);
   }
 
   const setCredentials = async (userCredential) => {
@@ -103,15 +116,27 @@ function Main() {
       }
     }
   }
+  
+  const getRokuData = useCallback(async (firstTime) => {
+    let updatesEnabled = !updatesDisabledRef.current;
+    if (firstTime) {
+      updatesEnabled = true;
+    }
+    if (userActive.current && updatesEnabled) {
+      const response = await requests.current.getRokuData('active-app');
+      if (response && response.status === 200) {
+      }
+    }
+  }, []);
 
-  const getStates = useCallback(async (firstTime) => {
+  const getMassMediaData = useCallback(async (firstTime) => {
     let updatesEnabled = !updatesDisabledRef.current;
     if (firstTime) {
       updatesEnabled = true;
     }
     if (userActive.current && updatesEnabled) {
       loadingDevices.current = true;
-      const response = await requests.current.getStates();
+      const response = await requests.current.getMassMediaData();
       if (response.status === 200) {
         setDevicesState(response.data);
         loadingDevices.current = false;
@@ -155,17 +180,19 @@ function Main() {
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
     if (localStorage.getItem('user')) {
-      getStates(true);
+      getMassMediaData(true);
+      getRokuData(true);
     }
     setInterval(() => {
       if (localStorage.getItem('user')) {
-        getStates();
+        getMassMediaData();
+        getRokuData();
       }
     }, 5000);
     setInterval(() => {getPosition();}, 300000);
     requests.current.sendLogs(user.current + ' entro');
     getVisibility();
-  }, [getStates, getPosition, getVisibility, user]);
+  }, [getMassMediaData, getRokuData, getPosition, getVisibility, user]);
 
   useEffect(() => {
     init();
@@ -184,7 +211,7 @@ function Main() {
   useEffect(() => {
     if (credential === devCredential.current) {
         eruda.init();
-        console.log('version 18');
+        console.log('version 20');
     }
   }, [credential]);
 
@@ -239,7 +266,7 @@ function Main() {
       </Credentials>
       {credential &&
       <div className='main-components'>
-        {inRange || (credential === ownerCredential.current || credential === devCredential.current) ?
+        {validateRangeAndCredential() ?
         <div>
           <Screens
             credential={credential}
