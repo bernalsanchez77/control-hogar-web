@@ -24,16 +24,9 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
     }
     const device = devicesState.hdmiSala.state === 'roku' ? 'rokuSala' : 'cableSala';
     if (saveChange) {
-      triggerControlParent({
-        ifttt: [[{device, key: 'command', value}]],
-        roku: [[{device, key: 'keypress', value}]]
-      });
+      triggerControlParent({ifttt: [[{device, key: 'command', value}]], roku: [[{device, key: 'keypress', value}]]});
     } else {
-      triggerControlParent({
-        ifttt: [[{device, key: 'command', value}]],
-        roku: [[{device, key: 'keypress', value}]],
-        massMedia: []
-      });
+      triggerControlParent({ifttt: [[{device, key: 'command', value}]], roku: [[{device, key: 'keypress', value}]], massMedia: []});
     }
   }
 
@@ -244,7 +237,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               className={`controls-levels-button`}
-              onTouchStart={() => triggerControl('options', false)}>
+              onTouchStart={() => triggerControl('info', false)}>
               <img
                 className='controls-levels-img controls-levels-img--button'
                 src="/imgs/asterisk-24.png"

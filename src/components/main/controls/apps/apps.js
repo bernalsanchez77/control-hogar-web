@@ -1,6 +1,4 @@
 
-
-import React from 'react';
 import './apps.css';
 
 function Apps({devicesState, screenSelected, triggerControlParent}) {
@@ -8,8 +6,12 @@ function Apps({devicesState, screenSelected, triggerControlParent}) {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
     }
-    const device = [{device: 'rokuSala', ifttt: 'rokuSala'}];
-    triggerControlParent(device, ['app'], [value]);
+    const device = 'rokuSala';
+    triggerControlParent({
+      ifttt: [[{device, key: 'app', value: value}]],
+      roku: [[{device, key: 'launch', value: devicesState.rokuSala.apps[value].rokuId}]],
+    });
+
   }
 
   return (

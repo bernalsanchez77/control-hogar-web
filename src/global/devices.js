@@ -160,32 +160,38 @@ export const devicesOriginal = {
             netflix: {
                 label: 'Netflix',
                 id: 'netflix',
-                img: '/imgs/apps/netflix.png'
+                img: '/imgs/apps/netflix.png',
+                rokuId: '12',
             },
             disney: {
                 label: 'Disney',
                 id: 'disney',
-                img: '/imgs/apps/disney.png'
+                img: '/imgs/apps/disney.png',
+                rokuId: '4',
             },
             youtube: {
                 label: 'Youtube',
                 id: 'youtube',
-                img: '/imgs/apps/youtube.png'
+                img: '/imgs/apps/youtube.png',
+                rokuId: '28',
             },
             max: {
                 label: 'Max',
                 id: 'max',
-                img: '/imgs/apps/max.png'
+                img: '/imgs/apps/max.png',
+                rokuId: '8',
             },
             amazon: {
                 label: 'Amazon',
                 id: 'amazon',
-                img: '/imgs/apps/amazon.png'
+                img: '/imgs/apps/amazon.png',
+                rokuId: '13',
             },
             pluto: {
                 label: 'Pluto',
                 id: 'pluto',
-                img: '/imgs/apps/pluto.png'
+                img: '/imgs/apps/pluto.png',
+                rokuId: '18',
             }
         }
     },
