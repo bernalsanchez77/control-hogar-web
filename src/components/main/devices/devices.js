@@ -1,4 +1,3 @@
-import React from 'react';
 import LamparaComedor from './lamparaComedor/lamparaComedor';
 import LamparaTurca from './lamparaTurca/lamparaTurca';
 import LamparaSala from './lamparaSala/lamparaSala';
@@ -13,21 +12,7 @@ import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
 import './devices.css';
 
-function Devices({credential, ownerCredential, devCredential, inRange, devicesState, loadingDevices, deviceState, changeDeviceStateParent, changeDeviceParent, changeControlParent}) {
-  const triggerDevice = (device, key, value) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
-    if (inRange || (credential === ownerCredential || credential === devCredential)) {
-      if (!loadingDevices.current) {
-        changeDeviceParent(device, key, value);
-      } else {
-        setTimeout(() => {
-            triggerDevice(device, key, value);
-        }, 1000);
-      }
-    }
-  }
+function Devices({credential, ownerCredential, devCredential, inRange, devicesState, loadingDevices, deviceState, changeDeviceStateParent, changeControlParent}) {
   const triggerControl = (device, key, value) => {
     if (navigator.vibrate) {
       navigator.vibrate([100]);
@@ -37,7 +22,7 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
         changeControlParent(device, key, value);
       } else {
         setTimeout(() => {
-            triggerControl(device, key, value);
+          triggerControl(device, key, value);
         }, 1000);
       }
     }
@@ -52,37 +37,37 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
         <div className='devices-element'>
           <LamparaComedor
             devicesState={devicesState}
-            triggerDeviceParent={triggerDevice}>
+            triggerControlParent={triggerControl}>
           </LamparaComedor>
         </div>
         <div className='devices-element'>
           <LamparaTurca
             devicesState={devicesState}
-            triggerDeviceParent={triggerDevice}>
+            triggerControlParent={triggerControl}>
           </LamparaTurca>
         </div>
         <div className='devices-element'>
           <LamparaSala
             devicesState={devicesState}
-            triggerDeviceParent={triggerDevice}>
+            triggerControlParent={triggerControl}>
           </LamparaSala>
         </div>
         <div className='devices-element'>
           <LamparaRotatoria
             devicesState={devicesState}
-            triggerDeviceParent={triggerDevice}>
+            triggerControlParent={triggerControl}>
           </LamparaRotatoria>
         </div>
         <div className='devices-element'>
           <ChimeneaSala
             devicesState={devicesState}
-            triggerDeviceParent={triggerDevice}>
+            triggerControlParent={triggerControl}>
           </ChimeneaSala>
         </div>
         <div className='devices-element'>
           <ParlantesSala
             devicesState={devicesState}
-            triggerDeviceParent={triggerDevice}>
+            triggerControlParent={triggerControl}>
           </ParlantesSala>
         </div> 
       </div>
@@ -90,14 +75,14 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
         <div className='devices-element'>
           <VentiladorSala
             devicesState={devicesState}
-            triggerDeviceParent={triggerDevice}>
+            triggerControlParent={triggerControl}>
           </VentiladorSala>
         </div>
         {(credential === ownerCredential || credential === devCredential) &&
         <div className='devices-element'>
           <CalentadorNegro
             devicesState={devicesState}
-            triggerDeviceParent={triggerDevice}>
+            triggerControlParent={triggerControl}>
           </CalentadorNegro>
         </div>
         }
@@ -112,7 +97,7 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
         <div className='devices-element'>
           <LamparasAbajo
             devicesState={devicesState}
-            triggerDeviceParent={triggerDevice}>
+            triggerControlParent={triggerControl}>
           </LamparasAbajo>
         </div>
           {(credential === ownerCredential || credential === devCredential) &&
@@ -121,7 +106,7 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
             devicesState={devicesState}
             deviceState={deviceState}
             triggerDeviceStateParent={triggerDeviceState}
-            triggerDeviceParent={triggerDevice}>
+            triggerControlParent={triggerControl}>
           </LuzCuarto>
         </div>
         }
@@ -129,7 +114,7 @@ function Devices({credential, ownerCredential, devCredential, inRange, devicesSt
         <div className='devices-element'>
           <LuzEscalera
             devicesState={devicesState}
-            triggerDeviceParent={triggerDevice}>
+            triggerControlParent={triggerControl}>
           </LuzEscalera>
         </div>
         }

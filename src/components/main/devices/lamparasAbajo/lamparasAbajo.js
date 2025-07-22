@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useCallback, useMemo} from 'react';
 import './lamparasAbajo.css';
 
-function LamparasAbajo({devicesState, triggerDeviceParent}) {
+function LamparasAbajo({devicesState, triggerControlParent}) {
   const [state, setState] = useState('off');
   const lamparasOn = [
     devicesState.lamparaComedor.id,
@@ -29,22 +29,22 @@ function LamparasAbajo({devicesState, triggerDeviceParent}) {
     }
   }, [devicesState, lamparasOff]);
   const triggerDevice = () => {
-    let lamp = [];
+    let device = [];
     if (state === 'on') {
       lamparasOff.forEach(lampara => {
         if (devicesState[lampara].state === 'on') {
-          lamp.push(devicesState[lampara].id);
+          device.push(devicesState[lampara].id);
         }
       });
-      triggerDeviceParent(lamp, ['state'], ['off']);
+      triggerControlParent({ifttt: [[{device, key: 'state', value: 'off'}]]});
       setState('off');
     } else {
       lamparasOn.forEach(lampara => {
         if (devicesState[lampara].state === 'off') {
-          lamp.push(devicesState[lampara].id);
+          device.push(devicesState[lampara].id);
         }
       });
-      triggerDeviceParent(lamp, ['state'], ['on']);
+      triggerControlParent({ifttt: [[{device, key: 'state', value: 'on'}]]});
       setState('on');
     }
   }

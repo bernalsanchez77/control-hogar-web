@@ -1,4 +1,3 @@
-import React from 'react';
 import './top.css';
 
 function Controls({devicesState, screenSelected, triggerControlParent}) {
