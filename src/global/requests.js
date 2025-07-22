@@ -106,7 +106,6 @@ class Requests {
     }
   }
   async sendControl2(ifttt, roku) {
-    console.log('llego');
     ifttt.forEach(device => {
       device.forEach(el => {
         if (el.device === 'rokuSala') {
