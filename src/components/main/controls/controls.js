@@ -8,18 +8,11 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({credential, ownerCredential, inRange, devicesState, loadingDevices, screenSelected, channelCategory, deviceState, changeControlParent, changeDeviceStateParent, changeChannelCategoryParent}) {
+function Controls({devicesState, screenSelected, channelCategory, deviceState, changeControlParent, changeDeviceStateParent, changeChannelCategoryParent}) {
   const triggerControl = (params) => {
-    if (inRange || (credential === ownerCredential)) {
-      if (!loadingDevices.current) {
-        changeControlParent(params);
-      } else {
-        setTimeout(() => {
-            triggerControl(params);
-        }, 1000);
-      }
-    }
+    changeControlParent(params);
   }
+
   const triggerChannelCategory = (category) => {
     changeChannelCategoryParent(category);
   }

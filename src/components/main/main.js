@@ -43,26 +43,6 @@ function Main() {
     setDeviceState(state);
   }
 
-  const changeDevice = (device, key, value, saveChange) => {
-    const devices = {...devicesStateUpdated.current};
-    device.forEach(item => {
-      if (!sendDisabled) {
-        requests.current.sendIfttt({device: item, key: key[0], value: value[0]});
-      }
-      if (saveChange) {
-        if (key[1]) {
-          devices[item][key[0]] = {...devices[item][key[0]], [key[1]]: value[1] || value[0]};
-        } else {
-          devices[item] = {...devices[item], [key[0]]: value[1] || value[0]};
-        }
-      }
-    });
-    if (saveChange) {
-      setDevicesState(devices);
-      requests.current.setDevices(devices);
-    }
-  }
-
   const changeControl = (params) => {
     const devices = {...devicesStateUpdated.current};
     if (!sendDisabled) {
@@ -84,6 +64,21 @@ function Main() {
     });
     setDevicesState(devices);
     requests.current.setDevices(devices);
+  }
+
+  const triggerControl = (params) => {
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
+    if (inRange || (credential === ownerCredential.current || credential === devCredential.current)) {
+      if (!loadingDevices.current) {
+        changeControl(params);
+      } else {
+        setTimeout(() => {
+          triggerControl(params);
+        }, 1000);
+      }
+    }
   }
 
   const changeScreen = (screen) => {
@@ -257,29 +252,22 @@ function Main() {
             changeScreenParent={changeScreen}>
           </Screens>
           <Controls
-            credential={credential}
-            ownerCredential={ownerCredential.current}
-            inRange={inRange}
             devicesState={devicesState}
-            loadingDevices={loadingDevices}
             screenSelected={screenSelected}
             channelCategory={channelCategory}
             deviceState={deviceState}
             changeChannelCategoryParent={changeChannelCategory}
             changeDeviceStateParent={changeDeviceState}
-            changeControlParent={changeControl}>
+            changeControlParent={triggerControl}>
           </Controls>
           <Devices
             credential={credential}
             ownerCredential={ownerCredential.current}
             devCredential={devCredential.current}
-            inRange={inRange}
             devicesState={devicesState}
-            loadingDevices={loadingDevices}
             deviceState={deviceState}
             changeDeviceStateParent={changeDeviceState}
-            changeDeviceParent={changeDevice}
-            changeControlParent={changeControl}>
+            changeControlParent={triggerControl}>
           </Devices>
           {credential === devCredential.current &&
           <Dev

@@ -12,20 +12,9 @@ import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
 import './devices.css';
 
-function Devices({credential, ownerCredential, devCredential, inRange, devicesState, loadingDevices, deviceState, changeDeviceStateParent, changeControlParent}) {
-  const triggerControl = (device, key, value) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
-    if (inRange || (credential === ownerCredential || credential === devCredential)) {
-      if (!loadingDevices.current) {
-        changeControlParent(device, key, value);
-      } else {
-        setTimeout(() => {
-          triggerControl(device, key, value);
-        }, 1000);
-      }
-    }
+function Devices({credential, ownerCredential, devCredential, devicesState, deviceState, changeDeviceStateParent, changeControlParent}) {
+  const triggerControl = (params) => {
+    changeControlParent(params);
   }
   const triggerDeviceState = (state) => {
     changeDeviceStateParent(state);
