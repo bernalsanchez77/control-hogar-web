@@ -189,7 +189,7 @@ function Main() {
   useEffect(() => {
     if (credential === devCredential.current) {
         eruda.init();
-        console.log('version 17');
+        console.log('version 18');
     }
   }, [credential]);
 
