@@ -125,6 +125,7 @@ function Main() {
     if (userActive.current && updatesEnabled) {
       const response = await requests.current.getRokuData('active-app');
       if (response && response.status === 200) {
+        console.log('Roku data received:', response);
       }
     }
   }, []);
