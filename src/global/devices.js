@@ -173,19 +173,19 @@ export const devicesOriginal = {
                 label: 'Disney',
                 id: 'disney',
                 img: '/imgs/apps/disney.png',
-                rokuId: '4',
+                rokuId: '291097',
             },
             youtube: {
                 label: 'Youtube',
                 id: 'youtube',
                 img: '/imgs/apps/youtube.png',
-                rokuId: '28',
+                rokuId: '837',
             },
             max: {
                 label: 'Max',
                 id: 'max',
                 img: '/imgs/apps/max.png',
-                rokuId: '8',
+                rokuId: '61322',
             },
             amazon: {
                 label: 'Amazon',
@@ -197,7 +197,7 @@ export const devicesOriginal = {
                 label: 'Pluto',
                 id: 'pluto',
                 img: '/imgs/apps/pluto.png',
-                rokuId: '18',
+                rokuId: '562859',
             }
         }
     },
