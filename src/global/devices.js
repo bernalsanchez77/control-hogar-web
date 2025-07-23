@@ -155,8 +155,14 @@ export const devicesOriginal = {
         state: 'play',
         label: '',
         id: 'rokuSala',
-        app: 'none',
+        app: 'home',
         apps: {
+            home: {
+                label: 'Home',
+                id: 'home',
+                img: '/imgs/apps/netflix.png',
+                rokuId: '562859',
+            },
             netflix: {
                 label: 'Netflix',
                 id: 'netflix',

@@ -7,7 +7,7 @@ const shortApiUrl = '/api/';
 const contentTypeJson = {'Content-Type':'application/json'};
 const contentTypeX = {'Content-Type':'application/x-www-form-urlencoded'};
 const rokuIp = 'http://192.168.86.28:8060/';
-const xmlParser = new XMLParser();
+const xmlParser =  new XMLParser({ignoreAttributes: false, attributeNamePrefix: ''});
 class Requests {
   async normalApiRequest(api, params, method = 'get') {
     let url = shortApiUrl + api;

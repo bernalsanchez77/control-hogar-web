@@ -82,6 +82,9 @@ function Main() {
   }
 
   const changeScreen = (screen) => {
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
     if (validateRangeAndCredential) {
       if (!loadingDevices.current) {
         setScreenSelected(screen);
@@ -125,8 +128,12 @@ function Main() {
     if (userActive.current && updatesEnabled) {
       const response = await requests.current.getRokuData('active-app');
       if (response && response.status === 200) {
-        console.log('Roku data received:', response);
-
+        if (devicesState.rokuSala.apps[devicesState.rokuSala.app].rokuId !== response.data['active-app'].app.id) {
+          const devices = {...devicesStateUpdated.current};
+          devices.rokuSala.app = Object.values(devicesState.rokuSala.apps).find(app => app.rokuId === response.data['active-app'].app.id).id;
+          setDevicesState(devices);
+          requests.current.setDevices(devices);
+        }
       }
     }
   }, []);
@@ -213,7 +220,7 @@ function Main() {
   useEffect(() => {
     if (credential === devCredential.current) {
         eruda.init();
-        console.log('version 20');
+        console.log('version 24');
     }
   }, [credential]);
 
