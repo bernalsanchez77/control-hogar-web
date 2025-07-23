@@ -136,9 +136,11 @@ function Main() {
         }
       }
       response = await requests.current.getRokuData('media-player');
-      if (devicesState.rokuSala.state !== response.data.player.state) {
-        devices.rokuSala.state = response.data.player.state;
-        changed = true;
+      if (response && response.status === 200) {
+        if (devicesState.rokuSala.state !== response.data.player.state) {
+          devices.rokuSala.state = response.data.player.state;
+          changed = true;
+        }
       }
       if (changed) {
         setDevicesState(devices);
