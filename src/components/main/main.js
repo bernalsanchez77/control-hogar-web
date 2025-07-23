@@ -208,7 +208,7 @@ function Main() {
         getMassMediaData();
         getRokuData();
       }
-    }, 5000);
+    }, 10000);
     setInterval(() => {getPosition();}, 300000);
     requests.current.sendLogs(user.current + ' entro');
     getVisibility();
@@ -231,7 +231,7 @@ function Main() {
   useEffect(() => {
     if (credential === devCredential.current) {
         eruda.init();
-        console.log('version 24');
+        console.log('version 25');
     }
   }, [credential]);
 

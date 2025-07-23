@@ -46,6 +46,10 @@ class Requests {
       info.data = params;
     }
     return new Promise((resolve, reject) => {
+      window.cordova.plugin.http.setHeader('*', 'User-Agent', 'Mozilla/5.0');
+      window.cordova.plugin.http.setHeader('*', 'Accept', 'application/json');
+      window.cordova.plugin.http.setHeader('*', 'Origin', '');
+      window.cordova.plugin.http.setHeader('*', 'Referer', '');
       window.cordova.plugin.http.sendRequest(
         longApiUrl + api,
         info,
