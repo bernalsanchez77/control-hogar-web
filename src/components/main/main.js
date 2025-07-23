@@ -126,15 +126,23 @@ function Main() {
       updatesEnabled = true;
     }
     if (userActive.current && updatesEnabled) {
-      const response = await requests.current.getRokuData('active-app');
+      let changed = false;
+      const devices = {...devicesStateUpdated.current};
+      let response = await requests.current.getRokuData('active-app');
       if (response && response.status === 200) {
         if (devicesState.rokuSala.apps[devicesState.rokuSala.app].rokuId !== response.data['active-app'].app.id) {
-          const devices = {...devicesStateUpdated.current};
           devices.rokuSala.app = Object.values(devicesState.rokuSala.apps).find(app => app.rokuId === response.data['active-app'].app.id).id;
-          setDevicesState(devices);
-          requests.current.setDevices(devices);
+          changed = true;
         }
-        // const response = await requests.current.getRokuData('media-player');
+      }
+      response = await requests.current.getRokuData('media-player');
+      if (devicesState.rokuSala.state !== response.data.player.state) {
+        devices.rokuSala.state = response.data.player.state;
+        changed = true;
+      }
+      if (changed) {
+        setDevicesState(devices);
+        requests.current.setDevices(devices);
       }
     }
   }, []);
