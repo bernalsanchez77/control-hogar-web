@@ -134,6 +134,7 @@ function Main() {
           setDevicesState(devices);
           requests.current.setDevices(devices);
         }
+        // const response = await requests.current.getRokuData('media-player');
       }
     }
   }, []);

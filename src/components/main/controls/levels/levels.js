@@ -24,7 +24,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
     }
     const device = devicesState.hdmiSala.state === 'roku' ? 'rokuSala' : 'cableSala';
     if (saveChange) {
-      triggerControlParent({ifttt: [[{device, key: 'command', value}]], roku: [[{device, key: 'keypress', value}]]});
+      triggerControlParent({ifttt: [[{device, key: 'command', value}]], roku: [[{device, key: 'keypress', value}]], massMedia: [[{device, key: 'app', value}]]});
     } else {
       triggerControlParent({ifttt: [[{device, key: 'command', value}]], roku: [[{device, key: 'keypress', value}]], massMedia: []});
     }
@@ -43,7 +43,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
       newChannelOrder = channelOrderSelected + 1; 
     }
     if (value === 'down') {
-      newChannelOrder = channelOrderSelected - 1; 
+      newChannelOrder = channelOrderSelected - 1;
     }
     newChannel = Object.values(devicesState.channelsSala.channels).find(obj => obj.order === newChannelOrder);
     if (!newChannel) {
