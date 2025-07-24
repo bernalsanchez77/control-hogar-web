@@ -1,8 +1,5 @@
 .devices {
-  margin: 10px 10px 0;
-  display: inline-block;
-}
-.devices-row {
+  margin: 5px 10px 0;
   display: inline-block;
 }
 .devices-element {
