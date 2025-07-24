@@ -3,9 +3,6 @@ import './apps.css';
 
 function Apps({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
     const device = 'rokuSala';
     triggerControlParent({
       ifttt: [[{device, key: 'app', value: value}]],

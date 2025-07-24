@@ -3,9 +3,6 @@ import './devices.css';
 
 function Devices({devicesState, deviceState, triggerControlParent}) {
   const triggerDevice = (color) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
     const device = devicesState[deviceState].id;
     if (devicesState[deviceState].state === 'off') {
       triggerControlParent({ifttt: [[{device, key: 'state', value: 'on'}]]});

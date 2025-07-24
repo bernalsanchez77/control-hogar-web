@@ -8,13 +8,17 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({devicesState, screenSelected, channelCategory, deviceState, changeControlParent, changeDeviceStateParent, changeChannelCategoryParent}) {
+function Controls({devicesState, screenSelected, channelCategory, deviceState, changeControlParent, changeDeviceStateParent, changeChannelCategoryParent, triggerVibrateParent }) {
   const triggerControl = (params) => {
     changeControlParent(params);
   }
 
   const triggerChannelCategory = (category) => {
     changeChannelCategoryParent(category);
+  }
+
+  const triggerVibrate = (length) => {
+    triggerVibrateParent(length);
   }
 
   const triggerDeviceState = (state) => {
@@ -41,7 +45,8 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, c
           deviceState={deviceState}
           triggerControlParent={triggerControl}
           triggerDeviceStateParent={triggerDeviceState}
-          triggerChannelCategoryParent={triggerChannelCategory}>
+          triggerChannelCategoryParent={triggerChannelCategory}
+          triggerVibrateParent={triggerVibrate}>
         </Levels>
         {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
         <Toolbar

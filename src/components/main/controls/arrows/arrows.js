@@ -3,9 +3,6 @@ import './arrows.css';
 
 function Arrows({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
     const device = 'rokuSala';
     triggerControlParent({
       ifttt: [[{device, key: 'command', value: value}]],

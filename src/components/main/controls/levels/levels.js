@@ -1,15 +1,12 @@
 import React, {useRef} from 'react';
 import './levels.css';
 
-function Levels({devicesState, screenSelected, channelCategory, deviceState, triggerControlParent, triggerDeviceStateParent, triggerChannelCategoryParent}) {
+function Levels({devicesState, screenSelected, channelCategory, deviceState, triggerControlParent, triggerDeviceStateParent, triggerChannelCategoryParent, triggerVibrateParent}) {
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
   const volumeChange = useRef('1');
 
   const triggerMute = () => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
     const device = screenSelected;
     if (devicesState[screenSelected].mute === 'on') {
       triggerControlParent({ifttt: [[{device, key: 'mute', value: 'off'}]]});
@@ -19,9 +16,6 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
     }
   }
   const triggerControl = (value, saveChange = true) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
     const device = devicesState.hdmiSala.state === 'roku' ? 'rokuSala' : 'cableSala';
     if (saveChange) {
       triggerControlParent({ifttt: [[{device, key: 'command', value}]], roku: [[{device, key: 'keypress', value}]], massMedia: [[{device, key: 'app', value}]]});
@@ -31,9 +25,6 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
   }
 
   const triggerChannel = (value) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
     let newChannel = {};
     const device = 'channelsSala';
     let newChannelOrder = 0;
@@ -60,9 +51,6 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
   }
 
   const triggerVolume = (vol, button, vib = true) => {
-    if (vib && navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
     const device = screenSelected;
     let newVol = 0;
     if (button === 'up') {
@@ -91,19 +79,15 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
     }
   }
 
-  const triggerVolumeStart = (button) => {
+  const triggerVolumeStart = () => {
     volumeChange.current = '1';
     timeout3s.current = setTimeout(() => {
       volumeChange.current = '5';
-      if (navigator.vibrate) {
-        navigator.vibrate([200]);
-      }
+      triggerVibrateParent(200);
     }, 1000);
     timeout6s.current = setTimeout(() => {
       volumeChange.current = '10';
-      if (navigator.vibrate) {
-        navigator.vibrate([400]);
-      }
+      triggerVibrateParent(400);
     }, 2000);
   }
 
@@ -118,16 +102,10 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
   }
 
   const triggerChannelCategory = (category) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
     triggerChannelCategoryParent(category);
   }
 
   const backButtonTriggered = () => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
     if (deviceState !== 'default') {
       triggerDeviceStateParent('default');
     } else {

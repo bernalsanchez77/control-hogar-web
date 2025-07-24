@@ -35,13 +35,22 @@ function Main() {
   const devCredential = useRef('dev');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
+  const triggerVibrate = (length = 100) => {
+    if (navigator.vibrate) {
+      navigator.vibrate([length]);
+    }
+  }
+
   const changeChannelCategory = (category) => {
+    triggerVibrate();
     setChannelCategory(category);
   }
 
   const changeDeviceState = (state) => {
+    triggerVibrate();
     setDeviceState(state);
   }
+
 
   const changeControl = (params) => {
     const devices = {...devicesStateUpdated.current};
@@ -67,9 +76,7 @@ function Main() {
   }
 
   const triggerControl = (params) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
+    triggerVibrate();
     if (validateRangeAndCredential) {
       if (!loadingDevices.current) {
         changeControl(params);
@@ -82,9 +89,7 @@ function Main() {
   }
 
   const changeScreen = (screen) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
+    triggerVibrate();
     if (validateRangeAndCredential) {
       if (!loadingDevices.current) {
         setScreenSelected(screen);
@@ -305,7 +310,8 @@ function Main() {
             deviceState={deviceState}
             changeChannelCategoryParent={changeChannelCategory}
             changeDeviceStateParent={changeDeviceState}
-            changeControlParent={triggerControl}>
+            changeControlParent={triggerControl}
+            triggerVibrateParent={triggerVibrate}>
           </Controls>
           <Devices
             credential={credential}

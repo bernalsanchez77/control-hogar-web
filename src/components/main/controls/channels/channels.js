@@ -3,9 +3,6 @@ import './channels.css';
 function Channels({devicesState, triggerCategoryParent}) {
   let selectedImg = '/imgs/channels/' + devicesState.channelsSala.selected + '.png';
   const triggerCategory = (category) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
     triggerCategoryParent(category);
   }
 

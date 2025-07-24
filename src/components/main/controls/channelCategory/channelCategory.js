@@ -2,9 +2,6 @@ import './channelCategory.css';
 
 function ChannelCategory({devicesState, channelCategory, triggerControlParent}) {
   const triggerChannel = (channel) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([100]);
-    }
     const device = 'channelsSala';
     triggerControlParent({
       ifttt: [[{device: device + devicesState.channelsSala.channels[channel].ifttt, key: 'selected', value: channel}]],
