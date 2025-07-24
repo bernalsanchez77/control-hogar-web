@@ -1,14 +1,12 @@
 .screens {
-  margin: 0 10px;
+  margin: 0 0 5px 0;
   display: inline-block;
 }
-.screens-row {
-  display: inline-block;
-}
+
 .screens-element {
   float: left;
   width: 70px;
-  margin: 5px;
+  margin: 0 5px;
 
 }
 .screens-button {

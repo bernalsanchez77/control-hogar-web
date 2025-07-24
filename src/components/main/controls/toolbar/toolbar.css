@@ -1,9 +1,8 @@
 .controls-toolbar {
     display: inline-block;
-    height: 50px;
+    margin-bottom: 5px;
   }
   .controls-toolbar-row {
-    display: inline-block;
     width: 240px;
   }
   .controls-toolbar-row--mute {
@@ -12,7 +11,7 @@
   .controls-toolbar-element {
     float: left;
     width: 70px;
-    margin: 5px;
+    margin: 0 5px;
   }
   .controls-toolbar-element--mute {
     margin-top: -2px;

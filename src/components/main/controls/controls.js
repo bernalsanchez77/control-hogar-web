@@ -49,16 +49,18 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, c
           triggerVibrateParent={triggerVibrate}>
         </Levels>
         {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
-        <Toolbar
-          devicesState={devicesState}
-          triggerControlParent={triggerControl}>
-        </Toolbar>
-        }
-        {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
-        <Apps
-          devicesState={devicesState}
-          triggerControlParent={triggerControl}>
-        </Apps>
+        <div className='controls-toolbar-apps'>
+          <div className='controls-toolbar-apps-wrapper'>
+            <Toolbar
+              devicesState={devicesState}
+              triggerControlParent={triggerControl}>
+            </Toolbar>
+            <Apps
+              devicesState={devicesState}
+              triggerControlParent={triggerControl}>
+            </Apps>
+          </div>
+        </div>
         }
         {devicesState.hdmiSala.state === 'cable' && channelCategory.includes('default') && deviceState === 'default' &&
         <div>

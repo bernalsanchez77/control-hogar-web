@@ -12,9 +12,6 @@ function Credentials({credential, guestCredential, setCredentialsParent}) {
   }
   return (
     <div className="credentials">
-      {credential ?
-      <div>
-      </div> :
       <div>
         <div className='credentials-input'>
           <input
@@ -32,7 +29,6 @@ function Credentials({credential, guestCredential, setCredentialsParent}) {
           </button>
         </div>
       </div>
-      }
     </div>
   );
 }

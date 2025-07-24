@@ -119,7 +119,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
       
   return (
     <div className='controls-levels'>
-      <div className='controls-levels-row'>
+      <div className='controls-levels-row controls-levels-row--top'>
         <div className='controls-levels-element controls-levels-element--left'>
           <button
             className='controls-levels-button'
@@ -173,7 +173,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
           </div>
         }
       </div>
-      <div className='controls-levels-row'>
+      <div className='controls-levels-row controls-levels-row--middle'>
         <div className='controls-levels-element controls-levels-element--no-margin'>
           <span className='controls-levels-span'>
             vol {devicesState[screenSelected].volume}
@@ -190,7 +190,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
           </span>
         </div>
       </div>
-      <div className='controls-levels-row'>
+      <div className='controls-levels-row controls-levels-row--bottom'>
         <div className='controls-levels-element controls-levels-element--left'>
           <button
             className='controls-levels-button'

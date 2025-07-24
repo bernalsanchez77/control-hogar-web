@@ -1,31 +1,17 @@
 .controls {
-    margin: 0;
-    display: inline-block;
-  }
-  .controls-row {
-    display: inline-block;
-  }
-  .controls-element {
-    float: left;
-    width: 70px;
-    margin: 5px;
-  
-  }
-  .controls-button {
-    font-size: 11px;
-    padding: 3px;
-    width: 100%;
-    border: transparent 3px solid;
-    height: 40px;
-    border-radius: 5px;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-  button.controls-button:active {
-    background-color: green;
-    transition: background-color 0.1s;
-  }
-  .controls-button--on {
-    border: green 2px solid;
-  }
-  
+  margin: 5px 0;
+}
+.controls-toolbar-apps {
+  height: 150px;
+  margin: 5px 0;
+  position: relative;
+}
+.controls-toolbar-apps-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}

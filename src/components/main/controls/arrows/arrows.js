@@ -13,7 +13,7 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
 
   return (
     <div className='controls-arrows'>
-      <div className='controls-arrows-row controls-arrows-row--one'>
+      <div className='controls-arrows-row controls-arrows-row--top'>
         <div className='controls-arrows-element'>
           <button
             className="controls-arrows-button"
@@ -45,7 +45,7 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
           </button>
         </div>
       </div>
-      <div className='controls-arrows-row  controls-arrows-row--one'>
+      <div className='controls-arrows-row  controls-arrows-row--bottom'>
         <div className='controls-arrows-element'>
           <button
             className="controls-arrows-button"

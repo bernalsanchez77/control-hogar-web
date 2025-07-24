@@ -1,11 +1,32 @@
 .controls-channels {
-  display: inline-block;
   height: 150px;
+  margin: 5px 0;
+  position: relative;
+}
+.controls-channels-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .controls-channels-row {
   width: 300px;
-  height: 45px;
-  display: inline-block;
+}
+.controls-channels-row--top {
+  height: 35px;
+  margin-bottom: 10px;
+}
+.controls-channels-row--middle {
+  height: 35px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.controls-channels-row--bottom {
+  height: 35px;
+  margin-top: 10px;
 }
 .controls-channels-element {
   float: left;

@@ -9,7 +9,8 @@ function Channels({devicesState, triggerCategoryParent}) {
   return (
     <div>
       <div className='controls-channels'>
-        <div className='controls-channels-row'>
+        <div className='controls-channels-wrapper'>
+        <div className='controls-channels-row controls-channels-row--top'>
           <div className='controls-channels-element  controls-channels-element--left'>
             <button
               className='controls-channels-elements-button'
@@ -32,7 +33,7 @@ function Channels({devicesState, triggerCategoryParent}) {
             </button>
           </div>
         </div>
-        <div className='controls-channels-row'>
+        <div className='controls-channels-row controls-channels-row--middle'>
           <div className='controls-channels-element controls-channels-element--left'>
             <button
               className='controls-channels-elements-button'
@@ -55,7 +56,7 @@ function Channels({devicesState, triggerCategoryParent}) {
             </button>
           </div>
         </div>
-        <div className='controls-channels-row'>
+        <div className='controls-channels-row controls-channels-row--bottom'>
           <div className='controls-channels-element controls-channels-element--left'>
             <button
               className='controls-channels-elements-button'
@@ -77,6 +78,7 @@ function Channels({devicesState, triggerCategoryParent}) {
               Infantiles
             </button>
           </div>
+        </div>
         </div>
       </div>
     </div>

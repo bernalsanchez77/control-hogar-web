@@ -1,10 +1,21 @@
 .controls-levels {
-    margin: 0 10px 10px;
+    margin: 5px 0 5px;
     display: inline-block;
   }
   .controls-levels-row {
     display: inline-block;
+  }
+  .controls-levels-row--top {
+    margin-bottom: 5px;
+  }
+  .controls-levels-row--middle {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 16px;
     width: 240px;
+  }
+  .controls-levels-row--bottom {
+    margin-top: 5px;
   }
   .controls-levels-row--mute {
     height: 20px;
@@ -12,16 +23,13 @@
   .controls-levels-element {
     float: left;
     width: 70px;
-    margin: 5px;
+    margin: 0 5px;
   }
   .controls-levels-element--no-margin {
     margin: 0 5px 0;
   }
   .controls-levels-element--mute {
     margin-top: -2px;
-  }
-  .controls-levels-element--left {
-    float: left;
   }
   .controls-levels-element--right {
     float: right;

@@ -284,11 +284,13 @@ function Main() {
 
   return (
     <div className="main">
+      {!credential &&
       <Credentials
         credential={credential}
         guestCredential={guestCredential.current}
         setCredentialsParent={setCredentials}>
       </Credentials>
+      }
       {credential &&
       <div className='main-components'>
         {validateRangeAndCredential() ?

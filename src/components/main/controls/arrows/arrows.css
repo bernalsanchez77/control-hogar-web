@@ -1,17 +1,20 @@
 .controls-arrows {
-    margin: 0 10px 10px;
-    display: inline-block;
+    margin: 5px 0;
   }
   .controls-arrows-row {
     display: inline-block;
+    margin: 5px 0;
   }
-  .controls-arrows-row--one {
-    margin: 0 20%;
+  .controls-arrows-row--top {
+    margin: 0 20% 5px;
+  }
+  .controls-arrows-row--bottom {
+    margin: 5px 20% 0;
   }
   .controls-arrows-element {
     float: left;
     width: 70px;
-    margin: 5px;
+    margin: 0 5px;
   }
   .controls-arrows-element--left {
     margin-top: 10px;

@@ -13,7 +13,7 @@ function Apps({devicesState, screenSelected, triggerControlParent}) {
 
   return (
     <div className='controls-apps'>
-      <div className='controls-apps-row'>
+      <div className='controls-apps-wrapper'>
         <div className='controls-apps-element'>
           <button
             className={`controls-apps-button ${devicesState.rokuSala.apps.netflix.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
@@ -69,8 +69,6 @@ function Apps({devicesState, screenSelected, triggerControlParent}) {
               </img>
           </button>
         </div>
-      </div>
-      <div className='controls-apps-row'>
         <div className='controls-apps-element'>
           <button
             className={`controls-apps-button ${devicesState.rokuSala.apps.pluto.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}

@@ -1,14 +1,15 @@
 .controls-apps {
-  height: 100px;
   display: inline-block;
+  margin-top: 5px;
+  position: relative;
 }
-.controls-apps-row {
-  display: inline-block;
+.controls-apps-wrapper {
+
 }
 .controls-apps-element {
   float: left;
   width: 60px;
-  margin: 3px 5px;
+  margin: 10px 5px 0;
 }
 .controls-apps-button {
   background-color: transparent;

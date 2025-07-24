@@ -1,14 +1,11 @@
 .controls-top {
-    margin: 0 10px 10px;
-    display: inline-block;
-  }
-  .controls-top-row {
+    margin-bottom: 5px;
     display: inline-block;
   }
   .controls-top-element {
     float: left;
     width: 70px;
-    margin: 5px;
+    margin: 0 5px;
   
   }
   .controls-top-button {
