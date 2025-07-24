@@ -1,5 +1,6 @@
 .controls-apps {
-  display: block; /* default or optional */
+  display: block;
+  margin-top: 5px
 }
 .controls-apps-wrapper {
   display: flex;
