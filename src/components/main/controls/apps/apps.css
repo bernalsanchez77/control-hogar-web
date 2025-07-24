@@ -3,6 +3,10 @@
   margin-top: 5px;
   position: relative;
 }
+.controls-apps {
+  text-align: center; /* optional if using inline-block */
+  width: 100%;
+}
 .controls-apps-wrapper {
   width: fit-content; /* or a fixed value like 300px */
   margin: 0 auto;
