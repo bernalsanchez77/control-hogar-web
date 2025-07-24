@@ -1,7 +1,11 @@
 .controls-apps {
-  display: inline-block;
+  /*display: inline-block;*/
   margin-top: 5px;
   position: relative;
+}
+.controls-apps-wrapper {
+  width: fit-content; /* or a fixed value like 300px */
+  margin: 0 auto;
 }
 .controls-apps-wrapper {
 
