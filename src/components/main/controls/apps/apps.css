@@ -1,17 +1,14 @@
 .controls-apps {
+  display: block; /* default or optional */
+}
+.controls-apps-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 5px;
+  flex-wrap: wrap;
+  gap: 10px 5px;
 }
-.controls-apps-wrapper {
-  display: flex;
-  width: 240px;/* optional if you want to control the internal layout */
-}
-.controls-apps-wrapper {
 
-}
 .controls-apps-element {
-  float: left;
   width: 60px;
   margin: 10px 5px 0;
 }
