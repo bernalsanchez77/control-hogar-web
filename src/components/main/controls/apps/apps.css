@@ -1,10 +1,11 @@
-..controls-apps {
+.controls-apps {
   display: flex;
   justify-content: center;
   margin-top: 5px;
 }
 .controls-apps-wrapper {
-  display: flex; /* optional if you want to control the internal layout */
+  display: flex;
+  width: 240px;/* optional if you want to control the internal layout */
 }
 .controls-apps-wrapper {
 
