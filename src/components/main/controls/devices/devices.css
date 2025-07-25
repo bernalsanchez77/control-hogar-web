@@ -2,6 +2,7 @@
   height: 150px;
   position: relative;
   width: 100%;
+  margin: 5px 0;
 }
 .controls-devices-ul {
   position: absolute;
@@ -13,6 +14,7 @@
   flex-wrap: wrap;
   justify-content: center;
   margin: 0;
+  padding: 0;
 }
 .controls-device {
   height: 50px;
