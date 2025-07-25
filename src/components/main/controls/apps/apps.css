@@ -8,9 +8,8 @@
   flex-wrap: wrap;
   gap: 0;
 }
-
 .controls-apps-element {
-  width: 60px;
+  width: 70px;
   margin: 10px 5px 0;
 }
 .controls-apps-button {
@@ -31,7 +30,7 @@
 .controls-apps-img--button {
   width: 40px;
   position: absolute;
-  left: 10px;
+  left: 15px;
   top: -3px;
 }
 .controls-apps-span {
