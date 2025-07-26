@@ -76,7 +76,7 @@ function Main() {
   }
 
   const triggerControl = (params) => {
-    if (!params.ignoreVibrate) {
+    if (!params.ignoreVibration) {
       triggerVibrate();
     }
     if (validateRangeAndCredential) {
