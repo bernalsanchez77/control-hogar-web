@@ -58,7 +58,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
       triggerControlParent({
         ifttt: [[{device, key: 'volume', value: button + vol}]],
         massMedia: [[{device, key: 'volume', value: newVol.toString()}]],
-        vibrate: false
+        ignoreVibration: true
       });
 
     } else if (devicesState[screenSelected].volume !== '0') {
@@ -67,18 +67,18 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
         triggerControlParent({
           ifttt: [[{device, key: 'volume', value: button + vol}]],
           massMedia: [[{device, key: 'volume', value: newVol.toString()}]],
-          vibrate: false
+          ignoreVibration: true
         });
       } else {
         newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
         triggerControlParent({
           ifttt: [[{device, key: 'volume', value: button + vol}]],
           massMedia: [[{device, key: 'volume', value: '0'}]],
-          vibrate: false
+          ignoreVibration: true
         });
       }
     } else {
-      triggerControlParent({ifttt: [[{device, key: 'volume', value: button + vol}]], massMedia: [], vibrate: false}); 
+      triggerControlParent({ifttt: [[{device, key: 'volume', value: button + vol}]], massMedia: [], ignoreVibration: true}); 
     }
   }
 
