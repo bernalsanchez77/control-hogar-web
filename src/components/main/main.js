@@ -76,7 +76,9 @@ function Main() {
   }
 
   const triggerControl = (params) => {
-    triggerVibrate();
+    if (!params.ignoreVibration) {
+      triggerVibrate();
+    }
     if (validateRangeAndCredential) {
       if (!loadingDevices.current) {
         changeControl(params);
