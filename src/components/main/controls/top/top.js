@@ -92,7 +92,20 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
           <button
             className="controls-top-button controls-top-button-off"
             onTouchStart={() => triggerHdmi()}>
-              {devicesState.hdmiSala.label[devicesState.hdmiSala.state]}
+              {devicesState.hdmiSala.state === 'cable' &&
+                <img
+                  className='controls-top-img controls-top-img--roku'
+                  src='/imgs/roku.png'
+                  alt="icono">
+                </img>
+              }
+              {devicesState.hdmiSala.state === 'roku' &&
+                <img
+                  className='controls-top-img controls-top-img--telecable'
+                  src='/imgs/telecable.png'
+                  alt="icono">
+                </img>
+              }
           </button>
         </div>
         <div className='controls-top-element'>
