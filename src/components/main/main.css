@@ -12,6 +12,7 @@
 .fade-in {
   opacity: 0;
   transition: opacity 1s ease 0.5s;
+}
 
 body.loaded .fade-in {
   opacity: 1;
