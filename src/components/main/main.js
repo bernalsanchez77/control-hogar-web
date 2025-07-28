@@ -221,7 +221,7 @@ function Main() {
     getVisibility();
     const handleLoad = () => {
     console.log("Page fully loaded (with images)");
-    // document.body.classList.add("loaded");
+    document.body.classList.add("loaded");
   };
 
   if (document.readyState === "complete") {
