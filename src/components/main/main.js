@@ -247,6 +247,7 @@ function Main() {
   }, [devicesState]);
 
   useEffect(() => {
+    console.log('effect');
   const handleLoad = () => {
     console.log("Page fully loaded (with images)");
     // document.body.classList.add("loaded");
