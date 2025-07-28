@@ -222,6 +222,10 @@ function Main() {
   }, [getMassMediaData, getRokuData, getPosition, getVisibility, user]);
 
   useEffect(() => {
+  console.log("useEffect ran");
+}, []);
+
+  useEffect(() => {
     init();
   }, [init]);
 
