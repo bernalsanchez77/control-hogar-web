@@ -242,14 +242,18 @@ function Main() {
     }
   }, [credential]);
 
-  useEffect(() => {
-    console.log('this logs');
-    devicesStateUpdated.current = devicesState;
-  }, [devicesState]);
+useEffect(() => {
+  console.log("[] effect ran (1)");
+}, []);
 
-  useEffect(() => {
-    console.log("this doesnt log");
-  }, []);
+useEffect(() => {
+  console.log('[devicesState] effect ran');
+  devicesStateUpdated.current = devicesState;
+}, [devicesState]);
+
+useEffect(() => {
+  console.log("[] effect ran (2)");
+}, []);
 
 
   useEffect(() => {
