@@ -247,6 +247,7 @@ function Main() {
   }, [credential]);
 
   useEffect(() => {
+    console.log('yes');
     devicesStateUpdated.current = devicesState;
   }, [devicesState]);
 
