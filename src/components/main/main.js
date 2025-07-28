@@ -219,6 +219,18 @@ function Main() {
     setInterval(() => {getPosition();}, 300000);
     requests.current.sendLogs(user.current + ' entro');
     getVisibility();
+    const handleLoad = () => {
+    console.log("Page fully loaded (with images)");
+    // document.body.classList.add("loaded");
+  };
+
+  if (document.readyState === "complete") {
+    // The load event has already fired
+    handleLoad();
+  } else {
+    window.addEventListener("load", handleLoad);
+    return () => window.removeEventListener("load", handleLoad);
+  }
   }, [getMassMediaData, getRokuData, getPosition, getVisibility, user]);
 
   useEffect(() => {
