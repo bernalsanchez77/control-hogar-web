@@ -222,10 +222,6 @@ function Main() {
   }, [getMassMediaData, getRokuData, getPosition, getVisibility, user]);
 
   useEffect(() => {
-  console.log("useEffect ran");
-}, []);
-
-  useEffect(() => {
     init();
   }, [init]);
 
@@ -247,9 +243,14 @@ function Main() {
   }, [credential]);
 
   useEffect(() => {
-    console.log('yes');
+    console.log('this logs');
     devicesStateUpdated.current = devicesState;
   }, [devicesState]);
+
+  useEffect(() => {
+    console.log("this doesnt log");
+  }, []);
+
 
   useEffect(() => {
     console.log('effect');
