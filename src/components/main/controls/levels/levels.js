@@ -9,18 +9,18 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
   const triggerMute = () => {
     const device = screenSelected;
     if (devicesState[screenSelected].mute === 'on') {
-      triggerControlParent({ifttt: [[{device, key: 'mute', value: 'off'}]]});
+      triggerControlParent({ifttt: [{device, key: 'mute', value: 'off'}]});
     }
     if (devicesState[screenSelected].mute === 'off') {
-      triggerControlParent({ifttt: [[{device, key: 'mute', value: 'on'}]]});
+      triggerControlParent({ifttt: [{device, key: 'mute', value: 'on'}]});
     }
   }
   const triggerControl = (value, saveChange = true) => {
     const device = devicesState.hdmiSala.state === 'roku' ? 'rokuSala' : 'cableSala';
     if (saveChange) {
-      triggerControlParent({ifttt: [[{device, key: 'command', value}]], roku: [[{device, key: 'keypress', value}]], massMedia: [[{device, key: 'app', value}]]});
+      triggerControlParent({ifttt: [{device, key: 'command', value}], roku: [{device, key: 'keypress', value}], massMedia: [{device, key: 'app', value}]});
     } else {
-      triggerControlParent({ifttt: [[{device, key: 'command', value}]], roku: [[{device, key: 'keypress', value}]], massMedia: []});
+      triggerControlParent({ifttt: [{device, key: 'command', value}], roku: [{device, key: 'keypress', value}], massMedia: []});
     }
   }
 
@@ -45,8 +45,8 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
       }     
     }
     triggerControlParent({
-      ifttt: [[{device: device + newChannel.ifttt, key: 'selected', value: newChannel.id}]],
-      massMedia: [[{device, key: 'selected', value: newChannel.id}]]
+      ifttt: [{device: device + newChannel.ifttt, key: 'selected', value: newChannel.id}],
+      massMedia: [{device, key: 'selected', value: newChannel.id}]
     });
   }
 
@@ -56,8 +56,8 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
     if (button === 'up') {
       newVol = parseInt(devicesState[screenSelected].volume) + parseInt(vol);
       triggerControlParent({
-        ifttt: [[{device, key: 'volume', value: button + vol}]],
-        massMedia: [[{device, key: 'volume', value: newVol.toString()}]],
+        ifttt: [{device, key: 'volume', value: button + vol}],
+        massMedia: [{device, key: 'volume', value: newVol.toString()}],
         ignoreVibration: true
       });
 
@@ -65,20 +65,20 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
       if (parseInt(devicesState[screenSelected].volume) - parseInt(vol) >= 0) {
         newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
         triggerControlParent({
-          ifttt: [[{device, key: 'volume', value: button + vol}]],
-          massMedia: [[{device, key: 'volume', value: newVol.toString()}]],
+          ifttt: [{device, key: 'volume', value: button + vol}],
+          massMedia: [{device, key: 'volume', value: newVol.toString()}],
           ignoreVibration: true
         });
       } else {
         newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
         triggerControlParent({
-          ifttt: [[{device, key: 'volume', value: button + vol}]],
-          massMedia: [[{device, key: 'volume', value: '0'}]],
+          ifttt: [{device, key: 'volume', value: button + vol}],
+          massMedia: [{device, key: 'volume', value: '0'}],
           ignoreVibration: true
         });
       }
     } else {
-      triggerControlParent({ifttt: [[{device, key: 'volume', value: button + vol}]], massMedia: [], ignoreVibration: true}); 
+      triggerControlParent({ifttt: [{device, key: 'volume', value: button + vol}], massMedia: [], ignoreVibration: true}); 
     }
   }
 

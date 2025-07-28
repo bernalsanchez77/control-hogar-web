@@ -3,10 +3,10 @@ import './lamparaRotatoria.css';
 function LamparaRotatoria({devicesState, triggerControlParent}) {
   const triggerDevice = (device) => {
     if (devicesState[device].state === 'on') {
-      triggerControlParent({ifttt: [[{device, key: 'state', value: 'off'}]]});
+      triggerControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
     }
     if (devicesState[device].state === 'off') {
-      triggerControlParent({ifttt: [[{device, key: 'state', value: 'on'}]]});
+      triggerControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
   }
 

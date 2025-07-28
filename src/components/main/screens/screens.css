@@ -29,3 +29,15 @@ button.screens-button:active {
   border: white 1px solid;
   box-shadow: 0 0 10px #fff;
 }
+.flash-shadow {
+  transition: opacity 0.3s;
+  animation: flash-shadow 0.6s ease-in-out 3;
+}
+@keyframes flash-shadow {
+  0%, 100% {
+    box-shadow: 0 0 10px #fff;
+  }
+  50% {
+    box-shadow: 0 0 0px #fff;
+  }
+}

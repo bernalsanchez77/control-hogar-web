@@ -21,7 +21,7 @@ function Devices({credential, ownerCredential, devCredential, devicesState, devi
   }
 
   return (
-    <div className="devices fade-in">
+    <div className="devices">
       <div className='devices-row'>
         <div className='devices-element'>
           <LamparaComedor

@@ -36,7 +36,7 @@ function LamparasAbajo({devicesState, triggerControlParent}) {
           ifttt.push({device: lampara, key: 'state', value: 'off'});
         }
       });
-      triggerControlParent({ifttt: [ifttt]});
+      triggerControlParent({ifttt});
       setState('off');
     } else {
       lamparasOn.forEach(lampara => {
@@ -44,7 +44,7 @@ function LamparasAbajo({devicesState, triggerControlParent}) {
           ifttt.push({device: lampara, key: 'state', value: 'on'});
         }
       });
-      triggerControlParent({ifttt: [ifttt]});
+      triggerControlParent({ifttt});
       setState('on');
     }
   }

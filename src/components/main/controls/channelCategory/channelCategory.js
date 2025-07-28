@@ -4,8 +4,8 @@ function ChannelCategory({devicesState, channelCategory, triggerControlParent}) 
   const triggerChannel = (channel) => {
     const device = 'channelsSala';
     triggerControlParent({
-      ifttt: [[{device: device + devicesState.channelsSala.channels[channel].ifttt, key: 'selected', value: channel}]],
-      massMedia: [[{device: device, key: 'selected', value: channel}]],
+      ifttt: [{device: device + devicesState.channelsSala.channels[channel].ifttt, key: 'selected', value: channel}],
+      massMedia: [{device: device, key: 'selected', value: channel}],
     });
   }
 

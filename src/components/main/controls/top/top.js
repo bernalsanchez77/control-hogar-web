@@ -14,7 +14,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
         });
         setTimeout(() => {
           triggerControlParent({
-            ifttt: [[{device: devicesState.proyectorSwitchSala.id, key: 'state', value: 'off'}]],
+            ifttt: [{device: devicesState.proyectorSwitchSala.id, key: 'state', value: 'off'}],
           });
         }, 60000);
       } else {
@@ -28,40 +28,40 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
         });
 
         setTimeout(() => {
-          triggerControlParent({ifttt: [[{device: screenSelected, key: 'state', value: 'on'}]]});
+          triggerControlParent({ifttt: [{device: screenSelected, key: 'state', value: 'on'}]});
         }, 5000);
       }
     } else {
       if (devicesState[screenSelected].state === 'on') {
-        triggerControlParent({ifttt: [[{device: screenSelected, key: 'state', value: 'off'}]]});
+        triggerControlParent({ifttt: [{device: screenSelected, key: 'state', value: 'off'}]});
         setTimeout(() => {
-          // triggerControlParent({ifttt: [[{device: screenSelected, key: 'mute', value: 'off'}]]});
+          // triggerControlParent({ifttt: [{device: screenSelected, key: 'mute', value: 'off'}]});
         }, 2000);
       } else {
-        triggerControlParent({ifttt: [[{device: screenSelected, key: 'state', value: 'on'}]]});
+        triggerControlParent({ifttt: [{device: screenSelected, key: 'state', value: 'on'}]});
       }
     }
   }
   const triggerHdmi = () => {
     const device = devicesState.hdmiSala.id;
     if (devicesState[devicesState.hdmiSala.id].state === 'roku') {
-      triggerControlParent({ifttt: [[{device, key: 'state', value: 'cable'}]]});
+      triggerControlParent({ifttt: [{device, key: 'state', value: 'cable'}]});
     }
     if (devicesState[devicesState.hdmiSala.id].state === 'cable') {
-      triggerControlParent({ifttt: [[{device, key: 'state', value: 'roku'}]]});
+      triggerControlParent({ifttt: [{device, key: 'state', value: 'roku'}]});
     }
   }
   const triggerInput = () => {
     const device = devicesState[screenSelected].id;
     if (devicesState[screenSelected].input.state === 'hdmi1') {
       triggerControlParent({
-        ifttt: [[{device: device, key: 'input', value: 'hdmi2'}]],
-        massMedia: [[{device, key: ['input', 'state'], value: 'hdmi2'}]]
+        ifttt: [{device: device, key: 'input', value: 'hdmi2'}],
+        massMedia: [{device, key: ['input', 'state'], value: 'hdmi2'}]
       })
     } else {
       triggerControlParent({
-        ifttt: [[{device, key: 'input', value: 'hdmi1'}]],
-        massMedia: [[{device: device, key: ['input', 'state'], value: 'hdmi1'}]]
+        ifttt: [{device, key: 'input', value: 'hdmi1'}],
+        massMedia: [{device: device, key: ['input', 'state'], value: 'hdmi1'}]
       })
     }
   }

@@ -5,8 +5,8 @@ function Apps({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
     const device = 'rokuSala';
     triggerControlParent({
-      ifttt: [[{device, key: 'app', value: value}]],
-      roku: [[{device, key: 'launch', value: devicesState.rokuSala.apps[value].rokuId}]],
+      ifttt: [{device, key: 'app', value: value}],
+      roku: [{device, key: 'launch', value: devicesState.rokuSala.apps[value].rokuId}],
     });
 
   }

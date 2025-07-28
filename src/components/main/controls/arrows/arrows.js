@@ -5,8 +5,8 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
   const triggerControl = (value) => {
     const device = 'rokuSala';
     triggerControlParent({
-      ifttt: [[{device, key: 'command', value: value}]],
-      roku: [[{device, key: 'keypress', value: value.charAt(0).toUpperCase() + value.slice(1)}]],
+      ifttt: [{device, key: 'command', value: value}],
+      roku: [{device, key: 'keypress', value: value.charAt(0).toUpperCase() + value.slice(1)}],
       massMedia: []
     });
   }

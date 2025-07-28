@@ -5,10 +5,10 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
   const triggerDevice = (color) => {
     const device = devicesState[deviceState].id;
     if (devicesState[deviceState].state === 'off') {
-      triggerControlParent({ifttt: [[{device, key: 'state', value: 'on'}]]});
+      triggerControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
     setTimeout(() => {
-      triggerControlParent({ifttt: [[{device, key: 'color', value: color}]]});
+      triggerControlParent({ifttt: [{device, key: 'color', value: color}]});
     }, 1000);
   }
 

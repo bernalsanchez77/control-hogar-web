@@ -13,11 +13,11 @@
   justify-content: center;
 }
 .controls-channels-row {
-  width: 300px;
+  width: 240px;
 }
 .controls-channels-row--top {
   height: 35px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 .controls-channels-row--middle {
   height: 35px;
@@ -26,14 +26,15 @@
 }
 .controls-channels-row--bottom {
   height: 35px;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 .controls-channels-element {
   float: left;
-  width: 33%;
+  width: 70px;
+  margin: 0 5px;
+
 }
 .controls-channels-element--img {
-  width: 20%;
   position: relative;
 }
 .controls-channels-element--left {
@@ -44,21 +45,20 @@
 }
 .controls-channels-img {
   margin: 0;
-  width: 40px;
-  position: absolute;
-  top: -2px;
+  width: 35px;
 }
 .controls-channels-elements-button {
   color: white;
   background-color: rgb(71, 3, 3, 0.8);
   text-align: center;
-  margin: 2px 0;
   border: gray 1px solid;
   border-radius: 5px;
   user-select: none;
   -webkit-user-select: none;
   padding: 6px 5px;
-  width: 80px;
+  font-size: 12px;
+  width: 100%;
+  height: 35px;
 }
 button.controls-channels-element-button:active {
   background-color: white;

@@ -18,6 +18,7 @@ function Main() {
   const loadingDevices = useRef(false);
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
+  const [userActive2, setUserActive2] = useState(false);
 
   const [sendDisabled, setSendDisabled] = useState(false);
   const [updatesDisabled, setUpdatesDisabled] = useState(false);
@@ -62,14 +63,12 @@ function Main() {
       }
     }
     const media = params.massMedia || params.ifttt;
-    media.forEach(device => {
-      device.forEach(el => {
-        if (Array.isArray(el.key)) {
-          devices[el.device][el.key[0]] = {...devices[el.device][el.key[0]], [el.key[1]]: el.value};
-        } else {
-          devices[el.device] = {...devices[el.device], [el.key]: el.value};
-        }
-      });
+    media.forEach(el => {
+      if (Array.isArray(el.key)) {
+        devices[el.device][el.key[0]] = {...devices[el.device][el.key[0]], [el.key[1]]: el.value};
+      } else {
+        devices[el.device] = {...devices[el.device], [el.key]: el.value};
+      }
     });
     setDevicesState(devices);
     requests.current.setDevices(devices);
@@ -185,9 +184,11 @@ function Main() {
       let message = '';
       if (document.visibilityState === 'visible') {
         userActive.current = true;
+        setUserActive2(true);
         message = user.current + ' regreso';
       } else {
         userActive.current = false;
+        setUserActive2(false);
         message = user.current + ' salio';
       }
       requests.current.sendLogs(message);
@@ -224,7 +225,7 @@ function Main() {
     } else {
       window.addEventListener("load", document.body.classList.add("loaded"));
     }
-    console.log('version 25');
+    console.log('version 26');
   }, [getMassMediaData, getRokuData, getPosition, getVisibility, user]);
 
   useEffect(() => {
@@ -287,7 +288,7 @@ function Main() {
   };
 
   return (
-    <div className="main">
+    <div className="main fade-in">
       {!credential &&
       <Credentials
         credential={credential}
@@ -303,10 +304,9 @@ function Main() {
             credential={credential}
             ownerCredential={ownerCredential.current}
             devCredential={devCredential.current}
-            inRange={inRange}
             devicesState={devicesState}
-            loadingDevices={loadingDevices}
             screenSelected={screenSelected}
+            userActive={userActive2}
             changeScreenParent={changeScreen}>
           </Screens>
           <Controls

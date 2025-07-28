@@ -124,35 +124,31 @@ class Requests {
     }
   }
   async sendControl(ifttt, roku) {
-    ifttt.forEach(device => {
-      device.forEach(el => {
-        if (el.device === 'rokuSala') {
-          if (!window.cordova) {
-              this.sendIfttt({
-                device: el.device,
-                key: el.key,
-                value: el.value
-              });
-          }
-        } else {
-          this.sendIfttt({
-            device: el.device,
+    ifttt.forEach(el => {
+      if (el.device === 'rokuSala') {
+        if (!window.cordova) {
+            this.sendIfttt({
+              device: el.device,
+              key: el.key,
+              value: el.value
+            });
+        }
+      } else {
+        this.sendIfttt({
+          device: el.device,
+          key: el.key,
+          value: el.value
+        });
+      }
+    });
+    if (roku) {
+      roku.forEach(el => {
+        if (window.cordova) {
+          this.fetchRoku({
             key: el.key,
             value: el.value
           });
         }
-      });
-    });
-    if (roku) {
-      roku.forEach(device => {
-        device.forEach(el => {
-          if (window.cordova) {
-            this.fetchRoku({
-              key: el.key,
-              value: el.value
-            });
-          }
-        });
       });
     }
   }
