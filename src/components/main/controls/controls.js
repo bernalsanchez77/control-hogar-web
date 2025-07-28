@@ -27,7 +27,7 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, c
 
   return (
     <div>
-      <div className='controls'>
+      <div className='controls fade-in'>
         <Top
           devicesState={devicesState}
           screenSelected={screenSelected}

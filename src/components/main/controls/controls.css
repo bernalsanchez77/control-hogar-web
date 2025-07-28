@@ -1,5 +1,7 @@
 .controls {
   margin: 5px 0;
+  opacity: 0;
+  transition: opacity 1s ease 0.5s;
 }
 .controls-toolbar-apps {
   height: 150px;

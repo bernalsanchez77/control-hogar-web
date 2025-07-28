@@ -35,6 +35,10 @@ function Main() {
   const devCredential = useRef('dev');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
+  window.addEventListener("load", () => {
+    document.body.classList.add("loaded");
+  });
+
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
       navigator.vibrate([length]);

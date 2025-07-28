@@ -8,3 +8,12 @@
   text-align: center;
   font-size: 0;
 }
+
+.fade-in {
+  opacity: 0;
+  transition: opacity 1s ease 0.5s; /* 1s fade, starts after 0.5s delay */
+}
+
+body.loaded .fade-in {
+  opacity: 1;
+}
