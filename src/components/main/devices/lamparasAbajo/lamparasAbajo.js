@@ -29,22 +29,22 @@ function LamparasAbajo({devicesState, triggerControlParent}) {
     }
   }, [devicesState, lamparasOff]);
   const triggerDevice = () => {
-    let device = [];
+    let ifttt = [];
     if (state === 'on') {
       lamparasOff.forEach(lampara => {
         if (devicesState[lampara].state === 'on') {
-          device.push(devicesState[lampara].id);
+          ifttt.push({device: lampara, key: 'state', value: 'off'});
         }
       });
-      triggerControlParent({ifttt: [[{device, key: 'state', value: 'off'}]]});
+      triggerControlParent({ifttt: [ifttt]});
       setState('off');
     } else {
       lamparasOn.forEach(lampara => {
         if (devicesState[lampara].state === 'off') {
-          device.push(devicesState[lampara].id);
+          ifttt.push({device: lampara, key: 'state', value: 'on'});
         }
       });
-      triggerControlParent({ifttt: [[{device, key: 'state', value: 'on'}]]});
+      triggerControlParent({ifttt: [ifttt]});
       setState('on');
     }
   }
