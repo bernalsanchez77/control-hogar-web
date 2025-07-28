@@ -248,12 +248,12 @@ function Main() {
 
   useEffect(() => {
     const handleLoad = () => {
-      document.body.classList.add("loaded");
+     // document.body.classList.add("loaded");
       console.log("Page fully loaded with images");
     };
     window.addEventListener("load", handleLoad);
     return () => {
-      window.removeEventListener("load", handleLoad);
+     // window.removeEventListener("load", handleLoad);
     };
   }, []);
 
