@@ -35,10 +35,6 @@ function Main() {
   const devCredential = useRef('dev');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
 
-  window.addEventListener("load", () => {
-    document.body.classList.add("loaded");
-  });
-
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
       navigator.vibrate([length]);
@@ -249,6 +245,17 @@ function Main() {
   useEffect(() => {
     devicesStateUpdated.current = devicesState;
   }, [devicesState]);
+
+  useEffect(() => {
+    const handleLoad = () => {
+      //document.body.classList.add("loaded");
+      console.log("Page fully loaded with images");
+    };
+    window.addEventListener("load", handleLoad);
+    return () => {
+      window.removeEventListener("load", handleLoad);
+    };
+  }, []);
 
   const resetDevices = async () => {
     await requests.current.setDevices(devicesOriginal);
