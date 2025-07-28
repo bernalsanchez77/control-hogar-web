@@ -248,7 +248,7 @@ function Main() {
 
   useEffect(() => {
     const handleLoad = () => {
-      //document.body.classList.add("loaded");
+      document.body.classList.add("loaded");
       console.log("Page fully loaded with images");
     };
     window.addEventListener("load", handleLoad);
