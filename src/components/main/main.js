@@ -247,15 +247,19 @@ function Main() {
   }, [devicesState]);
 
   useEffect(() => {
-    const handleLoad = () => {
-     // document.body.classList.add("loaded");
-      console.log("Page fully loaded with images");
-    };
+  const handleLoad = () => {
+    console.log("Page fully loaded (with images)");
+    // document.body.classList.add("loaded");
+  };
+
+  if (document.readyState === "complete") {
+    // The load event has already fired
+    handleLoad();
+  } else {
     window.addEventListener("load", handleLoad);
-    return () => {
-     // window.removeEventListener("load", handleLoad);
-    };
-  }, []);
+    return () => window.removeEventListener("load", handleLoad);
+  }
+}, []);
 
   const resetDevices = async () => {
     await requests.current.setDevices(devicesOriginal);
