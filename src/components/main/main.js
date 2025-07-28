@@ -219,18 +219,12 @@ function Main() {
     setInterval(() => {getPosition();}, 300000);
     requests.current.sendLogs(user.current + ' entro');
     getVisibility();
-    const handleLoad = () => {
-    console.log("Page fully loaded (with images)");
-    document.body.classList.add("loaded");
-  };
-
-  if (document.readyState === "complete") {
-    // The load event has already fired
-    handleLoad();
-  } else {
-    window.addEventListener("load", handleLoad);
-    return () => window.removeEventListener("load", handleLoad);
-  }
+    if (document.readyState === "complete") {
+      document.body.classList.add("loaded");
+    } else {
+      window.addEventListener("load", document.body.classList.add("loaded"));
+    }
+    console.log('version 25');
   }, [getMassMediaData, getRokuData, getPosition, getVisibility, user]);
 
   useEffect(() => {
@@ -245,44 +239,14 @@ function Main() {
     if (credential === 'dev') {
       setUpdatesDisabled(true);
     }
-  }, [credential]);
-
-  useEffect(() => {
     if (credential === devCredential.current) {
         eruda.init();
-        console.log('version 25');
     }
   }, [credential]);
 
-useEffect(() => {
-  console.log("[] effect ran (1)");
-}, []);
-
-useEffect(() => {
-  console.log('[devicesState] effect ran');
-  devicesStateUpdated.current = devicesState;
-}, [devicesState]);
-
-useEffect(() => {
-  console.log("[] effect ran (2)");
-}, []);
-
-
   useEffect(() => {
-    console.log('effect');
-  const handleLoad = () => {
-    console.log("Page fully loaded (with images)");
-    // document.body.classList.add("loaded");
-  };
-
-  if (document.readyState === "complete") {
-    // The load event has already fired
-    handleLoad();
-  } else {
-    window.addEventListener("load", handleLoad);
-    return () => window.removeEventListener("load", handleLoad);
-  }
-}, []);
+    devicesStateUpdated.current = devicesState;
+  }, [devicesState]);
 
   const resetDevices = async () => {
     await requests.current.setDevices(devicesOriginal);

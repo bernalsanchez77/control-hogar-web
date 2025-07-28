@@ -42,7 +42,7 @@ function Toolbar({devicesState, triggerControlParent}) {
             <button
                 className={`controls-toolbar-button`}
                 onTouchStart={() => triggerControl('play')}>
-                {(devicesState.rokuSala.state === 'play' || devicesState.rokuSala.state === 'none') &&
+                {(devicesState.rokuSala.state === 'play' || devicesState.rokuSala.state === 'none' || devicesState.rokuSala.state === 'close') &&
                 <img
                   className='controls-toolbar-img controls-toolbar-img--button'
                   src="/imgs/pause-50.png"
