@@ -10,6 +10,10 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
       triggerControlParent({ifttt: [{device, key: 'color', value: color}]});
     }, 1000);
   }
+    const triggerYoutube = (video) => {
+    const device = 'rokuSala';
+    //triggerControlParent({ifttt: [{device, key: 'color', value: color}]});
+  }
 
   return (
     <div>
@@ -37,13 +41,15 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
           <li className='controls-device'>
               <button
                 className={`controls-device-button controls-device-button--white`}
-                onTouchStart={() => triggerDevice('white')}>
+                onTouchStart={() => triggerYoutube('ebiDCZSGVEw')}>
+                  Calliou
               </button>
           </li>
           <li className='controls-device'>
               <button
                 className={`controls-device-button controls-device-button--red`}
-                onTouchStart={() => triggerDevice('red')}>
+                onTouchStart={() => triggerYoutube('ebiDCZSGVEw')}>
+                  Otra
               </button>
           </li>
         </ul>
