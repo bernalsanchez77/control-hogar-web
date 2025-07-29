@@ -54,24 +54,20 @@ function Main() {
 
 
   const changeControl = (params) => {
-    const devices = {...devicesStateUpdated.current};
-    if (!sendDisabled) {
-      if (params.roku) {
-      requests.current.sendControl(params.ifttt, params.roku);
-      } else {
-      requests.current.sendControl(params.ifttt);
-      }
+    requests.current.sendControl(sendDisabled, params);
+    const media = params.massMedia || params.ifttt || [];
+    if (media.length > 0) {
+      const devices = {...devicesStateUpdated.current};
+      media.forEach(el => {
+        if (Array.isArray(el.key)) {
+          devices[el.device][el.key[0]] = {...devices[el.device][el.key[0]], [el.key[1]]: el.value};
+        } else {
+          devices[el.device] = {...devices[el.device], [el.key]: el.value};
+        }
+      });
+      setDevicesState(devices);
+      requests.current.setDevices(devices);
     }
-    const media = params.massMedia || params.ifttt;
-    media.forEach(el => {
-      if (Array.isArray(el.key)) {
-        devices[el.device][el.key[0]] = {...devices[el.device][el.key[0]], [el.key[1]]: el.value};
-      } else {
-        devices[el.device] = {...devices[el.device], [el.key]: el.value};
-      }
-    });
-    setDevicesState(devices);
-    requests.current.setDevices(devices);
   }
 
   const triggerControl = (params) => {
@@ -238,7 +234,7 @@ function Main() {
 
   useEffect(() => {
     if (credential === 'dev') {
-      setUpdatesDisabled(true);
+      setSendDisabled(true);
     }
     if (credential === devCredential.current) {
         eruda.init();
