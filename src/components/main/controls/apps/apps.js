@@ -1,14 +1,30 @@
-
+import React, {useRef} from 'react';
 import './apps.css';
 
-function Apps({devicesState, screenSelected, triggerControlParent}) {
+function Apps({devicesState, triggerControlParent, triggerDeviceStateParent}) {
+  const timeout3s = useRef(null);
+  const longClick = useRef(false);
   const triggerControl = (value) => {
     const device = 'rokuSala';
     triggerControlParent({
-      ifttt: [{device, key: 'app', value: value}],
+      ifttt: [{device, key: 'app', value}],
       roku: [{device, key: 'launch', value: devicesState.rokuSala.apps[value].rokuId}],
     });
+  }
 
+  const triggerDeviceStart = () => {
+    timeout3s.current = setTimeout(() => {
+      longClick.current = true;
+    }, 1000);
+  }
+  const triggerDeviceEnd = (app) => {
+    clearTimeout(timeout3s.current);
+    if (longClick.current) {
+      triggerDeviceStateParent(app);
+    } else {
+      triggerControl(app);
+    }
+    longClick.current = false;
   }
 
   return (
@@ -39,7 +55,8 @@ function Apps({devicesState, screenSelected, triggerControlParent}) {
         <div className='controls-apps-element'>
           <button
             className={`controls-apps-button ${devicesState.rokuSala.apps.youtube.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
-            onTouchStart={() => triggerControl(devicesState.rokuSala.apps.youtube.id)}>
+            onTouchStart={() => triggerDeviceStart(devicesState.rokuSala.apps.youtube.id)}
+            onTouchEnd={() => triggerDeviceEnd(devicesState.rokuSala.apps.youtube.id)}>
               <img
                 className='controls-apps-img controls-apps-img--button'
                 src={devicesState.rokuSala.apps.youtube.img}

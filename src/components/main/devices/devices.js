@@ -93,7 +93,6 @@ function Devices({credential, ownerCredential, devCredential, devicesState, devi
         <div className='devices-element'>
           <LuzCuarto
             devicesState={devicesState}
-            deviceState={deviceState}
             triggerDeviceStateParent={triggerDeviceState}
             triggerControlParent={triggerControl}>
           </LuzCuarto>

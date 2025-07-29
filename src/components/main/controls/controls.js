@@ -57,7 +57,8 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, c
             </Toolbar>
             <Apps
               devicesState={devicesState}
-              triggerControlParent={triggerControl}>
+              triggerControlParent={triggerControl}
+              triggerDeviceStateParent={triggerDeviceState}>
             </Apps>
           </div>
         </div>

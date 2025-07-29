@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import './luzCuarto.css';
 
-function LuzCuarto({devicesState, deviceState, triggerDeviceStateParent, triggerControlParent}) {
+function LuzCuarto({devicesState, triggerDeviceStateParent, triggerControlParent}) {
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   const triggerDevice = (device) => {
@@ -12,12 +12,9 @@ function LuzCuarto({devicesState, deviceState, triggerDeviceStateParent, trigger
       triggerControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
   }
-  const triggerDeviceStart = (device) => {
+  const triggerDeviceStart = () => {
     timeout3s.current = setTimeout(() => {
       longClick.current = true;
-      if (navigator.vibrate) {
-        navigator.vibrate([200]);
-      }
     }, 1000);
   }
   const triggerDeviceEnd = (device) => {
