@@ -27,6 +27,12 @@
 .controls-apps-button--img {
   background-color: transparent;
   border: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-select: none;     /* Safari */
+  -webkit-touch-callout: none;   /* iOS Safari */
+  user-select: none;
+  pointer-events: none; 
 }
 .controls-apps-img--button {
   width: 40px;
