@@ -23,7 +23,7 @@ function Dev({ sendDisabled, updatesDisabled, changeDevParent }) {
             onContextMenu={(e) => e.preventDefault()}
             className={`dev-button ${sendDisabled ? "dev-button--on" : "dev-button-off"}`}
             onClick={() => changeDev('disableIfttt')}>
-              Disable IFTTT
+              Disable Changes
             </button>
         </div>
         <div className='dev-element'>

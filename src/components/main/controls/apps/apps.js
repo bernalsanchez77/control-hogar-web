@@ -6,9 +6,11 @@ function Apps({devicesState, triggerControlParent, triggerDeviceStateParent}) {
   const longClick = useRef(false);
   const triggerControl = (value) => {
     const device = 'rokuSala';
+    let rokuValue = devicesState.rokuSala.apps[value].rokuId
+    rokuValue = rokuValue.charAt(0).toUpperCase() + rokuValue.slice(1);
     triggerControlParent({
       ifttt: [{device, key: 'app', value}],
-      roku: [{device, key: 'launch', value: devicesState.rokuSala.apps[value].rokuId}],
+      roku: [{device, key: 'launch', value: rokuValue}],
     });
   }
 

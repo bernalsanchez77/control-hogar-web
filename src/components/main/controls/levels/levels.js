@@ -17,10 +17,11 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
   }
   const triggerControl = (value, saveChange = true) => {
     const device = devicesState.hdmiSala.state === 'roku' ? 'rokuSala' : 'cableSala';
+    const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
     if (saveChange) {
-      triggerControlParent({ifttt: [{device, key: 'command', value}], roku: [{device, key: 'keypress', value}], massMedia: [{device, key: 'app', value}]});
+      triggerControlParent({ifttt: [{device, key: 'command', value}], roku: [{device, key: 'keypress', value: rokuValue}], massMedia: [{device, key: 'app', value}]});
     } else {
-      triggerControlParent({ifttt: [{device, key: 'command', value}], roku: [{device, key: 'keypress', value}], massMedia: []});
+      triggerControlParent({ifttt: [{device, key: 'command', value}], roku: [{device, key: 'keypress', value: rokuValue}], massMedia: []});
     }
   }
 

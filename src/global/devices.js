@@ -156,6 +156,7 @@ export const devicesOriginal = {
         label: '',
         id: 'rokuSala',
         app: 'home',
+        video: '',
         apps: {
             home: {
                 label: 'Home',
@@ -180,6 +181,24 @@ export const devicesOriginal = {
                 id: 'youtube',
                 img: '/imgs/apps/youtube.png',
                 rokuId: '837',
+                videos: {
+                    liz: {
+                        ['5tVd50YAJP0']: {
+                            label: 'Caillou goes camping',
+                            description: 'Caillou goes camping',
+                            id: '5tVd50YAJP0',
+                            img: 'https://img.youtube.com/vi/5tVd50YAJP0/sddefault.jpg',
+                            state: '',
+                        },
+                        ['Z6dsdl76WGQ']: {
+                            label: 'Caillou gets sick',
+                            description: 'Caillou gets sick',
+                            id: 'Z6dsdl76WGQ',
+                            img: 'https://img.youtube.com/vi/Z6dsdl76WGQ/sddefault.jpg',
+                            state: '',
+                        },
+                    },
+                },
             },
             max: {
                 label: 'Max',

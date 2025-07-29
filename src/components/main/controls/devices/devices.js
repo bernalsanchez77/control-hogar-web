@@ -10,9 +10,12 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
       triggerControlParent({ifttt: [{device, key: 'color', value: color}]});
     }, 1000);
   }
-    const triggerYoutube = (video) => {
+  const triggerYoutube = (video) => {
     const device = 'rokuSala';
-    //triggerControlParent({ifttt: [{device, key: 'color', value: color}]});
+    triggerControlParent({
+      roku: [{device, key: 'launch', value: devicesState.rokuSala.apps.youtube.rokuId, params: {contentID: video}}],
+      massMedia: [{device: device, key: 'video', value: video}],
+    });
   }
 
   return (
@@ -22,13 +25,13 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
         <ul className='controls-devices-ul'>
           <li className='controls-device'>
               <button
-                className={`controls-device-button controls-device-button--white ${devicesState[deviceState].color === 'white' ? 'controls-device-button--selected' : ''}`}
+                className={`controls-device-luzcuarto-button controls-device-luzcuarto-button--white ${devicesState[deviceState].color === 'white' ? 'controls-device-luzcuarto-button--selected' : ''}`}
                 onTouchStart={() => triggerDevice('white')}>
               </button>
           </li>
           <li className='controls-device'>
               <button
-                className={`controls-device-button controls-device-button--red ${devicesState[deviceState].color === 'red' ? 'controls-device-button--selected' : ''}`}
+                className={`controls-device-luzcuarto-button controls-device-luzcuarto-button--red ${devicesState[deviceState].color === 'red' ? 'controls-device-luzcuarto-button--selected' : ''}`}
                 onTouchStart={() => triggerDevice('red')}>
               </button>
           </li>
@@ -38,20 +41,22 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
       {deviceState === 'youtube' &&
       <div className='controls-devices'>
         <ul className='controls-devices-ul'>
-          <li className='controls-device'>
+          {
+            Object.entries(devicesState.rokuSala.apps.youtube.videos.liz).map(([key, video]) => video.state ==='' ? (
+            <li key={key} className='controls-device'>
               <button
-                className={`controls-device-button controls-device-button--white`}
-                onTouchStart={() => triggerYoutube('ebiDCZSGVEw')}>
-                  Calliou
+                className={`controls-device-youtube-button ${devicesState.rokuSala.video === video.id ? 'controls-device-youtube-button--selected' : ''}`}
+                onTouchStart={() => triggerYoutube(video.id)}>
+                <img
+                  className='controls-device-youtube-img'
+                  src={video.img}
+                  alt="icono">
+                </img>
               </button>
-          </li>
-          <li className='controls-device'>
-              <button
-                className={`controls-device-button controls-device-button--red`}
-                onTouchStart={() => triggerYoutube('ebiDCZSGVEw')}>
-                  Otra
-              </button>
-          </li>
+            </li>
+            ) : null
+            )
+          }
         </ul>
       </div>
       }

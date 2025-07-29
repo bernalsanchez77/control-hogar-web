@@ -23,17 +23,19 @@
   display: flex;
   align-items: center;
 }
-.controls-device-button {
+
+
+.controls-device-luzcuarto-button {
   border: 2px solid transparent;
   width: 30px;
   height: 30px;
   border-radius: 50%;
   padding: 0;
 }
-.controls-device-button--white {
+.controls-device-luzcuarto-button--white {
   background-color: white;
 }
-.controls-device-button--red {
+.controls-device-luzcuarto-button--red {
   background-color: red;
 }
 @keyframes flashing {
@@ -44,10 +46,35 @@
     opacity: 0.3;
   }
 }
-.controls-device-button--selected {
+.controls-device-luzcuarto-button--selected {
   animation: flashing 2s ease-in-out infinite;
 }
-button.controls-device-button:active {
+button.controls-device-luzcuarto-button:active {
+  background-color: white;
+  transition: background-color 0.1s;
+}
+
+
+.controls-device-youtube-img {
+  width: 50px;
+}
+.controls-device-youtube-button {
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0;
+}
+@keyframes flashing {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+.controls-device-youtube-button--selected {
+  animation: flashing 2s ease-in-out infinite;
+}
+button.controls-device-youtube-button:active {
   background-color: white;
   transition: background-color 0.1s;
 }

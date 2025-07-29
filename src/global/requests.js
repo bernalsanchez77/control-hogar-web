@@ -116,60 +116,73 @@ class Requests {
       return await this.normalApiRequest('setDevices', devices, 'put');
     }
   }
-  async sendIfttt(params) {
-    if (window.cordova) {
-      return await this.cordovaApiRequest('sendIfttt', params, 'get');
-    } else {
-      return await this.normalApiRequest('sendIfttt', params, 'get');
+  async sendIfttt(params, sendDisabled) {
+    if (!sendDisabled) {
+      if (window.cordova) {
+        return await this.cordovaApiRequest('sendIfttt', params, 'get');
+      } else {
+        return await this.normalApiRequest('sendIfttt', params, 'get');
+      }
     }
   }
-  async sendControl(ifttt, roku) {
-    ifttt.forEach(el => {
-      if (el.device === 'rokuSala') {
-        if (!window.cordova) {
-            this.sendIfttt({
-              device: el.device,
-              key: el.key,
-              value: el.value
-            });
+  async sendControl(sendDisabled, params) {
+    if (params.ifttt) {
+      params.ifttt.forEach(el => {
+        if (el.device === 'rokuSala') {
+          if (!window.cordova) {
+              this.sendIfttt({
+                device: el.device,
+                key: el.key,
+                value: el.value
+              }, sendDisabled);
+          }
+        } else {
+          this.sendIfttt({
+            device: el.device,
+            key: el.key,
+            value: el.value,
+          }, sendDisabled);
         }
-      } else {
-        this.sendIfttt({
-          device: el.device,
-          key: el.key,
-          value: el.value
-        });
-      }
-    });
-    if (roku) {
-      roku.forEach(el => {
+      });
+    }
+    if (params.roku) {
+      params.roku.forEach(el => {
         if (window.cordova) {
           this.fetchRoku({
             key: el.key,
-            value: el.value
-          });
+            value: el.value,
+            params: el.params,
+          }, sendDisabled);
         }
       });
     }
   }
-  async fetchRoku(params) {
-    const url = `${rokuIp}${params.key}/${params.value.charAt(0).toUpperCase() + params.value.slice(1)}`;
-    const sendRequestPromise = new Promise((resolve, reject) => {
-      window.cordova.plugin.http.sendRequest(
-        url,
-        {method: 'post', headers: contentTypeX, data: {}, serializer: 'urlencoded'},
-        () => {resolve(true);},
-        (error) => {reject(error);}
+  async fetchRoku(params, sendDisabled) {
+    let url = '';
+    if (params.params) {
+      const par = new URLSearchParams(params.params);
+      url = `${rokuIp}${params.key}/${params.value}?${par.toString()}`;
+    } else {
+      url = `${rokuIp}${params.key}/${params.value}`;
+    }
+    if (!sendDisabled) {
+      const sendRequestPromise = new Promise((resolve, reject) => {
+        window.cordova.plugin.http.sendRequest(
+          url,
+          {method: 'post', headers: contentTypeX, data: {}, serializer: 'urlencoded'},
+          () => {resolve(true);},
+          (error) => {reject(error);}
+        );
+      });
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Roku not responding")), 500)
       );
-    });
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Roku not responding")), 500)
-    );
-    Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
-      console.log('Request to Roku succeeded');
-    }).catch(async() => {
-      return await this.cordovaApiRequest('sendIfttt', params, 'get');
-    });
+      Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
+        console.log('Request to Roku succeeded');
+      }).catch(async() => {
+        return await this.cordovaApiRequest('sendIfttt', params, 'get');
+      });
+    }
   }
 }
 export default Requests;
