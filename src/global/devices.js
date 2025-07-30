@@ -1059,6 +1059,26 @@ export const devicesOriginal = {
                 img: '/imgs/channels/tnt.png',
                 category: 'movies',
             },
+            tnt2: {
+                order: 84,
+                number: '282',
+                ifttt: '5',
+                label: 'tnt',
+                id: 'tnt2',
+                info: '',
+                img: '/imgs/channels/tnt.png',
+                category: 'movies',
+            },
+            tnt3: {
+                order: 85,
+                number: '282',
+                ifttt: '5',
+                label: 'tnt',
+                id: 'tnt3',
+                info: '',
+                img: '/imgs/channels/tnt.png',
+                category: 'movies',
+            },
         }
     }
 };
