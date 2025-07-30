@@ -163,6 +163,7 @@ function Main() {
     if (userActive.current && updatesEnabled) {
       loadingDevices.current = true;
       const response = await requests.current.getMassMediaData();
+      const videos = await requests.current.getAllVideos();
       if (response.status === 200) {
         setDevicesState(response.data);
         loadingDevices.current = false;
