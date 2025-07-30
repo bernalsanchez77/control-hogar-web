@@ -66,16 +66,6 @@ class Requests {
       );
     });
   }
-  // async cordovaPost() {
-  //   window.cordova.plugin.http.post(
-  //     longApiUrl + 'saveVideo',
-  //     {
-  //     },
-  //     { 'Content-Type': 'application/json' },
-  //     response => console.log('✅ Guardado', response),
-  //     error => console.error('❌ Error', error)
-  //   );
-  // }
   async saveVideo() {
     await this.normalApiRequest(
       'saveVideo',
@@ -92,10 +82,17 @@ class Requests {
       'post');
   }
   async getAllVideos() {
-    return await this.normalApiRequest('getVideos', null, 'get');
+    if (window.cordova) {
+      return await this.cordovaApiRequest('getVideos', null, 'get');
+    } else {
+      return await this.normalApiRequest('getVideos', null, 'get');
   }
   async updateVideo(params) {
-    return await this.normalApiRequest('updateVideo', params, 'patch');
+    if (window.cordova) {
+      return await this.cordovaApiRequest('updateVideo', params, 'patch');
+    } else {
+      return await this.normalApiRequest('updateVideo', params, 'patch');
+    }
   }
   async sendLogs(message) {
     if (window.cordova) {
