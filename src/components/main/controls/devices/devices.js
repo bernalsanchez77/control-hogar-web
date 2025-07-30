@@ -48,8 +48,8 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
             sortedVideos.map((video, key) => (
             <li key={key} className='controls-device'>
               <button
-                className={`controls-device-youtube-button ${devicesState.rokuSala.video === video.id ? 'controls-device-youtube-button--selected' : ''}`}
-                onTouchStart={() => triggerYoutube(video.id)}>
+                className={`controls-device-youtube-button ${devicesState.rokuSala.video === video.yid ? 'controls-device-youtube-button--selected' : ''}`}
+                onTouchStart={() => triggerYoutube(video.yid)}>
                 <img
                   className='controls-device-youtube-img'
                   src={video.img}

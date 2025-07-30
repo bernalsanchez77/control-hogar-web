@@ -183,26 +183,6 @@ export const devicesOriginal = {
                 rokuId: '837',
                 videos: {
                     liz: [
-                        {
-                            label: 'Caillou goes camping',
-                            description: 'Caillou goes camping',
-                            id: '5tVd50YAJP0',
-                            img: 'https://img.youtube.com/vi/5tVd50YAJP0/sddefault.jpg',
-                            state: '',
-                            channel: 'caillow',
-                            date: '',
-                            order: 0,
-                        },
-                        {
-                            label: 'Caillou gets sick',
-                            description: 'Caillou gets sick',
-                            id: 'Z6dsdl76WGQ',
-                            img: 'https://img.youtube.com/vi/Z6dsdl76WGQ/sddefault.jpg',
-                            state: '',
-                            channel: 'caillow',
-                            date: '',
-                            order: 0,
-                        },
                     ],
                 },
             },

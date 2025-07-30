@@ -35,6 +35,7 @@ function Main() {
   const guestCredential = useRef('guest');
   const devCredential = useRef('dev');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
+  const videos = useRef([]);
 
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
@@ -64,8 +65,9 @@ function Main() {
         } else {
           devices[el.device] = {...devices[el.device], [el.key]: el.value};
           if (el.key === 'video') {
-            const video = devices[el.device].apps.youtube.videos.liz.find(video => video.id === el.value);
-            video.date = new Date().toISOString();
+            const video = devices[el.device].apps.youtube.videos.liz.find(video => video.yid === el.value);
+            // video.date = new Date().toISOString();
+            requests.current.updateVideo({id: video.id, date: new Date().toISOString()});
           }
         }
       });
@@ -163,8 +165,11 @@ function Main() {
     if (userActive.current && updatesEnabled) {
       loadingDevices.current = true;
       const response = await requests.current.getMassMediaData();
-      const videos = await requests.current.getAllVideos();
+      if (firstTime) {
+        videos.current = await requests.current.getAllVideos();
+      }
       if (response.status === 200) {
+        response.data.rokuSala.apps.youtube.videos.liz = videos.current.data;
         setDevicesState(response.data);
         loadingDevices.current = false;
       }
@@ -271,7 +276,7 @@ function Main() {
   }
 
   const removeStorage = () => {
-    requests.current.guardarVideo();
+    requests.current.saveVideo();
     // localStorage.setItem('user', '');
   }
 

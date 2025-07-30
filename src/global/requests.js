@@ -81,7 +81,6 @@ class Requests {
       error => console.error('❌ Error', error)
     );
   }
-
   async saveVideo() {
     await this.normalApiRequest(
       'saveVideo',
@@ -99,6 +98,9 @@ class Requests {
   }
   async getAllVideos() {
     return await this.normalApiRequest('getVideos', null, 'get');
+  }
+  async updateVideo(params) {
+
   }
   async sendLogs(message) {
     if (window.cordova) {
