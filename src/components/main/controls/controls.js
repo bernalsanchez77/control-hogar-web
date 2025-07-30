@@ -8,7 +8,7 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({devicesState, screenSelected, channelCategory, deviceState, changeControlParent, changeDeviceStateParent, changeChannelCategoryParent, triggerVibrateParent }) {
+function Controls({devicesState, screenSelected, channelCategory, deviceState, videos, changeControlParent, changeDeviceStateParent, changeChannelCategoryParent, triggerVibrateParent }) {
   const triggerControl = (params) => {
     changeControlParent(params);
   }
@@ -85,6 +85,7 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, c
           <Devices
             devicesState={devicesState}
             deviceState={deviceState}
+            videos={videos}
             triggerControlParent={triggerControl}>
           </Devices>
         </div>
