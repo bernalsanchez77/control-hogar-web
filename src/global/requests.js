@@ -83,7 +83,7 @@ class Requests {
 
   async guardarVideo() {
     await this.normalApiRequest(
-      'saveVideos',
+      'saveVideo',
       {
         label: 'Caillou goes camping',
         description: 'Little kid in the forest',
@@ -93,8 +93,7 @@ class Requests {
         state: '',
         channel: 'caillow',
       },
-      'post'
-    );
+      'post');
   }
 
   async sendLogs(message) {
