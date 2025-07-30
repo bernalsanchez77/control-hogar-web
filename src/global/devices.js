@@ -182,22 +182,38 @@ export const devicesOriginal = {
                 img: '/imgs/apps/youtube.png',
                 rokuId: '837',
                 videos: {
-                    liz: {
-                        ['5tVd50YAJP0']: {
+                    liz: [
+                        {
                             label: 'Caillou goes camping',
                             description: 'Caillou goes camping',
                             id: '5tVd50YAJP0',
                             img: 'https://img.youtube.com/vi/5tVd50YAJP0/sddefault.jpg',
                             state: '',
+                            channel: 'caillow',
+                            date: '',
+                            order: 0,
                         },
-                        ['Z6dsdl76WGQ']: {
+                        {
                             label: 'Caillou gets sick',
                             description: 'Caillou gets sick',
                             id: 'Z6dsdl76WGQ',
                             img: 'https://img.youtube.com/vi/Z6dsdl76WGQ/sddefault.jpg',
                             state: '',
+                            channel: 'caillow',
+                            date: '',
+                            order: 0,
                         },
-                    },
+                        {
+                            label: 'Halloween Party',
+                            description: 'Halloween Party',
+                            id: 'ODBJliTc2j4',
+                            img: 'https://img.youtube.com/vi/ODBJliTc2j4/sddefault.jpg',
+                            state: '',
+                            channel: 'caillow',
+                            date: '',
+                            order: 0,
+                        },
+                    ],
                 },
             },
             max: {

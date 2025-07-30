@@ -63,6 +63,10 @@ function Main() {
           devices[el.device][el.key[0]] = {...devices[el.device][el.key[0]], [el.key[1]]: el.value};
         } else {
           devices[el.device] = {...devices[el.device], [el.key]: el.value};
+          if (el.key === 'video') {
+            const video = devices[el.device].apps.youtube.videos.liz.find(video => video.id === el.value);
+            video.date = new Date().toISOString();
+          }
         }
       });
       setDevicesState(devices);

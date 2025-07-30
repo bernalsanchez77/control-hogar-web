@@ -17,6 +17,9 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
       massMedia: [{device: device, key: 'video', value: video}],
     });
   }
+  const sortedVideos = Object.values(devicesState.rokuSala.apps.youtube.videos.liz).sort(
+    (a, b) => new Date(a.date) - new Date(b.date)
+  );
 
   return (
     <div>
@@ -42,7 +45,7 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
       <div className='controls-devices'>
         <ul className='controls-devices-ul'>
           {
-            Object.entries(devicesState.rokuSala.apps.youtube.videos.liz).map(([key, video]) => video.state ==='' ? (
+            sortedVideos.map((video, key) => (
             <li key={key} className='controls-device'>
               <button
                 className={`controls-device-youtube-button ${devicesState.rokuSala.video === video.id ? 'controls-device-youtube-button--selected' : ''}`}
@@ -54,8 +57,7 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
                 </img>
               </button>
             </li>
-            ) : null
-            )
+            ))
           }
         </ul>
       </div>
