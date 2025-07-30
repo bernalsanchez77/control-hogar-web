@@ -20,6 +20,7 @@ function Devices({devicesState, deviceState, videos, triggerControlParent}) {
   const sortedVideos = Object.values(videos).sort(
     (a, b) => new Date(a.date) - new Date(b.date)
   );
+  console.log(sortedVideos);
 
   return (
     <div>
