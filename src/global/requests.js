@@ -70,7 +70,7 @@ class Requests {
       {
         label: 'Caillou goes camping',
         description: 'Little kid in the forest',
-        youtube_id: '5tVd50YAJP0',
+        yid: '5tVd50YAJP0',
         img: 'https://img.youtube.com/vi/5tVd50YAJP0/sddefault.jpg',
         order: 0,
         state: '',

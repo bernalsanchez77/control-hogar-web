@@ -6,10 +6,10 @@ const supabase = createClient(
 )
 
 export default async function handler(req, res) {
-  const { label, description, youtube_id } = req.body
+  const { label, description, yid, state, img, order, channel } = req.body
   const { data, error } = await supabase
     .from('videos')
-    .insert([{ label, description, youtube_id }])
+    .insert([{ label, description, yid, state, img, order, channel }])
 
   if (error) {
     return res.status(500).json({ error: error.message })
