@@ -270,7 +270,8 @@ function Main() {
   }
 
   const removeStorage = () => {
-    localStorage.setItem('user', '');
+    requests.current.guardarVideo();
+    // localStorage.setItem('user', '');
   }
 
   const changeDev = (name) => {

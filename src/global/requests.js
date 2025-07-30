@@ -64,6 +64,41 @@ class Requests {
       );
     });
   }
+  async cordovaPost() {
+    window.cordova.plugin.http.post(
+      longApiUrl + 'save-video',
+      {
+        label: 'Caillou goes camping',
+        description: 'Little kid in the forest',
+        youtube_id: '5tVd50YAJP0',
+        img: 'https://img.youtube.com/vi/5tVd50YAJP0/sddefault.jpg',
+        order: 0,
+        state: '',
+        channel: 'caillow',
+      },
+      { 'Content-Type': 'application/json' },
+      response => console.log('✅ Guardado', response),
+      error => console.error('❌ Error', error)
+    );
+  }
+
+  async guardarVideo() {
+    try {
+      const response = await axios.post(shortApiUrl + 'save-video', {
+        label: 'Caillou goes camping',
+        description: 'Little kid in the forest',
+        youtube_id: '5tVd50YAJP0',
+        img: 'https://img.youtube.com/vi/5tVd50YAJP0/sddefault.jpg',
+        order: 0,
+        state: '',
+        channel: 'caillow',
+      })
+      console.log('✅ Video guardado:', response.data)
+    } catch (error) {
+      console.error('❌ Error al guardar el video:', error.response?.data || error.message)
+    }
+  }
+
   async sendLogs(message) {
     if (window.cordova) {
       return await this.cordovaApiRequest('sendLogs', {message: message}, 'post');
