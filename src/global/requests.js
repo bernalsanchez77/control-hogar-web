@@ -82,7 +82,7 @@ class Requests {
     );
   }
 
-  async guardarVideo() {
+  async saveVideo() {
     await this.normalApiRequest(
       'saveVideo',
       {
@@ -97,7 +97,9 @@ class Requests {
       },
       'post');
   }
-
+  async getAllVideos() {
+    return await this.normalApiRequest('getVideos', null, 'get');
+  }
   async sendLogs(message) {
     if (window.cordova) {
       return await this.cordovaApiRequest('sendLogs', {message: message}, 'post');
