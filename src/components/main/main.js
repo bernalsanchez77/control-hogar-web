@@ -167,6 +167,7 @@ function Main() {
       const response = await requests.current.getMassMediaData();
       if (firstTime) {
         videos.current = await requests.current.getAllVideos();
+        videos.current = videos.current.data;
       }
       if (response.status === 200) {
         // response.data.rokuSala.apps.youtube.videos.liz = videos.current.data;
