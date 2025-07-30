@@ -80,13 +80,13 @@ class Requests {
     await this.normalApiRequest(
       'saveVideo',
       {
-                            label: 'Caillou goes camping',
-                            description: 'Caillou goes camping',
-                            yid: '5tVd50YAJP0',
-                            img: 'https://img.youtube.com/vi/5tVd50YAJP0/sddefault.jpg',
+                            label: 'Halloween Party',
+                            description: 'Halloween Party',
+                            yid: 'ODBJliTc2j4',
+                            img: 'https://img.youtube.com/vi/ODBJliTc2j4/sddefault.jpg',
                             state: '',
                             channel: 'caillou',
-                            date: '',
+                            date: new Date().toISOString(),
                             order: 0,
       },
       'post');

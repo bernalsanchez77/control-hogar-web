@@ -20,6 +20,7 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
   const sortedVideos = Object.values(devicesState.rokuSala.apps.youtube.videos.liz).sort(
     (a, b) => new Date(a.date) - new Date(b.date)
   );
+  console.log(sortedVideos);
 
   return (
     <div>
