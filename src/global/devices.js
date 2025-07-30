@@ -216,7 +216,7 @@ export const devicesOriginal = {
                         {
                             label: 'Halloween Party',
                             description: 'Halloween Party',
-                            id: 'ODBJliTc2j4',
+                            id: 'w9KbHe6-NcM',
                             img: 'https://img.youtube.com/vi/ODBJliTc2j4/sddefault.jpg',
                             state: '',
                             channel: 'caillow',
