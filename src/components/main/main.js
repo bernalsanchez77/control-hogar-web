@@ -169,7 +169,7 @@ function Main() {
         videos.current = await requests.current.getAllVideos();
       }
       if (response.status === 200) {
-        response.data.rokuSala.apps.youtube.videos.liz = videos.current.data;
+        // response.data.rokuSala.apps.youtube.videos.liz = videos.current.data;
         setDevicesState(response.data);
         loadingDevices.current = false;
       }
@@ -321,6 +321,7 @@ function Main() {
             screenSelected={screenSelected}
             channelCategory={channelCategory}
             deviceState={deviceState}
+            videos={videos.current}
             changeChannelCategoryParent={changeChannelCategory}
             changeDeviceStateParent={changeDeviceState}
             changeControlParent={triggerControl}
