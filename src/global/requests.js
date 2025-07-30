@@ -25,6 +25,9 @@ class Requests {
     if (method === 'put') {
       response = await axios.put(url, params, {headers: contentTypeJson});
     }
+    if (method === 'patch') {
+      response = await axios.patch(url, params);
+    }
     if (response.status === 200) {
       console.log(`${method} request to ${api} succeeded`);
       return {status: response.status, data: response.data};
@@ -63,36 +66,28 @@ class Requests {
       );
     });
   }
-  async cordovaPost() {
-    window.cordova.plugin.http.post(
-      longApiUrl + 'save-video',
-      {
-        label: 'Caillou goes camping',
-        description: 'Little kid in the forest',
-        yid: '5tVd50YAJP0',
-        img: 'https://img.youtube.com/vi/5tVd50YAJP0/sddefault.jpg',
-        order: 0,
-        state: '',
-        channel: 'caillow',
-        date: new Date().toISOString(),
-      },
-      { 'Content-Type': 'application/json' },
-      response => console.log('✅ Guardado', response),
-      error => console.error('❌ Error', error)
-    );
-  }
+  // async cordovaPost() {
+  //   window.cordova.plugin.http.post(
+  //     longApiUrl + 'saveVideo',
+  //     {
+  //     },
+  //     { 'Content-Type': 'application/json' },
+  //     response => console.log('✅ Guardado', response),
+  //     error => console.error('❌ Error', error)
+  //   );
+  // }
   async saveVideo() {
     await this.normalApiRequest(
       'saveVideo',
       {
-        label: 'Caillou goes camping',
-        description: 'Little kid in the forest',
-        yid: '5tVd50YAJP0',
-        img: 'https://img.youtube.com/vi/5tVd50YAJP0/sddefault.jpg',
-        order: 0,
-        state: '',
-        channel: 'caillow',
-        date: new Date().toISOString(),
+                            label: 'Caillou goes camping',
+                            description: 'Caillou goes camping',
+                            yid: '5tVd50YAJP0',
+                            img: 'https://img.youtube.com/vi/5tVd50YAJP0/sddefault.jpg',
+                            state: '',
+                            channel: 'caillou',
+                            date: '',
+                            order: 0,
       },
       'post');
   }
@@ -100,7 +95,7 @@ class Requests {
     return await this.normalApiRequest('getVideos', null, 'get');
   }
   async updateVideo(params) {
-
+    return await this.normalApiRequest('updateVideo', params, 'patch');
   }
   async sendLogs(message) {
     if (window.cordova) {
