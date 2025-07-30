@@ -1,6 +1,6 @@
 import './devices.css';
 
-function Devices({devicesState, deviceState, triggerControlParent}) {
+function Devices({devicesState, deviceState, videos, triggerControlParent}) {
   const triggerDevice = (color) => {
     const device = devicesState[deviceState].id;
     if (devicesState[deviceState].state === 'off') {
@@ -17,10 +17,9 @@ function Devices({devicesState, deviceState, triggerControlParent}) {
       massMedia: [{device: device, key: 'video', value: video}],
     });
   }
-  const sortedVideos = Object.values(devicesState.rokuSala.apps.youtube.videos.liz).sort(
+  const sortedVideos = Object.values(videos).sort(
     (a, b) => new Date(a.date) - new Date(b.date)
   );
-  console.log(sortedVideos);
 
   return (
     <div>
