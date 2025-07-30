@@ -67,7 +67,7 @@ function Main() {
           if (el.key === 'video') {
             const video = videos.current.find(video => video.yid === el.value);
             video.date = new Date().toISOString();
-            //requests.current.updateVideo({id: video.id, date: new Date().toISOString()});
+            requests.current.updateVideo({id: video.id, date: new Date().toISOString()});
           }
         }
       });
