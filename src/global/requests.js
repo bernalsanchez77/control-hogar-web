@@ -74,6 +74,7 @@ class Requests {
         order: 0,
         state: '',
         channel: 'caillow',
+        date: new Date().toISOString(),
       },
       { 'Content-Type': 'application/json' },
       response => console.log('✅ Guardado', response),
