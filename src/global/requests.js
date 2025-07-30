@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { XMLParser } from 'fast-xml-parser';
-import Utils from './utils';
 
 const longApiUrl = 'https://control-hogar-psi.vercel.app/api/';
 const shortApiUrl = '/api/';
@@ -83,8 +82,9 @@ class Requests {
   }
 
   async guardarVideo() {
-    try {
-      const response = await axios.post(shortApiUrl + 'save-video', {
+    await this.normalApiRequest(
+      'saveVideos',
+      {
         label: 'Caillou goes camping',
         description: 'Little kid in the forest',
         yid: '5tVd50YAJP0',
@@ -92,11 +92,9 @@ class Requests {
         order: 0,
         state: '',
         channel: 'caillow',
-      })
-      console.log('✅ Video guardado:', response.data)
-    } catch (error) {
-      console.error('❌ Error al guardar el video:', error.response?.data || error.message)
-    }
+      },
+      'post'
+    );
   }
 
   async sendLogs(message) {

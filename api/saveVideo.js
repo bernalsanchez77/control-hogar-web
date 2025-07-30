@@ -6,14 +6,10 @@ const supabase = createClient(
 )
 
 export default async function handler(req, res) {
-  const { label, description, yid, state, img, order, channel } = req.body
-  const { data, error } = await supabase
-    .from('videos')
-    .insert([{ label, description, yid, state, img, order, channel }])
-
+  const { label, description, yid, state, img, order, channel } = req.body;
+  const { data, error } = await supabase.from('videos').insert([{ label, description, yid, state, img, order, channel }]);
   if (error) {
     return res.status(500).json({ error: error.message })
   }
-
   res.status(200).json({ message: 'Video saved', data })
 }
