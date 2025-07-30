@@ -65,7 +65,7 @@ function Main() {
         } else {
           devices[el.device] = {...devices[el.device], [el.key]: el.value};
           if (el.key === 'video') {
-            const video = videos.find(video => video.yid === el.value);
+            const video = videos.current.find(video => video.yid === el.value);
             video.date = new Date().toISOString();
             //requests.current.updateVideo({id: video.id, date: new Date().toISOString()});
           }
