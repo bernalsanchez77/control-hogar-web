@@ -55,10 +55,18 @@ button.controls-device-luzcuarto-button:active {
 }
 
 
-.controls-device-youtube-img {
+.controls-device-youtube-channel-img {
+  width: 50px;
+}
+.controls-device-youtube-video-img {
   width: 70px;
 }
-.controls-device-youtube-button {
+.controls-device-youtube-video-button {
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0;
+}
+.controls-device-youtube-channel-button {
   background-color: transparent;
   border: 1px solid transparent;
   padding: 0;
@@ -71,10 +79,10 @@ button.controls-device-luzcuarto-button:active {
     opacity: 0.3;
   }
 }
-.controls-device-youtube-button--selected {
+.controls-device-youtube-video-button--selected {
   animation: flashing 2s ease-in-out infinite;
 }
-button.controls-device-youtube-button:active {
+button.controls-device-youtube-video-button:active {
   background-color: white;
   transition: background-color 0.1s;
 }

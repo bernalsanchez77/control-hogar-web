@@ -1,8 +1,10 @@
+import React, {useRef} from 'react';
 import './devices.css';
 
-function Devices({devicesState, deviceState, youtubeLizVideos, triggerControlParent}) {
+function Devices({devicesState, deviceState, youtubeLizVideos, triggerControlParent, triggerDeviceStateParent}) {
   let youtubeLizSortedVideos = [];
-  let youtubeLizVideoCategories = [];
+  let youtubeLizSortedChannels = [];
+  const channelSelected = useRef('');
   const triggerDevice = (color) => {
     const device = devicesState[deviceState].id;
     if (devicesState[deviceState].state === 'off') {
@@ -12,13 +14,18 @@ function Devices({devicesState, deviceState, youtubeLizVideos, triggerControlPar
       triggerControlParent({ifttt: [{device, key: 'color', value: color}]});
     }, 1000);
   }
-  const triggerYoutube = (video) => {
+  const triggerYoutubeChannel = (state, channel) => {
+    channelSelected.current = channel;
+    triggerDeviceStateParent(state);
+  }
+  const triggerYoutubeVideo = (video) => {
     const device = 'rokuSala';
     triggerControlParent({
       roku: [{device, key: 'launch', value: devicesState.rokuSala.apps.youtube.rokuId, params: {contentID: video}}],
       massMedia: [{device: device, key: 'video', value: video}],
     });
   }
+
   if (deviceState === 'youtube') {
     const refMap = {};
     youtubeLizVideos.forEach(video => {
@@ -28,10 +35,14 @@ function Devices({devicesState, deviceState, youtubeLizVideos, triggerControlPar
         channelImg: video.channelImg
       }
     });
-    youtubeLizSortedVideos = Object.values(refMap).sort((a, b) => a.order - b.order);
-    // youtubeLizSortedVideos = Object.values(youtubeLizVideos).sort(
-    //   (a, b) => new Date(a.date) - new Date(b.date)
-    // );
+    youtubeLizSortedChannels = Object.values(refMap).sort((a, b) => a.order - b.order);
+  }
+
+  if (deviceState === 'youtubeVideos') {
+    youtubeLizSortedVideos = youtubeLizVideos.filter(video => video.channelId === channelSelected.current);
+    youtubeLizSortedVideos = Object.values(youtubeLizSortedVideos).sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
   }
 
   return (
@@ -58,14 +69,35 @@ function Devices({devicesState, deviceState, youtubeLizVideos, triggerControlPar
       <div className='controls-devices'>
         <ul className='controls-devices-ul'>
           {
+            youtubeLizSortedChannels.map((channel, key) => (
+            <li key={key} className='controls-device'>
+              <button
+                className={'controls-device-youtube-channel-button'}
+                onTouchStart={() => triggerYoutubeChannel('youtubeVideos', channel.channelId)}>
+                <img
+                  className='controls-device-youtube-channel-img'
+                  src={channel.channelImg}
+                  alt="icono">
+                </img>
+              </button>
+            </li>
+            ))
+          }
+        </ul>
+      </div>
+      }
+      {deviceState === 'youtubeVideos' &&
+      <div className='controls-devices'>
+        <ul className='controls-devices-ul'>
+          {
             youtubeLizSortedVideos.map((video, key) => (
             <li key={key} className='controls-device'>
               <button
-                className={`controls-device-youtube-button ${devicesState.rokuSala.video === video.channelId ? 'controls-device-youtube-button--selected' : ''}`}
-                onTouchStart={() => triggerYoutube(video.videoId)}>
+                className={`controls-device-youtube-video-button ${devicesState.rokuSala.video === video.videoId ? 'controls-device-youtube-video-button--selected' : ''}`}
+                onTouchStart={() => triggerYoutubeVideo(video.videoId)}>
                 <img
-                  className='controls-device-youtube-img'
-                  src={video.channelImg}
+                  className='controls-device-youtube-video-img'
+                  src={video.videoImg}
                   alt="icono">
                 </img>
               </button>

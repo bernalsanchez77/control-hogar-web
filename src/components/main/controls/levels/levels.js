@@ -111,7 +111,11 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
 
   const backButtonTriggered = () => {
     if (deviceState !== 'default') {
-      triggerDeviceStateParent('default');
+      if (deviceState === 'youtubeVideos') {
+        triggerDeviceStateParent('youtube');
+      } else {
+        triggerDeviceStateParent('default');
+      }
     } else {
       if (channelCategory === 'default') {
         triggerControl('back', false);

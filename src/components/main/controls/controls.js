@@ -86,7 +86,8 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, y
             devicesState={devicesState}
             deviceState={deviceState}
             youtubeLizVideos={youtubeLizVideos}
-            triggerControlParent={triggerControl}>
+            triggerControlParent={triggerControl}
+            triggerDeviceStateParent={triggerDeviceState}>
           </Devices>
         </div>
         }

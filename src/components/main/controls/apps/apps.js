@@ -17,7 +17,7 @@ function Apps({devicesState, triggerControlParent, triggerDeviceStateParent}) {
   const triggerDeviceStart = () => {
     timeout3s.current = setTimeout(() => {
       longClick.current = true;
-    }, 1000);
+    }, 500);
   }
   const triggerDeviceEnd = (app) => {
     clearTimeout(timeout3s.current);
