@@ -48,7 +48,11 @@ function Main() {
     setChannelCategory(category);
   }
 
-  const changeDeviceState = (state) => {
+  const changeDeviceState = async (state) => {
+    if (state === 'youtube') {
+      videos.current = await requests.current.getYoutubeLizVideos();
+      videos.current = videos.current.data;
+    }
     triggerVibrate();
     setDeviceState(state);
   }
@@ -165,12 +169,7 @@ function Main() {
     if (userActive.current && updatesEnabled) {
       loadingDevices.current = true;
       const response = await requests.current.getMassMediaData();
-      if (firstTime) {
-        videos.current = await requests.current.getAllVideos();
-        videos.current = videos.current.data;
-      }
       if (response.status === 200) {
-        // response.data.rokuSala.apps.youtube.videos.liz = videos.current.data;
         setDevicesState(response.data);
         loadingDevices.current = false;
       }

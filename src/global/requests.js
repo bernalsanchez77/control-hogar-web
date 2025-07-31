@@ -81,7 +81,7 @@ class Requests {
       },
       'post');
   }
-  async getAllVideos() {
+  async getYoutubeLizVideos() {
     if (window.cordova) {
       return await this.cordovaApiRequest('getVideos', null, 'get');
     } else {
