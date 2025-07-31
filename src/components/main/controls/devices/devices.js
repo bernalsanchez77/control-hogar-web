@@ -1,6 +1,8 @@
 import './devices.css';
 
-function Devices({devicesState, deviceState, videos, triggerControlParent}) {
+function Devices({devicesState, deviceState, youtubeLizVideos, triggerControlParent}) {
+  let youtubeLizSortedVideos = [];
+  let youtubeLizVideoCategories = [];
   const triggerDevice = (color) => {
     const device = devicesState[deviceState].id;
     if (devicesState[deviceState].state === 'off') {
@@ -17,10 +19,20 @@ function Devices({devicesState, deviceState, videos, triggerControlParent}) {
       massMedia: [{device: device, key: 'video', value: video}],
     });
   }
-  const sortedVideos = Object.values(videos).sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
-  );
-  console.log(sortedVideos);
+  if (deviceState === 'youtube') {
+    const refMap = {};
+    youtubeLizVideos.forEach(video => {
+      refMap[video.channelId] = {
+        channelId: video.channelId,
+        channelOrder: video.channelOrder,
+        channelImg: video.channelImg
+      }
+    });
+    youtubeLizSortedVideos = Object.values(refMap).sort((a, b) => a.order - b.order);
+    // youtubeLizSortedVideos = Object.values(youtubeLizVideos).sort(
+    //   (a, b) => new Date(a.date) - new Date(b.date)
+    // );
+  }
 
   return (
     <div>
@@ -46,14 +58,14 @@ function Devices({devicesState, deviceState, videos, triggerControlParent}) {
       <div className='controls-devices'>
         <ul className='controls-devices-ul'>
           {
-            sortedVideos.map((video, key) => (
+            youtubeLizSortedVideos.map((video, key) => (
             <li key={key} className='controls-device'>
               <button
-                className={`controls-device-youtube-button ${devicesState.rokuSala.video === video.yid ? 'controls-device-youtube-button--selected' : ''}`}
-                onTouchStart={() => triggerYoutube(video.yid)}>
+                className={`controls-device-youtube-button ${devicesState.rokuSala.video === video.channelId ? 'controls-device-youtube-button--selected' : ''}`}
+                onTouchStart={() => triggerYoutube(video.videoId)}>
                 <img
                   className='controls-device-youtube-img'
-                  src={video.img}
+                  src={video.channelImg}
                   alt="icono">
                 </img>
               </button>

@@ -88,7 +88,7 @@ class Requests {
       return await this.normalApiRequest('getVideos', null, 'get');
     }
   }
-  async updateVideo(params) {
+  async updateYoutubeLizVideo(params) {
     if (window.cordova) {
       return await this.cordovaApiRequest('updateVideo', params, 'patch');
     } else {

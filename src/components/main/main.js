@@ -35,7 +35,7 @@ function Main() {
   const guestCredential = useRef('guest');
   const devCredential = useRef('dev');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
-  const videos = useRef([]);
+  const youtubeLizVideos = useRef([]);
 
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
@@ -50,8 +50,10 @@ function Main() {
 
   const changeDeviceState = async (state) => {
     if (state === 'youtube') {
-      videos.current = await requests.current.getYoutubeLizVideos();
-      videos.current = videos.current.data;
+      if (youtubeLizVideos.current.length === 0) {
+        youtubeLizVideos.current = await requests.current.getYoutubeLizVideos();
+        youtubeLizVideos.current = youtubeLizVideos.current.data;
+      }
     }
     triggerVibrate();
     setDeviceState(state);
@@ -69,9 +71,9 @@ function Main() {
         } else {
           devices[el.device] = {...devices[el.device], [el.key]: el.value};
           if (el.key === 'video') {
-            const video = videos.current.find(video => video.yid === el.value);
-            video.date = new Date().toISOString();
-            requests.current.updateVideo({id: video.id, date: new Date().toISOString()});
+            const video = youtubeLizVideos.current.find(video => video.videoId === el.value);
+            video.videoDate = new Date().toISOString();
+            requests.current.updateYoutubeLizVideo({videoId: video.videoId, videoDate: new Date().toISOString()});
           }
         }
       });
@@ -276,8 +278,7 @@ function Main() {
   }
 
   const removeStorage = () => {
-    requests.current.saveVideo();
-    // localStorage.setItem('user', '');
+    localStorage.setItem('user', '');
   }
 
   const changeDev = (name) => {
@@ -321,7 +322,7 @@ function Main() {
             screenSelected={screenSelected}
             channelCategory={channelCategory}
             deviceState={deviceState}
-            videos={videos.current}
+            youtubeLizVideos={youtubeLizVideos.current}
             changeChannelCategoryParent={changeChannelCategory}
             changeDeviceStateParent={changeDeviceState}
             changeControlParent={triggerControl}
