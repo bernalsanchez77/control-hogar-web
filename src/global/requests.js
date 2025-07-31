@@ -44,7 +44,7 @@ class Requests {
     if (serializer) {
       info.serializer = serializer;
     }
-    if (method === 'post' || method === 'put') {
+    if (method === 'post' || method === 'put' || method === 'patch') {
       info.data = params;
     }
     return new Promise((resolve, reject) => {
@@ -86,6 +86,7 @@ class Requests {
       return await this.cordovaApiRequest('getVideos', null, 'get');
     } else {
       return await this.normalApiRequest('getVideos', null, 'get');
+    }
   }
   async updateVideo(params) {
     if (window.cordova) {
