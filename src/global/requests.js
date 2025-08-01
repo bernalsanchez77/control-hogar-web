@@ -114,8 +114,11 @@ class Requests {
   // }
 
   async searchYoutube(text) {
-    // const res = await axios.get(`/api/youtube-search?q=${encodeURIComponent(text)}`);
-    const res = await this.normalApiRequest('getVideosFromYoutube', {q: encodeURIComponent(text)}, 'get');
+    if (window.cordova) {
+      const res = await this.cordovaApiRequest('getVideosFromYoutube', {q: encodeURIComponent(text)}, 'get');
+    } else {
+      const res = await this.normalApiRequest('getVideosFromYoutube', {q: encodeURIComponent(text)}, 'get');
+    }
     return res.data.items;
   }
 
