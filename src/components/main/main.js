@@ -53,8 +53,8 @@ function Main() {
   }
 
   const searchYoutube = async (text) => {
-    // youtubeSearchVideos.current = await requests.current.searchYoutube(text);
-    youtubeSearchVideos.current = youtubeDummyData.current.getYoutubeDummyData();
+    youtubeSearchVideos.current = await requests.current.searchYoutube(text);
+    //youtubeSearchVideos.current = youtubeDummyData.current.getYoutubeDummyData();
   }
 
   const changeDeviceState = async (state) => {
