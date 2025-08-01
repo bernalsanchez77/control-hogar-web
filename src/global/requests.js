@@ -95,25 +95,25 @@ class Requests {
       return await this.normalApiRequest('updateVideoInSupabase', params, 'patch');
     }
   }
-  async searchYoutube(text) {
-    console.log(text);
-    try {
-      const res = await axios.get('https://www.googleapis.com/youtube/v3/search', {
-        params: {
-          part: 'snippet',
-          maxResults: 10,
-          q: text,
-          type: 'video',
-          key: 'AIzaSyAm7Z-IXj2M9we65X0V2YmRM3URgn6tqWk'
-        }
-      });
-      return res.data.items;
-    } catch (error) {
-      console.error('Search error:', error);
-    }
-  }
+  // async searchYoutube(text) {
+  //   console.log(text);
+  //   try {
+  //     const res = await axios.get('https://www.googleapis.com/youtube/v3/search', {
+  //       params: {
+  //         part: 'snippet',
+  //         maxResults: 10,
+  //         q: text,
+  //         type: 'video',
+  //         key: 'AIzaSyAm7Z-IXj2M9we65X0V2YmRM3URgn6tqWk'
+  //       }
+  //     });
+  //     return res.data.items;
+  //   } catch (error) {
+  //     console.error('Search error:', error);
+  //   }
+  // }
 
-  async searchYouTube(text) {
+  async searchYoutube(text) {
     // const res = await axios.get(`/api/youtube-search?q=${encodeURIComponent(text)}`);
     const res = await this.normalApiRequest('getVideosFromYoutube', {q: encodeURIComponent(text)}, 'get');
     return res.data.items;

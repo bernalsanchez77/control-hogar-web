@@ -80,8 +80,10 @@ function Main() {
           devices[el.device] = {...devices[el.device], [el.key]: el.value};
           if (el.key === 'video') {
             const video = youtubeLizVideos.current.find(video => video.videoId === el.value);
-            video.videoDate = new Date().toISOString();
-            requests.current.updateYoutubeLizVideo({videoId: video.videoId, videoDate: new Date().toISOString()});
+            if (video) {
+              video.videoDate = new Date().toISOString();
+              requests.current.updateYoutubeLizVideo({videoId: video.videoId, videoDate: new Date().toISOString()});
+            }
           }
         }
       });

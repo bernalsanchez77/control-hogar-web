@@ -53,7 +53,6 @@ function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVide
         videoImg: item.snippet.thumbnails.medium.url,
         channelTitle: item.snippet.channelTitle,
       }));
-      console.log('test');
     } else {
       youtubeLizSortedVideos = youtubeLizVideos.current.filter(video => video.channelId === channelSelected.current);
       youtubeLizSortedVideos = Object.values(youtubeLizSortedVideos).sort(
@@ -84,14 +83,18 @@ function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVide
       }
       {deviceState === 'youtube' &&
       <div className='controls-devices'>
-        <div>
-          <input
+        <div className='controls-devices-search'>
+          <div className='controls-devices-search-input-wrapper'>
+          <input className='controls-devices-search-input'
             type="text"
-            placeholder="Search YouTube videos"
+            placeholder="Buscar Videos"
             value={youtubeSearchText}
             onChange={e => setYoutubeSearchText(e.target.value)}>
           </input>
-          <button onClick={searchYoutube}>Search</button>
+          </div>
+          <div className='controls-devices-search-button-wrapper'>
+            <button className='controls-devices-search-button' onClick={searchYoutube}>Buscar</button>
+          </div>
         </div>
         <ul className='controls-devices-ul'>
           {
@@ -118,7 +121,6 @@ function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVide
           {
             youtubeLizSortedVideos.map((video, key) => (
             <li key={key} className='controls-device'>
-              {searchMode === true ?
               <button
                 className={`controls-device-youtube-video-button ${devicesState.rokuSala.video === video.videoId ? 'controls-device-youtube-video-button--selected' : ''}`}
                 onTouchStart={() => triggerYoutubeVideo(video.videoId)}>
@@ -128,17 +130,6 @@ function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVide
                   alt="icono">
                 </img>
               </button>
-              :
-              <button
-                className={'controls-device-youtube-video-button'}
-                onTouchStart={() => triggerYoutubeVideo(video.videoId)}>
-                <img
-                  className='controls-device-youtube-video-img'
-                  src={video.videoImg}
-                  alt="icono">
-                </img>
-              </button>
-              }
             </li>
             ))
           }
