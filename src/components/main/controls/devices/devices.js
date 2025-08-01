@@ -27,7 +27,6 @@ function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVide
     });
   };
   if (deviceState === 'youtube') {
-    searchMode.current = false;
     const refMap = {};
     youtubeLizVideos.current.forEach(video => {
       refMap[video.channelId] = {

@@ -26,6 +26,9 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, y
   }
 
   const triggerDeviceState = (state) => {
+    if (state === 'youtube') {
+      searchMode.current = false;
+    }
     changeDeviceStateParent(state);
   }
 

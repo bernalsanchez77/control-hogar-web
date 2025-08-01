@@ -4,8 +4,10 @@ import './search.css';
 function Search({devicesState, deviceState, youtubeSearchVideos, youtubeLizVideos, triggerControlParent, triggerDeviceStateParent, searchYoutubeParent}) {
   const [youtubeSearchText, setYoutubeSearchText] = useState('');
   const searchYoutube = () => {
-    triggerDeviceStateParent('youtubeVideos');
-    searchYoutubeParent(youtubeSearchText);
+    if (youtubeSearchText) {
+      triggerDeviceStateParent('youtubeVideos');
+      searchYoutubeParent(youtubeSearchText);
+    }
   };
 
   return (
