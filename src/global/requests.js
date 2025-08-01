@@ -95,6 +95,23 @@ class Requests {
       return await this.normalApiRequest('updateVideo', params, 'patch');
     }
   }
+  async searchYoutube(text) {
+    console.log(text);
+    try {
+      const res = await axios.get('https://www.googleapis.com/youtube/v3/search', {
+        params: {
+          part: 'snippet',
+          maxResults: 10,
+          q: text,
+          type: 'video',
+          key: 'AIzaSyAm7Z-IXj2M9we65X0V2YmRM3URgn6tqWk'
+        }
+      });
+      return res.data.items;
+    } catch (error) {
+      console.error('Search error:', error);
+    }
+  }
   async sendLogs(message) {
     if (window.cordova) {
       return await this.cordovaApiRequest('sendLogs', {message: message}, 'post');

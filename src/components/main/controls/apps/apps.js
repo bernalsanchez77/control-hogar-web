@@ -14,12 +14,14 @@ function Apps({devicesState, triggerControlParent, triggerDeviceStateParent}) {
     });
   }
 
-  const triggerDeviceStart = () => {
+  const triggerDeviceStart = (e) => {
+    e.preventDefault();
     timeout3s.current = setTimeout(() => {
       longClick.current = true;
     }, 500);
   }
-  const triggerDeviceEnd = (app) => {
+  const triggerDeviceEnd = (e, app) => {
+    e.preventDefault();
     clearTimeout(timeout3s.current);
     if (longClick.current) {
       triggerDeviceStateParent(app);
@@ -57,8 +59,8 @@ function Apps({devicesState, triggerControlParent, triggerDeviceStateParent}) {
         <div className='controls-apps-element'>
           <button
             className={`controls-apps-button ${devicesState.rokuSala.apps.youtube.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
-            onTouchStart={() => triggerDeviceStart(devicesState.rokuSala.apps.youtube.id)}
-            onTouchEnd={() => triggerDeviceEnd(devicesState.rokuSala.apps.youtube.id)}>
+            onTouchStart={(e) => triggerDeviceStart(e, devicesState.rokuSala.apps.youtube.id)}
+            onTouchEnd={(e) => triggerDeviceEnd(e, devicesState.rokuSala.apps.youtube.id)}>
               <img
                 className='controls-apps-img controls-apps-img--button'
                 src={devicesState.rokuSala.apps.youtube.img}

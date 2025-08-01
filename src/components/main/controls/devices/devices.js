@@ -1,10 +1,12 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import './devices.css';
 
-function Devices({devicesState, deviceState, youtubeLizVideos, triggerControlParent, triggerDeviceStateParent}) {
+function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVideos, triggerControlParent, triggerDeviceStateParent, searchYoutubeParent}) {
   let youtubeLizSortedVideos = [];
   let youtubeLizSortedChannels = [];
   const channelSelected = useRef('');
+  const searchMode = useRef(false);
+  const [youtubeSearchText, setYoutubeSearchText] = useState('');
   const triggerDevice = (color) => {
     const device = devicesState[deviceState].id;
     if (devicesState[deviceState].state === 'off') {
@@ -13,22 +15,27 @@ function Devices({devicesState, deviceState, youtubeLizVideos, triggerControlPar
     setTimeout(() => {
       triggerControlParent({ifttt: [{device, key: 'color', value: color}]});
     }, 1000);
-  }
+  };
   const triggerYoutubeChannel = (state, channel) => {
     channelSelected.current = channel;
     triggerDeviceStateParent(state);
-  }
+  };
   const triggerYoutubeVideo = (video) => {
     const device = 'rokuSala';
     triggerControlParent({
       roku: [{device, key: 'launch', value: devicesState.rokuSala.apps.youtube.rokuId, params: {contentID: video}}],
       massMedia: [{device: device, key: 'video', value: video}],
     });
-  }
-
+  };
+  const searchYoutube = () => {
+    searchMode.current = true;
+    triggerDeviceStateParent('youtubeVideos');
+    searchYoutubeParent(youtubeSearchText);
+  };
   if (deviceState === 'youtube') {
+    searchMode.current = false;
     const refMap = {};
-    youtubeLizVideos.forEach(video => {
+    youtubeLizVideos.current.forEach(video => {
       refMap[video.channelId] = {
         channelId: video.channelId,
         channelOrder: video.channelOrder,
@@ -37,12 +44,22 @@ function Devices({devicesState, deviceState, youtubeLizVideos, triggerControlPar
     });
     youtubeLizSortedChannels = Object.values(refMap).sort((a, b) => a.channelOrder - b.channelOrder);
   }
-
   if (deviceState === 'youtubeVideos') {
-    youtubeLizSortedVideos = youtubeLizVideos.filter(video => video.channelId === channelSelected.current);
-    youtubeLizSortedVideos = Object.values(youtubeLizSortedVideos).sort(
-      (a, b) => new Date(a.videoDate) - new Date(b.videoDate)
-    );
+    if (searchMode.current) {
+      youtubeLizSortedVideos = youtubeSearchVideos.current.map(item => ({
+        videoId: item.id.videoId,
+        videoTitle: item.snippet.title,
+        videoDescription: item.snippet.description,
+        videoImg: item.snippet.thumbnails.medium.url,
+        channelTitle: item.snippet.channelTitle,
+      }));
+      console.log('test');
+    } else {
+      youtubeLizSortedVideos = youtubeLizVideos.current.filter(video => video.channelId === channelSelected.current);
+      youtubeLizSortedVideos = Object.values(youtubeLizSortedVideos).sort(
+        (a, b) => new Date(a.videoDate) - new Date(b.videoDate)
+      );
+    }
   }
 
   return (
@@ -67,6 +84,15 @@ function Devices({devicesState, deviceState, youtubeLizVideos, triggerControlPar
       }
       {deviceState === 'youtube' &&
       <div className='controls-devices'>
+        <div>
+          <input
+            type="text"
+            placeholder="Search YouTube videos"
+            value={youtubeSearchText}
+            onChange={e => setYoutubeSearchText(e.target.value)}>
+          </input>
+          <button onClick={searchYoutube}>Search</button>
+        </div>
         <ul className='controls-devices-ul'>
           {
             youtubeLizSortedChannels.map((channel, key) => (
@@ -92,6 +118,7 @@ function Devices({devicesState, deviceState, youtubeLizVideos, triggerControlPar
           {
             youtubeLizSortedVideos.map((video, key) => (
             <li key={key} className='controls-device'>
+              {searchMode === true ?
               <button
                 className={`controls-device-youtube-video-button ${devicesState.rokuSala.video === video.videoId ? 'controls-device-youtube-video-button--selected' : ''}`}
                 onTouchStart={() => triggerYoutubeVideo(video.videoId)}>
@@ -101,6 +128,17 @@ function Devices({devicesState, deviceState, youtubeLizVideos, triggerControlPar
                   alt="icono">
                 </img>
               </button>
+              :
+              <button
+                className={'controls-device-youtube-video-button'}
+                onTouchStart={() => triggerYoutubeVideo(video.videoId)}>
+                <img
+                  className='controls-device-youtube-video-img'
+                  src={video.videoImg}
+                  alt="icono">
+                </img>
+              </button>
+              }
             </li>
             ))
           }

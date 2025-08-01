@@ -8,7 +8,7 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({devicesState, screenSelected, channelCategory, deviceState, youtubeLizVideos, changeControlParent, changeDeviceStateParent, changeChannelCategoryParent, triggerVibrateParent}) {
+function Controls({devicesState, screenSelected, channelCategory, deviceState, youtubeSearchVideos, youtubeLizVideos, changeControlParent, changeDeviceStateParent, changeChannelCategoryParent, triggerVibrateParent, searchYoutubeParent}) {
   const triggerControl = (params) => {
     changeControlParent(params);
   }
@@ -23,6 +23,10 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, y
 
   const triggerDeviceState = (state) => {
     changeDeviceStateParent(state);
+  }
+
+  const searchYoutube = (text) => {
+    searchYoutubeParent(text);
   }
 
   return (
@@ -85,9 +89,11 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, y
           <Devices
             devicesState={devicesState}
             deviceState={deviceState}
+            youtubeSearchVideos={youtubeSearchVideos}
             youtubeLizVideos={youtubeLizVideos}
             triggerControlParent={triggerControl}
-            triggerDeviceStateParent={triggerDeviceState}>
+            triggerDeviceStateParent={triggerDeviceState}
+            searchYoutubeParent={searchYoutube}>
           </Devices>
         </div>
         }

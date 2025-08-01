@@ -8,6 +8,7 @@ import Dev from './dev/dev';
 import { devicesOriginal } from '../../global/devices';
 import Utils from '../../global/utils';
 import Requests from '../../global/requests';
+import YoutubeDummyData from '../../global/youtube-dummy-data';
 import './main.css';
 
 function Main() {
@@ -15,6 +16,8 @@ function Main() {
   utils.current = new Utils();
   const requests = useRef({});
   requests.current = new Requests();
+  const youtubeDummyData = useRef({});
+  youtubeDummyData.current = new YoutubeDummyData();
   const loadingDevices = useRef(false);
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
@@ -35,6 +38,7 @@ function Main() {
   const guestCredential = useRef('guest');
   const devCredential = useRef('dev');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
+  const youtubeSearchVideos = useRef([]);
   const youtubeLizVideos = useRef([]);
 
   const triggerVibrate = (length = 100) => {
@@ -48,6 +52,11 @@ function Main() {
     setChannelCategory(category);
   }
 
+  const searchYoutube = async (text) => {
+    // youtubeSearchVideos.current = await requests.current.searchYoutube(text);
+    youtubeSearchVideos.current = youtubeDummyData.current.getYoutubeDummyData();
+  }
+
   const changeDeviceState = async (state) => {
     if (state === 'youtube') {
       if (youtubeLizVideos.current.length === 0) {
@@ -58,7 +67,6 @@ function Main() {
     triggerVibrate();
     setDeviceState(state);
   }
-
 
   const changeControl = (params) => {
     requests.current.sendControl(sendDisabled, params);
@@ -322,11 +330,13 @@ function Main() {
             screenSelected={screenSelected}
             channelCategory={channelCategory}
             deviceState={deviceState}
-            youtubeLizVideos={youtubeLizVideos.current}
+            youtubeSearchVideos={youtubeSearchVideos}
+            youtubeLizVideos={youtubeLizVideos}
             changeChannelCategoryParent={changeChannelCategory}
             changeDeviceStateParent={changeDeviceState}
             changeControlParent={triggerControl}
-            triggerVibrateParent={triggerVibrate}>
+            triggerVibrateParent={triggerVibrate}
+            searchYoutubeParent={searchYoutube}>
           </Controls>
           <Devices
             credential={credential}
