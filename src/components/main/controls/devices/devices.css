@@ -3,6 +3,7 @@
   position: relative;
   width: 100%;
   margin: 5px 0;
+  overflow-y: scroll;
 }
 .controls-devices-ul {
   position: absolute;
@@ -17,7 +18,7 @@
   padding: 0;
 }
 .controls-device {
-  height: 70px;
+  height: 120px;
   padding: 0 5px 5px;
   list-style-type: none;
   display: flex;
@@ -57,7 +58,7 @@ button.controls-device-luzcuarto-button:active {
   width: 50px;
 }
 .controls-device-youtube-video-img {
-  width: 70px;
+  width: 100px;
 }
 .controls-device-youtube-video-button {
   background-color: transparent;
@@ -81,12 +82,12 @@ button.controls-device-luzcuarto-button:active {
   animation: flashing 2s ease-in-out infinite;
 }
 .controls-device-youtube-video-title {
-  padding: 0;
+  padding: 3px 0 0;
   margin: 0;
-  width: 70px;
+  width: 100px;
   font-size: 10px;
   display: -webkit-box;
-  -webkit-line-clamp: 2;       /* Number of lines */
+  -webkit-line-clamp: 3;       /* Number of lines */
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
