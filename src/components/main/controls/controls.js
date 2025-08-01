@@ -1,6 +1,9 @@
+import React, {useRef, useState} from 'react';
+
 import Top from './top/top';
 import Arrows from './arrows/arrows';
 import Levels from './levels/levels';
+import Search from './search/search';
 import Toolbar from './toolbar/toolbar';
 import Channels from './channels/channels';
 import ChannelCategory from './channelCategory/channelCategory';
@@ -9,6 +12,7 @@ import Apps from './apps/apps';
 import './controls.css';
 
 function Controls({devicesState, screenSelected, channelCategory, deviceState, youtubeSearchVideos, youtubeLizVideos, changeControlParent, changeDeviceStateParent, changeChannelCategoryParent, triggerVibrateParent, searchYoutubeParent}) {
+  const searchMode = useRef(false);
   const triggerControl = (params) => {
     changeControlParent(params);
   }
@@ -26,6 +30,7 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, y
   }
 
   const searchYoutube = (text) => {
+    searchMode.current = true;
     searchYoutubeParent(text);
   }
 
@@ -52,6 +57,17 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, y
           triggerChannelCategoryParent={triggerChannelCategory}
           triggerVibrateParent={triggerVibrate}>
         </Levels>
+        {deviceState !== 'default' &&
+        <Search
+          devicesState={devicesState}
+          deviceState={deviceState}
+          youtubeSearchVideos={youtubeSearchVideos}
+          youtubeLizVideos={youtubeLizVideos}
+          triggerControlParent={triggerControl}
+          triggerDeviceStateParent={triggerDeviceState}
+          searchYoutubeParent={searchYoutube}>
+        </Search>
+        }
         {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
         <div className='controls-toolbar-apps'>
           <div className='controls-toolbar-apps-wrapper'>
@@ -93,7 +109,8 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, y
             youtubeLizVideos={youtubeLizVideos}
             triggerControlParent={triggerControl}
             triggerDeviceStateParent={triggerDeviceState}
-            searchYoutubeParent={searchYoutube}>
+            searchYoutubeParent={searchYoutube}
+            searchMode={searchMode}>
           </Devices>
         </div>
         }

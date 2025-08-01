@@ -1,11 +1,10 @@
 import React, {useRef, useState} from 'react';
 import './devices.css';
 
-function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVideos, triggerControlParent, triggerDeviceStateParent, searchYoutubeParent}) {
+function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVideos, searchMode, triggerControlParent, triggerDeviceStateParent, searchYoutubeParent}) {
   let youtubeLizSortedVideos = [];
   let youtubeLizSortedChannels = [];
   const channelSelected = useRef('');
-  const searchMode = useRef(false);
   const [youtubeSearchText, setYoutubeSearchText] = useState('');
   const triggerDevice = (color) => {
     const device = devicesState[deviceState].id;
@@ -26,11 +25,6 @@ function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVide
       roku: [{device, key: 'launch', value: devicesState.rokuSala.apps.youtube.rokuId, params: {contentID: video}}],
       massMedia: [{device: device, key: 'video', value: video}],
     });
-  };
-  const searchYoutube = () => {
-    searchMode.current = true;
-    triggerDeviceStateParent('youtubeVideos');
-    searchYoutubeParent(youtubeSearchText);
   };
   if (deviceState === 'youtube') {
     searchMode.current = false;
@@ -83,19 +77,6 @@ function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVide
       }
       {deviceState === 'youtube' &&
       <div className='controls-devices'>
-        <div className='controls-devices-search'>
-          <div className='controls-devices-search-input-wrapper'>
-          <input className='controls-devices-search-input'
-            type="text"
-            placeholder="Buscar Videos"
-            value={youtubeSearchText}
-            onChange={e => setYoutubeSearchText(e.target.value)}>
-          </input>
-          </div>
-          <div className='controls-devices-search-button-wrapper'>
-            <button className='controls-devices-search-button' onClick={searchYoutube}>Buscar</button>
-          </div>
-        </div>
         <ul className='controls-devices-ul'>
           {
             youtubeLizSortedChannels.map((channel, key) => (
@@ -129,6 +110,9 @@ function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVide
                   src={video.videoImg}
                   alt="icono">
                 </img>
+                <p className='controls-device-youtube-video-title'>
+                  {video.videoTitle}
+                </p>
               </button>
             </li>
             ))
