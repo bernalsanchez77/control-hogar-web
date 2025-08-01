@@ -35,13 +35,13 @@ function Devices({devicesState, deviceState, youtubeLizVideos, triggerControlPar
         channelImg: video.channelImg
       }
     });
-    youtubeLizSortedChannels = Object.values(refMap).sort((a, b) => a.order - b.order);
+    youtubeLizSortedChannels = Object.values(refMap).sort((a, b) => a.channelOrder - b.channelOrder);
   }
 
   if (deviceState === 'youtubeVideos') {
     youtubeLizSortedVideos = youtubeLizVideos.filter(video => video.channelId === channelSelected.current);
     youtubeLizSortedVideos = Object.values(youtubeLizSortedVideos).sort(
-      (a, b) => new Date(a.date) - new Date(b.date)
+      (a, b) => new Date(a.videoDate) - new Date(b.videoDate)
     );
   }
 
