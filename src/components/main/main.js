@@ -338,6 +338,7 @@ function Main() {
             triggerVibrateParent={triggerVibrate}
             searchYoutubeParent={searchYoutube}>
           </Controls>
+          {deviceState === 'default' &&
           <Devices
             credential={credential}
             ownerCredential={ownerCredential.current}
@@ -347,7 +348,8 @@ function Main() {
             changeDeviceStateParent={changeDeviceState}
             changeControlParent={triggerControl}>
           </Devices>
-          {credential === devCredential.current &&
+          }
+          {credential === devCredential.current && deviceState === 'default' &&
           <Dev
             sendDisabled={sendDisabled}
             updatesDisabled={updatesDisabled}

@@ -68,7 +68,7 @@ class Requests {
   }
   async saveVideo() {
     await this.normalApiRequest(
-      'saveVideo',
+      'saveVideoInSupabase',
       {
                             label: 'Halloween Party',
                             description: 'Halloween Party',
@@ -83,16 +83,16 @@ class Requests {
   }
   async getYoutubeLizVideos() {
     if (window.cordova) {
-      return await this.cordovaApiRequest('getVideos', null, 'get');
+      return await this.cordovaApiRequest('getVideosFromSupabase', null, 'get');
     } else {
-      return await this.normalApiRequest('getVideos', null, 'get');
+      return await this.normalApiRequest('getVideosFromSupabase', null, 'get');
     }
   }
   async updateYoutubeLizVideo(params) {
     if (window.cordova) {
-      return await this.cordovaApiRequest('updateVideo', params, 'patch');
+      return await this.cordovaApiRequest('updateVideoInSupabase', params, 'patch');
     } else {
-      return await this.normalApiRequest('updateVideo', params, 'patch');
+      return await this.normalApiRequest('updateVideoInSupabase', params, 'patch');
     }
   }
   async searchYoutube(text) {
@@ -112,6 +112,13 @@ class Requests {
       console.error('Search error:', error);
     }
   }
+
+  async searchYouTube(text) {
+    // const res = await axios.get(`/api/youtube-search?q=${encodeURIComponent(text)}`);
+    const res = await this.normalApiRequest('getVideosFromYoutube', {q: encodeURIComponent(text)}, 'get');
+    return res.data.items;
+  }
+
   async sendLogs(message) {
     if (window.cordova) {
       return await this.cordovaApiRequest('sendLogs', {message: message}, 'post');
