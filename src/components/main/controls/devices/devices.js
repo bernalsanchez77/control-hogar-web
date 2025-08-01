@@ -33,7 +33,8 @@ function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVide
       refMap[video.channelId] = {
         channelId: video.channelId,
         channelOrder: video.channelOrder,
-        channelImg: video.channelImg
+        channelImg: video.channelImg,
+        channelTitle: video.channelTitle,
       }
     });
     youtubeLizSortedChannels = Object.values(refMap).sort((a, b) => a.channelOrder - b.channelOrder);
@@ -89,6 +90,9 @@ function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVide
                   src={channel.channelImg}
                   alt="icono">
                 </img>
+                <p className='controls-device-youtube-channel-title'>
+                  {channel.channelTitle}
+                </p>
               </button>
             </li>
             ))

@@ -82,7 +82,8 @@ button.controls-device-luzcuarto-button:active {
 .controls-device-youtube-video-button--selected {
   animation: flashing 2s ease-in-out infinite;
 }
-.controls-device-youtube-video-title {
+.controls-device-youtube-video-title,
+.controls-device-youtube-channel-title {
   padding: 3px 0 0;
   margin: 0;
   width: 100px;
