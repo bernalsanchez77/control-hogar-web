@@ -1,9 +1,10 @@
 .controls-search {
   display: inline-block;
+  margin: 5px 0 5px;
 }
 .controls-search-row {
   width: 230px;
-  margin: 10px auto 0;
+  margin: 0 auto;
   height: 35px;
 }
 .controls-search-input-wrapper {
