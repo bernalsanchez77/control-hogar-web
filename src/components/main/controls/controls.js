@@ -60,6 +60,12 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, y
           triggerChannelCategoryParent={triggerChannelCategory}
           triggerVibrateParent={triggerVibrate}>
         </Levels>
+        {devicesState.hdmiSala.state === 'roku' &&
+        <Toolbar
+          devicesState={devicesState}
+          triggerControlParent={triggerControl}>
+        </Toolbar>  
+        }
         {deviceState !== 'default' &&
         <Search
           devicesState={devicesState}
@@ -70,12 +76,6 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, y
           triggerDeviceStateParent={triggerDeviceState}
           searchYoutubeParent={searchYoutube}>
         </Search>
-        }
-        {devicesState.hdmiSala.state === 'roku' &&
-        <Toolbar
-          devicesState={devicesState}
-          triggerControlParent={triggerControl}>
-        </Toolbar>  
         }
         {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
         <div className='controls-toolbar-apps'>
