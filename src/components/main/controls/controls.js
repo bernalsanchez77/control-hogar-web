@@ -72,10 +72,10 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, y
         </Search>
         }
         {devicesState.hdmiSala.state === 'roku' &&
-            <Toolbar
-              devicesState={devicesState}
-              triggerControlParent={triggerControl}>
-            </Toolbar>  
+        <Toolbar
+          devicesState={devicesState}
+          triggerControlParent={triggerControl}>
+        </Toolbar>  
         }
         {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
         <div className='controls-toolbar-apps'>
