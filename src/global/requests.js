@@ -116,9 +116,9 @@ class Requests {
   async searchYoutube(text) {
     let res = {};
     if (window.cordova) {
-      res = await this.cordovaApiRequest('getVideosFromYoutube', {q: encodeURIComponent(text)}, 'get');
+      res = await this.cordovaApiRequest('getVideosFromYoutube', {q: text}, 'get');
     } else {
-      res = await this.normalApiRequest('getVideosFromYoutube', {q: encodeURIComponent(text)}, 'get');
+      res = await this.normalApiRequest('getVideosFromYoutube', {q: text}, 'get');
     }
     return res.data.items;
   }
