@@ -60,12 +60,10 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, y
           triggerChannelCategoryParent={triggerChannelCategory}
           triggerVibrateParent={triggerVibrate}>
         </Levels>
-        {devicesState.hdmiSala.state === 'roku' &&
         <Toolbar
           devicesState={devicesState}
           triggerControlParent={triggerControl}>
-        </Toolbar>  
-        }
+        </Toolbar>
         {deviceState !== 'default' &&
         <Search
           devicesState={devicesState}
