@@ -71,13 +71,15 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, y
           searchYoutubeParent={searchYoutube}>
         </Search>
         }
-        {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
-        <div className='controls-toolbar-apps'>
-          <div className='controls-toolbar-apps-wrapper'>
+        {devicesState.hdmiSala.state === 'roku'
             <Toolbar
               devicesState={devicesState}
               triggerControlParent={triggerControl}>
-            </Toolbar>
+            </Toolbar>  
+        }
+        {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
+        <div className='controls-toolbar-apps'>
+          <div className='controls-toolbar-apps-wrapper'>
             <Apps
               devicesState={devicesState}
               triggerControlParent={triggerControl}
