@@ -1,5 +1,6 @@
 .controls-toolbar {
     display: inline-block;
+    margin: 5px 0 5px;
   }
   .controls-toolbar-row {
     width: 240px;
