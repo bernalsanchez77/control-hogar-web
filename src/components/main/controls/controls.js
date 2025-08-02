@@ -71,7 +71,7 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, y
           searchYoutubeParent={searchYoutube}>
         </Search>
         }
-        {devicesState.hdmiSala.state === 'roku'
+        {devicesState.hdmiSala.state === 'roku' &&
             <Toolbar
               devicesState={devicesState}
               triggerControlParent={triggerControl}>
