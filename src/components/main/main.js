@@ -53,6 +53,7 @@ function Main() {
   }
 
   const searchYoutube = async (text) => {
+      console.log(text);
       youtubeSearchVideos.current = await requests.current.searchYoutube(text);
     //youtubeSearchVideos.current = youtubeDummyData.current.getYoutubeDummyData();
   }
