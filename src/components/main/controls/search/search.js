@@ -18,7 +18,7 @@ function Search({devicesState, deviceState, youtubeSearchVideos, youtubeLizVideo
             type="text"
             placeholder="Buscar Videos"
             value={youtubeSearchText}
-            onkeydown={(e) => {if (e.key === 'Enter'){setYoutubeSearchText(e.target.value)}}}
+            onKeyDown={(e) => {if (e.key === 'Enter'){setYoutubeSearchText(e.target.value)}}}
             onChange={e => setYoutubeSearchText(e.target.value)}>
           </input>
         </div>
