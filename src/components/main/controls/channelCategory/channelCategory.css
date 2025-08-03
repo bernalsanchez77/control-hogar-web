@@ -25,11 +25,12 @@
 }
 .controls-channels-category-img {
   width: 40px;
+  margin: 5px 0;
 }
 .controls-channels-category-button {
   background-color: transparent;
   border: 1px solid transparent;
-  padding: 10px 0;
+  padding: 0;
 }
 @keyframes flashing {
   0%, 100% {
