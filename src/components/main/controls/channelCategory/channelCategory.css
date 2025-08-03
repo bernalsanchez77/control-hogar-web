@@ -6,7 +6,7 @@
 }
 .controls-channels-category {
   height: 50px;
-  padding: 0 10px;
+  padding: 0 15px;
   list-style-type: none;
   display: flex;
   align-items: center;
@@ -25,7 +25,6 @@
 }
 .controls-channels-category-img {
   width: 40px;
-  margin: 5px 0;
 }
 .controls-channels-category-button {
   background-color: transparent;
