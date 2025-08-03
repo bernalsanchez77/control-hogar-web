@@ -29,7 +29,7 @@
 .controls-channels-category-button {
   background-color: transparent;
   border: 1px solid transparent;
-  padding: 0;
+  padding: 5px 0;
 }
 @keyframes flashing {
   0%, 100% {
