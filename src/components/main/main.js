@@ -352,7 +352,7 @@ function Main() {
             changeControlParent={triggerControl}>
           </Devices>
           }
-          {credential === devCredential.current && deviceState === 'default' &&
+          {credential === devCredential.current && deviceState === 'default' && channelCategory.includes('default') &&
           <Dev
             sendDisabled={sendDisabled}
             updatesDisabled={updatesDisabled}
