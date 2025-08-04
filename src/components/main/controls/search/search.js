@@ -41,23 +41,6 @@ function Search({devicesState, deviceState, youtubeSearchVideos, youtubeLizVideo
     Buscar
   </button>
 </div>
-
-      /*
-        <div className='controls-search-input-wrapper'>
-          <input className='controls-search-input'
-            type="text"
-            placeholder="Buscar Videos"
-            value={youtubeSearchText}
-            onKeyDown={(e) => {if (e.key === 'Enter'){setYoutubeSearchText(e.target.value)}}}
-            onChange={e => setYoutubeSearchText(e.target.value)}>
-          </input>
-        </div>
-        <div className='controls-search-button-wrapper'>
-          <button className='controls-search-button' onClick={searchYoutube}>
-            Buscar
-          </button>
-        </div>
-        */
       </div>
     </div>
   )
