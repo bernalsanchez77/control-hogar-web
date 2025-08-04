@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import './devices.css';
 
 function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVideos, searchMode, triggerControlParent, triggerDeviceStateParent, searchYoutubeParent}) {
@@ -7,7 +7,6 @@ function Devices({devicesState, deviceState, youtubeSearchVideos, youtubeLizVide
   let touchMoved = false;
   let touchStartY = 0;
   const channelSelected = useRef('');
-  const [youtubeSearchText, setYoutubeSearchText] = useState('');
   const triggerDevice = (color) => {
     const device = devicesState[deviceState].id;
     if (devicesState[deviceState].state === 'off') {
