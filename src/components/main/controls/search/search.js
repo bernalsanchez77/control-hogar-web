@@ -3,6 +3,7 @@ import './search.css';
 
 function Search({devicesState, deviceState, youtubeSearchVideos, youtubeLizVideos, triggerControlParent, triggerDeviceStateParent, searchYoutubeParent}) {
   const [youtubeSearchText, setYoutubeSearchText] = useState('');
+  const inputRef = useRef(null);
   const searchYoutube = () => {
     if (youtubeSearchText) {
       triggerDeviceStateParent('youtubeVideos');
@@ -18,11 +19,13 @@ function Search({devicesState, deviceState, youtubeSearchVideos, youtubeLizVideo
    <form
   className="controls-search-input-wrapper"
   onSubmit={(e) => {
-    e.preventDefault(); // Prevent page reload
-    searchYoutube();    // Trigger the search
+    e.preventDefault();
+    searchYoutube();
+    inputRef.current?.blur();
   }}
 >
   <input
+    ref={inputRef}
     className="controls-search-input"
     type="search"
     inputMode="search"
