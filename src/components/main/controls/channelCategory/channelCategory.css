@@ -1,12 +1,12 @@
 .controls-channels-categories {
-  height: 150px;
+  height: 200px;
   position: relative;
   width: 90%;
   margin: 5px auto;
 }
 .controls-channels-category {
   height: 50px;
-  padding: 0 10px;
+  padding: 0 15px;
   list-style-type: none;
   display: flex;
   align-items: center;
@@ -24,7 +24,7 @@
   margin: 0;
 }
 .controls-channels-category-img {
-  width: 35px;
+  width: 40px;
 }
 .controls-channels-category-button {
   background-color: transparent;
