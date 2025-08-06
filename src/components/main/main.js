@@ -70,7 +70,6 @@ function Main() {
       }
     }
     if (devicesState.hdmiSala.id === 'cable') {
-      console.log('va');
     }
   };
 
