@@ -88,6 +88,13 @@ class Requests {
       return await this.normalApiRequest('getVideosFromSupabase', null, 'get');
     }
   }
+  async getCableChannels() {
+    if (window.cordova) {
+      return await this.cordovaApiRequest('getCableChannelsFromSupabase', null, 'get');
+    } else {
+      return await this.normalApiRequest('getCableChannelsFromSupabase', null, 'get');
+    }
+  }
   async updateYoutubeLizVideo(params) {
     if (window.cordova) {
       return await this.cordovaApiRequest('updateVideoInSupabase', params, 'patch');

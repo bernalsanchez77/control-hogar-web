@@ -1,12 +1,12 @@
 import './ventiladorSala.css';
 
-function VentiladorSala({devicesState, triggerControlParent}) {
-  const triggerDevice = (device) => {
+function VentiladorSala({devicesState, changeControlParent}) {
+  const changeControl = (device) => {
     if (devicesState[device].state === 'on') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
     }
     if (devicesState[device].state === 'off') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
   }
 
@@ -15,7 +15,7 @@ function VentiladorSala({devicesState, triggerControlParent}) {
       <div>
         <button
           className={`devices-button ${devicesState.ventiladorSala.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => triggerDevice(devicesState.ventiladorSala.id)}>
+          onTouchStart={() => changeControl(devicesState.ventiladorSala.id)}>
           <img
             className='devices-button-img'
             src={devicesState.ventiladorSala.img}

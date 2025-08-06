@@ -1,12 +1,12 @@
 import './calentadorNegro.css';
 
-function CalentadorNegro({devicesState, triggerControlParent}) {
-  const triggerDevice = (device) => {
+function CalentadorNegro({devicesState, changeControlParent}) {
+  const changeControl = (device) => {
     if (devicesState[device].state === 'on') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
     }
     if (devicesState[device].state === 'off') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
   }
 
@@ -15,7 +15,7 @@ function CalentadorNegro({devicesState, triggerControlParent}) {
       <div>
         <button
           className={`devices-button ${devicesState.calentadorNegro.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => triggerDevice(devicesState.calentadorNegro.id)}>
+          onTouchStart={() => changeControl(devicesState.calentadorNegro.id)}>
           <img
             className='devices-button-img'
             src={devicesState.calentadorNegro.img}

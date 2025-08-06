@@ -1,12 +1,12 @@
 import './lamparaRotatoria.css';
 
-function LamparaRotatoria({devicesState, triggerControlParent}) {
-  const triggerDevice = (device) => {
+function LamparaRotatoria({devicesState, changeControlParent}) {
+  const changeControl = (device) => {
     if (devicesState[device].state === 'on') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
     }
     if (devicesState[device].state === 'off') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
   }
 
@@ -15,7 +15,7 @@ function LamparaRotatoria({devicesState, triggerControlParent}) {
       <div>
         <button
           className={`devices-button ${devicesState.lamparaRotatoria.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => triggerDevice(devicesState.lamparaRotatoria.id)}>
+          onTouchStart={() => changeControl(devicesState.lamparaRotatoria.id)}>
           <img
             className='devices-button-img'
             src={devicesState.lamparaRotatoria.img}

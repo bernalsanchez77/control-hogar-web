@@ -1,10 +1,10 @@
 import './top.css';
 
-function Controls({devicesState, screenSelected, triggerControlParent}) {
-  const triggerPower = () => {
+function Controls({devicesState, view, screenSelected, changeControlParent, changeViewParent}) {
+  const changePower = () => {
     if (screenSelected === devicesState.proyectorSala.id) {
       if (devicesState[screenSelected].state === 'on') {
-        triggerControlParent({
+        changeControlParent({
           ifttt: [
             [{device: screenSelected, key: 'state', value: 'off'}],
             [{device: devicesState.parlantesSala.id, key: 'state', value: 'off'}],
@@ -13,12 +13,12 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
           ]
         });
         setTimeout(() => {
-          triggerControlParent({
+          changeControlParent({
             ifttt: [{device: devicesState.proyectorSwitchSala.id, key: 'state', value: 'off'}],
           });
         }, 60000);
       } else {
-        triggerControlParent({
+        changeControlParent({
           ifttt: [
             [{device: devicesState.proyectorSwitchSala.id, key: 'state', value: 'on'}],
             [{device: devicesState.parlantesSala.id, key: 'state', value: 'on'}],
@@ -28,38 +28,50 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
         });
 
         setTimeout(() => {
-          triggerControlParent({ifttt: [{device: screenSelected, key: 'state', value: 'on'}]});
+          changeControlParent({ifttt: [{device: screenSelected, key: 'state', value: 'on'}]});
         }, 5000);
       }
     } else {
       if (devicesState[screenSelected].state === 'on') {
-        triggerControlParent({ifttt: [{device: screenSelected, key: 'state', value: 'off'}]});
+        changeControlParent({ifttt: [{device: screenSelected, key: 'state', value: 'off'}]});
         setTimeout(() => {
-          // triggerControlParent({ifttt: [{device: screenSelected, key: 'mute', value: 'off'}]});
+          // changeControlParent({ifttt: [{device: screenSelected, key: 'mute', value: 'off'}]});
         }, 2000);
       } else {
-        triggerControlParent({ifttt: [{device: screenSelected, key: 'state', value: 'on'}]});
+        changeControlParent({ifttt: [{device: screenSelected, key: 'state', value: 'on'}]});
       }
     }
   }
-  const triggerHdmi = () => {
+  const changeHdmi = () => {
     const device = devicesState.hdmiSala.id;
     if (devicesState[devicesState.hdmiSala.id].state === 'roku') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'cable'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'cable'}]});
+      if (view.apps.selected) {
+        const newView = {...view};
+        newView.apps.selected = '';
+        newView.apps.youtube.mode = '';
+        newView.apps.youtube.channel = '';
+        changeViewParent(newView);
+      }
     }
     if (devicesState[devicesState.hdmiSala.id].state === 'cable') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'roku'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'roku'}]});
+      if (view.channels.category.length) {
+        const newView = {...view};
+        newView.channels.category = [];
+        changeViewParent(newView);
+      }
     }
   }
-  const triggerInput = () => {
+  const changeInput = () => {
     const device = devicesState[screenSelected].id;
     if (devicesState[screenSelected].input.state === 'hdmi1') {
-      triggerControlParent({
+      changeControlParent({
         ifttt: [{device: device, key: 'input', value: 'hdmi2'}],
         massMedia: [{device, key: ['input', 'state'], value: 'hdmi2'}]
       })
     } else {
-      triggerControlParent({
+      changeControlParent({
         ifttt: [{device, key: 'input', value: 'hdmi1'}],
         massMedia: [{device: device, key: ['input', 'state'], value: 'hdmi1'}]
       })
@@ -71,7 +83,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
         <div className='controls-top-element'>
           <button
             className={`controls-top-button`}
-            onTouchStart={() => triggerPower()}>
+            onTouchStart={() => changePower()}>
               {devicesState[screenSelected].state === 'on' &&
                 <img
                   className='controls-top-img controls-top-img--button'
@@ -91,7 +103,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
         <div className='controls-top-element'>
           <button
             className="controls-top-button controls-top-button-off"
-            onTouchStart={() => triggerHdmi()}>
+            onTouchStart={() => changeHdmi()}>
               {devicesState.hdmiSala.state === 'cable' &&
                 <img
                   className='controls-top-img controls-top-img--roku'
@@ -111,7 +123,7 @@ function Controls({devicesState, screenSelected, triggerControlParent}) {
         <div className='controls-top-element'>
           <button
             className={`controls-top-button`}
-            onTouchStart={() => triggerInput()}>
+            onTouchStart={() => changeInput()}>
               {devicesState[screenSelected].input.label[devicesState[screenSelected].input.state]}
           </button>
         </div>

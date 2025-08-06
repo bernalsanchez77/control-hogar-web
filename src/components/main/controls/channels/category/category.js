@@ -1,9 +1,9 @@
-import './channelCategory.css';
+import './category.css';
 
-function ChannelCategory({devicesState, channelCategory, triggerControlParent}) {
-  const triggerChannel = (channel) => {
+function Category({devicesState, category, changeControlParent}) {
+  const changeControl = (channel) => {
     const device = 'channelsSala';
-    triggerControlParent({
+    changeControlParent({
       ifttt: [{device: device + devicesState.channelsSala.channels[channel].ifttt, key: 'selected', value: channel}],
       massMedia: [{device: device, key: 'selected', value: channel}],
     });
@@ -14,11 +14,11 @@ function ChannelCategory({devicesState, channelCategory, triggerControlParent}) 
       <div className='controls-channels-categories'>
         <ul className='controls-channels-categories-ul'>
           {
-            Object.entries(devicesState.channelsSala.channels).map(([key, channel]) => channelCategory.includes(channel.category) ? (
+            Object.entries(devicesState.channelsSala.channels).map(([key, channel]) => category.includes(channel.category) ? (
             <li key={key} className='controls-channels-category'>
               <button
                 className={`controls-channels-category-button ${devicesState.channelsSala.selected === channel.id ? 'controls-channels-category-button--selected' : ''}`}
-                onTouchStart={() => triggerChannel(channel.id)}>
+                onTouchStart={() => changeControl(channel.id)}>
                 <img
                   className='controls-channels-category-img'
                   src={channel.img}
@@ -35,4 +35,4 @@ function ChannelCategory({devicesState, channelCategory, triggerControlParent}) 
   )
 }
 
-export default ChannelCategory;
+export default Category;

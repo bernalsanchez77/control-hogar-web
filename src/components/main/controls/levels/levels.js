@@ -1,31 +1,31 @@
-import React, {useRef} from 'react';
+import {useRef} from 'react';
 import './levels.css';
 
-function Levels({devicesState, screenSelected, channelCategory, deviceState, triggerControlParent, triggerDeviceStateParent, triggerChannelCategoryParent, triggerVibrateParent}) {
+function Levels({devicesState, screenSelected, view, changeControlParent, changeViewParent, changeVibrateParent}) {
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
   const volumeChange = useRef('1');
 
-  const triggerMute = () => {
+  const changeMute = () => {
     const device = screenSelected;
     if (devicesState[screenSelected].mute === 'on') {
-      triggerControlParent({ifttt: [{device, key: 'mute', value: 'off'}]});
+      changeControlParent({ifttt: [{device, key: 'mute', value: 'off'}]});
     }
     if (devicesState[screenSelected].mute === 'off') {
-      triggerControlParent({ifttt: [{device, key: 'mute', value: 'on'}]});
+      changeControlParent({ifttt: [{device, key: 'mute', value: 'on'}]});
     }
   }
-  const triggerControl = (value, saveChange = true) => {
+  const changeControl = (value, saveChange = true) => {
     const device = devicesState.hdmiSala.state === 'roku' ? 'rokuSala' : 'cableSala';
     const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
     if (saveChange) {
-      triggerControlParent({ifttt: [{device, key: 'command', value}], roku: [{device, key: 'keypress', value: rokuValue}], massMedia: [{device, key: 'app', value}]});
+      changeControlParent({ifttt: [{device, key: 'command', value}], roku: [{device, key: 'keypress', value: rokuValue}], massMedia: [{device, key: 'app', value}]});
     } else {
-      triggerControlParent({ifttt: [{device, key: 'command', value}], roku: [{device, key: 'keypress', value: rokuValue}], massMedia: []});
+      changeControlParent({ifttt: [{device, key: 'command', value}], roku: [{device, key: 'keypress', value: rokuValue}], massMedia: []});
     }
   }
 
-  const triggerChannel = (value) => {
+  const changeChannel = (value) => {
     let newChannel = {};
     const device = 'channelsSala';
     let newChannelOrder = 0;
@@ -45,18 +45,18 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
         newChannel = Object.values(devicesState.channelsSala.channels)[Object.values(devicesState.channelsSala.channels).length - 1];
       }     
     }
-    triggerControlParent({
+    changeControlParent({
       ifttt: [{device: device + newChannel.ifttt, key: 'selected', value: newChannel.id}],
       massMedia: [{device, key: 'selected', value: newChannel.id}]
     });
   }
 
-  const triggerVolume = (vol, button, vib = true) => {
+  const changeVolume = (vol, button, vib = true) => {
     const device = screenSelected;
     let newVol = 0;
     if (button === 'up') {
       newVol = parseInt(devicesState[screenSelected].volume) + parseInt(vol);
-      triggerControlParent({
+      changeControlParent({
         ifttt: [{device, key: 'volume', value: button + vol}],
         massMedia: [{device, key: 'volume', value: newVol.toString()}],
         ignoreVibration: !vib
@@ -65,63 +65,72 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
     } else if (devicesState[screenSelected].volume !== '0') {
       if (parseInt(devicesState[screenSelected].volume) - parseInt(vol) >= 0) {
         newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
-        triggerControlParent({
+        changeControlParent({
           ifttt: [{device, key: 'volume', value: button + vol}],
           massMedia: [{device, key: 'volume', value: newVol.toString()}],
           ignoreVibration: !vib
         });
       } else {
         newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
-        triggerControlParent({
+        changeControlParent({
           ifttt: [{device, key: 'volume', value: button + vol}],
           massMedia: [{device, key: 'volume', value: '0'}],
           ignoreVibration: !vib
         });
       }
     } else {
-      triggerControlParent({ifttt: [{device, key: 'volume', value: button + vol}], massMedia: [], ignoreVibration: !vib}); 
+      changeControlParent({ifttt: [{device, key: 'volume', value: button + vol}], massMedia: [], ignoreVibration: !vib}); 
     }
   }
 
-  const triggerVolumeStart = () => {
+  const changeVolumeStart = () => {
     volumeChange.current = '1';
     timeout3s.current = setTimeout(() => {
       volumeChange.current = '5';
-      triggerVibrateParent(200);
+      changeVibrateParent(200);
     }, 1000);
     timeout6s.current = setTimeout(() => {
       volumeChange.current = '10';
-      triggerVibrateParent(400);
+      changeVibrateParent(400);
     }, 2000);
   }
 
-  const triggerVolumeEnd = (button) => {
+  const changeVolumeEnd = (button) => {
     clearTimeout(timeout3s.current);
     clearTimeout(timeout6s.current);
     if (volumeChange.current === '1') {
-      triggerVolume(volumeChange.current, button);
+      changeVolume(volumeChange.current, button);
     } else {
-      triggerVolume(volumeChange.current, button, false);
+      changeVolume(volumeChange.current, button, false);
     }
   }
 
-  const triggerChannelCategory = (category) => {
-    triggerChannelCategoryParent(category);
-  }
-
   const backButtonTriggered = () => {
-    if (deviceState !== 'default') {
-      if (deviceState === 'youtubeVideos') {
-        triggerDeviceStateParent('youtube');
-      } else {
-        triggerDeviceStateParent('default');
+    const newView = {...view};
+    if (devicesState.hdmiSala.state === 'roku') {
+      if (view.apps.selected) {
+        if (view.apps.youtube.mode === 'channel' || view.apps.youtube.mode === 'search') {
+          newView.apps.youtube.mode = '';
+          changeViewParent(newView);
+          if (view.apps.youtube.channel !== '') {
+            newView.apps.youtube.channels = '';
+            changeViewParent(newView);
+          }
+        } else {
+          newView.apps.selected = '';
+          changeViewParent(newView);
+        }
       }
-    } else {
-      if (channelCategory === 'default') {
-        triggerControl('back', false);
-      } else {
-        triggerChannelCategory('default');
+    }
+    if (devicesState.hdmiSala.state === 'cable') {
+      if (view.channels.category.length) {
+        newView.channels.category = [];
+        changeViewParent(newView);
       }
+    }
+    if (view.devices.device) {
+      newView.devices.device = '';
+      changeViewParent(newView);
     }
   }
       
@@ -131,15 +140,15 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
         <div className='controls-levels-element controls-levels-element--left'>
           <button
             className='controls-levels-button'
-            onTouchStart={() => triggerVolumeStart('up')}
-            onTouchEnd={() => triggerVolumeEnd('up')}>
+            onTouchStart={() => changeVolumeStart('up')}
+            onTouchEnd={() => changeVolumeEnd('up')}>
             &#9650;
           </button>
         </div>
         <div className='controls-levels-element controls-levels-element--mute-icon'>
           <button
             className="controls-levels-button controls-levels-button--img"
-            onTouchStart={() => triggerMute()}>
+            onTouchStart={() => changeMute()}>
             {devicesState[screenSelected].mute === 'off' &&
               <img
                 className='controls-levels-img controls-levels-img--no-button'
@@ -161,7 +170,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               className={`controls-levels-button`}
-              onTouchStart={() => triggerControl('home')}>
+              onTouchStart={() => changeControl('home')}>
               <img
                 className='controls-levels-img controls-levels-img--button'
                 src="/imgs/home-50.png"
@@ -175,7 +184,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               className={'controls-levels-button'}
-              onTouchStart={() => triggerChannel('up')}>
+              onTouchStart={() => changeChannel('up')}>
               &#9650;
             </button>
           </div>
@@ -202,8 +211,8 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
         <div className='controls-levels-element controls-levels-element--left'>
           <button
             className='controls-levels-button'
-            onTouchStart={() => triggerVolumeStart('down')}
-            onTouchEnd={() => triggerVolumeEnd('down')}>
+            onTouchStart={() => changeVolumeStart('down')}
+            onTouchEnd={() => changeVolumeEnd('down')}>
             &#9660;
           </button>
         </div>
@@ -223,7 +232,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               className={`controls-levels-button`}
-              onTouchStart={() => triggerControl('info', false)}>
+              onTouchStart={() => changeControl('info', false)}>
               <img
                 className='controls-levels-img controls-levels-img--button'
                 src="/imgs/asterisk-24.png"
@@ -237,7 +246,7 @@ function Levels({devicesState, screenSelected, channelCategory, deviceState, tri
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               className={`controls-levels-button`}
-              onTouchStart={() => triggerChannel('down')}>
+              onTouchStart={() => changeChannel('down')}>
               &#9660;
             </button>
           </div>

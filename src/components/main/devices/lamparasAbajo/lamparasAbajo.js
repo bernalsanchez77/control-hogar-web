@@ -1,7 +1,7 @@
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import {useEffect, useState, useCallback, useMemo} from 'react';
 import './lamparasAbajo.css';
 
-function LamparasAbajo({devicesState, triggerControlParent}) {
+function LamparasAbajo({devicesState, changeControlParent}) {
   const [state, setState] = useState('off');
   const lamparasOn = [
     devicesState.lamparaComedor.id,
@@ -28,7 +28,7 @@ function LamparasAbajo({devicesState, triggerControlParent}) {
       setState('off');
     }
   }, [devicesState, lamparasOff]);
-  const triggerDevice = () => {
+  const changeControl = () => {
     let ifttt = [];
     if (state === 'on') {
       lamparasOff.forEach(lampara => {
@@ -36,7 +36,7 @@ function LamparasAbajo({devicesState, triggerControlParent}) {
           ifttt.push({device: lampara, key: 'state', value: 'off'});
         }
       });
-      triggerControlParent({ifttt});
+      changeControlParent({ifttt});
       setState('off');
     } else {
       lamparasOn.forEach(lampara => {
@@ -44,7 +44,7 @@ function LamparasAbajo({devicesState, triggerControlParent}) {
           ifttt.push({device: lampara, key: 'state', value: 'on'});
         }
       });
-      triggerControlParent({ifttt});
+      changeControlParent({ifttt});
       setState('on');
     }
   }
@@ -58,7 +58,7 @@ function LamparasAbajo({devicesState, triggerControlParent}) {
       <div>
         <button
           className={`devices-button ${state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => triggerDevice()}>
+          onTouchStart={() => changeControl()}>
           <img
             className='devices-button-img'
             src='/imgs/devices/lamparasabajo.png'

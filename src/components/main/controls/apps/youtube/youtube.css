@@ -1,11 +1,11 @@
-.controls-devices {
-  height: 275px;
+.controls-apps-youtube {
+  height: 310px;
   position: relative;
   width: 100%;
-  margin: 5px 0;
+  margin: 0;
   overflow-y: scroll;
 }
-.controls-devices-ul {
+.controls-apps-youtube-ul {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -18,25 +18,25 @@
   padding: 0;
   height: 100%;
 }
-.controls-device {
+.controls-apps-youtube-li {
   height: 120px;
   padding: 0 5px 5px;
   list-style-type: none;
   display: flex;
   align-items: center;
 }
-.controls-device-youtube-channel-img {
+.controls-apps-youtube-channel-img {
   width: 50px;
 }
-.controls-device-youtube-video-img {
+.controls-apps-youtube-video-img {
   width: 100px;
 }
-.controls-device-youtube-video-button {
+.controls-apps-youtube-video-button {
   background-color: transparent;
   border: 1px solid transparent;
   padding: 0;
 }
-.controls-device-youtube-channel-button {
+.controls-apps-youtube-channel-button {
   background-color: transparent;
   border: 1px solid transparent;
   padding: 0;
@@ -49,11 +49,11 @@
     opacity: 0.3;
   }
 }
-.controls-device-youtube-video-button--selected {
+.controls-apps-youtube-video-button--selected {
   animation: flashing 2s ease-in-out infinite;
 }
-.controls-device-youtube-video-title,
-.controls-device-youtube-channel-title {
+.controls-apps-youtube-video-title,
+.controls-apps-youtube-channel-title {
   padding: 3px 0 0;
   margin: 0;
   width: 100px;
@@ -64,7 +64,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-button.controls-device-youtube-video-button:active {
+button.controls-apps-youtube-video-button:active {
   background-color: white;
   transition: background-color 0.1s;
 }

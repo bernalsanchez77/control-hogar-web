@@ -1,10 +1,10 @@
 
 import './arrows.css';
 
-function Arrows({devicesState, screenSelected, triggerControlParent}) {
-  const triggerControl = (value) => {
+function Arrows({changeControlParent}) {
+  const changeControl = (value) => {
     const device = 'rokuSala';
-    triggerControlParent({
+    changeControlParent({
       ifttt: [{device, key: 'command', value: value}],
       roku: [{device, key: 'keypress', value: value.charAt(0).toUpperCase() + value.slice(1)}],
       massMedia: []
@@ -17,7 +17,7 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
         <div className='controls-arrows-element'>
           <button
             className="controls-arrows-button"
-            onTouchStart={() => triggerControl('up')}>
+            onTouchStart={() => changeControl('up')}>
               &#9650;
           </button>
         </div>
@@ -26,21 +26,21 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
         <div className='controls-arrows-element controls-arrows-element--left'>
           <button
             className="controls-arrows-button control-arrows-button--left"
-            onTouchStart={() => triggerControl('left')}>
+            onTouchStart={() => changeControl('left')}>
               &#9664;
           </button>
         </div>
         <div className='controls-arrows-element'>
           <button
             className="controls-arrows-button controls-arrows-button--circle"
-            onTouchStart={() => triggerControl('select')}>
+            onTouchStart={() => changeControl('select')}>
               ok
           </button>
         </div>
         <div className='controls-arrows-element controls-arrows-element--right'>
           <button
             className="controls-arrows-button"
-            onTouchStart={() => triggerControl('right')}>
+            onTouchStart={() => changeControl('right')}>
               &#9654;
           </button>
         </div>
@@ -49,7 +49,7 @@ function Arrows({devicesState, screenSelected, triggerControlParent}) {
         <div className='controls-arrows-element'>
           <button
             className="controls-arrows-button"
-            onTouchStart={() => triggerControl('down')}>
+            onTouchStart={() => changeControl('down')}>
               &#9660;
           </button>
         </div>

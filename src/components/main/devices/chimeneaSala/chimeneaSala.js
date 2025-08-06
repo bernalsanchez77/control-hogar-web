@@ -1,12 +1,12 @@
 import './chimeneaSala.css';
 
-function ChimeneaSala({devicesState, triggerControlParent}) {
-  const triggerDevice = (device) => {
+function ChimeneaSala({devicesState, changeControlParent}) {
+  const changeControl = (device) => {
     if (devicesState[device].state === 'on') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
     }
     if (devicesState[device].state === 'off') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
   }
 
@@ -15,7 +15,7 @@ function ChimeneaSala({devicesState, triggerControlParent}) {
       <div>
         <button
           className={`devices-button ${devicesState.chimeneaSala.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => triggerDevice(devicesState.chimeneaSala.id)}>
+          onTouchStart={() => changeControl(devicesState.chimeneaSala.id)}>
           <img
             className='devices-button-img'
             src={devicesState.chimeneaSala.img}

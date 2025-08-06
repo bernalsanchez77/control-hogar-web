@@ -28,7 +28,7 @@ function Main() {
   const updatesDisabledRef = useRef(updatesDisabled);
   const [credential, setCredential] = useState('');
   const [channelCategory, setChannelCategory] = useState(['default']);
-  const [deviceState, setDeviceState] = useState('default');
+  const [view, setView] = useState({channels: {category: []}, devices: {device: ''}, apps: {selected: '', youtube: {mode: '', channel: ''}}});
 
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
@@ -38,8 +38,9 @@ function Main() {
   const guestCredential = useRef('guest');
   const devCredential = useRef('dev');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
-  const youtubeSearchVideos = useRef([]);
-  const youtubeLizVideos = useRef([]);
+  const [youtubeSearchVideos, setYoutubeSearchVideos] = useState([]);
+  const [youtubeLizVideos, setYoutubeLizVideos] = useState([]);
+  const [cableChannels, setCableChannels] = useState([]);
 
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
@@ -53,37 +54,48 @@ function Main() {
   }
 
   const searchYoutube = async (text) => {
-      console.log(text);
-      youtubeSearchVideos.current = await requests.current.searchYoutube(text);
-    //youtubeSearchVideos.current = youtubeDummyData.current.getYoutubeDummyData();
+    const videos = await requests.current.searchYoutube(text);
+    setYoutubeSearchVideos(videos);
+    // setYoutubeSearchVideos(youtubeDummyData.current.getYoutubeDummyData());
   }
 
-  const changeDeviceState = async (state) => {
-    if (state === 'youtube') {
-      if (youtubeLizVideos.current.length === 0) {
-        youtubeLizVideos.current = await requests.current.getYoutubeLizVideos();
-        youtubeLizVideos.current = youtubeLizVideos.current.data;
+  const changeView = async (params) => {
+    triggerVibrate();
+    const newView = structuredClone(params);
+    setView(newView);
+    if (newView.apps.selected === 'youtube' && newView.apps.youtube.channel === '') {
+      if (youtubeLizVideos.length === 0) {
+        const videos = await requests.current.getYoutubeLizVideos();
+        setYoutubeLizVideos(videos.data);
       }
     }
-    triggerVibrate();
-    setDeviceState(state);
-  }
+    if (devicesState.hdmiSala.id === 'cable') {
+      console.log('va');
+    }
+  };
+
 
   const changeControl = (params) => {
     requests.current.sendControl(sendDisabled, params);
     const media = params.massMedia || params.ifttt || [];
     if (media.length > 0) {
       const devices = {...devicesStateUpdated.current};
-      media.forEach(el => {
+      media.forEach(async el => {
         if (Array.isArray(el.key)) {
           devices[el.device][el.key[0]] = {...devices[el.device][el.key[0]], [el.key[1]]: el.value};
         } else {
           devices[el.device] = {...devices[el.device], [el.key]: el.value};
           if (el.key === 'video') {
-            const video = youtubeLizVideos.current.find(video => video.videoId === el.value);
+            const video = youtubeLizVideos.find(video => video.videoId === el.value);
             if (video) {
               video.videoDate = new Date().toISOString();
               requests.current.updateYoutubeLizVideo({videoId: video.videoId, videoDate: new Date().toISOString()});
+            }
+          }
+          if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'cable') {
+            if (!cableChannels.length) {
+              const videos = await requests.current.getCableChannels();
+              setYoutubeLizVideos(videos.data);
             }
           }
         }
@@ -332,27 +344,27 @@ function Main() {
             devicesState={devicesState}
             screenSelected={screenSelected}
             channelCategory={channelCategory}
-            deviceState={deviceState}
+            view={view}
             youtubeSearchVideos={youtubeSearchVideos}
             youtubeLizVideos={youtubeLizVideos}
             changeChannelCategoryParent={changeChannelCategory}
-            changeDeviceStateParent={changeDeviceState}
+            changeViewParent={changeView}
             changeControlParent={triggerControl}
             triggerVibrateParent={triggerVibrate}
             searchYoutubeParent={searchYoutube}>
           </Controls>
-          {deviceState === 'default' &&
+          {view.apps.selected === '' &&
           <Devices
             credential={credential}
             ownerCredential={ownerCredential.current}
             devCredential={devCredential.current}
+            view={view}
             devicesState={devicesState}
-            deviceState={deviceState}
-            changeDeviceStateParent={changeDeviceState}
+            changeViewParent={changeView}
             changeControlParent={triggerControl}>
           </Devices>
           }
-          {credential === devCredential.current && deviceState === 'default' && channelCategory.includes('default') &&
+          {credential === devCredential.current && view.state === 'main' && channelCategory.includes('default') &&
           <Dev
             sendDisabled={sendDisabled}
             updatesDisabled={updatesDisabled}

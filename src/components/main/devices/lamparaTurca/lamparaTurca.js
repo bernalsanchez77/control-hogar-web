@@ -1,13 +1,12 @@
-import React from 'react';
 import './lamparaTurca.css';
 
-function LamparaTurca({devicesState, triggerControlParent}) {
-  const triggerDevice = (device) => {
+function LamparaTurca({devicesState, changeControlParent}) {
+  const changeControl = (device) => {
     if (devicesState[device].state === 'on') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
     }
     if (devicesState[device].state === 'off') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
   }
 
@@ -16,7 +15,7 @@ function LamparaTurca({devicesState, triggerControlParent}) {
       <div>
         <button
           className={`devices-button ${devicesState.lamparaTurca.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => triggerDevice(devicesState.lamparaTurca.id)}>
+          onTouchStart={() => changeControl(devicesState.lamparaTurca.id)}>
           <img
             className='devices-button-img'
             src={devicesState.lamparaTurca.img}

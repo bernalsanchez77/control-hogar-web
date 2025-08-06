@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import {useRef} from 'react';
 
 import Top from './top/top';
 import Arrows from './arrows/arrows';
@@ -6,30 +6,26 @@ import Levels from './levels/levels';
 import Search from './search/search';
 import Toolbar from './toolbar/toolbar';
 import Channels from './channels/channels';
-import ChannelCategory from './channelCategory/channelCategory';
 import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({devicesState, screenSelected, channelCategory, deviceState, youtubeSearchVideos, youtubeLizVideos, changeControlParent, changeDeviceStateParent, changeChannelCategoryParent, triggerVibrateParent, searchYoutubeParent}) {
+function Controls({devicesState, screenSelected, view, youtubeSearchVideos, youtubeLizVideos, changeControlParent, changeViewParent, changeChannelCategoryParent, changeVibrateParent, searchYoutubeParent}) {
   const searchMode = useRef(false);
-  const triggerControl = (params) => {
+  const changeControl = (params) => {
     changeControlParent(params);
   }
 
-  const triggerChannelCategory = (category) => {
+  const changeChannelCategory = (category) => {
     changeChannelCategoryParent(category);
   }
 
-  const triggerVibrate = (length) => {
-    triggerVibrateParent(length);
+  const changeVibrate = (length) => {
+    changeVibrateParent(length);
   }
 
-  const triggerDeviceState = (state) => {
-    if (state === 'youtube') {
-      searchMode.current = false;
-    }
-    changeDeviceStateParent(state);
+  const changeView = (view) => {
+    changeViewParent(view);
   }
 
   const searchYoutube = (text) => {
@@ -42,80 +38,60 @@ function Controls({devicesState, screenSelected, channelCategory, deviceState, y
       <div className='controls'>
         <Top
           devicesState={devicesState}
+          view={view}
           screenSelected={screenSelected}
-          triggerControlParent={triggerControl}>
+          changeControlParent={changeControl}
+          changeViewParent={changeView}>
         </Top>
         <Arrows
-          devicesState={devicesState}
-          screenSelected={screenSelected}
-          triggerControlParent={triggerControl}>
+          changeControlParent={changeControl}>
         </Arrows>
         <Levels
           devicesState={devicesState}
           screenSelected={screenSelected}
-          channelCategory={channelCategory}
-          deviceState={deviceState}
-          triggerControlParent={triggerControl}
-          triggerDeviceStateParent={triggerDeviceState}
-          triggerChannelCategoryParent={triggerChannelCategory}
-          triggerVibrateParent={triggerVibrate}>
+          view={view}
+          changeControlParent={changeControl}
+          changeViewParent={changeView}
+          changeChannelCategoryParent={changeChannelCategory}
+          changeVibrateParent={changeVibrate}>
         </Levels>
         <Toolbar
           devicesState={devicesState}
-          triggerControlParent={triggerControl}>
+          changeControlParent={changeControl}>
         </Toolbar>
-        {deviceState !== 'default' &&
+        {view.state !== 'main' &&
         <Search
           devicesState={devicesState}
-          deviceState={deviceState}
-          youtubeSearchVideos={youtubeSearchVideos}
-          youtubeLizVideos={youtubeLizVideos}
-          triggerControlParent={triggerControl}
-          triggerDeviceStateParent={triggerDeviceState}
+          view={view}
+          changeViewParent={changeView}
           searchYoutubeParent={searchYoutube}>
         </Search>
         }
-        {devicesState.hdmiSala.state === 'roku' && deviceState === 'default' &&
-        <div className='controls-toolbar-apps'>
-          <div className='controls-toolbar-apps-wrapper'>
-            <Apps
-              devicesState={devicesState}
-              triggerControlParent={triggerControl}
-              triggerDeviceStateParent={triggerDeviceState}>
-            </Apps>
-          </div>
-        </div>
+        {devicesState.hdmiSala.state === 'roku' &&
+        <Apps
+          devicesState={devicesState}
+          view={view}
+          youtubeSearchVideos={youtubeSearchVideos}
+          youtubeLizVideos={youtubeLizVideos}
+          changeControlParent={changeControl}
+          changeViewParent={changeView}>
+        </Apps>
         }
-        {devicesState.hdmiSala.state === 'cable' && channelCategory.includes('default') && deviceState === 'default' &&
-        <div>
-          <Channels
-            devicesState={devicesState}
-            triggerCategoryParent={triggerChannelCategory}>
-          </Channels>
-        </div>
+        {devicesState.hdmiSala.state === 'cable' &&
+        <Channels
+          view={view}
+          devicesState={devicesState}
+          changeControlParent={changeControl}
+          changeViewParent={changeView}>
+        </Channels>
         }
-        {devicesState.hdmiSala.state === 'cable' && !channelCategory.includes('default') && deviceState === 'default' &&
-        <div>
-          <ChannelCategory
-            devicesState={devicesState}
-            channelCategory={channelCategory}
-            triggerControlParent={triggerControl}>
-          </ChannelCategory>
-        </div>
-        }
-        {deviceState !== 'default' &&
-        <div>
-          <Devices
-            devicesState={devicesState}
-            deviceState={deviceState}
-            youtubeSearchVideos={youtubeSearchVideos}
-            youtubeLizVideos={youtubeLizVideos}
-            triggerControlParent={triggerControl}
-            triggerDeviceStateParent={triggerDeviceState}
-            searchYoutubeParent={searchYoutube}
-            searchMode={searchMode}>
-          </Devices>
-        </div>
+        {view.devices.device !== '' &&
+        <Devices
+          devicesState={devicesState}
+          view={view}
+          changeControlParent={changeControl}
+          changeViewParent={changeView}>
+        </Devices>
         }
       </div>
     </div>

@@ -1,28 +1,28 @@
-import React, {useRef} from 'react';
+import {useRef} from 'react';
 import './luzCuarto.css';
 
-function LuzCuarto({devicesState, triggerDeviceStateParent, triggerControlParent}) {
+function LuzCuarto({devicesState, changeViewParent, changeControlParent}) {
   const timeout3s = useRef(null);
   const longClick = useRef(false);
-  const triggerDevice = (device) => {
+  const changeControl = (device) => {
     if (devicesState[device].state === 'on') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
     }
     if (devicesState[device].state === 'off') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
   }
-  const triggerDeviceStart = () => {
+  const changeControlStart = () => {
     timeout3s.current = setTimeout(() => {
       longClick.current = true;
     }, 1000);
   }
-  const triggerDeviceEnd = (device) => {
+  const changeControlEnd = (device) => {
     clearTimeout(timeout3s.current);
     if (longClick.current) {
-      triggerDeviceStateParent('luzCuarto');
+      changeViewParent(device);
     } else {
-      triggerDevice(device);
+      changeControl(device);
     }
     longClick.current = false;
   }
@@ -32,8 +32,8 @@ function LuzCuarto({devicesState, triggerDeviceStateParent, triggerControlParent
       <div>
         <button
           className={`devices-button ${devicesState.luzCuarto.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => triggerDeviceStart(devicesState.luzCuarto.id)}
-          onTouchEnd={() => triggerDeviceEnd(devicesState.luzCuarto.id)}>
+          onTouchStart={() => changeControlStart(devicesState.luzCuarto.id)}
+          onTouchEnd={() => changeControlEnd(devicesState.luzCuarto.id)}>
           <img
             className='devices-button-img'
             src={devicesState.luzCuarto.img}

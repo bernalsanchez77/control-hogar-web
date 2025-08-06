@@ -12,12 +12,14 @@ import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
 import './devices.css';
 
-function Devices({credential, ownerCredential, devCredential, devicesState, deviceState, changeDeviceStateParent, changeControlParent}) {
-  const triggerControl = (params) => {
+function Devices({credential, ownerCredential, devCredential, view, devicesState, changeViewParent, changeControlParent}) {
+  const changeControl = (params) => {
     changeControlParent(params);
   }
-  const triggerDeviceState = (state) => {
-    changeDeviceStateParent(state);
+  const changeView = (device) => {
+    const newView = {...view};
+    newView.devices.device = device;
+    changeViewParent(newView);
   }
 
   return (
@@ -26,37 +28,37 @@ function Devices({credential, ownerCredential, devCredential, devicesState, devi
         <div className='devices-element'>
           <LamparaComedor
             devicesState={devicesState}
-            triggerControlParent={triggerControl}>
+            changeControlParent={changeControl}>
           </LamparaComedor>
         </div>
         <div className='devices-element'>
           <LamparaTurca
             devicesState={devicesState}
-            triggerControlParent={triggerControl}>
+            changeControlParent={changeControl}>
           </LamparaTurca>
         </div>
         <div className='devices-element'>
           <LamparaSala
             devicesState={devicesState}
-            triggerControlParent={triggerControl}>
+            changeControlParent={changeControl}>
           </LamparaSala>
         </div>
         <div className='devices-element'>
           <LamparaRotatoria
             devicesState={devicesState}
-            triggerControlParent={triggerControl}>
+            changeControlParent={changeControl}>
           </LamparaRotatoria>
         </div>
         <div className='devices-element'>
           <ChimeneaSala
             devicesState={devicesState}
-            triggerControlParent={triggerControl}>
+            changeControlParent={changeControl}>
           </ChimeneaSala>
         </div>
         <div className='devices-element'>
           <ParlantesSala
             devicesState={devicesState}
-            triggerControlParent={triggerControl}>
+            changeControlParent={changeControl}>
           </ParlantesSala>
         </div> 
       </div>
@@ -64,14 +66,14 @@ function Devices({credential, ownerCredential, devCredential, devicesState, devi
         <div className='devices-element'>
           <VentiladorSala
             devicesState={devicesState}
-            triggerControlParent={triggerControl}>
+            changeControlParent={changeControl}>
           </VentiladorSala>
         </div>
         {(credential === ownerCredential || credential === devCredential) &&
         <div className='devices-element'>
           <CalentadorNegro
             devicesState={devicesState}
-            triggerControlParent={triggerControl}>
+            changeControlParent={changeControl}>
           </CalentadorNegro>
         </div>
         }
@@ -79,22 +81,22 @@ function Devices({credential, ownerCredential, devCredential, devicesState, devi
         <div className='devices-element'>
           <CalentadorBlanco
             devicesState={devicesState}
-            triggerControlParent={triggerControl}>
+            changeControlParent={changeControl}>
           </CalentadorBlanco>
         </div>
         }
         <div className='devices-element'>
           <LamparasAbajo
             devicesState={devicesState}
-            triggerControlParent={triggerControl}>
+            changeControlParent={changeControl}>
           </LamparasAbajo>
         </div>
           {(credential === ownerCredential || credential === devCredential) &&
         <div className='devices-element'>
           <LuzCuarto
             devicesState={devicesState}
-            triggerDeviceStateParent={triggerDeviceState}
-            triggerControlParent={triggerControl}>
+            changeViewParent={changeView}
+            changeControlParent={changeControl}>
           </LuzCuarto>
         </div>
         }
@@ -102,7 +104,7 @@ function Devices({credential, ownerCredential, devCredential, devicesState, devi
         <div className='devices-element'>
           <LuzEscalera
             devicesState={devicesState}
-            triggerControlParent={triggerControl}>
+            changeControlParent={changeControl}>
           </LuzEscalera>
         </div>
         }

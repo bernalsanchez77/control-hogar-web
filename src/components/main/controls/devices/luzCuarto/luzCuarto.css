@@ -1,0 +1,55 @@
+.controls-devices-luzcuarto {
+  height: 275px;
+  position: relative;
+  width: 100%;
+  margin: 5px 0;
+  overflow-y: scroll;
+}
+.controls-devices-luzcuarto-ul {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+.controls-device-luzcuarto {
+  height: 120px;
+  padding: 0 5px 5px;
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+}
+.controls-device-luzcuarto-button {
+  border: 2px solid transparent;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  padding: 0;
+}
+.controls-device-luzcuarto-button--white {
+  background-color: white;
+}
+.controls-device-luzcuarto-button--red {
+  background-color: red;
+}
+@keyframes flashing {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+.controls-device-luzcuarto-button--selected {
+  animation: flashing 2s ease-in-out infinite;
+}
+button.controls-device-luzcuarto-button:active {
+  background-color: white;
+  transition: background-color 0.1s;
+}

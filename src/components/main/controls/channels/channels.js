@@ -1,88 +1,37 @@
+import Category from './category/category';
+import Categories from './categories/categories';
 import './channels.css';
 
-function Channels({devicesState, triggerCategoryParent}) {
-  let selectedImg = '/imgs/channels/' + devicesState.channelsSala.selected + '.png';
-  const triggerCategory = (category) => {
-    triggerCategoryParent(category);
-  }
+function Channels({devicesState, view, changeControlParent, changeViewParent}) {
+
+  const changeCategory = (category) => {
+    const newView = {...view};
+    newView.channels.category = category;
+    changeViewParent(newView);
+  };
+
+  const changeControl = (control) => {
+    changeControlParent(control);
+  };
 
   return (
     <div>
-      <div className='controls-channels'>
-        <div className='controls-channels-wrapper'>
-        <div className='controls-channels-row controls-channels-row--top'>
-          <div className='controls-channels-element  controls-channels-element--left'>
-            <button
-              className='controls-channels-elements-button'
-              onTouchStart={() => triggerCategory(['national'])}>
-              Nacionales
-            </button>
-          </div>
-          <div className='controls-channels-element controls-channels-element--center'>
-            <button
-              className='controls-channels-elements-button'
-              onTouchStart={() => triggerCategory(['news'])}>
-              Noticias
-            </button>
-          </div>
-          <div className='controls-channels-element controls-channels-element--right'>
-            <button
-              className='controls-channels-elements-button'
-              onTouchStart={() => triggerCategory(['sports'])}>
-              Deportes
-            </button>
-          </div>
-        </div>
-        <div className='controls-channels-row controls-channels-row--middle'>
-          <div className='controls-channels-element controls-channels-element--left'>
-            <button
-              className='controls-channels-elements-button'
-              onTouchStart={() => triggerCategory(['science'])}>
-              Ciencia
-            </button>
-          </div>
-          <div className='controls-channels-element controls-channels-element--img'>
-              <img
-                  className='controls-channels-img'
-                  src={selectedImg}
-                  alt="icono">
-              </img>
-          </div>
-          <div className='controls-channels-element controls-channels-element--right'>
-            <button
-              className='controls-channels-elements-button'
-              onTouchStart={() => triggerCategory(['movies'])}>
-              Peliculas
-            </button>
-          </div>
-        </div>
-        <div className='controls-channels-row controls-channels-row--bottom'>
-          <div className='controls-channels-element controls-channels-element--left'>
-            <button
-              className='controls-channels-elements-button'
-              onTouchStart={() => triggerCategory(['food', 'lifestyle'])}>
-              Vida
-            </button>
-          </div>
-          <div className='controls-channels-element controls-channels-element--center'>
-            <button
-              className='controls-channels-elements-button'
-              onTouchStart={() => triggerCategory(['general'])}>
-              General
-            </button>
-          </div>
-          <div className='controls-channels-element controls-channels-element--right'>
-            <button
-              className='controls-channels-elements-button'
-              onTouchStart={() => triggerCategory(['children'])}>
-              Infantiles
-            </button>
-          </div>
-        </div>
-        </div>
-      </div>
+      {view.channels.category.length === 0 &&
+      <Categories
+        devicesState={devicesState}
+        changeControlParent={changeControl}
+        changeCategoryParent={changeCategory}>
+      </Categories>
+      }
+      {view.channels.category.length &&
+      <Category
+        devicesState={devicesState}
+        category={view.channels.category}
+        changeControlParent={changeControl}>
+      </Category>
+      }
     </div>
-  )
+  );
 }
 
 export default Channels;

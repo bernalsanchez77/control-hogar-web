@@ -1,12 +1,12 @@
 import './luzEscalera.css';
 
-function LuzEscalera({devicesState, triggerControlParent}) {
-  const triggerDevice = (device) => {
+function LuzEscalera({devicesState, changeControlParent}) {
+  const changeControl = (device) => {
     if (devicesState[device].state === 'on') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
     }
     if (devicesState[device].state === 'off') {
-      triggerControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
+      changeControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
   }
 
@@ -15,7 +15,7 @@ function LuzEscalera({devicesState, triggerControlParent}) {
       <div>
         <button
           className={`devices-button ${devicesState.luzEscalera.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => triggerDevice(devicesState.luzEscalera.id)}>
+          onTouchStart={() => changeControl(devicesState.luzEscalera.id)}>
           <img
             className='devices-button-img'
             src={devicesState.luzEscalera.img}

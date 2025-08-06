@@ -1,22 +1,22 @@
 import './toolbar.css';
 
-function Toolbar({devicesState, triggerControlParent}) {
-  const triggerControl = (value) => {
+function Toolbar({devicesState, changeControlParent}) {
+  const changeControl = (value) => {
     const device = devicesState.rokuSala.id;
     if (value === 'play') {
       if (devicesState.rokuSala.state === 'play') {
-        triggerControlParent({
+        changeControlParent({
           ifttt: [{device, key: 'state', value: 'pause'}],
           roku: [{device, key: 'keypress', value: 'Play'}]
         });
       } else {
-        triggerControlParent({
+        changeControlParent({
           ifttt: [{device, key: 'state', value: 'play'}],
           roku: [{device, key: 'keypress', value: 'Play'}]
         });
       }
     } else {
-      triggerControlParent({
+      changeControlParent({
         ifttt: [{device, key: 'command', value}],
         roku: [{device, key: 'keypress', value: value.charAt(0).toUpperCase() + value.slice(1)}],
         massMedia: []
@@ -30,7 +30,7 @@ function Toolbar({devicesState, triggerControlParent}) {
         <div className='controls-toolbar-element controls-toolbar-element--left'>
           <button
             className='controls-toolbar-button'
-            onTouchStart={() => triggerControl('rev')}>
+            onTouchStart={() => changeControl('rev')}>
             <img
               className='controls-toolbar-img controls-toolbar-img--button'
               src="/imgs/rewind-50.png"
@@ -41,7 +41,7 @@ function Toolbar({devicesState, triggerControlParent}) {
         <div className='controls-toolbar-element'>
             <button
                 className={`controls-toolbar-button`}
-                onTouchStart={() => triggerControl('play')}>
+                onTouchStart={() => changeControl('play')}>
                 {(devicesState.rokuSala.state === 'play' || devicesState.rokuSala.state === 'none' || devicesState.rokuSala.state === 'close') &&
                 <img
                   className='controls-toolbar-img controls-toolbar-img--button'
@@ -61,7 +61,7 @@ function Toolbar({devicesState, triggerControlParent}) {
         <div className='controls-toolbar-element controls-toolbar-element--right'>
         <button
             className={'controls-toolbar-button'}
-            onTouchStart={() => triggerControl('fwd')}>
+            onTouchStart={() => changeControl('fwd')}>
             <img
               className='controls-toolbar-img controls-toolbar-img--button'
               src="/imgs/forward-50.png"
