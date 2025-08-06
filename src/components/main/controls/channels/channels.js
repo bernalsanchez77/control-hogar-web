@@ -2,7 +2,7 @@ import Category from './category/category';
 import Categories from './categories/categories';
 import './channels.css';
 
-function Channels({devicesState, view, changeControlParent, changeViewParent}) {
+function Channels({devicesState, view, cableChannels, changeControlParent, changeViewParent}) {
 
   const changeCategory = (category) => {
     const newView = {...view};
@@ -19,6 +19,7 @@ function Channels({devicesState, view, changeControlParent, changeViewParent}) {
       {view.channels.category.length === 0 &&
       <Categories
         devicesState={devicesState}
+        cableChannels={cableChannels}
         changeControlParent={changeControl}
         changeCategoryParent={changeCategory}>
       </Categories>
@@ -26,6 +27,7 @@ function Channels({devicesState, view, changeControlParent, changeViewParent}) {
       {view.channels.category.length &&
       <Category
         devicesState={devicesState}
+        cableChannels={cableChannels}
         category={view.channels.category}
         changeControlParent={changeControl}>
       </Category>

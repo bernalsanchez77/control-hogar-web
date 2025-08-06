@@ -10,14 +10,10 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({devicesState, screenSelected, view, youtubeSearchVideos, youtubeLizVideos, changeControlParent, changeViewParent, changeChannelCategoryParent, changeVibrateParent, searchYoutubeParent}) {
+function Controls({devicesState, screenSelected, view, youtubeSearchVideos, youtubeLizVideos, cableChannels, changeControlParent, changeViewParent, changeVibrateParent, searchYoutubeParent}) {
   const searchMode = useRef(false);
   const changeControl = (params) => {
     changeControlParent(params);
-  }
-
-  const changeChannelCategory = (category) => {
-    changeChannelCategoryParent(category);
   }
 
   const changeVibrate = (length) => {
@@ -50,9 +46,9 @@ function Controls({devicesState, screenSelected, view, youtubeSearchVideos, yout
           devicesState={devicesState}
           screenSelected={screenSelected}
           view={view}
+          cableChannels={cableChannels}
           changeControlParent={changeControl}
           changeViewParent={changeView}
-          changeChannelCategoryParent={changeChannelCategory}
           changeVibrateParent={changeVibrate}>
         </Levels>
         <Toolbar
@@ -81,6 +77,7 @@ function Controls({devicesState, screenSelected, view, youtubeSearchVideos, yout
         <Channels
           view={view}
           devicesState={devicesState}
+          cableChannels={cableChannels}
           changeControlParent={changeControl}
           changeViewParent={changeView}>
         </Channels>

@@ -1,6 +1,6 @@
 import './categories.css';
 
-function Categories({devicesState, changeCategoryParent}) {
+function Categories({devicesState, cableChannels, changeCategoryParent}) {
   let selectedImg = '/imgs/channels/' + devicesState.channelsSala.selected + '.png';
   const changeCategory = (category) => {
     changeCategoryParent(category);

@@ -95,6 +95,13 @@ class Requests {
       return await this.normalApiRequest('getCableChannelsFromSupabase', null, 'get');
     }
   }
+  async getRokuApps() {
+    if (window.cordova) {
+      return await this.cordovaApiRequest('getRokuAppsFromSupabase', null, 'get');
+    } else {
+      return await this.normalApiRequest('getRokuAppsFromSupabase', null, 'get');
+    }
+  }
   async updateYoutubeLizVideo(params) {
     if (window.cordova) {
       return await this.cordovaApiRequest('updateVideoInSupabase', params, 'patch');
@@ -129,7 +136,6 @@ class Requests {
     }
     return res.data.items;
   }
-
   async sendLogs(message) {
     if (window.cordova) {
       return await this.cordovaApiRequest('sendLogs', {message: message}, 'post');

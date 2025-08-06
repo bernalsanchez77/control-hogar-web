@@ -9,6 +9,8 @@ import { devicesOriginal } from '../../global/devices';
 import Utils from '../../global/utils';
 import Requests from '../../global/requests';
 import YoutubeDummyData from '../../global/youtube-dummy-data';
+import CableChannelsDummyData from '../../global/cable-channels-dummy-data';
+import RokuAppsDummyData from '../../global/roku-apps-dummy-data';
 import './main.css';
 
 function Main() {
@@ -18,6 +20,10 @@ function Main() {
   requests.current = new Requests();
   const youtubeDummyData = useRef({});
   youtubeDummyData.current = new YoutubeDummyData();
+  const cableChannelsDummyData = useRef({});
+  cableChannelsDummyData.current = new CableChannelsDummyData();
+  const rokuAppsDummyData = useRef({});
+  rokuAppsDummyData.current = new RokuAppsDummyData();
   const loadingDevices = useRef(false);
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
@@ -27,7 +33,6 @@ function Main() {
   const [updatesDisabled, setUpdatesDisabled] = useState(false);
   const updatesDisabledRef = useRef(updatesDisabled);
   const [credential, setCredential] = useState('');
-  const [channelCategory, setChannelCategory] = useState(['default']);
   const [view, setView] = useState({channels: {category: []}, devices: {device: ''}, apps: {selected: '', youtube: {mode: '', channel: ''}}});
 
   const [devicesState, setDevicesState] = useState(devicesOriginal);
@@ -41,16 +46,12 @@ function Main() {
   const [youtubeSearchVideos, setYoutubeSearchVideos] = useState([]);
   const [youtubeLizVideos, setYoutubeLizVideos] = useState([]);
   const [cableChannels, setCableChannels] = useState([]);
+  const [rokuApps, setRokuApps] = useState([]);
 
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
       navigator.vibrate([length]);
     }
-  }
-
-  const changeChannelCategory = (category) => {
-    triggerVibrate();
-    setChannelCategory(category);
   }
 
   const searchYoutube = async (text) => {
@@ -93,8 +94,16 @@ function Main() {
           }
           if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'cable') {
             if (!cableChannels.length) {
-              const videos = await requests.current.getCableChannels();
-              setYoutubeLizVideos(videos.data);
+              // const channels = await requests.current.getCableChannels();
+              // setCableChannels(channels.data);
+              setCableChannels(cableChannelsDummyData.current.getCableChannelsDummyData());
+            }
+          }
+          if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'roku') {
+            if (!rokuApps.length) {
+              // const apps = await requests.current.getRokuApps();
+              // setRokuApps(apps.data);
+              setRokuApps(rokuAppsDummyData.current.getRokuAppsDummyData());
             }
           }
         }
@@ -277,7 +286,17 @@ function Main() {
 
   useEffect(() => {
     devicesStateUpdated.current = devicesState;
-  }, [devicesState]);
+    if (devicesStateUpdated.current.hdmiSala.state === 'cable' && !cableChannels.length) {
+      // const channels = await requests.current.getCableChannels();
+      // setCableChannels(channels.data);
+      setCableChannels(cableChannelsDummyData.current.getCableChannelsDummyData());
+    }
+    if (devicesStateUpdated.current.hdmiSala.state === 'roku' && !rokuApps.length) {
+      // const channels = await requests.current.getCableChannels();
+      // setCableChannels(channels.data);
+      setRokuApps(rokuAppsDummyData.current.getRokuAppsDummyData());
+    }
+  }, [devicesState, cableChannels, rokuApps]);
 
   const resetDevices = async () => {
     await requests.current.setDevices(devicesOriginal);
@@ -342,11 +361,10 @@ function Main() {
           <Controls
             devicesState={devicesState}
             screenSelected={screenSelected}
-            channelCategory={channelCategory}
             view={view}
             youtubeSearchVideos={youtubeSearchVideos}
             youtubeLizVideos={youtubeLizVideos}
-            changeChannelCategoryParent={changeChannelCategory}
+            cableChannels={cableChannels}
             changeViewParent={changeView}
             changeControlParent={triggerControl}
             triggerVibrateParent={triggerVibrate}
@@ -363,7 +381,7 @@ function Main() {
             changeControlParent={triggerControl}>
           </Devices>
           }
-          {credential === devCredential.current && view.state === 'main' && channelCategory.includes('default') &&
+          {credential === devCredential.current && !view.apps.selected && !view.channels.category.length &&
           <Dev
             sendDisabled={sendDisabled}
             updatesDisabled={updatesDisabled}

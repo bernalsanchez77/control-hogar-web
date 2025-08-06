@@ -1,7 +1,7 @@
 import {useRef} from 'react';
 import './levels.css';
 
-function Levels({devicesState, screenSelected, view, changeControlParent, changeViewParent, changeVibrateParent}) {
+function Levels({devicesState, screenSelected, view, cableChannels, changeControlParent, changeViewParent, changeVibrateParent}) {
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
   const volumeChange = useRef('1');
@@ -37,12 +37,12 @@ function Levels({devicesState, screenSelected, view, changeControlParent, change
     if (value === 'down') {
       newChannelOrder = channelOrderSelected - 1;
     }
-    newChannel = Object.values(devicesState.channelsSala.channels).find(obj => obj.order === newChannelOrder);
+    newChannel = cableChannels.find(ch => ch.order === newChannelOrder);
     if (!newChannel) {
       if (value === 'up') {
-        newChannel = Object.values(devicesState.channelsSala.channels).find(obj => obj.order === 1);
+        newChannel = cableChannels.find(ch => ch.order === 1);
       } else {
-        newChannel = Object.values(devicesState.channelsSala.channels)[Object.values(devicesState.channelsSala.channels).length - 1];
+        newChannel = cableChannels[cableChannels.length - 1];
       }     
     }
     changeControlParent({

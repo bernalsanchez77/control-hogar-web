@@ -1,10 +1,11 @@
 import './category.css';
 
-function Category({devicesState, category, changeControlParent}) {
+function Category({devicesState, cableChannels, category, changeControlParent}) {
   const changeControl = (channel) => {
     const device = 'channelsSala';
+    const ifttt = cableChannels.find(ch => ch.id === channel).ifttt;
     changeControlParent({
-      ifttt: [{device: device + devicesState.channelsSala.channels[channel].ifttt, key: 'selected', value: channel}],
+      ifttt: [{device: device + ifttt, key: 'selected', value: channel}],
       massMedia: [{device: device, key: 'selected', value: channel}],
     });
   }
@@ -14,7 +15,7 @@ function Category({devicesState, category, changeControlParent}) {
       <div className='controls-channels-categories'>
         <ul className='controls-channels-categories-ul'>
           {
-            Object.entries(devicesState.channelsSala.channels).map(([key, channel]) => category.includes(channel.category) ? (
+            cableChannels.map((channel, key) => category.includes(channel.category) ? (
             <li key={key} className='controls-channels-category'>
               <button
                 className={`controls-channels-category-button ${devicesState.channelsSala.selected === channel.id ? 'controls-channels-category-button--selected' : ''}`}
