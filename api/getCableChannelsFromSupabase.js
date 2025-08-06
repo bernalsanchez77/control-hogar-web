@@ -4,7 +4,7 @@ const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 )
-
+console.log('se llamo a cable-channels');
 export default async function handler(req, res) {
   const { data, error } = await supabase.from('cable-channels').select('*').order('number', { ascending: true }) // or descending: false
   if (error) {
