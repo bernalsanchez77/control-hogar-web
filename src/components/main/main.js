@@ -94,16 +94,16 @@ function Main() {
           }
           if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'cable') {
             if (!cableChannels.length) {
-              // const channels = await requests.current.getCableChannels();
-              // setCableChannels(channels.data);
-              setCableChannels(cableChannelsDummyData.current.getCableChannelsDummyData());
+              const channels = await requests.current.getCableChannels();
+              setCableChannels(channels.data);
+              // setCableChannels(cableChannelsDummyData.current.getCableChannelsDummyData());
             }
           }
           if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'roku') {
             if (!rokuApps.length) {
-              // const apps = await requests.current.getRokuApps();
-              // setRokuApps(apps.data);
-              setRokuApps(rokuAppsDummyData.current.getRokuAppsDummyData());
+              const apps = await requests.current.getRokuApps();
+              setRokuApps(apps.data);
+              // setRokuApps(rokuAppsDummyData.current.getRokuAppsDummyData());
             }
           }
         }
@@ -286,17 +286,20 @@ function Main() {
   }, [credential]);
 
   useEffect(() => {
-    devicesStateUpdated.current = devicesState;
-    if (devicesStateUpdated.current.hdmiSala.state === 'cable' && !cableChannels.length) {
-      // const channels = await requests.current.getCableChannels();
-      // setCableChannels(channels.data);
-      setCableChannels(cableChannelsDummyData.current.getCableChannelsDummyData());
+    async function getDbData() {
+      devicesStateUpdated.current = devicesState;
+      if (devicesStateUpdated.current.hdmiSala.state === 'cable' && !cableChannels.length) {
+        const channels = await requests.current.getCableChannels();
+        setCableChannels(channels.data);
+        // setCableChannels(cableChannelsDummyData.current.getCableChannelsDummyData());
+      }
+      if (devicesStateUpdated.current.hdmiSala.state === 'roku' && !rokuApps.length) {
+        const apps = await requests.current.getRokuApps();
+        setRokuApps(apps.data);
+        // setRokuApps(rokuAppsDummyData.current.getRokuAppsDummyData());
+      }
     }
-    if (devicesStateUpdated.current.hdmiSala.state === 'roku' && !rokuApps.length) {
-      // const channels = await requests.current.getCableChannels();
-      // setCableChannels(channels.data);
-      setRokuApps(rokuAppsDummyData.current.getRokuAppsDummyData());
-    }
+    getDbData();
   }, [devicesState, cableChannels, rokuApps]);
 
   const resetDevices = async () => {
@@ -383,7 +386,7 @@ function Main() {
             changeControlParent={triggerControl}>
           </Devices>
           }
-          {credential === devCredential.current && !view.apps.selected && !view.channels.category.length &&
+          {credential === devCredential.current && !view.apps.selected && !view.channels.category.length && !view.devices.device &&
           <Dev
             sendDisabled={sendDisabled}
             updatesDisabled={updatesDisabled}

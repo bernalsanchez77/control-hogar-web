@@ -13,6 +13,7 @@ function Search({devicesState, view, changeViewParent, searchYoutubeParent}) {
         newView.apps.youtube.mode = 'search';
         newView.apps.youtube.channel = '';
         newView.apps.selected = 'youtube';
+        newView.devices.device = '';
         changeViewParent(newView);
         searchYoutubeParent(searchText);
       }

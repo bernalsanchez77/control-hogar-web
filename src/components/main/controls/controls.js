@@ -63,7 +63,7 @@ function Controls({devicesState, screenSelected, view, rokuApps, youtubeSearchVi
           searchYoutubeParent={searchYoutube}>
         </Search>
         }
-        {devicesState.hdmiSala.state === 'roku' &&
+        {devicesState.hdmiSala.state === 'roku' && !view.devices.device &&
         <Apps
           devicesState={devicesState}
           view={view}

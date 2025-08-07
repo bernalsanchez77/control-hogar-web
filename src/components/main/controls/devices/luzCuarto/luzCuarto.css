@@ -1,8 +1,8 @@
 .controls-devices-luzcuarto {
-  height: 275px;
+  height: 200px;
   position: relative;
   width: 100%;
-  margin: 5px 0;
+  margin: 0;
   overflow-y: scroll;
 }
 .controls-devices-luzcuarto-ul {
