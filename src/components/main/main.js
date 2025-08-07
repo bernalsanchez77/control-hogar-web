@@ -66,7 +66,7 @@ function Main() {
     setView(newView);
     if (newView.apps.selected === 'youtube' && newView.apps.youtube.channel === '') {
       if (youtubeLizVideos.length === 0) {
-        const videos = await requests.current.getYoutubeLizVideos();
+        const videos = await requests.current.getYoutubeVideosLiz();
         setYoutubeLizVideos(videos.data);
       }
     }

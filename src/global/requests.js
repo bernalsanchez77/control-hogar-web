@@ -81,11 +81,18 @@ class Requests {
       },
       'post');
   }
-  async getYoutubeLizVideos() {
+  async getYoutubeVideosLiz() {
     if (window.cordova) {
-      return await this.cordovaApiRequest('getVideosFromSupabase', null, 'get');
+      return await this.cordovaApiRequest('getYoutubeVideosFromSupabase', null, 'get');
     } else {
-      return await this.normalApiRequest('getVideosFromSupabase', null, 'get');
+      return await this.normalApiRequest('getYoutubeVideosFromSupabase', null, 'get');
+    }
+  }
+  async getYoutubeChannelsLiz() {
+    if (window.cordova) {
+      return await this.cordovaApiRequest('getYoutubeChannelsFromSupabase', null, 'get');
+    } else {
+      return await this.normalApiRequest('getYoutubeChannelsFromSupabase', null, 'get');
     }
   }
   async getCableChannels() {
