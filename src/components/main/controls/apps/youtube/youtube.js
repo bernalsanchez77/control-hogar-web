@@ -1,7 +1,7 @@
 import {useRef} from 'react';
 import './youtube.css';
 
-function Youtube({devicesState, view, youtubeSearchVideos, youtubeLizVideos, changeControlParent, changeViewParent}) {
+function Youtube({devicesState, view, rokuApps, youtubeSearchVideos, youtubeLizVideos, changeControlParent, changeViewParent}) {
   let youtubeSortedVideos = [];
   let youtubeSortedChannels = [];
   let touchMoved = false;
@@ -17,8 +17,9 @@ function Youtube({devicesState, view, youtubeSearchVideos, youtubeLizVideos, cha
   };
   const changeControl = (video) => {
     const device = 'rokuSala';
+    const rokuId = rokuApps.find(app => app.id === 'youtube').rokuId;
     changeControlParent({
-      roku: [{device, key: 'launch', value: devicesState.rokuSala.apps.youtube.rokuId, params: {contentID: video}}],
+      roku: [{device, key: 'launch', value: rokuId, params: {contentID: video}}],
       massMedia: [{device: device, key: 'video', value: video}],
     });
   };

@@ -1,12 +1,12 @@
 class RokuAppsDummyData {
   getRokuAppsDummyData() {
     return [
-            {
-                "label": "Home",
-                "id": "home",
-                "img": "/imgs/apps/netflix.png",
-                "rokuId": "562859",
-            },
+            // {
+            //     "label": "Home",
+            //     "id": "home",
+            //     "img": "/imgs/apps/netflix.png",
+            //     "rokuId": "562859",
+            // },
             {
                 "label": "Netflix",
                 "id": "netflix",

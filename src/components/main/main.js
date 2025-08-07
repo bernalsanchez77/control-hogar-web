@@ -175,8 +175,9 @@ function Main() {
       const devices = {...devicesStateUpdated.current};
       let response = await requests.current.getRokuData('active-app');
       if (response && response.status === 200) {
-        if (devicesState.rokuSala.apps[devicesState.rokuSala.app].rokuId !== response.data['active-app'].app.id) {
-          devices.rokuSala.app = Object.values(devicesState.rokuSala.apps).find(app => app.rokuId === response.data['active-app'].app.id).id;
+        const id = rokuApps.find(app => app.id === devicesState.rokuSala.app).rokuId;
+        if (id !== response.data['active-app'].app.id) {
+          devices.rokuSala.app = rokuApps.find(app => app.rokuId === response.data['active-app'].app.id).id;
           changed = true;
         }
       }
@@ -362,6 +363,7 @@ function Main() {
             devicesState={devicesState}
             screenSelected={screenSelected}
             view={view}
+            rokuApps={rokuApps}
             youtubeSearchVideos={youtubeSearchVideos}
             youtubeLizVideos={youtubeLizVideos}
             cableChannels={cableChannels}
