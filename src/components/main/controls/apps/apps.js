@@ -2,7 +2,7 @@ import All from './all/all';
 import Youtube from './youtube/youtube';
 import './apps.css';
 
-function Apps({devicesState, view, rokuApps, youtubeSearchVideos, youtubeLizVideos, changeControlParent, changeViewParent}) {
+function Apps({devicesState, view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeViewParent}) {
   const changeControl = (value) => {
     changeControlParent(value);
   }
@@ -27,7 +27,8 @@ function Apps({devicesState, view, rokuApps, youtubeSearchVideos, youtubeLizVide
         devicesState={devicesState}
         view={view}
         rokuApps={rokuApps}
-        youtubeLizVideos={youtubeLizVideos}
+        youtubeChannelsLiz={youtubeChannelsLiz}
+        youtubeVideosLiz={youtubeVideosLiz}
         youtubeSearchVideos={youtubeSearchVideos}
         changeControlParent={changeControl}
         changeViewParent={changeView}>

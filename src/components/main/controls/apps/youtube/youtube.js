@@ -1,7 +1,7 @@
 import {useRef} from 'react';
 import './youtube.css';
 
-function Youtube({devicesState, view, rokuApps, youtubeSearchVideos, youtubeLizVideos, changeControlParent, changeViewParent}) {
+function Youtube({devicesState, view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeViewParent}) {
   let youtubeSortedVideos = [];
   let youtubeSortedChannels = [];
   let touchMoved = false;
@@ -24,30 +24,18 @@ function Youtube({devicesState, view, rokuApps, youtubeSearchVideos, youtubeLizV
     });
   };
   if (view.apps.youtube.mode === '') {
-    const refMap = {};
-    youtubeLizVideos.forEach(video => {
-      refMap[video.channelId] = {
-        channelId: video.channelId,
-        channelOrder: video.channelOrder,
-        channelImg: video.channelImg,
-        channelTitle: video.channelTitle,
-      }
-    });
-    youtubeSortedChannels = Object.values(refMap).sort((a, b) => a.channelOrder - b.channelOrder);
+    youtubeSortedChannels = Object.values(youtubeChannelsLiz).sort((a, b) => a.order - b.order);
   }
   if (view.apps.youtube.mode === 'channel') {
-    youtubeSortedVideos = youtubeLizVideos.filter(video => video.channelId === channelSelected.current);
-    youtubeSortedVideos = Object.values(youtubeSortedVideos).sort(
-      (a, b) => new Date(a.videoDate) - new Date(b.videoDate)
-    );
+    youtubeSortedVideos = youtubeVideosLiz.filter(video => video.channelId === channelSelected.current);
+    youtubeSortedVideos = Object.values(youtubeSortedVideos).sort((a, b) => new Date(a.videoDate) - new Date(b.videoDate));
   }
   if (view.apps.youtube.mode === 'search') {
     youtubeSortedVideos = youtubeSearchVideos.map(item => ({
-      videoId: item.id.videoId,
-      videoTitle: item.snippet.title,
-      videoDescription: item.snippet.description,
-      videoImg: item.snippet.thumbnails.medium.url,
-      channelTitle: item.snippet.channelTitle,
+      id: item.id.videoId,
+      title: item.snippet.title,
+      description: item.snippet.description,
+      img: item.snippet.thumbnails.medium.url,
     }));
   }
 
@@ -79,14 +67,14 @@ function Youtube({devicesState, view, rokuApps, youtubeSearchVideos, youtubeLizV
             <li key={key} className='controls-apps-youtube-li'>
               <button
                 className={'controls-apps-youtube-channel-button'}
-                onTouchStart={() => changeView(channel.channelId)}>
+                onTouchStart={() => changeView(channel.id)}>
                 <img
                   className='controls-apps-youtube-channel-img'
-                  src={channel.channelImg}
+                  src={channel.img}
                   alt="icono">
                 </img>
                 <p className='controls-apps-youtube-channel-title'>
-                  {channel.channelTitle}
+                  {channel.title}
                 </p>
               </button>
             </li>
@@ -102,17 +90,17 @@ function Youtube({devicesState, view, rokuApps, youtubeSearchVideos, youtubeLizV
             youtubeSortedVideos.map((video, key) => (
             <li key={key} className='controls-apps-youtube-li'>
               <button
-                className={`controls-apps-youtube-video-button ${devicesState.rokuSala.video === video.videoId ? 'controls-apps-youtube-video-button--selected' : ''}`}
-                onTouchStart={(e) => onTouchStart(e, video.videoId)}
-                onTouchMove={(e) => onTouchMove(e, video.videoId)}
-                onTouchEnd={(e) => onTouchEnd(e, video.videoId)}>
+                className={`controls-apps-youtube-video-button ${devicesState.rokuSala.video === video.id ? 'controls-apps-youtube-video-button--selected' : ''}`}
+                onTouchStart={(e) => onTouchStart(e, video.id)}
+                onTouchMove={(e) => onTouchMove(e, video.id)}
+                onTouchEnd={(e) => onTouchEnd(e, video.id)}>
                 <img
                   className='controls-apps-youtube-video-img'
-                  src={video.videoImg}
+                  src={video.img}
                   alt="icono">
                 </img>
                 <p className='controls-apps-youtube-video-title'>
-                  {video.videoTitle}
+                  {video.title}
                 </p>
               </button>
             </li>

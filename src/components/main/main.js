@@ -44,7 +44,8 @@ function Main() {
   const devCredential = useRef('dev');
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
   const [youtubeSearchVideos, setYoutubeSearchVideos] = useState([]);
-  const [youtubeLizVideos, setYoutubeLizVideos] = useState([]);
+  const [youtubeVideosLiz, setYoutubeVideosLiz] = useState([]);
+  const [youtubeChannelsLiz, setYoutubeChannelsLiz] = useState([]);
   const [cableChannels, setCableChannels] = useState([]);
   const [rokuApps, setRokuApps] = useState([]);
 
@@ -64,10 +65,14 @@ function Main() {
     triggerVibrate();
     const newView = structuredClone(params);
     setView(newView);
-    if (newView.apps.selected === 'youtube' && newView.apps.youtube.channel === '') {
-      if (youtubeLizVideos.length === 0) {
+    if (newView.apps.selected === 'youtube') {
+      if (newView.apps.youtube.channel === '' && youtubeChannelsLiz.length === 0) {
+        const channels = await requests.current.getYoutubeChannelsLiz();
+        setYoutubeChannelsLiz(channels.data);
+      }
+      if (newView.apps.youtube.channel !== '' && youtubeVideosLiz.length === 0) {
         const videos = await requests.current.getYoutubeVideosLiz();
-        setYoutubeLizVideos(videos.data);
+        setYoutubeVideosLiz(videos.data);
       }
     }
     if (devicesState.hdmiSala.id === 'cable') {
@@ -86,10 +91,10 @@ function Main() {
         } else {
           devices[el.device] = {...devices[el.device], [el.key]: el.value};
           if (el.key === 'video') {
-            const video = youtubeLizVideos.find(video => video.videoId === el.value);
+            const video = youtubeVideosLiz.find(video => video.videoId === el.value);
             if (video) {
               video.videoDate = new Date().toISOString();
-              requests.current.updateYoutubeLizVideo({videoId: video.videoId, videoDate: new Date().toISOString()});
+              requests.current.updateYoutubeVideoLiz({videoId: video.videoId, videoDate: new Date().toISOString()});
             }
           }
           if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'cable') {
@@ -368,7 +373,8 @@ function Main() {
             view={view}
             rokuApps={rokuApps}
             youtubeSearchVideos={youtubeSearchVideos}
-            youtubeLizVideos={youtubeLizVideos}
+            youtubeChannelsLiz={youtubeChannelsLiz}
+            youtubeVideosLiz={youtubeVideosLiz}
             cableChannels={cableChannels}
             changeViewParent={changeView}
             changeControlParent={triggerControl}
