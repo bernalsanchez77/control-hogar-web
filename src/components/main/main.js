@@ -187,9 +187,9 @@ function Main() {
       const devices = {...devicesStateUpdated.current};
       let response = await requests.current.getRokuData('active-app');
       if (response && response.status === 200) {
-        const id = rokuApps.find(app => app.id === devicesState.rokuSala.app).rokuId;
+        const id = rokuApps.find(app => app.id === devicesState.rokuSala.app).id;
         if (id !== response.data['active-app'].app.id) {
-          devices.rokuSala.app = rokuApps.find(app => app.rokuId === response.data['active-app'].app.id).id;
+          devices.rokuSala.app = rokuApps.find(app => app.id === response.data['active-app'].app.id).id;
           changed = true;
         }
       }
@@ -231,6 +231,16 @@ function Main() {
     }
   }, []);
 
+  const subscribeToSupabase = () => {
+    supabase.channel('youtube-videos-liz-changes').on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'youtube-videos-liz' },
+      payload => {
+        console.log('Change received!', payload.new);
+      }
+    ).subscribe();
+  }
+
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = () => {
       let message = '';
@@ -270,14 +280,9 @@ function Main() {
       }
     }, 10000);
     setInterval(() => {getPosition();}, 300000);
+
     if (!isLocalhost) {
-      supabase.channel('youtube-videos-liz-changes').on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'youtube-videos-liz' },
-        payload => {
-          console.log('Change received!', payload.new);
-        }
-      ).subscribe();
+      subscribeToSupabase();
     }
 
     requests.current.sendLogs(user.current + ' entro');
