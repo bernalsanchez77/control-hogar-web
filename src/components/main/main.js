@@ -95,10 +95,10 @@ function Main() {
         } else {
           devices[el.device] = {...devices[el.device], [el.key]: el.value};
           if (el.key === 'video') {
-            const video = youtubeVideosLiz.find(video => video.videoId === el.value);
+            const video = youtubeVideosLiz.find(video => video.id === el.value);
             if (video) {
               video.videoDate = new Date().toISOString();
-              requests.current.updateYoutubeVideoLiz({videoId: video.videoId, videoDate: new Date().toISOString()});
+              requests.current.updateYoutubeVideoLiz({id: video.id, videoDate: new Date().toISOString()});
             }
           }
           if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'cable') {         
