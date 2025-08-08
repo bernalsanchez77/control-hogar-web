@@ -8,16 +8,42 @@ function Categories({devicesState, cableChannels, cableChannelCategories, change
 
   return (
     <div>
-      <div className='controls-channels'>
-      <ul className='controls-channels-wrapper'>
-        {
-        cableChannelCategories.current.map((category, key) => (
-        <li key={key} className={`controls-channels-row ${key === 0 ? "controls-channels-row--top" : ""}`}>
 
-        </li>
-        ))
-        }  
-      </ul>
+<div className='controls-channels'>
+  <div className='controls-channels-wrapper'>
+    {categories.map((row, rowIndex) => (
+      <div key={rowIndex} className={`controls-channels-row controls-channels-row--${['top', 'middle', 'bottom'][rowIndex]}`}>
+        {row.map((item, colIndex) => {
+          const position = ['left', 'center', 'right'][colIndex];
+          if (item.isImage) {
+            return (
+              <div key={colIndex} className='controls-channels-element controls-channels-element--img'>
+                <img
+                  className='controls-channels-img'
+                  src={selectedImg}
+                  alt='icono'
+                />
+              </div>
+            );
+          }
+
+          return (
+            <div key={colIndex} className={`controls-channels-element controls-channels-element--${position}`}>
+              <button className='controls-channels-elements-button'
+                onTouchStart={() => changeCategory(item.categories)}>
+                {item.label}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    ))}
+  </div>
+</div>
+
+
+
+    
 
 {/*       
       <div className='controls-channels'>
@@ -93,7 +119,6 @@ function Categories({devicesState, cableChannels, cableChannelCategories, change
         </div>
         </div>
       </div> */}
-      </div>
     </div>
   )
 }
