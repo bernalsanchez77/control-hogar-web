@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import eruda from 'eruda';
-import { createClient } from '@supabase/supabase-js';
+import supabase from '../../global/supabase-client';
 import Screens from './screens/screens';
 import Devices from './devices/devices';
 import Controls from './controls/controls';
@@ -14,9 +14,6 @@ import CableChannelsDummyData from '../../global/cable-channels-dummy-data';
 import CableChannelCategories from '../../global/cable-channel-categories';
 import RokuAppsDummyData from '../../global/roku-apps-dummy-data';
 import './main.css';
-
-console.log('Supabase URL:', process.env.REACT_APP_SUPABASE_URL);
-console.log('Supabase ANON KEY:', process.env.REACT_APP_SUPABASE_ANON_KEY);
 
 function Main() {
   const utils = useRef({});
@@ -56,7 +53,6 @@ function Main() {
   const [youtubeChannelsLiz, setYoutubeChannelsLiz] = useState([]);
   const [cableChannels, setCableChannels] = useState([]);
   const [rokuApps, setRokuApps] = useState([]);
-  const supabase = createClient(process.env.REACT_APP_SUPABASE_URL, process.env.REACT_APP_SUPABASE_ANON_KEY);
 
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
@@ -273,16 +269,6 @@ function Main() {
     }, 10000);
     setInterval(() => {getPosition();}, 300000);
 
-
-    supabase.channel('youtube-videos-liz-changes').on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'youtube-videos-liz' },
-      payload => {
-        console.log('Change received!', payload.new);
-      }
-    ).subscribe();
-
-
     requests.current.sendLogs(user.current + ' entro');
     getVisibility();
     if (document.readyState === "complete") {
@@ -296,6 +282,17 @@ function Main() {
   useEffect(() => {
     init();
   }, [init]);
+
+  useEffect(() => {
+    console.log('cupa', supabase);
+    supabase.channel('youtube-videos-liz-changes').on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'youtube-videos-liz' },
+      payload => {
+        console.log('Change received!', payload.new);
+      }
+    ).subscribe();
+  }, []);
 
   useEffect(() => {
     updatesDisabledRef.current = updatesDisabled;
