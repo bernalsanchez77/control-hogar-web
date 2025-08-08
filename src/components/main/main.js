@@ -54,7 +54,7 @@ function Main() {
   const [cableChannels, setCableChannels] = useState([]);
   const [rokuApps, setRokuApps] = useState([]);
   const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  let initialized = false;
+  const initialized = useRef(false);
 
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
@@ -176,7 +176,7 @@ function Main() {
       }
     }
   }
-  
+
   const getRokuData = useCallback(async (firstTime) => {
     let updatesEnabled = !updatesDisabledRef.current;
     if (firstTime) {
@@ -186,10 +186,10 @@ function Main() {
       let changed = false;
       const devices = {...devicesStateUpdated.current};
       let response = await requests.current.getRokuData('active-app');
-      if (response && response.status === 200) {
-        const id = rokuApps.find(app => app.id === devicesState.rokuSala.app).id;
+      if (response && response.status === 200 && rokuApps.data.length) {
+        const id = rokuApps.data.find(app => app.id === devicesState.rokuSala.app).id;
         if (id !== response.data['active-app'].app.id) {
-          devices.rokuSala.app = rokuApps.find(app => app.id === response.data['active-app'].app.id).id;
+          devices.rokuSala.app = rokuApps.data.find(app => app.id === response.data['active-app'].app.id).id;
           changed = true;
         }
       }
@@ -205,7 +205,7 @@ function Main() {
         requests.current.setDevices(devices);
       }
     }
-  }, []);
+  }, [devicesState.rokuSala.app, devicesState.rokuSala.state, rokuApps]);
 
   const getMassMediaData = useCallback(async (firstTime) => {
     let updatesEnabled = !updatesDisabledRef.current;
@@ -295,13 +295,13 @@ function Main() {
       window.addEventListener("load", document.body.classList.add("loaded"));
     }
     console.log('version 26');
-  }, [getMassMediaData, getRokuData, getPosition, getVisibility, user]);
+  }, [getMassMediaData, getRokuData, getPosition, getVisibility, user, isLocalhost]);
 
   useEffect(() => {
-    if (!initialized) {
+    if (!initialized.current) {
       init();
     }
-    initialized = true;
+    initialized.current = true;
   }, [init]);
 
   useEffect(() => {
@@ -319,7 +319,6 @@ function Main() {
 
   useEffect(() => {
     async function getDbData() {
-      devicesStateUpdated.current = devicesState;
       if (devicesStateUpdated.current.hdmiSala.state === 'cable' && !cableChannels.length) {
         const channels = await requests.current.getCableChannels();
         setCableChannels(channels.data);
@@ -332,7 +331,7 @@ function Main() {
       }
     }
     getDbData();
-  }, [devicesState, cableChannels, rokuApps]);
+  }, [devicesStateUpdated, cableChannels, rokuApps]);
 
   const resetDevices = async () => {
     await requests.current.setDevices(devicesOriginal);
