@@ -53,7 +53,7 @@ function Main() {
   const [youtubeChannelsLiz, setYoutubeChannelsLiz] = useState([]);
   const [cableChannels, setCableChannels] = useState([]);
   const [rokuApps, setRokuApps] = useState([]);
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  // const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
@@ -271,11 +271,11 @@ function Main() {
     setInterval(() => {getPosition();}, 300000);
 
 
-    supabase.channel('youtube-videos-liz-changes').on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'youtube-videos-liz' },
-      payload => {console.log('Change received!', payload)}
-    ).subscribe();
+    // supabase.channel('youtube-videos-liz-changes').on(
+    //   'postgres_changes',
+    //   { event: '*', schema: 'public', table: 'youtube-videos-liz' },
+    //   payload => {console.log('Change received!', payload)}
+    // ).subscribe();
 
 
     requests.current.sendLogs(user.current + ' entro');
