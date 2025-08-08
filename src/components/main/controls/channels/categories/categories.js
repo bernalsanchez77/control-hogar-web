@@ -8,10 +8,11 @@ function Categories({devicesState, cableChannels, cableChannelCategories, change
 
   return (
     <div>
-      <ul className='controls-channels'>
+      <div className='controls-channels'>
+      <ul className='controls-channels-wrapper'>
         {
         cableChannelCategories.current.map((category, key) => (
-        <li key={key} className='controls-channels-wrapper'>
+        <li key={key} className='controls-channels-row'>
 
         </li>
         ))
@@ -92,6 +93,7 @@ function Categories({devicesState, cableChannels, cableChannelCategories, change
         </div>
         </div>
       </div> */}
+      </div>
     </div>
   )
 }
