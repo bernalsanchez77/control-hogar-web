@@ -10,6 +10,7 @@ import Utils from '../../global/utils';
 import Requests from '../../global/requests';
 import YoutubeDummyData from '../../global/youtube-dummy-data';
 import CableChannelsDummyData from '../../global/cable-channels-dummy-data';
+import CableChannelCategories from '../../global/cable-channel-categories';
 import RokuAppsDummyData from '../../global/roku-apps-dummy-data';
 import './main.css';
 
@@ -20,6 +21,9 @@ function Main() {
   requests.current = new Requests();
   const youtubeDummyData = useRef({});
   youtubeDummyData.current = new YoutubeDummyData();
+  const cableChannelCategories = useRef({});
+  cableChannelCategories.current = new CableChannelCategories();
+  cableChannelCategories.current = cableChannelCategories.current.getCableChannelCategories();
   const cableChannelsDummyData = useRef({});
   cableChannelsDummyData.current = new CableChannelsDummyData();
   const rokuAppsDummyData = useRef({});
@@ -97,7 +101,7 @@ function Main() {
               requests.current.updateYoutubeVideoLiz({videoId: video.videoId, videoDate: new Date().toISOString()});
             }
           }
-          if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'cable') {
+          if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'cable') {         
             if (!cableChannels.length) {
               const channels = await requests.current.getCableChannels();
               setCableChannels(channels.data);
@@ -376,6 +380,7 @@ function Main() {
             youtubeChannelsLiz={youtubeChannelsLiz}
             youtubeVideosLiz={youtubeVideosLiz}
             cableChannels={cableChannels}
+            cableChannelCategories={cableChannelCategories}
             changeViewParent={changeView}
             changeControlParent={triggerControl}
             triggerVibrateParent={triggerVibrate}

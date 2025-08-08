@@ -1,6 +1,6 @@
 import './categories.css';
 
-function Categories({devicesState, cableChannels, changeCategoryParent}) {
+function Categories({devicesState, cableChannels, cableChannelCategories, changeCategoryParent}) {
   let selectedImg = '/imgs/channels/' + devicesState.channelsSala.selected + '.png';
   const changeCategory = (category) => {
     changeCategoryParent(category);
@@ -8,6 +8,17 @@ function Categories({devicesState, cableChannels, changeCategoryParent}) {
 
   return (
     <div>
+      <ul className='controls-channels'>
+        {
+        cableChannelCategories.current.map((category, key) => (
+        <li key={key} className='controls-channels-wrapper'>
+
+        </li>
+        ))
+        }  
+      </ul>
+
+{/*       
       <div className='controls-channels'>
         <div className='controls-channels-wrapper'>
         <div className='controls-channels-row controls-channels-row--top'>
@@ -80,7 +91,7 @@ function Categories({devicesState, cableChannels, changeCategoryParent}) {
           </div>
         </div>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }
