@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import eruda from 'eruda';
+import { createClient } from '@supabase/supabase-js';
 import Screens from './screens/screens';
 import Devices from './devices/devices';
 import Controls from './controls/controls';
@@ -52,6 +53,7 @@ function Main() {
   const [youtubeChannelsLiz, setYoutubeChannelsLiz] = useState([]);
   const [cableChannels, setCableChannels] = useState([]);
   const [rokuApps, setRokuApps] = useState([]);
+  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
@@ -267,6 +269,15 @@ function Main() {
       }
     }, 10000);
     setInterval(() => {getPosition();}, 300000);
+
+
+    supabase.channel('youtube-videos-liz-changes').on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'youtube-videos-liz' },
+      payload => {console.log('Change received!', payload)}
+    ).subscribe();
+
+
     requests.current.sendLogs(user.current + ' entro');
     getVisibility();
     if (document.readyState === "complete") {
