@@ -53,6 +53,8 @@ function Main() {
   const [youtubeChannelsLiz, setYoutubeChannelsLiz] = useState([]);
   const [cableChannels, setCableChannels] = useState([]);
   const [rokuApps, setRokuApps] = useState([]);
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  let initialized = false;
 
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
@@ -268,6 +270,15 @@ function Main() {
       }
     }, 10000);
     setInterval(() => {getPosition();}, 300000);
+    if (!isLocalhost) {
+      supabase.channel('youtube-videos-liz-changes').on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'youtube-videos-liz' },
+        payload => {
+          console.log('Change received!', payload.new);
+        }
+      ).subscribe();
+    }
 
     requests.current.sendLogs(user.current + ' entro');
     getVisibility();
@@ -280,19 +291,11 @@ function Main() {
   }, [getMassMediaData, getRokuData, getPosition, getVisibility, user]);
 
   useEffect(() => {
-    init();
+    if (!initialized) {
+      init();
+    }
+    initialized = true;
   }, [init]);
-
-  useEffect(() => {
-    console.log('cupa', supabase);
-    supabase.channel('youtube-videos-liz-changes').on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'youtube-videos-liz' },
-      payload => {
-        console.log('Change received!', payload.new);
-      }
-    ).subscribe();
-  }, []);
 
   useEffect(() => {
     updatesDisabledRef.current = updatesDisabled;
