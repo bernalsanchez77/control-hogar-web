@@ -98,7 +98,7 @@ function Main() {
             const video = youtubeVideosLiz.find(video => video.id === el.value);
             if (video) {
               video.videoDate = new Date().toISOString();
-              requests.current.updateYoutubeVideoLiz({id: video.id, videoDate: new Date().toISOString()});
+              requests.current.updateYoutubeVideoLiz({id: video.id, date: new Date().toISOString()});
             }
           }
           if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'cable') {         
