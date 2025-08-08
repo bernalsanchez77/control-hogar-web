@@ -186,7 +186,7 @@ function Main() {
       let changed = false;
       const devices = {...devicesStateUpdated.current};
       let response = await requests.current.getRokuData('active-app');
-      if (response && response.status === 200 && rokuApps.data.length) {
+      if (response && response.status === 200 && rokuApps.data) {
         const id = rokuApps.data.find(app => app.id === devicesState.rokuSala.app).id;
         if (id !== response.data['active-app'].app.id) {
           devices.rokuSala.app = rokuApps.data.find(app => app.id === response.data['active-app'].app.id).id;
