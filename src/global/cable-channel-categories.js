@@ -1,6 +1,7 @@
 class CableChannelCategories {
   getCableChannelCategories() {
     return [
+            [
             {
                 "label": "Nacionales",
                 "id": "nacionales",
@@ -22,12 +23,17 @@ class CableChannelCategories {
                 "categories": ['sports'],
                 "state": "",
             },
-           {
+            ],
+            [
+            {
                 "label": "Ciencia",
                 "id": "ciencia",
                 "img": "",
                 "categories": ['science'],
                 "state": "",
+            },
+            {
+                "isImage": true,
             },
             {
                 "label": "Peliculas",
@@ -36,6 +42,8 @@ class CableChannelCategories {
                 "categories": ['movies'],
                 "state": "",
             },
+            ],
+            [
             {
                 "label": "Vida",
                 "id": "vida",
@@ -57,7 +65,9 @@ class CableChannelCategories {
                 "categories": ['children'],
                 "state": "",
             },
+            ]
     ];
   }
 }
+
 export default CableChannelCategories;
