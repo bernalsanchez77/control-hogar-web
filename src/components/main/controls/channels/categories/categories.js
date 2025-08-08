@@ -12,7 +12,7 @@ function Categories({devicesState, cableChannels, cableChannelCategories, change
       <ul className='controls-channels-wrapper'>
         {
         cableChannelCategories.current.map((category, key) => (
-        <li key={key} className='controls-channels-row'>
+        <li key={key} className='{`controls-channels-row ${key === 0 ? }`}'>
 
         </li>
         ))
