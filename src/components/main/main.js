@@ -235,8 +235,10 @@ function Main() {
     supabase.channel('youtube-videos-liz-changes').on(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'youtube-videos-liz' },
-      payload => {
+      async (payload) => {
         console.log('Change received!', payload.new);
+        const videos = await requests.current.getYoutubeVideosLiz();
+        setYoutubeVideosLiz(videos.data);
       }
     ).subscribe();
   }
