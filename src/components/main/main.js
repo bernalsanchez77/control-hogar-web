@@ -15,6 +15,9 @@ import CableChannelCategories from '../../global/cable-channel-categories';
 import RokuAppsDummyData from '../../global/roku-apps-dummy-data';
 import './main.css';
 
+console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.log('Supabase ANON KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+
 function Main() {
   const utils = useRef({});
   utils.current = new Utils();
@@ -53,7 +56,10 @@ function Main() {
   const [youtubeChannelsLiz, setYoutubeChannelsLiz] = useState([]);
   const [cableChannels, setCableChannels] = useState([]);
   const [rokuApps, setRokuApps] = useState([]);
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
 
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
