@@ -6,8 +6,13 @@ const supabase = createClient(
 )
 
 export default async function handler(req, res) {
-  const {id, date} = req.body
-  const {data, error} = await supabase.from('youtube-videos-liz').update({date, state: 'selected'}).eq('id', id)
+  const {id, date} = req.body;
+  if (date) {
+    const {data, error} = await supabase.from('youtube-videos-liz').update({date, state: 'selected'}).eq('id', id);
+  } else {
+    const {data, error} = await supabase.from('youtube-videos-liz').update({state: ''}).eq('id', id);
+  }
+
   if (error) {
     return res.status(500).json({ error: error.message })
   }

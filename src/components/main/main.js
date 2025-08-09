@@ -99,9 +99,10 @@ function Main() {
           devices[el.device] = {...devices[el.device], [el.key]: el.value};
           if (el.key === 'video') {
             const video = youtubeVideosLiz.find(video => video.id === el.value);
+            const oldVideo = youtubeVideosLiz.find(video => video.state === 'selected');
             if (video) {
               video.videoDate = new Date().toISOString();
-              requests.current.updateYoutubeVideoLiz({id: video.id, date: new Date().toISOString()});
+              requests.current.updateYoutubeVideoLiz({id: video.id, date: new Date().toISOString()}, oldVideo.id);
             }
           }
           if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'cable') {         

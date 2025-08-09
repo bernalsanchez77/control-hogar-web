@@ -109,10 +109,11 @@ class Requests {
       return await this.normalApiRequest('getRokuAppsFromSupabase', null, 'get');
     }
   }
-  async updateYoutubeVideoLiz(params) {
+  async updateYoutubeVideoLiz(params, oldVideoId) {
     if (window.cordova) {
       return await this.cordovaApiRequest('updateVideoInSupabase', params, 'patch');
     } else {
+      await this.normalApiRequest('updateVideoInSupabase', {id: oldVideoId}, 'patch');
       return await this.normalApiRequest('updateVideoInSupabase', params, 'patch');
     }
   }
