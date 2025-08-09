@@ -234,6 +234,7 @@ function Main() {
   }, []);
 
   const subscribeToSupabase = () => {
+    console.log('suscrito');
     supabase.channel('youtube-videos-liz-changes').on(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'youtube-videos-liz' },
