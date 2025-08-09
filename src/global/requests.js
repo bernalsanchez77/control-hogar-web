@@ -114,7 +114,7 @@ class Requests {
       return await this.cordovaApiRequest('updateVideoInSupabase', params, 'patch');
     } else {
       await this.normalApiRequest('updateVideoInSupabase', {id: oldVideoId}, 'patch');
-      setTimeout(() => {
+      setTimeout(async () => {
         return await this.normalApiRequest('updateVideoInSupabase', params, 'patch');
       }, 2000);
     }
