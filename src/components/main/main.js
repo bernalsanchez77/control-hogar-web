@@ -235,13 +235,13 @@ function Main() {
 
   const subscribeToSupabase = () => {
     console.log('suscrito');
-    supabase.channel('youtube-videos-liz-changes').on(
+    supabase.channel('youtube-videos-liz-change').on(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'youtube-videos-liz' },
-      async (payload) => {
-        console.log('Change received!', payload.new);
-        const videos = await requests.current.getYoutubeVideosLiz();
-        setYoutubeVideosLiz(videos.data);
+      payload => {
+        console.log('Change received');
+        //const videos = await requests.current.getYoutubeVideosLiz();
+        //setYoutubeVideosLiz(videos.data);
       }
     ).subscribe();
   }
