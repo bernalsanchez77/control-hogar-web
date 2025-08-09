@@ -100,7 +100,7 @@ function Main() {
           if (el.key === 'video') {
             const video = youtubeVideosLiz.find(video => video.id === el.value);
             const oldVideo = youtubeVideosLiz.find(video => video.state === 'selected');
-            console.log(oldVideo.name)
+            console.log(oldVideo.label)
             if (video) {
               video.videoDate = new Date().toISOString();
               requests.current.updateYoutubeVideoLiz({id: video.id, date: new Date().toISOString()}, oldVideo.id);
