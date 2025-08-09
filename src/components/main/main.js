@@ -294,7 +294,7 @@ function Main() {
     } else {
       window.addEventListener("load", document.body.classList.add("loaded"));
     }
-    console.log('version 26');
+    console.log('version 27');
   }, [getMassMediaData, getRokuData, getPosition, getVisibility, user, isLocalhost]);
 
   useEffect(() => {
