@@ -55,6 +55,7 @@ function Main() {
   const [rokuApps, setRokuApps] = useState([]);
   const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const initialized = useRef(false);
+  const supabaseChannel = useRef(supabase.channel('youtube-videos-liz-changes'));
 
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
@@ -99,8 +100,8 @@ function Main() {
           devices[el.device] = {...devices[el.device], [el.key]: el.value};
           if (el.key === 'video') {
             const video = youtubeVideosLiz.find(video => video.id === el.value);
-            const oldVideo = youtubeVideosLiz.find(video => video.state === 'selected');
-            console.log(oldVideo.title)
+            const oldVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
+            console.log(oldVideo.title);
             if (video) {
               video.videoDate = new Date().toISOString();
               requests.current.updateYoutubeVideoLiz({id: video.id, date: new Date().toISOString()}, oldVideo.id);
@@ -234,16 +235,15 @@ function Main() {
   }, []);
 
   const subscribeToSupabase = () => {
-    console.log('suscrito');
-    supabase.channel('youtube-videos-liz-change').on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'youtube-videos-liz' },
-      payload => {
-        console.log('Change received');
-        //const videos = await requests.current.getYoutubeVideosLiz();
-        //setYoutubeVideosLiz(videos.data);
-      }
-    ).subscribe();
+    supabaseChannel.current
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'youtube-videos-liz' },
+        payload => {
+          console.log('Change received!', payload);
+        }
+      )
+      .subscribe();
   }
 
   const getVisibility = useCallback(() => {
@@ -256,6 +256,7 @@ function Main() {
       } else {
         userActive.current = false;
         setUserActive2(false);
+        supabase.removeChannel(supabaseChannel.current);
         message = user.current + ' salio';
       }
       requests.current.sendLogs(message);
@@ -286,9 +287,9 @@ function Main() {
     }, 10000);
     setInterval(() => {getPosition();}, 300000);
 
-    if (!isLocalhost) {
+    // if (!isLocalhost) {
       subscribeToSupabase();
-    }
+    // }
 
     requests.current.sendLogs(user.current + ' entro');
     getVisibility();
