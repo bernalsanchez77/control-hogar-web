@@ -116,7 +116,7 @@ class Requests {
       await this.normalApiRequest('updateVideoInSupabase', {id: oldVideoId}, 'patch');
       setTimeout(async () => {
         await this.normalApiRequest('updateVideoInSupabase', params, 'patch');
-      }, 5000);
+      }, 2000);
     }
   }
   // async searchYoutube(text) {
