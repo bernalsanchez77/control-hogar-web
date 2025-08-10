@@ -235,16 +235,19 @@ function Main() {
   }, []);
 
   const subscribeToSupabase = () => {
-    supabaseChannel.current
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'youtube-videos-liz' },
-        payload => {
-          console.log('Change received!', payload);
+    supabaseChannel.current.on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'youtube-videos-liz' },
+      payload => {
+        console.log('Change received!');
+      }).subscribe(status => {
+        console.log(status);
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ Connected to Realtime.');
         }
-      )
-      .subscribe();
-  }
+      }
+    );
+  };
 
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = () => {
@@ -288,7 +291,7 @@ function Main() {
     setInterval(() => {getPosition();}, 300000);
 
     // if (!isLocalhost) {
-      subscribeToSupabase();
+      // subscribeToSupabase();
     // }
 
     requests.current.sendLogs(user.current + ' entro');
@@ -322,24 +325,23 @@ function Main() {
   }, [credential]);
 
   useEffect(() => {
-  const channel = supabase
-    .channel('youtube-videos-liz')
-    .on(
+    console.log('subscribing');
+    console.log(supabaseChannel.current);
+    supabaseChannel.current.on(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'youtube-videos-liz' },
-      payload => console.log('📡 Change received:', payload)
-    )
-      .subscribe(status => {
-        console.log(status);
-        if (status === 'SUBSCRIBED') {
-          console.log('✅ Connected to Realtime.');
-        }
-      });
-
-  return () => {
-    supabase.removeChannel(channel);
-  };
-}, []);
+      payload => console.log('📡 Change received:')
+    ).subscribe(status => {
+      console.log(status);
+      if (status === 'SUBSCRIBED') {
+        console.log('✅ Connected to Realtime.');
+      }
+    });
+    return () => {
+      console.log('unsubcribing');
+      supabase.removeChannel(supabaseChannel.current);
+    };
+  }, []);
 
   useEffect(() => {
     async function getDbData() {
