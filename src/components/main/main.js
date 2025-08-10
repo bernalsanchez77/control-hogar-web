@@ -325,22 +325,25 @@ function Main() {
   }, [credential]);
 
   useEffect(() => {
+    const channel = supabaseChannel.current;
     console.log('subscribing');
-    console.log(supabaseChannel.current);
-    supabaseChannel.current.on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'youtube-videos-liz' },
-      payload => console.log('📡 Change received:')
-    ).subscribe(status => {
-      console.log(status);
-      if (status === 'SUBSCRIBED') {
-        console.log('✅ Connected to Realtime.');
-      }
-    });
-    return () => {
-      console.log('unsubcribing');
-      supabase.removeChannel(supabaseChannel.current);
-    };
+    console.log(channel);
+    if (channel?.socket.state !== 'joined') {
+      channel.on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'youtube-videos-liz' },
+        payload => console.log('📡 Change received:')
+      ).subscribe(status => {
+        console.log(status);
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ Connected to Realtime.');
+        }
+      });
+      return () => {
+        console.log('unsubcribing');
+        supabase.removeChannel(channel);
+      };
+    }
   }, []);
 
   useEffect(() => {
