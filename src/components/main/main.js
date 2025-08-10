@@ -334,9 +334,9 @@ function Main() {
         { event: '*', schema: 'public', table: 'youtube-videos-liz' },
         (payload) => {
           console.log('📡 Change received:', payload);
-          if (payload.new.id) {
-            //const videos = await requests.current.getYoutubeVideosLiz();
-            //setYoutubeVideosLiz(videos.data);
+          if (payload.new.state === 'selected') {
+            const videos = await requests.current.getYoutubeVideosLiz();
+            setYoutubeVideosLiz(videos.data);
           }
         }
       ).subscribe(status => {
