@@ -322,6 +322,21 @@ function Main() {
   }, [credential]);
 
   useEffect(() => {
+  const channel = supabase
+    .channel('youtube-videos-liz-changes')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'youtube-videos-liz' },
+      payload => console.log('📡 Change received:', payload)
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}, []);
+
+  useEffect(() => {
     async function getDbData() {
       if (devicesStateUpdated.current.hdmiSala.state === 'cable' && !cableChannels.length) {
         const channels = await requests.current.getCableChannels();
