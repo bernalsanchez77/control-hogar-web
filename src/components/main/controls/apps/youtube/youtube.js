@@ -16,12 +16,15 @@ function Youtube({devicesState, view, rokuApps, youtubeSearchVideos, youtubeChan
     changeViewParent(newView);
   };
   const changeControl = (video) => {
-    const device = 'rokuSala';
-    const rokuId = rokuApps.find(app => app.id === 'youtube').rokuId;
-    changeControlParent({
-      roku: [{device, key: 'launch', value: rokuId, params: {contentID: video}}],
-      massMedia: [{device: device, key: 'video', value: video}],
-    });
+    const currentVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
+    if (currentVideo.id !== video) {
+      const device = 'rokuSala';
+      const rokuId = rokuApps.find(app => app.id === 'youtube').rokuId;
+      changeControlParent({
+        roku: [{device, key: 'launch', value: rokuId, params: {contentID: video}}],
+        massMedia: [{device: device, key: 'video', value: video}],
+      });   
+    }
   };
   if (view.apps.youtube.mode === '') {
     youtubeSortedChannels = Object.values(youtubeChannelsLiz).sort((a, b) => a.order - b.order);
