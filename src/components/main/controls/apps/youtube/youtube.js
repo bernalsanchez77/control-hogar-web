@@ -90,7 +90,7 @@ function Youtube({devicesState, view, rokuApps, youtubeSearchVideos, youtubeChan
             youtubeSortedVideos.map((video, key) => (
             <li key={key} className='controls-apps-youtube-li'>
               <button
-                className={`controls-apps-youtube-video-button ${devicesState.rokuSala.video === video.id ? 'controls-apps-youtube-video-button--selected' : ''}`}
+                className={`controls-apps-youtube-video-button ${video.state === 'selected' ? 'controls-apps-youtube-video-button--selected' : ''}`}
                 onTouchStart={(e) => onTouchStart(e, video.id)}
                 onTouchMove={(e) => onTouchMove(e, video.id)}
                 onTouchEnd={(e) => onTouchEnd(e, video.id)}>
