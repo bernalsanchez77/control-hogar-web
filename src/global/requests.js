@@ -113,10 +113,10 @@ class Requests {
     if (window.cordova) {
       return await this.cordovaApiRequest('updateVideoInSupabase', params, 'patch');
     } else {
-     // return await this.normalApiRequest('updateVideoInSupabase', {id: oldVideoId}, 'patch');
-      //setTimeout(async () => {
-       return await this.normalApiRequest('updateVideoInSupabase', params, 'patch');
-  //}, 2000);
+      return await this.normalApiRequest('updateVideoInSupabase', {id: oldVideoId}, 'patch');
+      setTimeout(async () => {
+        return await this.normalApiRequest('updateVideoInSupabase', params, 'patch');
+      }, 5000);
     }
   }
   // async searchYoutube(text) {
