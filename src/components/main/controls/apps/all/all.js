@@ -7,7 +7,7 @@ function Apps({devicesState, view, rokuApps, changeControlParent, changeViewPare
   const changeControl = (value) => {
     const device = 'rokuSala';
     let rokuValue = rokuApps.find(app => app.id === value).rokuId;
-    rokuValue = rokuValue.charAt(0).toUpperCase() + rokuValue.slice(1);
+    // rokuValue = rokuValue.charAt(0).toUpperCase() + rokuValue.slice(1);
     changeControlParent({
       ifttt: [{device, key: 'app', value}],
       roku: [{device, key: 'launch', value: rokuValue}],
