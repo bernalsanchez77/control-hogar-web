@@ -55,7 +55,7 @@ function Main() {
   const [rokuApps, setRokuApps] = useState([]);
   const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const initialized = useRef(false);
-  const supabaseChannel = useRef(supabase.channel('youtube-videos-liz-changes'));
+  const youtubeVideosLizSupabaseChannel = useRef(null);
 
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
@@ -233,19 +233,27 @@ function Main() {
     }
   }, []);
 
-  const subscribeToSupabase = () => {
-    supabaseChannel.current.on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'youtube-videos-liz' },
-      payload => {
-        console.log('Change received!', payload);
-      }).subscribe(status => {
-        console.log(status);
-        if (status === 'SUBSCRIBED') {
-          console.log('✅ Connected to Realtime.');
+  const subscribeToYoutubeVideosLizSupabaseChannel = () => {
+    console.log('creating youtubeVideosLizSupabaseChannel');
+    youtubeVideosLizSupabaseChannel.current = supabase.channel('youtube-videos-liz-changes');
+    if (youtubeVideosLizSupabaseChannel.current?.socket.state !== 'joined') {
+      youtubeVideosLizSupabaseChannel.current.on(
+        'postgres_changes',
+        {event: '*', schema: 'public', table: 'youtube-videos-liz'},
+        async (change) => {
+          console.log('youtube-videos-liz table changed');
+          if (change.new.state === 'selected') {
+            const videos = await requests.current.getYoutubeVideosLiz();
+            setYoutubeVideosLiz(videos.data);
+          }
         }
-      }
-    );
+      ).subscribe(status => {
+        console.log('youtubeVideosLizSupabaseChannel status is: ', status);
+        if (status === 'SUBSCRIBED') {
+          console.log('Subscribed to youtubeVideosLizSupabaseChannel');
+        }
+      });
+    }
   };
 
   const getVisibility = useCallback(() => {
@@ -254,11 +262,12 @@ function Main() {
       if (document.visibilityState === 'visible') {
         userActive.current = true;
         setUserActive2(true);
+        subscribeToYoutubeVideosLizSupabaseChannel();
         message = user.current + ' regreso';
       } else {
         userActive.current = false;
         setUserActive2(false);
-        supabase.removeChannel(supabaseChannel.current);
+        supabase.removeChannel(youtubeVideosLizSupabaseChannel.current);
         message = user.current + ' salio';
       }
       requests.current.sendLogs(message);
@@ -290,7 +299,7 @@ function Main() {
     setInterval(() => {getPosition();}, 300000);
 
     // if (!isLocalhost) {
-      // subscribeToSupabase();
+    subscribeToYoutubeVideosLizSupabaseChannel();
     // }
 
     requests.current.sendLogs(user.current + ' entro');
@@ -322,34 +331,6 @@ function Main() {
         eruda.init();
     }
   }, [credential]);
-
-  useEffect(() => {
-    const channel = supabaseChannel.current;
-    console.log('subscribing');
-   // console.log(channel);
-    if (channel?.socket.state !== 'joined') {
-      channel.on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'youtube-videos-liz' },
-        async (payload) => {
-          console.log('📡 Change received:');
-          if (payload.new.state === 'selected') {
-            const videos = await requests.current.getYoutubeVideosLiz();
-            setYoutubeVideosLiz(videos.data);
-          }
-        }
-      ).subscribe(status => {
-        console.log(status);
-        if (status === 'SUBSCRIBED') {
-          console.log('✅ Connected to Realtime.');
-        }
-      });
-      return () => {
-        console.log('unsubcribing');
-        supabase.removeChannel(channel);
-      };
-    }
-  }, []);
 
   useEffect(() => {
     async function getDbData() {
