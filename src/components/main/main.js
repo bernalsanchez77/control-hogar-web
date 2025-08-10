@@ -323,7 +323,7 @@ function Main() {
 
   useEffect(() => {
   const channel = supabase
-    .channel('youtube-videos-liz-changes')
+    .channel('youtube-videos-liz')
     .on(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'youtube-videos-liz' },
