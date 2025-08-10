@@ -327,13 +327,13 @@ function Main() {
   useEffect(() => {
     const channel = supabaseChannel.current;
     console.log('subscribing');
-    console.log(channel);
+   // console.log(channel);
     if (channel?.socket.state !== 'joined') {
       channel.on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'youtube-videos-liz' },
         async (payload) => {
-          console.log('📡 Change received:', payload);
+          console.log('📡 Change received:');
           if (payload.new.state === 'selected') {
             const videos = await requests.current.getYoutubeVideosLiz();
             setYoutubeVideosLiz(videos.data);
