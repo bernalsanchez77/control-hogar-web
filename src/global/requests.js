@@ -111,11 +111,11 @@ class Requests {
   }
   async updateYoutubeVideoLiz(params, oldVideoId) {
     if (window.cordova) {
-      return await this.cordovaApiRequest('updateVideoInSupabase', params, 'patch');
+      await this.cordovaApiRequest('updateVideoInSupabase', params, 'patch');
     } else {
-      return await this.normalApiRequest('updateVideoInSupabase', {id: oldVideoId}, 'patch');
+      await this.normalApiRequest('updateVideoInSupabase', {id: oldVideoId}, 'patch');
       setTimeout(async () => {
-        return await this.normalApiRequest('updateVideoInSupabase', params, 'patch');
+        await this.normalApiRequest('updateVideoInSupabase', params, 'patch');
       }, 5000);
     }
   }
