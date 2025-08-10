@@ -329,7 +329,12 @@ function Main() {
       { event: '*', schema: 'public', table: 'youtube-videos-liz' },
       payload => console.log('📡 Change received:', payload)
     )
-    .subscribe();
+      .subscribe(status => {
+        console.log(status);
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ Connected to Realtime.');
+        }
+      });
 
   return () => {
     supabase.removeChannel(channel);
