@@ -332,7 +332,7 @@ function Main() {
       channel.on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'youtube-videos-liz' },
-        (payload) => {
+        async (payload) => {
           console.log('📡 Change received:', payload);
           if (payload.new.state === 'selected') {
             const videos = await requests.current.getYoutubeVideosLiz();
