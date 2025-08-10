@@ -333,8 +333,7 @@ function Main() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'youtube-videos-liz' },
         (payload) => {
-          console.log('📡 Change received:');
-          
+          console.log('📡 Change received:', payload);     
         }
       ).subscribe(status => {
         console.log(status);
