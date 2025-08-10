@@ -333,7 +333,11 @@ function Main() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'youtube-videos-liz' },
         (payload) => {
-          console.log('📡 Change received:', payload);     
+          console.log('📡 Change received:', payload);
+          if (payload.new.id) {
+            //const videos = await requests.current.getYoutubeVideosLiz();
+            //setYoutubeVideosLiz(videos.data);
+          }
         }
       ).subscribe(status => {
         console.log(status);
