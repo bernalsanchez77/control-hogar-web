@@ -256,7 +256,7 @@ function Main() {
     }
   };
 
-  const getVisibility = useCallback(() => {
+  const getVisibility = useCallback(async() => {
     const handleVisibilityChange = () => {
       let message = '';
       if (document.visibilityState === 'visible') {
@@ -267,6 +267,8 @@ function Main() {
       } else {
         userActive.current = false;
         setUserActive2(false);
+        const videos = await requests.current.getYoutubeVideosLiz();
+        setYoutubeVideosLiz(videos.data);
         supabase.removeChannel(youtubeVideosLizSupabaseChannel.current);
         message = user.current + ' salio';
       }
