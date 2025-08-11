@@ -124,13 +124,13 @@ function Main() {
             }
           }
           if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'cable') {
-            (!cableChannels.length) {
+            if (!cableChannels.length) {
               const channels = await requests.current.getCableChannels();
               setCableChannels(channels.data);
             }
           }
           if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'roku') {
-            (!rokuApps.length) {
+            if (!rokuApps.length) {
               const apps = await requests.current.getRokuApps();
               setRokuApps(apps.data);
             }
