@@ -45,14 +45,13 @@ function Controls({devicesState, view, screenSelected, changeControlParent, chan
   const changeHdmi = () => {
     const device = devicesState.hdmiSala.id;
     if (devicesState[devicesState.hdmiSala.id].state === 'roku') {
-      changeControlParent({ifttt: [{device, key: 'state', value: 'cable'}]});
       if (view.apps.selected) {
         const newView = {...view};
         newView.apps.selected = '';
         newView.apps.youtube.mode = '';
         newView.apps.youtube.channel = '';
-        changeViewParent(newView);
       }
+      changeControlParent({ifttt: [{device, key: 'state', value: 'cable'}]}, newView);
     }
     if (devicesState[devicesState.hdmiSala.id].state === 'cable') {
       changeControlParent({ifttt: [{device, key: 'state', value: 'roku'}]});
