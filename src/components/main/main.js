@@ -123,13 +123,17 @@ function Main() {
               requests.current.updateYoutubeVideoLiz({id: video.id, date: new Date().toISOString()}, currentVideo.id);
             }
           }
-          if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'cable') {         
-            const channels = await requests.current.getCableChannels();
-            setCableChannels(channels.data);
+          if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'cable') {
+            (!rokuApps.length) {
+              const channels = await requests.current.getCableChannels();
+              setCableChannels(channels.data);
+            }
           }
           if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'roku') {
-            const apps = await requests.current.getRokuApps();
-            setRokuApps(apps.data);
+            (!rokuApps.length) {
+              const apps = await requests.current.getRokuApps();
+              setRokuApps(apps.data);
+            }
           }
         }
       });
