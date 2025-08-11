@@ -16,7 +16,7 @@ function Levels({devicesState, screenSelected, view, cableChannels, changeContro
     }
   }
   const changeControl = (value, saveChange = true) => {
-    const device = devicesState.hdmiSala.state === 'roku' ? 'rokuSala' : 'cableSala';
+    const device = view.selected === 'roku' ? 'rokuSala' : 'cableSala';
     const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
     if (saveChange) {
       changeControlParent({ifttt: [{device, key: 'command', value}], roku: [{device, key: 'keypress', value: rokuValue}], massMedia: [{device, key: 'app', value}]});
@@ -106,24 +106,24 @@ function Levels({devicesState, screenSelected, view, cableChannels, changeContro
   }
 
   const backButtonTriggered = () => {
-    const newView = {...view};
-    if (devicesState.hdmiSala.state === 'roku') {
-      if (view.apps.selected) {
-        if (view.apps.youtube.mode === 'channel' || view.apps.youtube.mode === 'search') {
-          newView.apps.youtube.mode = '';
-          if (view.apps.youtube.channel !== '') {
-            newView.apps.youtube.channel = '';
+    const newView = structuredClone(view);
+    if (view.selected === 'roku') {
+      if (view.roku.apps.selected) {
+        if (view.roku.apps.youtube.mode === 'channel' || view.roku.apps.youtube.mode === 'search') {
+          newView.roku.apps.youtube.mode = '';
+          if (view.roku.apps.youtube.channel !== '') {
+            newView.roku.apps.youtube.channel = '';
           }
           changeViewParent(newView);
         } else {
-          newView.apps.selected = '';
+          newView.roku.apps.selected = '';
           changeViewParent(newView);
         }
       }
     }
-    if (devicesState.hdmiSala.state === 'cable') {
-      if (view.channels.category.length) {
-        newView.channels.category = [];
+    if (view.selected === 'cable') {
+      if (view.cable.channels.category.length) {
+        newView.cable.channels.category = [];
         changeViewParent(newView);
       }
     }
@@ -165,7 +165,7 @@ function Levels({devicesState, screenSelected, view, cableChannels, changeContro
           </button>
         </div>
         {
-          devicesState.hdmiSala.state === 'roku' &&
+          view.selected === 'roku' &&
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               className={`controls-levels-button`}
@@ -179,7 +179,7 @@ function Levels({devicesState, screenSelected, view, cableChannels, changeContro
           </div>
         }
         {
-          devicesState.hdmiSala.state === 'cable' &&
+          view.selected === 'cable' &&
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               className={'controls-levels-button'}
@@ -197,10 +197,10 @@ function Levels({devicesState, screenSelected, view, cableChannels, changeContro
         </div>
         <div className='controls-levels-element controls-levels-element--right controls-levels-element--no-margin'>
           <span className='controls-levels-span'>
-            {devicesState.hdmiSala.state === 'roku'  &&
+            {view.selected === 'roku'  &&
               'op'
             }
-            {devicesState.hdmiSala.state === 'cable'  &&
+            {view.selected === 'cable'  &&
               'ch'
             }
           </span>
@@ -227,7 +227,7 @@ function Levels({devicesState, screenSelected, view, cableChannels, changeContro
           </button>
         </div>
         {
-        devicesState.hdmiSala.state === 'roku' &&
+        view.selected === 'roku' &&
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               className={`controls-levels-button`}
@@ -241,7 +241,7 @@ function Levels({devicesState, screenSelected, view, cableChannels, changeContro
           </div>
         }
         {
-        devicesState.hdmiSala.state === 'cable' &&
+        view.selected === 'cable' &&
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               className={`controls-levels-button`}

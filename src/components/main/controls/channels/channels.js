@@ -5,8 +5,8 @@ import './channels.css';
 function Channels({devicesState, view, cableChannels, cableChannelCategories, changeControlParent, changeViewParent}) {
 
   const changeCategory = (category) => {
-    const newView = {...view};
-    newView.channels.category = category;
+    const newView = structuredClone(view);
+    newView.cable.channels.category = category;
     changeViewParent(newView);
   };
 
@@ -16,7 +16,7 @@ function Channels({devicesState, view, cableChannels, cableChannelCategories, ch
 
   return (
     <div>
-      {view.channels.category.length === 0 &&
+      {view.cable.channels.category.length === 0 &&
       <Categories
         devicesState={devicesState}
         cableChannels={cableChannels}
@@ -25,11 +25,11 @@ function Channels({devicesState, view, cableChannels, cableChannelCategories, ch
         changeCategoryParent={changeCategory}>
       </Categories>
       }
-      {view.channels.category.length &&
+      {view.cable.channels.category.length &&
       <Category
         devicesState={devicesState}
         cableChannels={cableChannels}
-        category={view.channels.category}
+        category={view.cable.channels.category}
         changeControlParent={changeControl}>
       </Category>
       }

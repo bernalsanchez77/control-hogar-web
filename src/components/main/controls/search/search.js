@@ -4,20 +4,20 @@ import './search.css';
 function Search({devicesState, view, changeViewParent, searchYoutubeParent}) {
   const [searchText, setSearchText] = useState('');
   const inputRef = useRef(null);
-  const placeholder = devicesState.hdmiSala.state === 'roku' ? 'Buscar en Youtube' : 'Buscar Canal';
+  const placeholder = view.selected === 'roku' ? 'Buscar en Youtube' : 'Buscar Canal';
 
   const searchQuery = () => {
     if (searchText) {
-      if (devicesState.hdmiSala.state === 'roku') {
-        const newView = {...view};
-        newView.apps.youtube.mode = 'search';
-        newView.apps.youtube.channel = '';
-        newView.apps.selected = 'youtube';
-        newView.devices.device = '';
+      if (view.selected === 'roku') {
+        const newView = structuredClone(view);
+        newView.roku.apps.youtube.mode = 'search';
+        newView.roku.apps.youtube.channel = '';
+        newView.roku.apps.selected = 'youtube';
+        newView.roku.devices.device = '';
         changeViewParent(newView);
         searchYoutubeParent(searchText);
       }
-      if (devicesState.hdmiSala.state === 'cable') {
+      if (view.selected === 'cable') {
 
       }
     }

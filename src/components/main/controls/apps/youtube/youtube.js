@@ -10,9 +10,9 @@ function Youtube({devicesState, view, rokuApps, youtubeSearchVideos, youtubeChan
 
   const changeView = (channel) => {
     channelSelected.current = channel;
-    const newView = {...view};
-    newView.apps.youtube.channel = channel;
-    newView.apps.youtube.mode = 'channel';
+    const newView = structuredClone(view);
+    newView.roku.apps.youtube.channel = channel;
+    newView.roku.apps.youtube.mode = 'channel';
     changeViewParent(newView);
   };
   const changeControl = (video) => {
@@ -26,14 +26,14 @@ function Youtube({devicesState, view, rokuApps, youtubeSearchVideos, youtubeChan
       });   
     }
   };
-  if (view.apps.youtube.mode === '') {
+  if (view.roku.apps.youtube.mode === '') {
     youtubeSortedChannels = Object.values(youtubeChannelsLiz).sort((a, b) => a.order - b.order);
   }
-  if (view.apps.youtube.mode === 'channel') {
+  if (view.roku.apps.youtube.mode === 'channel') {
     youtubeSortedVideos = youtubeVideosLiz.filter(video => video.channelId === channelSelected.current);
     youtubeSortedVideos = Object.values(youtubeSortedVideos).sort((a, b) => new Date(a.videoDate) - new Date(b.videoDate));
   }
-  if (view.apps.youtube.mode === 'search') {
+  if (view.roku.apps.youtube.mode === 'search') {
     youtubeSortedVideos = youtubeSearchVideos.map(item => ({
       id: item.id.videoId,
       title: item.snippet.title,
@@ -62,7 +62,7 @@ function Youtube({devicesState, view, rokuApps, youtubeSearchVideos, youtubeChan
 
   return (
     <div>
-      {view.apps.youtube.mode === '' &&
+      {view.roku.apps.youtube.mode === '' &&
       <div className='controls-apps-youtube'>
         <ul className='controls-apps-youtube-ul'>
           {
@@ -86,7 +86,7 @@ function Youtube({devicesState, view, rokuApps, youtubeSearchVideos, youtubeChan
         </ul>
       </div>
       }
-      {(view.apps.youtube.mode === 'channel' || view.apps.youtube.mode === 'search') &&
+      {(view.roku.apps.youtube.mode === 'channel' || view.roku.apps.youtube.mode === 'search') &&
       <div className='controls-apps-youtube'>
         <ul className='controls-apps-youtube-ul'>
           {

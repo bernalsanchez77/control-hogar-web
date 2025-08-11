@@ -1,6 +1,6 @@
 import './top.css';
 
-function Controls({devicesState, view, screenSelected, changeControlParent, changeViewParent}) {
+function Controls({devicesState, view, screenSelected, changeControlParent}) {
   const changePower = () => {
     if (screenSelected === devicesState.proyectorSala.id) {
       if (devicesState[screenSelected].state === 'on') {
@@ -45,21 +45,10 @@ function Controls({devicesState, view, screenSelected, changeControlParent, chan
   const changeHdmi = () => {
     const device = devicesState.hdmiSala.id;
     if (devicesState[devicesState.hdmiSala.id].state === 'roku') {
-      if (view.apps.selected) {
-        const newView = {...view};
-        newView.apps.selected = '';
-        newView.apps.youtube.mode = '';
-        newView.apps.youtube.channel = '';
-      }
-      changeControlParent({ifttt: [{device, key: 'state', value: 'cable'}]}, newView);
+      changeControlParent({ifttt: [{device, key: 'state', value: 'cable'}]});
     }
     if (devicesState[devicesState.hdmiSala.id].state === 'cable') {
       changeControlParent({ifttt: [{device, key: 'state', value: 'roku'}]});
-      if (view.channels.category.length) {
-        const newView = {...view};
-        newView.channels.category = [];
-        changeViewParent(newView);
-      }
     }
   }
   const changeInput = () => {
@@ -103,14 +92,14 @@ function Controls({devicesState, view, screenSelected, changeControlParent, chan
           <button
             className="controls-top-button controls-top-button-off"
             onTouchStart={() => changeHdmi()}>
-              {devicesState.hdmiSala.state === 'cable' &&
+              {view.selected === 'cable' &&
                 <img
                   className='controls-top-img controls-top-img--roku'
                   src='/imgs/roku.png'
                   alt="icono">
                 </img>
               }
-              {devicesState.hdmiSala.state === 'roku' &&
+              {view.selected === 'roku' &&
                 <img
                   className='controls-top-img controls-top-img--telecable'
                   src='/imgs/telecable.png'

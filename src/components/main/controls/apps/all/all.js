@@ -14,8 +14,8 @@ function Apps({devicesState, view, rokuApps, changeControlParent, changeViewPare
   }
 
   const changeView = (app) => {
-    const newView = {...view};
-    newView.apps.selected = app;
+    const newView = structuredClone(view);
+    newView.roku.apps.selected = app;
     changeViewParent(newView);
   }
 

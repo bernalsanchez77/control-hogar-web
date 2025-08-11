@@ -36,8 +36,7 @@ function Controls({devicesState, screenSelected, view, rokuApps, youtubeSearchVi
           devicesState={devicesState}
           view={view}
           screenSelected={screenSelected}
-          changeControlParent={changeControl}
-          changeViewParent={changeView}>
+          changeControlParent={changeControl}>
         </Top>
         <Arrows
           changeControlParent={changeControl}>
@@ -55,15 +54,13 @@ function Controls({devicesState, screenSelected, view, rokuApps, youtubeSearchVi
           devicesState={devicesState}
           changeControlParent={changeControl}>
         </Toolbar>
-        {view.state !== 'main' &&
         <Search
           devicesState={devicesState}
           view={view}
           changeViewParent={changeView}
           searchYoutubeParent={searchYoutube}>
         </Search>
-        }
-        {devicesState.hdmiSala.state === 'roku' && !view.devices.device &&
+        {view.selected === 'roku' && !view.devices.device &&
         <Apps
           devicesState={devicesState}
           view={view}
@@ -75,7 +72,7 @@ function Controls({devicesState, screenSelected, view, rokuApps, youtubeSearchVi
           changeViewParent={changeView}>
         </Apps>
         }
-        {devicesState.hdmiSala.state === 'cable' &&
+        {view.selected === 'cable' &&
         <Channels
           view={view}
           devicesState={devicesState}

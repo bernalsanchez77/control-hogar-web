@@ -13,7 +13,7 @@ function Apps({devicesState, view, rokuApps, youtubeSearchVideos, youtubeChannel
 
   return (
     <div>
-      {view.apps.selected === '' &&
+      {view.roku.apps.selected === '' &&
       <All
         devicesState={devicesState}
         view={view}
@@ -22,7 +22,7 @@ function Apps({devicesState, view, rokuApps, youtubeSearchVideos, youtubeChannel
         changeViewParent={changeView}>
       </All>
       }
-      {view.apps.selected === 'youtube' &&
+      {view.roku.apps.selected === 'youtube' &&
       <Youtube
         devicesState={devicesState}
         view={view}

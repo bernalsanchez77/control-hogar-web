@@ -17,7 +17,7 @@ function Devices({credential, ownerCredential, devCredential, view, devicesState
     changeControlParent(params);
   }
   const changeView = (device) => {
-    const newView = {...view};
+    const newView = structuredClone(view);
     newView.devices.device = device;
     changeViewParent(newView);
   }
