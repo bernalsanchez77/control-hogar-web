@@ -262,13 +262,13 @@ function Main() {
       if (document.visibilityState === 'visible') {
         userActive.current = true;
         setUserActive2(true);
+        const videos = await requests.current.getYoutubeVideosLiz();
+        setYoutubeVideosLiz(videos.data);
         subscribeToYoutubeVideosLizSupabaseChannel();
         message = user.current + ' regreso';
       } else {
         userActive.current = false;
         setUserActive2(false);
-        const videos = await requests.current.getYoutubeVideosLiz();
-        setYoutubeVideosLiz(videos.data);
         supabase.removeChannel(youtubeVideosLizSupabaseChannel.current);
         message = user.current + ' salio';
       }
