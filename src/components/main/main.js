@@ -124,7 +124,7 @@ function Main() {
             }
           }
           if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'cable') {
-            (!rokuApps.length) {
+            (!cableChannels.length) {
               const channels = await requests.current.getCableChannels();
               setCableChannels(channels.data);
             }
