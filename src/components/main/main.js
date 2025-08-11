@@ -256,8 +256,8 @@ function Main() {
     }
   };
 
-  const getVisibility = useCallback(async() => {
-    const handleVisibilityChange = () => {
+  const getVisibility = useCallback(() => {
+    const handleVisibilityChange = async () => {
       let message = '';
       if (document.visibilityState === 'visible') {
         userActive.current = true;
