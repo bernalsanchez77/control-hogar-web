@@ -69,7 +69,7 @@ function Main() {
     // setYoutubeSearchVideos(youtubeDummyData.current.getYoutubeDummyData());
   }
 
-  const changeView = async (params) => {
+  const changeView = useCallback(async (params) => {
     triggerVibrate();
     const newView = structuredClone(params);
     setView(newView);
@@ -102,7 +102,7 @@ function Main() {
       const apps = await requests.current.getRokuApps();
       setRokuApps(apps.data);
     }
-  };
+  }, []);
 
 
   const changeControl = (params) => {
