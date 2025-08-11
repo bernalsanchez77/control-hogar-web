@@ -51,7 +51,9 @@ function Controls({devicesState, view, screenSelected, changeControlParent, chan
         newView.apps.selected = '';
         newView.apps.youtube.mode = '';
         newView.apps.youtube.channel = '';
-        changeViewParent(newView);
+        setTimeout(() => {
+          changeViewParent(newView);
+        }, 100);
       }
     }
     if (devicesState[devicesState.hdmiSala.id].state === 'cable') {
