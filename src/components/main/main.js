@@ -102,7 +102,7 @@ function Main() {
       const apps = await requests.current.getRokuApps();
       setRokuApps(apps.data);
     }
-  }, []);
+  }, [devicesState.hdmiSala.state ]);
 
 
   const changeControl = (params) => {
