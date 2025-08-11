@@ -111,11 +111,10 @@ function Levels({devicesState, screenSelected, view, cableChannels, changeContro
       if (view.apps.selected) {
         if (view.apps.youtube.mode === 'channel' || view.apps.youtube.mode === 'search') {
           newView.apps.youtube.mode = '';
-          changeViewParent(newView);
           if (view.apps.youtube.channel !== '') {
-            newView.apps.youtube.channels = '';
-            changeViewParent(newView);
+            newView.apps.youtube.channel = '';
           }
+          changeViewParent(newView);
         } else {
           newView.apps.selected = '';
           changeViewParent(newView);

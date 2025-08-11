@@ -53,7 +53,7 @@ function Main() {
   const [youtubeChannelsLiz, setYoutubeChannelsLiz] = useState([]);
   const [cableChannels, setCableChannels] = useState([]);
   const [rokuApps, setRokuApps] = useState([]);
-  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  //const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const initialized = useRef(false);
   const youtubeVideosLizSupabaseChannel = useRef(null);
 
@@ -74,16 +74,33 @@ function Main() {
     const newView = structuredClone(params);
     setView(newView);
     if (newView.apps.selected === 'youtube') {
-      if (newView.apps.youtube.channel === '' && youtubeChannelsLiz.length === 0) {
-        const channels = await requests.current.getYoutubeChannelsLiz();
-        setYoutubeChannelsLiz(channels.data);
-      }
-      if (newView.apps.youtube.channel !== '' && youtubeVideosLiz.length === 0) {
+      if (newView.apps.youtube.channel) {
         const videos = await requests.current.getYoutubeVideosLiz();
         setYoutubeVideosLiz(videos.data);
+        subscribeToYoutubeVideosLizSupabaseChannel();
+      } else {
+        if (youtubeVideosLizSupabaseChannel.current) {
+          supabase.removeChannel(youtubeVideosLizSupabaseChannel.current);
+        }
+        if (!youtubeChannelsLiz.length) {
+          const channels = await requests.current.getYoutubeChannelsLiz();
+          setYoutubeChannelsLiz(channels.data);
+        }
       }
     }
-    if (devicesState.hdmiSala.id === 'cable') {
+    if (devicesState.hdmiSala.state === 'cable') {
+      if (youtubeVideosLizSupabaseChannel.current) {
+        supabase.removeChannel(youtubeVideosLizSupabaseChannel.current);
+      }
+      const channels = await requests.current.getCableChannels();
+      setCableChannels(channels.data);
+    }
+    if (!newView.apps.selected && devicesState.hdmiSala.state === 'roku') {
+      if (youtubeVideosLizSupabaseChannel.current) {
+        supabase.removeChannel(youtubeVideosLizSupabaseChannel.current);
+      }
+      const apps = await requests.current.getRokuApps();
+      setRokuApps(apps.data);
     }
   };
 
@@ -107,18 +124,12 @@ function Main() {
             }
           }
           if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'cable') {         
-            if (!cableChannels.length) {
-              const channels = await requests.current.getCableChannels();
-              setCableChannels(channels.data);
-              // setCableChannels(cableChannelsDummyData.current.getCableChannelsDummyData());
-            }
+            const channels = await requests.current.getCableChannels();
+            setCableChannels(channels.data);
           }
           if (el.device === 'hdmiSala' && el.key === 'state' && el.value === 'roku') {
-            if (!rokuApps.length) {
-              const apps = await requests.current.getRokuApps();
-              setRokuApps(apps.data);
-              // setRokuApps(rokuAppsDummyData.current.getRokuAppsDummyData());
-            }
+            const apps = await requests.current.getRokuApps();
+            setRokuApps(apps.data);
           }
         }
       });
@@ -262,14 +273,20 @@ function Main() {
       if (document.visibilityState === 'visible') {
         userActive.current = true;
         setUserActive2(true);
-        const videos = await requests.current.getYoutubeVideosLiz();
-        setYoutubeVideosLiz(videos.data);
-        subscribeToYoutubeVideosLizSupabaseChannel();
+        if (view.apps.selected === 'youtube' && view.apps.youtube.channel !== '') {
+          const videos = await requests.current.getYoutubeVideosLiz();
+          setYoutubeVideosLiz(videos.data);
+          subscribeToYoutubeVideosLizSupabaseChannel();
+        }
         message = user.current + ' regreso';
       } else {
         userActive.current = false;
         setUserActive2(false);
-        supabase.removeChannel(youtubeVideosLizSupabaseChannel.current);
+        if (view.apps.selected === 'youtube' && view.apps.youtube.channel !== '') {
+          if (youtubeVideosLizSupabaseChannel.current) {
+            supabase.removeChannel(youtubeVideosLizSupabaseChannel.current);
+          }
+        }
         message = user.current + ' salio';
       }
       requests.current.sendLogs(message);
@@ -278,7 +295,7 @@ function Main() {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [user]);
+  }, [user, view]);
 
   const init = useCallback(async () => {
     const localStorageScreen = localStorage.getItem('screen');
@@ -300,9 +317,14 @@ function Main() {
     }, 10000);
     setInterval(() => {getPosition();}, 300000);
 
-    // if (!isLocalhost) {
-    subscribeToYoutubeVideosLizSupabaseChannel();
-    // }
+    if (devicesStateUpdated.current.hdmiSala.state === 'cable') {
+      const channels = await requests.current.getCableChannels();
+      setCableChannels(channels.data);
+    }
+    if (devicesStateUpdated.current.hdmiSala.state === 'roku') {
+      const apps = await requests.current.getRokuApps();
+      setRokuApps(apps.data);
+    }
 
     requests.current.sendLogs(user.current + ' entro');
     getVisibility();
@@ -312,7 +334,7 @@ function Main() {
       window.addEventListener("load", document.body.classList.add("loaded"));
     }
     console.log('version 27');
-  }, [getMassMediaData, getRokuData, getPosition, getVisibility, user, isLocalhost]);
+  }, [getMassMediaData, getRokuData, getPosition, getVisibility, user]);
 
   useEffect(() => {
     if (!initialized.current) {
@@ -334,21 +356,21 @@ function Main() {
     }
   }, [credential]);
 
-  useEffect(() => {
-    async function getDbData() {
-      if (devicesStateUpdated.current.hdmiSala.state === 'cable' && !cableChannels.length) {
-        const channels = await requests.current.getCableChannels();
-        setCableChannels(channels.data);
-        // setCableChannels(cableChannelsDummyData.current.getCableChannelsDummyData());
-      }
-      if (devicesStateUpdated.current.hdmiSala.state === 'roku' && !rokuApps.length) {
-        const apps = await requests.current.getRokuApps();
-        setRokuApps(apps.data);
-        // setRokuApps(rokuAppsDummyData.current.getRokuAppsDummyData());
-      }
-    }
-    getDbData();
-  }, [devicesStateUpdated, cableChannels, rokuApps]);
+  // useEffect(() => {
+  //   async function getDbData() {
+  //     if (devicesStateUpdated.current.hdmiSala.state === 'cable' && !cableChannels.length) {
+  //       const channels = await requests.current.getCableChannels();
+  //       setCableChannels(channels.data);
+  //       // setCableChannels(cableChannelsDummyData.current.getCableChannelsDummyData());
+  //     }
+  //     if (devicesStateUpdated.current.hdmiSala.state === 'roku' && !rokuApps.length) {
+  //       const apps = await requests.current.getRokuApps();
+  //       setRokuApps(apps.data);
+  //       // setRokuApps(rokuAppsDummyData.current.getRokuAppsDummyData());
+  //     }
+  //   }
+  //   getDbData();
+  // }, [devicesStateUpdated, cableChannels, rokuApps]);
 
   const resetDevices = async () => {
     await requests.current.setDevices(devicesOriginal);
