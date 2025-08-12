@@ -75,7 +75,6 @@ function Controls({devicesState, screenSelected, view, rokuApps, youtubeSearchVi
         {view.selected === 'cable' &&
         <Channels
           view={view}
-          devicesState={devicesState}
           cableChannels={cableChannels}
           cableChannelCategories={cableChannelCategories}
           changeControlParent={changeControl}

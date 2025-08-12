@@ -88,18 +88,17 @@ class Requests {
       return await this.normalApiRequest('getYoutubeVideosFromSupabase', null, 'get');
     }
   }
-  async updateYoutubeVideoLiz(params, currentVideoId) {
-    params.table = 'youtube-videos-liz';
+  async updateTableInSupabase(params, id) {
     if (window.cordova) {
-      await this.cordovaApiRequest('updateTableInSupabase', {id: currentVideoId, table: params.table}, 'patch');
-      setTimeout(async () => {
-        await this.cordovaApiRequest('updateTableInSupabase', params, 'patch');
-      }, 1000);
-    } else {
-      await this.normalApiRequest('updateTableInSupabase', {id: currentVideoId, table: params.table}, 'patch');
+      await this.cordovaApiRequest('updateTableInSupabase', {id, table: params.table}, 'patch');
       setTimeout(async () => {
         await this.normalApiRequest('updateTableInSupabase', params, 'patch');
       }, 1000);
+    } else {
+      await this.normalApiRequest('updateTableInSupabase', {id, table: params.table}, 'patch');
+      setTimeout(async () => {
+        await this.normalApiRequest('updateTableInSupabase', params, 'patch');
+      }, 500);
     }
   }
   async getYoutubeChannelsLiz() {
@@ -121,20 +120,6 @@ class Requests {
       return await this.cordovaApiRequest('getRokuAppsFromSupabase', null, 'get');
     } else {
       return await this.normalApiRequest('getRokuAppsFromSupabase', null, 'get');
-    }
-  }
-  async updateRokuApps(params, currentAppId) {
-    params.table = 'roku-apps';
-    if (window.cordova) {
-      await this.cordovaApiRequest('updateVideoInSupabase', {id: currentAppId, table: params.table}, 'patch');
-      setTimeout(async () => {
-        await this.normalApiRequest('updateVideoInSupabase', params, 'patch');
-      }, 1000);
-    } else {
-      await this.normalApiRequest('updateVideoInSupabase', {id: currentAppId, table: params.table}, 'patch');
-      setTimeout(async () => {
-        await this.normalApiRequest('updateVideoInSupabase', params, 'patch');
-      }, 1000);
     }
   }
   // async searchYoutube(text) {

@@ -1,7 +1,7 @@
 import './categories.css';
 
-function Categories({devicesState, cableChannels, cableChannelCategories, changeCategoryParent}) {
-  let selectedImg = '/imgs/channels/' + devicesState.channelsSala.selected + '.png';
+function Categories({cableChannels, cableChannelCategories, changeCategoryParent}) {
+  let selectedImg = '/imgs/channels/' + cableChannels.find(ch => ch.state === 'selected')?.id + '.png';
   const changeCategory = (category) => {
     changeCategoryParent(category);
   }
