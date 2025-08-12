@@ -84,7 +84,7 @@ function Main() {
       // cable selected
       if (view.selected === 'cable') {
         // was in cable
-        if (newView.cable.channels.categories.length) {
+        if (newView.cable.channels.category.length) {
           // category selected
           const channels = await requests.current.getCableChannels();
           setCableChannels(channels.data);       
