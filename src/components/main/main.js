@@ -124,7 +124,7 @@ function Main() {
                 // youtube channel selected
                 const videos = await requests.current.getYoutubeVideosLiz();
                 setYoutubeVideosLiz(videos.data);
-                subscribeToSupabaseChannel('youtube-videos-liz');
+                subscribeToSupabaseChannel('youtube-videos-liz', 'YoutubeVideosLiz');
               } else {
                 // youtube channel is not selected
                 if (supabaseChannelsRef.current['youtube-videos-liz']) {
@@ -317,7 +317,7 @@ function Main() {
     return supabaseChannelsRef.current[name];
   };
 
-  const subscribeToSupabaseChannel = (tableName, callback = 'YoutubeVideosLiz') => {
+  const subscribeToSupabaseChannel = (tableName, objName) => {
     const channel = getSupabaseChannel(tableName);
     if (channel?.socket.state !== 'joined') {
       channel.on(
@@ -326,9 +326,10 @@ function Main() {
         async (change) => {
           console.log(tableName, ' changed');
           if (change.new.state === 'selected') {
-            const name = 'get' + callback;
+            let name = 'get' + objName;
             const apps = await requests.current[name]();
-            // setRokuApps(apps.data);
+            name = 'set' + objName;
+            [name](apps.data);
           }
         }
       ).subscribe(status => {
@@ -357,7 +358,7 @@ function Main() {
         if (view.roku.apps.youtube.channel) {
           const videos = await requests.current.getYoutubeVideosLiz();
           setYoutubeVideosLiz(videos.data);
-          subscribeToSupabaseChannel('youtube-videos-liz');
+          subscribeToSupabaseChannel('youtube-videos-liz', 'YoutubeVideosLiz');
         }
         message = user.current + ' regreso';
       } else {
