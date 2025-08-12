@@ -6,19 +6,19 @@ const supabase = createClient(
 )
 
 export default async function handler(req, res) {
-  const { id, date } = req.body;
+  const {id, date, table} = req.body;
 
   let data, error;
 
   if (date) {
     ({ data, error } = await supabase
-      .from('youtube-videos-liz')
-      .update({ date, state: 'selected' })
+      .from(table)
+      .update({date, state: 'selected'})
       .eq('id', id));
   } else {
     ({ data, error } = await supabase
-      .from('youtube-videos-liz')
-      .update({ state: '' })
+      .from(table)
+      .update({state: ''})
       .eq('id', id));
   }
 

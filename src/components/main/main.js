@@ -33,20 +33,10 @@ function Main() {
   const gettingInRange = useRef(false);
   const userActive = useRef(true);
   const [userActive2, setUserActive2] = useState(false);
-
   const [sendDisabled, setSendDisabled] = useState(false);
   const [updatesDisabled, setUpdatesDisabled] = useState(false);
   const updatesDisabledRef = useRef(updatesDisabled);
   const [credential, setCredential] = useState('');
-  const [view, setView] = useState(
-    {
-      selected: '',
-      cable: {channels: {category: []}},
-      roku: {apps: {selected: '', youtube: {mode: '', channel: ''}}},
-      devices: {device: ''},
-    }
-  );
-
   const [devicesState, setDevicesState] = useState(devicesOriginal);
   const devicesStateUpdated = useRef(devicesState);
   const [inRange, setInRange] = useState(false);
@@ -57,25 +47,33 @@ function Main() {
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
   const [youtubeSearchVideos, setYoutubeSearchVideos] = useState([]);
   const [youtubeVideosLiz, setYoutubeVideosLiz] = useState([]);
-  const setters = {setYoutubeVideosLiz};
   const [youtubeChannelsLiz, setYoutubeChannelsLiz] = useState([]);
   const [cableChannels, setCableChannels] = useState([]);
   const [rokuApps, setRokuApps] = useState([]);
+  const setters = {setYoutubeVideosLiz, setRokuApps};
   //const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const initialized = useRef(false);
   const supabaseChannelsRef = useRef({});
+  const [view, setView] = useState(
+    {
+      selected: '',
+      cable: {channels: {category: []}},
+      roku: {apps: {selected: '', youtube: {mode: '', channel: ''}}},
+      devices: {device: ''},
+    }
+  );
 
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
       navigator.vibrate([length]);
     }
-  }
+  };
 
   const searchYoutube = async (text) => {
     const videos = await requests.current.searchYoutube(text);
     setYoutubeSearchVideos(videos);
     // setYoutubeSearchVideos(youtubeDummyData.current.getYoutubeDummyData());
-  }
+  };
 
   const changeView = useCallback(async (params) => {
     triggerVibrate();
@@ -160,7 +158,6 @@ function Main() {
     }
     setView(newView);
   }, [youtubeChannelsLiz.length, view]);
-
 
   const changeControl = (params) => {
     requests.current.sendControl(sendDisabled, params);
@@ -409,6 +406,7 @@ function Main() {
     if (newView.selected === 'roku') {
       const apps = await requests.current.getRokuApps();
       setRokuApps(apps.data);
+      subscribeToSupabaseChannel('roku-apps', 'RokuApps');
     }
 
     requests.current.sendLogs(user.current + ' entro');
@@ -442,25 +440,9 @@ function Main() {
     }
   }, [credential]);
 
-  // useEffect(() => {
-  //   async function getDbData() {
-  //     if (devicesStateUpdated.current.hdmiSala.state === 'cable' && !cableChannels.length) {
-  //       const channels = await requests.current.getCableChannels();
-  //       setCableChannels(channels.data);
-  //       // setCableChannels(cableChannelsDummyData.current.getCableChannelsDummyData());
-  //     }
-  //     if (devicesStateUpdated.current.hdmiSala.state === 'roku' && !rokuApps.length) {
-  //       const apps = await requests.current.getRokuApps();
-  //       setRokuApps(apps.data);
-  //       // setRokuApps(rokuAppsDummyData.current.getRokuAppsDummyData());
-  //     }
-  //   }
-  //   getDbData();
-  // }, [devicesStateUpdated, cableChannels, rokuApps]);
-
   const resetDevices = async () => {
     await requests.current.setDevices(devicesOriginal);
-  }
+  };
 
   const disableIfttt = () => {
     if (sendDisabled === true) {
@@ -468,7 +450,7 @@ function Main() {
     } else {
       setSendDisabled(true);
     }
-  }
+  };
 
   const disableUpdates = () => {
     if (updatesDisabled === true) {
@@ -476,18 +458,18 @@ function Main() {
     } else {
       setUpdatesDisabled(true);
     }
-  }
+  };
 
   const removeStorage = () => {
     localStorage.setItem('user', '');
-  }
+  };
 
   const changeDev = (name) => {
     const fn = devActions[name];
     if (typeof fn === 'function') {
       fn();
     }
-  }
+  };
 
   const devActions = {
     resetDevices,

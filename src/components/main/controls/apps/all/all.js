@@ -43,7 +43,7 @@ function Apps({devicesState, view, rokuApps, changeControlParent, changeViewPare
         <li key={key} className='controls-apps-li'>
           <div className='controls-apps-element'>
             <button
-              className={`controls-apps-button ${app.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
+              className={`controls-apps-button ${app.state === 'selected' ? "controls-apps-button--on" : "controls-apps-button--off"}`}
               onTouchStart={(e) => onTouchStart(e, app.id)}
               onTouchEnd={(e) => onTouchEnd(e, app.id)}>
                 <img
