@@ -81,9 +81,16 @@ function Main() {
     const newView = structuredClone(params);
 
     if (newView.selected === 'cable') {
-      // cable button pressed
+      // cable selected
       if (view.selected === 'cable') {
         // was in cable
+        if (newView.cable.channels.categories.length) {
+          // category selected
+          const channels = await requests.current.getCableChannels();
+          setCableChannels(channels.data);       
+        } else {
+          
+        }
 
       }
       if (view.selected === 'roku') {
@@ -93,7 +100,7 @@ function Main() {
     }
 
     if (newView.selected === 'roku') {
-      // roku button pressed
+      // roku selected
       if (view.selected === 'roku') {
         // was in roku
         if (newView.roku.apps.selected) {
