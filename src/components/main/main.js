@@ -327,10 +327,8 @@ function Main() {
         async (change) => {
           console.log(tableName, ' changed');
           if (change.new.state === 'selected') {
-            let name = 'get' + objName;
-            const apps = await requests.current[name]();
-            name = 'set' + objName;
-            setters[name](apps.data);
+            const data = await requests.current['get' + objName]();
+            setters['set' + objName](data.data);
           }
         }
       ).subscribe(status => {
