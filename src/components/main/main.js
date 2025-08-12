@@ -57,6 +57,7 @@ function Main() {
   const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
   const [youtubeSearchVideos, setYoutubeSearchVideos] = useState([]);
   const [youtubeVideosLiz, setYoutubeVideosLiz] = useState([]);
+  const setters = {setYoutubeVideosLiz};
   const [youtubeChannelsLiz, setYoutubeChannelsLiz] = useState([]);
   const [cableChannels, setCableChannels] = useState([]);
   const [rokuApps, setRokuApps] = useState([]);
@@ -329,7 +330,7 @@ function Main() {
             let name = 'get' + objName;
             const apps = await requests.current[name]();
             name = 'set' + objName;
-            [name](apps.data);
+            setters[name](apps.data);
           }
         }
       ).subscribe(status => {
