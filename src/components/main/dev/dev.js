@@ -1,7 +1,6 @@
-import React from 'react';
 import './dev.css';
 
-function Dev({ sendDisabled, updatesDisabled, changeDevParent }) {
+function Dev({sendDisabled, updatesDisabled, changeDevParent}) {
   const changeDev = (fn) => {
     navigator.vibrate([100]);
     changeDevParent(fn);

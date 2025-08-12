@@ -62,7 +62,7 @@ function Main() {
   const [rokuApps, setRokuApps] = useState([]);
   //const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const initialized = useRef(false);
-  const youtubeVideosLizSupabaseChannel = useRef(null);
+  const supabaseChannelsRef = useRef({});
 
   const triggerVibrate = (length = 100) => {
     if (navigator.vibrate) {
@@ -76,7 +76,7 @@ function Main() {
     // setYoutubeSearchVideos(youtubeDummyData.current.getYoutubeDummyData());
   }
 
-  const changeView = useCallback(async (params, updateDb = true) => {
+  const changeView = useCallback(async (params) => {
     triggerVibrate();
     const newView = structuredClone(params);
 
@@ -100,8 +100,8 @@ function Main() {
          if (view.roku.apps.selected === 'youtube') {
            // app was Youtube
            if (view.roku.apps.youtube.channel) {
-             if (youtubeVideosLizSupabaseChannel.current) {
-               unSubscribeFromYoutubeVideosLizSupabaseChannel();
+             if (supabaseChannelsRef.current['youtube-videos-liz']) {
+               unsubscribeFromSupabaseChannel('youtube-videos-liz');
              }      
            }
          } 
@@ -124,11 +124,11 @@ function Main() {
                 // youtube channel selected
                 const videos = await requests.current.getYoutubeVideosLiz();
                 setYoutubeVideosLiz(videos.data);
-                subscribeToYoutubeVideosLizSupabaseChannel();
+                subscribeToSupabaseChannel('youtube-videos-liz');
               } else {
                 // youtube channel is not selected
-                if (youtubeVideosLizSupabaseChannel.current) {
-                  unSubscribeFromYoutubeVideosLizSupabaseChannel();
+                if (supabaseChannelsRef.current['youtube-videos-liz']) {
+                  unsubscribeFromSupabaseChannel('youtube-videos-liz');
                 }
               }
             }
@@ -157,36 +157,6 @@ function Main() {
 
       }
     }
-
-
-
-    // if (newView.selected === 'cable' && view.selected === 'roku' && newView.roku.apps.youtube.channel) {
-    //   if (youtubeVideosLizSupabaseChannel.current) {
-    //     unSubscribeFromYoutubeVideosLizSupabaseChannel();
-    //   }
-    // }
-
-
-
-
-    // if (view.selected === 'cable') {
-    //   if (youtubeVideosLizSupabaseChannel.current) {
-    //     unSubscribeFromYoutubeVideosLizSupabaseChannel();
-    //   }
-    //   if (updateDb) {
-    //     const channels = await requests.current.getCableChannels();
-    //     setCableChannels(channels.data);
-    //   }
-    // }
-    // if (!newView.roku.apps.selected && view.selected === 'roku') {
-    //   if (youtubeVideosLizSupabaseChannel.current) {
-    //     unSubscribeFromYoutubeVideosLizSupabaseChannel();
-    //   }
-    //   if (updateDb) {
-    //     const apps = await requests.current.getRokuApps();
-    //     setRokuApps(apps.data);
-    //   }
-    // }
     setView(newView);
   }, [youtubeChannelsLiz.length, view]);
 
@@ -224,14 +194,14 @@ function Main() {
               }
             }
             newView.selected = el.value;
-            changeView(newView, false);
+            changeView(newView);
           }
         }
       });
       setDevicesState(devices);
       requests.current.setDevices(devices);
     }
-  }
+  };
 
   const triggerControl = (params) => {
     if (!params.ignoreVibration) {
@@ -246,7 +216,7 @@ function Main() {
         }, 1000);
       }
     }
-  }
+  };
 
   const changeScreen = (screen) => {
     triggerVibrate();
@@ -261,11 +231,11 @@ function Main() {
         }, 1000);
       }
     }
-  }
+  };
 
   const validateRangeAndCredential = () => {
     return inRange || (credential === ownerCredential.current || credential === devCredential.current);
-  }
+  };
 
   const setCredentials = async (userCredential) => {
     if (userCredential === guestCredential.current) {
@@ -283,7 +253,7 @@ function Main() {
         }
       }
     }
-  }
+  };
 
   const getRokuData = useCallback(async (firstTime) => {
     let updatesEnabled = !updatesDisabledRef.current;
@@ -339,32 +309,43 @@ function Main() {
     }
   }, []);
 
-  const subscribeToYoutubeVideosLizSupabaseChannel = () => {
-    console.log('creating youtubeVideosLizSupabaseChannel');
-    youtubeVideosLizSupabaseChannel.current = supabase.channel('youtube-videos-liz-changes');
-    if (youtubeVideosLizSupabaseChannel.current?.socket.state !== 'joined') {
-      youtubeVideosLizSupabaseChannel.current.on(
+  const getSupabaseChannel = (name) => {
+    if (!supabaseChannelsRef.current[name]) {
+      console.log(`Creating channel: ${name}`);
+      supabaseChannelsRef.current[name] = supabase.channel(name);
+    }
+    return supabaseChannelsRef.current[name];
+  };
+
+  const subscribeToSupabaseChannel = (tableName, callback = 'YoutubeVideosLiz') => {
+    const channel = getSupabaseChannel(tableName);
+    if (channel?.socket.state !== 'joined') {
+      channel.on(
         'postgres_changes',
-        {event: '*', schema: 'public', table: 'youtube-videos-liz'},
+        {event: '*', schema: 'public', table: tableName},
         async (change) => {
-          console.log('youtube-videos-liz table changed');
+          console.log(tableName, ' changed');
           if (change.new.state === 'selected') {
-            const videos = await requests.current.getYoutubeVideosLiz();
-            setYoutubeVideosLiz(videos.data);
+            const name = 'get' + callback;
+            const apps = await requests.current[name]();
+            // setRokuApps(apps.data);
           }
         }
       ).subscribe(status => {
-        console.log('youtubeVideosLizSupabaseChannel status is: ', status);
+        console.log(tableName, ' status is: ', status);
         if (status === 'SUBSCRIBED') {
-          console.log('Subscribed to youtubeVideosLizSupabaseChannel');
+          console.log('Subscribed to ', tableName);
         }
       });
     }
   };
 
-  const unSubscribeFromYoutubeVideosLizSupabaseChannel = () => {
-    supabase.removeChannel(youtubeVideosLizSupabaseChannel.current);
-    console.log('Unsubscribed from youtubeVideosLizSupabaseChannel');
+  function unsubscribeFromSupabaseChannel(tableName) {
+    if (supabaseChannelsRef.current[tableName]) {
+      console.log(`Removing channel: ${tableName}`);
+      supabaseChannelsRef.current[tableName].unsubscribe();
+      delete supabaseChannelsRef.current[tableName];
+    }
   }
 
   const getVisibility = useCallback(() => {
@@ -373,18 +354,18 @@ function Main() {
       if (document.visibilityState === 'visible') {
         userActive.current = true;
         setUserActive2(true);
-        if (view.roku.apps.selected === 'youtube' && view.roku.apps.youtube.channel !== '') {
+        if (view.roku.apps.youtube.channel) {
           const videos = await requests.current.getYoutubeVideosLiz();
           setYoutubeVideosLiz(videos.data);
-          subscribeToYoutubeVideosLizSupabaseChannel();
+          subscribeToSupabaseChannel('youtube-videos-liz');
         }
         message = user.current + ' regreso';
       } else {
         userActive.current = false;
         setUserActive2(false);
-        if (view.roku.apps.selected === 'youtube' && view.roku.apps.youtube.channel !== '') {
-          if (youtubeVideosLizSupabaseChannel.current) {
-            unSubscribeFromYoutubeVideosLizSupabaseChannel();
+        if (view.roku.apps.youtube.channel) {
+          if (supabaseChannelsRef.current['youtube-videos-liz']) {
+            unsubscribeFromSupabaseChannel('youtube-videos-liz');
           }
         }
         message = user.current + ' salio';
@@ -454,6 +435,7 @@ function Main() {
   useEffect(() => {
     if (credential === 'dev') {
       setSendDisabled(true);
+      setUpdatesDisabled(true);
     }
     if (credential === devCredential.current) {
         eruda.init();

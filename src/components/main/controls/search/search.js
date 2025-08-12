@@ -13,7 +13,7 @@ function Search({devicesState, view, changeViewParent, searchYoutubeParent}) {
         newView.roku.apps.youtube.mode = 'search';
         newView.roku.apps.youtube.channel = '';
         newView.roku.apps.selected = 'youtube';
-        newView.roku.devices.device = '';
+        newView.devices.device = '';
         changeViewParent(newView);
         searchYoutubeParent(searchText);
       }

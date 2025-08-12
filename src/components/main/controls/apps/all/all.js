@@ -19,13 +19,13 @@ function Apps({devicesState, view, rokuApps, changeControlParent, changeViewPare
     changeViewParent(newView);
   }
 
-  const changeControlStart = (e) => {
-    e.preventDefault();
+  const onTouchStart = (e) => {
+    // e.preventDefault();
     timeout3s.current = setTimeout(() => {
       longClick.current = true;
     }, 500);
   }
-  const changeControlEnd = (e, app) => {
+  const onTouchEnd = (e, app) => {
     e.preventDefault();
     clearTimeout(timeout3s.current);
     if (longClick.current) {
@@ -44,8 +44,8 @@ function Apps({devicesState, view, rokuApps, changeControlParent, changeViewPare
           <div className='controls-apps-element'>
             <button
               className={`controls-apps-button ${app.id === devicesState.rokuSala.app ? "controls-apps-button--on" : "controls-apps-button--off"}`}
-              onTouchStart={(e) => changeControlStart(e, app.id)}
-              onTouchEnd={(e) => changeControlEnd(e, app.id)}>
+              onTouchStart={(e) => onTouchStart(e, app.id)}
+              onTouchEnd={(e) => onTouchEnd(e, app.id)}>
                 <img
                   className='controls-apps-img controls-apps-img--button'
                   src={app.img}
