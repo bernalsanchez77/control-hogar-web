@@ -95,6 +95,17 @@ function Main() {
       }
       if (view.selected === 'roku') {
         // was not in cable
+        if (view.roku.apps.selected) {
+          // was in an app 
+         if (view.roku.apps.selected === 'youtube') {
+           // app was Youtube
+           if (view.roku.apps.youtube.channel) {
+             if (youtubeVideosLizSupabaseChannel.current) {
+               unSubscribeFromYoutubeVideosLizSupabaseChannel();
+             }      
+           }
+         } 
+        }
         
       }
     }
