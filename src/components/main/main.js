@@ -86,7 +86,7 @@ function Main() {
         // was in cable
         if (newView.cable.channels.category.length) {
           // category selected
-          const channels = await requests.current.getCableChannels();
+          const channels = await requests.current.getTableFromSupabase('cableChannels');
           setCableChannels(channels.data);       
         } else {
           
@@ -95,7 +95,7 @@ function Main() {
       }
       if (viewRef.current.selected === 'roku') {
         // was in roku
-        const channels = await requests.current.getCableChannels();
+        const channels = await requests.current.getTableFromSupabase('cableChannels');
         setCableChannels(channels.data);
         subscribeToSupabaseChannel2('cableChannels');
         if (viewRef.current.roku.apps.selected) {
@@ -438,7 +438,7 @@ function Main() {
           subscribeToSupabaseChannel('roku-apps', 'RokuApps');
         }
         if (currentView.selected === 'cable') {
-          const channels = await requests.current.getCableChannels();
+          const channels = await requests.current.getTableFromSupabase('cableChannels');
           setCableChannels(channels.data);
           subscribeToSupabaseChannel2('cableChannels');
         }
@@ -492,7 +492,7 @@ function Main() {
     changeView(newView);
 
     if (newView.selected === 'cable') {
-      const channels = await requests.current.getCableChannels();
+      const channels = await requests.current.getTableFromSupabase('cableChannels');
       setCableChannels(channels.data);
       subscribeToSupabaseChannel2('cableChannels');
     }
