@@ -30,7 +30,7 @@ function Devices({credential, ownerCredential, devCredential, view, devicesState
         <div className='devices-element'>
           <LamparaComedor
             devicesState={devicesState}
-            state={lamparaComedor.state}
+            deviceEl={lamparaComedor}
             changeControlParent={changeControl}>
           </LamparaComedor>
         </div>

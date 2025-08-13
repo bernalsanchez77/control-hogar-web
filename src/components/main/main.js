@@ -51,9 +51,9 @@ function Main() {
   const [cableChannels, setCableChannels] = useState([]);
   const [rokuApps, setRokuApps] = useState([]);
   const [hdmiSala, setHdmiSala] = useState([]);
-  const setters = {setYoutubeVideosLiz, setRokuApps, setCableChannels, setHdmiSala};
-  //const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const [devices, setDevices] = useState([]);
+  const setters = {setYoutubeVideosLiz, setRokuApps, setCableChannels, setHdmiSala, setDevices};
+  //const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const initialized = useRef(false);
   const supabaseChannelsRef = useRef({});
   const [view, setView] = useState(
@@ -102,6 +102,26 @@ function Main() {
               changeView(newView);
             }
           }
+        }
+      ).subscribe(status => {
+        console.log(tableName, ' status is: ', status);
+        if (status === 'SUBSCRIBED') {
+          console.log('Subscribed to ', tableName);
+        }
+      });
+    }
+  },[setters]);
+
+  const subscribeToSupabaseChannelDevices = useCallback(async (tableName) => {
+    const channel = getSupabaseChannel(tableName);
+    if (channel?.socket.state !== 'joined') {
+      channel.on(
+        'postgres_changes',
+        {event: '*', schema: 'public', table: tableName},
+        async (change) => {
+          console.log(tableName, ' changed');
+          const data = await requests.current['getTableFromSupabase'](tableName);
+          setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](data.data);
         }
       ).subscribe(status => {
         console.log(tableName, ' status is: ', status);
@@ -264,6 +284,10 @@ function Main() {
             }
             newView.selected = el.value;
             changeView(newView);
+          }
+          if (el.device === 'lamparaComedor') {
+            const device = devices.find(device => device.id === el.device);
+            requests.current.updateTableInSupabaseDevices({id: device.id, table: 'devices', state: el.value, date: new Date().toISOString()});
           }
         }
       });
@@ -486,7 +510,7 @@ function Main() {
 
     const devices = await requests.current.getTableFromSupabase('devices');
     setDevices(devices.data);
-    subscribeToSupabaseChannel('devices');
+    subscribeToSupabaseChannelDevices('devices');
 
     if (localStorage.getItem('user')) {
       getMassMediaData(true);

@@ -1,26 +1,24 @@
 import './lamparaComedor.css';
 
-function LamparaComedor({devicesState, state, changeControlParent}) {
+function LamparaComedor({deviceEl, changeControlParent}) {
   const changeControl = (device) => {
-    if (devicesState[device].state === 'on') {
+    if (deviceEl.state === 'on') {
       changeControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
     }
-    if (devicesState[device].state === 'off') {
+    if (deviceEl.state === 'off') {
       changeControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
   }
-
-  const steee = state;
 
   return (
     <div className="lamparaComedor">
       <div>
         <button
-          className={`devices-button ${devicesState.lamparaComedor.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => changeControl(devicesState.lamparaComedor.id)}>
+          className={`devices-button ${deviceEl.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
+          onTouchStart={() => changeControl(deviceEl.id)}>
           <img
             className='devices-button-img'
-            src={devicesState.lamparaComedor.img}
+            src={deviceEl.img}
             alt="icono">
           </img>
           <div className='devices-led'></div>

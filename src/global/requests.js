@@ -94,6 +94,13 @@ class Requests {
       }, 500);
     }
   }
+  async updateTableInSupabaseDevices(params) {
+    if (window.cordova) {
+      await this.cordovaApiRequest('updateTableInSupabaseDevices', params, 'patch');
+    } else {
+      await this.normalApiRequest('updateTableInSupabaseDevices', params, 'patch');
+    }
+  }
   async getTableFromSupabase(table) {
     if (window.cordova) {
       return await this.cordovaApiRequest('getTableFromSupabase', {table}, 'get');
