@@ -213,7 +213,7 @@ function Main() {
             if (hdmi && currentHdmi) {
               requests.current.updateTableInSupabase({id: hdmi.id, table: 'hdmiSala', date: new Date().toISOString()}, currentHdmi.id);
             }
-            const newView = structuredClone(view);
+            const newView = structuredClone(viewRef.current);
             if (el.value === 'roku') {
               if (view.selected === 'cable') {
                 newView.cable.channels.category = [];
@@ -353,6 +353,7 @@ function Main() {
         async (change) => {
           console.log(tableName, ' changed');
           if (change.new.state === 'selected') {
+            console.log('obj: ', objName);
             const data = await requests.current['get' + objName]();
             setters['set' + objName](data.data);
           }
@@ -377,6 +378,11 @@ function Main() {
           if (change.new.state === 'selected') {
             const data = await requests.current['getTableFromSupabase'](tableName);
             setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](data.data);
+            if (tableName === 'hdmiSala') {
+              const newView = structuredClone(viewRef.current);
+              newView.selected = data.data.find(el => el.state === 'selected').id;
+              changeView(newView);
+            }
           }
         }
       ).subscribe(status => {
@@ -403,6 +409,9 @@ function Main() {
       if (document.visibilityState === 'visible') {
         userActive.current = true;
         setUserActive2(true);
+        // const channels = await requests.current.getCableChannels();
+        // setCableChannels(channels.data);
+        // subscribeToSupabaseChannel('cable-channels', 'CableChannels');
         if (currentView.roku.apps.youtube.channel) {
           const videos = await requests.current.getYoutubeVideosLiz();
           setYoutubeVideosLiz(videos.data);
@@ -422,6 +431,9 @@ function Main() {
       } else {
         userActive.current = false;
         setUserActive2(false);
+        if (supabaseChannelsRef.current['hdmiSala']) {
+          unsubscribeFromSupabaseChannel('hdmiSala');
+        }
         if (currentView.roku.apps.youtube.channel) {
           if (supabaseChannelsRef.current['youtube-videos-liz']) {
             unsubscribeFromSupabaseChannel('youtube-videos-liz');
@@ -457,10 +469,10 @@ function Main() {
     const inRange = await utils.current.getInRange();
     setInRange(inRange);
 
-    const newView = structuredClone(view);
+    const newView = structuredClone(viewRef.current);
     const hdmi = await requests.current.getTableFromSupabase('hdmiSala');
     setHdmiSala(hdmi.data);
-    subscribeToSupabaseChannel('hdmiSala', 'HdmiSala');
+    subscribeToSupabaseChannel2('hdmiSala');
     newView.selected = hdmi.data.find(el => el.state === 'selected').id;
     changeView(newView);
 
