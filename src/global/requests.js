@@ -92,7 +92,7 @@ class Requests {
     if (window.cordova) {
       await this.cordovaApiRequest('updateTableInSupabase', {id, table: params.table}, 'patch');
       setTimeout(async () => {
-        await this.normalApiRequest('updateTableInSupabase', params, 'patch');
+        await this.cordovaApiRequest('updateTableInSupabase', params, 'patch');
       }, 1000);
     } else {
       await this.normalApiRequest('updateTableInSupabase', {id, table: params.table}, 'patch');
