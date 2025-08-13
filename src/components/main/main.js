@@ -157,9 +157,9 @@ function Main() {
           // no app selected
           if (viewRef.current.roku.apps.selected) {
             // was in an app
-            const apps = await requests.current.getRokuApps(); // brings apps cause another user might have changed the app selected in Roku
+            const apps = await requests.current.getTableFromSupabase('rokuApps');
             setRokuApps(apps.data);
-            subscribeToSupabaseChannel('roku-apps', 'RokuApps');
+            subscribeToSupabaseChannel2('rokuApps');
           }
         }
       }
@@ -168,9 +168,9 @@ function Main() {
         if (supabaseChannelsRef.current['cableChannels']) {
           unsubscribeFromSupabaseChannel('cableChannels');
         }      
-        const apps = await requests.current.getRokuApps();
+        const apps = await requests.current.getTableFromSupabase('rokuApps');
         setRokuApps(apps.data);
-        subscribeToSupabaseChannel('roku-apps', 'RokuApps');
+        subscribeToSupabaseChannel2('rokuApps');
       }
     }
     setView(newView);
@@ -433,9 +433,9 @@ function Main() {
           subscribeToSupabaseChannel('youtube-videos-liz', 'YoutubeVideosLiz');
         }
         if (currentView.selected === 'roku' & !currentView.roku.apps.selected) {
-          const apps = await requests.current.getRokuApps();
+          const apps = await requests.current.getTableFromSupabase('rokuApps');
           setRokuApps(apps.data);
-          subscribeToSupabaseChannel('roku-apps', 'RokuApps');
+          subscribeToSupabaseChannel2('rokuApps');
         }
         if (currentView.selected === 'cable') {
           const channels = await requests.current.getTableFromSupabase('cableChannels');
@@ -497,9 +497,9 @@ function Main() {
       subscribeToSupabaseChannel2('cableChannels');
     }
     if (newView.selected === 'roku') {
-      apps = await requests.current.getRokuApps();
+      apps = await requests.current.getTableFromSupabase('rokuApps');
       setRokuApps(apps.data);
-      subscribeToSupabaseChannel('roku-apps', 'RokuApps');
+      subscribeToSupabaseChannel2('rokuApps');
       if (localStorage.getItem('user')) {
         getRokuData(apps.data, true);
       }

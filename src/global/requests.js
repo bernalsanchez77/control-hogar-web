@@ -108,13 +108,6 @@ class Requests {
       return await this.normalApiRequest('getYoutubeChannelsFromSupabase', null, 'get');
     }
   }
-  async getRokuApps() {
-    if (window.cordova) {
-      return await this.cordovaApiRequest('getRokuAppsFromSupabase', null, 'get');
-    } else {
-      return await this.normalApiRequest('getRokuAppsFromSupabase', null, 'get');
-    }
-  }
   async getTableFromSupabase(table) {
     if (window.cordova) {
       return await this.cordovaApiRequest('getTableFromSupabase', {table}, 'get');
