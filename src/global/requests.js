@@ -81,13 +81,6 @@ class Requests {
       },
       'post');
   }
-  async getYoutubeVideosLiz() {
-    if (window.cordova) {
-      return await this.cordovaApiRequest('getYoutubeVideosFromSupabase', null, 'get');
-    } else {
-      return await this.normalApiRequest('getYoutubeVideosFromSupabase', null, 'get');
-    }
-  }
   async updateTableInSupabase(params, id) {
     if (window.cordova) {
       await this.cordovaApiRequest('updateTableInSupabase', {id, table: params.table}, 'patch');
@@ -99,13 +92,6 @@ class Requests {
       setTimeout(async () => {
         await this.normalApiRequest('updateTableInSupabase', params, 'patch');
       }, 500);
-    }
-  }
-  async getYoutubeChannelsLiz() {
-    if (window.cordova) {
-      return await this.cordovaApiRequest('getYoutubeChannelsFromSupabase', null, 'get');
-    } else {
-      return await this.normalApiRequest('getYoutubeChannelsFromSupabase', null, 'get');
     }
   }
   async getTableFromSupabase(table) {
