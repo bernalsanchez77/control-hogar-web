@@ -165,6 +165,9 @@ function Main() {
       }
       if (view.selected === 'cable') {
         //was in cable
+        if (supabaseChannelsRef.current['cable-channels']) {
+          unsubscribeFromSupabaseChannel('cable-channels');
+        }      
         const apps = await requests.current.getRokuApps();
         setRokuApps(apps.data);
         subscribeToSupabaseChannel('roku-apps', 'RokuApps');
@@ -457,7 +460,7 @@ function Main() {
     const newView = structuredClone(view);
     const hdmi = await requests.current.getTableFromSupabase('hdmiSala');
     setHdmiSala(hdmi.data);
-    subscribeToSupabaseChannel2('hdmiSala');
+    subscribeToSupabaseChannel('hdmiSala', 'HdmiSala');
     newView.selected = hdmi.data.find(el => el.state === 'selected').id;
     changeView(newView);
 

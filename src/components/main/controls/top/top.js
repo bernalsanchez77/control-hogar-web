@@ -43,11 +43,11 @@ function Controls({devicesState, view, screenSelected, changeControlParent}) {
     }
   }
   const changeHdmi = () => {
-    const device = devicesState.hdmiSala.id;
-    if (devicesState[devicesState.hdmiSala.id].state === 'roku') {
+    const device = 'hdmiSala';
+    if (view.selected === 'roku') {
       changeControlParent({ifttt: [{device, key: 'state', value: 'cable'}]});
     }
-    if (devicesState[devicesState.hdmiSala.id].state === 'cable') {
+    if (view.selected === 'cable') {
       changeControlParent({ifttt: [{device, key: 'state', value: 'roku'}]});
     }
   }
