@@ -97,7 +97,7 @@ function Main() {
         // was in roku
         const channels = await requests.current.getCableChannels();
         setCableChannels(channels.data);
-        subscribeToSupabaseChannel('cable-channels', 'CableChannels');
+        subscribeToSupabaseChannel2('cableChannels');
         if (viewRef.current.roku.apps.selected) {
           // was in an app 
          if (viewRef.current.roku.apps.selected === 'youtube') {
@@ -165,8 +165,8 @@ function Main() {
       }
       if (viewRef.current.selected === 'cable') {
         //was in cable
-        if (supabaseChannelsRef.current['cable-channels']) {
-          unsubscribeFromSupabaseChannel('cable-channels');
+        if (supabaseChannelsRef.current['cableChannels']) {
+          unsubscribeFromSupabaseChannel('cableChannels');
         }      
         const apps = await requests.current.getRokuApps();
         setRokuApps(apps.data);
@@ -204,7 +204,7 @@ function Main() {
             const channel = cableChannels.find(ch => ch.id === el.value);
             const currentChannel = cableChannels.find(ch => ch.state === 'selected');
             if (channel && currentChannel) {
-              requests.current.updateTableInSupabase({id: channel.id, table: 'cable-channels', date: new Date().toISOString()}, currentChannel.id);
+              requests.current.updateTableInSupabase({id: channel.id, table: 'cableChannels', date: new Date().toISOString()}, currentChannel.id);
             }
           }
           if (el.device === 'hdmiSala' && el.key === 'state') {
@@ -416,9 +416,17 @@ function Main() {
       if (document.visibilityState === 'visible') {
         userActive.current = true;
         setUserActive2(true);
-        // const channels = await requests.current.getCableChannels();
-        // setCableChannels(channels.data);
-        // subscribeToSupabaseChannel('cable-channels', 'CableChannels');
+
+        subscribeToSupabaseChannel2('hdmiSala');
+        const newView = structuredClone(viewRef.current);
+        const hdmiTable = await requests.current.getTableFromSupabase('hdmiSala');
+        const hdmiId = hdmiTable.data.find(el => el.state === 'selected').id;
+        if (hdmiId !== viewRef.current.selected) {
+          setHdmiSala(hdmiTable.data);
+          newView.selected = hdmiId;
+          changeView(newView);
+        }
+
         if (currentView.roku.apps.youtube.channel) {
           const videos = await requests.current.getYoutubeVideosLiz();
           setYoutubeVideosLiz(videos.data);
@@ -432,7 +440,7 @@ function Main() {
         if (currentView.selected === 'cable') {
           const channels = await requests.current.getCableChannels();
           setCableChannels(channels.data);
-          subscribeToSupabaseChannel('cable-channels', 'CableChannels');
+          subscribeToSupabaseChannel2('cableChannels');
         }
         message = user.current + ' regreso';
       } else {
@@ -452,8 +460,8 @@ function Main() {
           }
         }
         if (currentView.selected === 'cable') {
-          if (supabaseChannelsRef.current['cable-channels']) {
-            unsubscribeFromSupabaseChannel('cable-channels');
+          if (supabaseChannelsRef.current['cableChannels']) {
+            unsubscribeFromSupabaseChannel('cableChannels');
           }
         }
         message = user.current + ' salio';
@@ -486,7 +494,7 @@ function Main() {
     if (newView.selected === 'cable') {
       const channels = await requests.current.getCableChannels();
       setCableChannels(channels.data);
-      subscribeToSupabaseChannel('cable-channels', 'CableChannels');
+      subscribeToSupabaseChannel2('cableChannels');
     }
     if (newView.selected === 'roku') {
       apps = await requests.current.getRokuApps();

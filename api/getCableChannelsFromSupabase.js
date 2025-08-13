@@ -6,7 +6,7 @@ const supabase = createClient(
 )
 console.log('se llamo a cable-channels');
 export default async function handler(req, res) {
-  const { data, error } = await supabase.from('cable-channels').select('*').order('number', { ascending: true }) // or descending: false
+  const { data, error } = await supabase.from('cableChannels').select('*').order('number', { ascending: true }) // or descending: false
   if (error) {
     return res.status(500).json({ error: error.message })
   }
