@@ -97,7 +97,7 @@ function Main() {
         // was in roku
         const channels = await requests.current.getCableChannels();
         setCableChannels(channels.data);
-        subscribeToSupabaseChannel('cable-channels', 'CableChannels');
+        subscribeToSupabaseChannel2('cable-channels');
         if (view.roku.apps.selected) {
           // was in an app 
          if (view.roku.apps.selected === 'youtube') {
@@ -425,7 +425,7 @@ function Main() {
         if (currentView.selected === 'cable') {
           const channels = await requests.current.getCableChannels();
           setCableChannels(channels.data);
-          subscribeToSupabaseChannel('cable-channels', 'CableChannels');
+          subscribeToSupabaseChannel2('cable-channels');
         }
         message = user.current + ' regreso';
       } else {
@@ -479,7 +479,7 @@ function Main() {
     if (newView.selected === 'cable') {
       const channels = await requests.current.getCableChannels();
       setCableChannels(channels.data);
-      subscribeToSupabaseChannel('cable-channels', 'CableChannels');
+      subscribeToSupabaseChannel2('cable-channels');
     }
     if (newView.selected === 'roku') {
       apps = await requests.current.getRokuApps();
