@@ -236,12 +236,11 @@ function Main() {
     requests.current.sendControl(sendDisabled, params);
     const media = params.massMedia || params.ifttt || [];
     if (media.length > 0) {
-      const devices = {...devicesStateUpdated.current};
       media.forEach(async el => {
         if (Array.isArray(el.key)) {
-          devices[el.device][el.key[0]] = {...devices[el.device][el.key[0]], [el.key[1]]: el.value};
+          //devices[el.device][el.key[0]] = {...devices[el.device][el.key[0]], [el.key[1]]: el.value};
         } else {
-          devices[el.device] = {...devices[el.device], [el.key]: el.value};
+          //devices[el.device] = {...devices[el.device], [el.key]: el.value};
           if (el.key === 'video') {
             const video = youtubeVideosLiz.find(video => video.id === el.value);
             const currentVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
@@ -291,8 +290,6 @@ function Main() {
           }
         }
       });
-      setDevicesState(devices);
-      requests.current.setDevices(devices);
     }
   };
 
