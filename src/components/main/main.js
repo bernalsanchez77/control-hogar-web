@@ -50,7 +50,8 @@ function Main() {
   const [youtubeChannelsLiz, setYoutubeChannelsLiz] = useState([]);
   const [cableChannels, setCableChannels] = useState([]);
   const [rokuApps, setRokuApps] = useState([]);
-  const setters = {setYoutubeVideosLiz, setRokuApps, setCableChannels};
+  const [hdmiSala, setHdmiSala] = useState([]);
+  const setters = {setYoutubeVideosLiz, setRokuApps, setCableChannels, setHdmiSala};
   //const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const initialized = useRef(false);
   const supabaseChannelsRef = useRef({});
@@ -76,7 +77,7 @@ function Main() {
   };
 
   const changeView = useCallback(async (params) => {
-    triggerVibrate();
+    // triggerVibrate();
     const newView = structuredClone(params);
 
     if (newView.selected === 'cable') {
@@ -94,6 +95,8 @@ function Main() {
       }
       if (view.selected === 'roku') {
         // was in roku
+        const channels = await requests.current.getCableChannels();
+        setCableChannels(channels.data);
         subscribeToSupabaseChannel('cable-channels', 'CableChannels');
         if (view.roku.apps.selected) {
           // was in an app 
@@ -160,9 +163,10 @@ function Main() {
           }
         }
       }
-      // different hdmi
       if (view.selected === 'cable') {
         //was in cable
+        const apps = await requests.current.getRokuApps();
+        setRokuApps(apps.data);
         subscribeToSupabaseChannel('roku-apps', 'RokuApps');
       }
     }
@@ -201,6 +205,11 @@ function Main() {
             }
           }
           if (el.device === 'hdmiSala' && el.key === 'state') {
+            const hdmi = hdmiSala.find(hd => hd.id === el.value);
+            const currentHdmi = hdmiSala.find(hd => hd.state === 'selected');
+            if (hdmi && currentHdmi) {
+              requests.current.updateTableInSupabase({id: hdmi.id, table: 'hdmiSala', date: new Date().toISOString()}, currentHdmi.id);
+            }
             const newView = structuredClone(view);
             if (el.value === 'roku') {
               if (view.selected === 'cable') {
@@ -225,9 +234,6 @@ function Main() {
   };
 
   const triggerControl = (params) => {
-    if (!params.ignoreVibration) {
-      triggerVibrate();
-    }
     if (validateRangeAndCredential) {
       if (!loadingDevices.current) {
         changeControl(params);
@@ -236,6 +242,9 @@ function Main() {
           triggerControl(params);
         }, 1000);
       }
+    }
+    if (!params.ignoreVibration) {
+      triggerVibrate();
     }
   };
 
@@ -354,6 +363,28 @@ function Main() {
     }
   };
 
+    const subscribeToSupabaseChannel2 = (tableName) => {
+    const channel = getSupabaseChannel(tableName);
+    if (channel?.socket.state !== 'joined') {
+      channel.on(
+        'postgres_changes',
+        {event: '*', schema: 'public', table: tableName},
+        async (change) => {
+          console.log(tableName, ' changed');
+          if (change.new.state === 'selected') {
+            const data = await requests.current['getTableFromSupabase'](tableName);
+            setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](data.data);
+          }
+        }
+      ).subscribe(status => {
+        console.log(tableName, ' status is: ', status);
+        if (status === 'SUBSCRIBED') {
+          console.log('Subscribed to ', tableName);
+        }
+      });
+    }
+  };
+
   function unsubscribeFromSupabaseChannel(tableName) {
     if (supabaseChannelsRef.current[tableName]) {
       console.log(`Removing channel: ${tableName}`);
@@ -424,8 +455,10 @@ function Main() {
     setInRange(inRange);
 
     const newView = structuredClone(view);
-    newView.selected = await requests.current.getTableFromSupabase('hdmiSala');
-    newView.selected = devicesStateUpdated.current.hdmiSala.state;
+    const hdmi = await requests.current.getTableFromSupabase('hdmiSala');
+    setHdmiSala(hdmi.data);
+    subscribeToSupabaseChannel2('hdmiSala');
+    newView.selected = hdmi.data.find(el => el.state === 'selected').id;
     changeView(newView);
 
     if (newView.selected === 'cable') {

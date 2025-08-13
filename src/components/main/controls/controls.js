@@ -60,7 +60,7 @@ function Controls({devicesState, screenSelected, view, rokuApps, youtubeSearchVi
           changeViewParent={changeView}
           searchYoutubeParent={searchYoutube}>
         </Search>
-        {view.selected === 'roku' && !view.devices.device &&
+        {view.selected === 'roku' &&
         <Apps
           devicesState={devicesState}
           view={view}

@@ -7,7 +7,6 @@ const supabase = createClient(
 
 export default async function handler(req, res) {
   const {table} = req.query;
-  console.log('table: ', table);
   const {data, error} = await supabase.from(table).select('*').order('order', { ascending: true });
   if (error) {
     return res.status(500).json({ error: error.message })
