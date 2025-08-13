@@ -97,7 +97,7 @@ function Main() {
         // was in roku
         const channels = await requests.current.getCableChannels();
         setCableChannels(channels.data);
-        subscribeToSupabaseChannel2('cable-channels');
+        subscribeToSupabaseChannel('cable-channels', 'CableChannels');
         if (view.roku.apps.selected) {
           // was in an app 
          if (view.roku.apps.selected === 'youtube') {
@@ -353,7 +353,6 @@ function Main() {
         async (change) => {
           console.log(tableName, ' changed');
           if (change.new.state === 'selected') {
-            console.log('obj: ', objName);
             const data = await requests.current['get' + objName]();
             setters['set' + objName](data.data);
           }
@@ -425,7 +424,7 @@ function Main() {
         if (currentView.selected === 'cable') {
           const channels = await requests.current.getCableChannels();
           setCableChannels(channels.data);
-          subscribeToSupabaseChannel2('cable-channels');
+          subscribeToSupabaseChannel('cable-channels', 'CableChannels');
         }
         message = user.current + ' regreso';
       } else {
@@ -479,7 +478,7 @@ function Main() {
     if (newView.selected === 'cable') {
       const channels = await requests.current.getCableChannels();
       setCableChannels(channels.data);
-      subscribeToSupabaseChannel2('cable-channels');
+      subscribeToSupabaseChannel('cable-channels', 'CableChannels');
     }
     if (newView.selected === 'roku') {
       apps = await requests.current.getRokuApps();
