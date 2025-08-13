@@ -82,7 +82,7 @@ function Main() {
 
     if (newView.selected === 'cable') {
       // cable selected
-      if (view.selected === 'cable') {
+      if (viewRef.current.selected === 'cable') {
         // was in cable
         if (newView.cable.channels.category.length) {
           // category selected
@@ -93,16 +93,16 @@ function Main() {
         }
 
       }
-      if (view.selected === 'roku') {
+      if (viewRef.current.selected === 'roku') {
         // was in roku
         const channels = await requests.current.getCableChannels();
         setCableChannels(channels.data);
         subscribeToSupabaseChannel('cable-channels', 'CableChannels');
-        if (view.roku.apps.selected) {
+        if (viewRef.current.roku.apps.selected) {
           // was in an app 
-         if (view.roku.apps.selected === 'youtube') {
+         if (viewRef.current.roku.apps.selected === 'youtube') {
            // app was Youtube
-           if (view.roku.apps.youtube.channel) {
+           if (viewRef.current.roku.apps.youtube.channel) {
              if (supabaseChannelsRef.current['youtube-videos-liz']) {
                unsubscribeFromSupabaseChannel('youtube-videos-liz');
              }      
@@ -120,11 +120,11 @@ function Main() {
 
     if (newView.selected === 'roku') {
       // roku selected
-      if (view.selected === 'roku') {
+      if (viewRef.current.selected === 'roku') {
         // was in roku
         if (newView.roku.apps.selected) {
           // app is selected
-          if (view.roku.apps.selected) {
+          if (viewRef.current.roku.apps.selected) {
             // was in an app
             if (newView.roku.apps.selected === 'youtube') {
               // app is Youtube
@@ -155,7 +155,7 @@ function Main() {
           }
         } else {
           // no app selected
-          if (view.roku.apps.selected) {
+          if (viewRef.current.roku.apps.selected) {
             // was in an app
             const apps = await requests.current.getRokuApps(); // brings apps cause another user might have changed the app selected in Roku
             setRokuApps(apps.data);
@@ -163,7 +163,7 @@ function Main() {
           }
         }
       }
-      if (view.selected === 'cable') {
+      if (viewRef.current.selected === 'cable') {
         //was in cable
         if (supabaseChannelsRef.current['cable-channels']) {
           unsubscribeFromSupabaseChannel('cable-channels');
@@ -174,7 +174,7 @@ function Main() {
       }
     }
     setView(newView);
-  }, [youtubeChannelsLiz.length, view]);
+  }, [youtubeChannelsLiz.length, viewRef]);
 
   const changeControl = (params) => {
     requests.current.sendControl(sendDisabled, params);
@@ -215,12 +215,12 @@ function Main() {
             }
             const newView = structuredClone(viewRef.current);
             if (el.value === 'roku') {
-              if (view.selected === 'cable') {
+              if (newView.selected === 'cable') {
                 newView.cable.channels.category = [];
               }
             }
             if (el.value === 'cable') {
-              if (view.selected === 'roku') {
+              if (newView.selected === 'roku') {
                   newView.roku.apps.selected = '';
                   newView.roku.apps.youtube.mode = '';
                   newView.roku.apps.youtube.channel = '';
