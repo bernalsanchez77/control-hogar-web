@@ -122,6 +122,13 @@ class Requests {
       return await this.normalApiRequest('getRokuAppsFromSupabase', null, 'get');
     }
   }
+  async getTableFromSupabase(table) {
+    if (window.cordova) {
+      return await this.cordovaApiRequest('getTableFromSupabase', {table}, 'get');
+    } else {
+      return await this.normalApiRequest('getTableFromSupabase', {table}, 'get');
+    }
+  }
   // async searchYoutube(text) {
   //   console.log(text);
   //   try {

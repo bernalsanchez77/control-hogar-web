@@ -424,6 +424,7 @@ function Main() {
     setInRange(inRange);
 
     const newView = structuredClone(view);
+    newView.selected = await requests.current.getTableFromSupabase('hdmiSala');
     newView.selected = devicesStateUpdated.current.hdmiSala.state;
     changeView(newView);
 
