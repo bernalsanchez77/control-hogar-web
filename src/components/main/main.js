@@ -380,6 +380,14 @@ function Main() {
             if (tableName === 'hdmiSala') {
               const newView = structuredClone(viewRef.current);
               newView.selected = data.data.find(el => el.state === 'selected').id;
+              if (newView.selected === 'roku') {
+                newView.cable.channels.category = [];
+              }
+              if (newView.selected === 'cable') {
+                newView.roku.apps.selected = '';
+                newView.roku.apps.youtube.mode = '';
+                newView.roku.apps.youtube.channel = '';
+              }
               changeView(newView);
             }
           }
