@@ -363,7 +363,7 @@ function Main() {
     }
   };
 
-    const subscribeToSupabaseChannel2 = (tableName) => {
+  const subscribeToSupabaseChannel2 = (tableName) => {
     const channel = getSupabaseChannel(tableName);
     if (channel?.socket.state !== 'joined') {
       channel.on(
@@ -470,11 +470,13 @@ function Main() {
       apps = await requests.current.getRokuApps();
       setRokuApps(apps.data);
       subscribeToSupabaseChannel('roku-apps', 'RokuApps');
+      if (localStorage.getItem('user')) {
+        getRokuData(apps.data, true);
+      }
     }
 
     if (localStorage.getItem('user')) {
       getMassMediaData(true);
-      getRokuData(apps.data, true);
     }
     // setInterval(() => {
     //   if (localStorage.getItem('user')) {
