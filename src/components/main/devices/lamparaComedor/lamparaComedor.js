@@ -1,6 +1,6 @@
 import './lamparaComedor.css';
 
-function LamparaComedor({devicesState, changeControlParent}) {
+function LamparaComedor({devicesState, state, changeControlParent}) {
   const changeControl = (device) => {
     if (devicesState[device].state === 'on') {
       changeControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
@@ -9,6 +9,8 @@ function LamparaComedor({devicesState, changeControlParent}) {
       changeControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
   }
+
+  const steee = state;
 
   return (
     <div className="lamparaComedor">

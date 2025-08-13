@@ -12,7 +12,7 @@ import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
 import './devices.css';
 
-function Devices({credential, ownerCredential, devCredential, view, devicesState, changeViewParent, changeControlParent}) {
+function Devices({credential, ownerCredential, devCredential, view, devicesState, devices, changeViewParent, changeControlParent}) {
   const changeControl = (params) => {
     changeControlParent(params);
   }
@@ -21,6 +21,8 @@ function Devices({credential, ownerCredential, devCredential, view, devicesState
     newView.devices.device = device;
     changeViewParent(newView);
   }
+  const lamparaComedor = devices.find(device => device.id === 'lamparaComedor');
+
 
   return (
     <div className="devices">
@@ -28,6 +30,7 @@ function Devices({credential, ownerCredential, devCredential, view, devicesState
         <div className='devices-element'>
           <LamparaComedor
             devicesState={devicesState}
+            state={lamparaComedor.state}
             changeControlParent={changeControl}>
           </LamparaComedor>
         </div>

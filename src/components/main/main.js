@@ -53,6 +53,7 @@ function Main() {
   const [hdmiSala, setHdmiSala] = useState([]);
   const setters = {setYoutubeVideosLiz, setRokuApps, setCableChannels, setHdmiSala};
   //const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const [devices, setDevices] = useState([]);
   const initialized = useRef(false);
   const supabaseChannelsRef = useRef({});
   const [view, setView] = useState(
@@ -76,6 +77,41 @@ function Main() {
     // setYoutubeSearchVideos(youtubeDummyData.current.getYoutubeDummyData());
   };
 
+  const subscribeToSupabaseChannel = useCallback(async (tableName) => {
+    const channel = getSupabaseChannel(tableName);
+    if (channel?.socket.state !== 'joined') {
+      channel.on(
+        'postgres_changes',
+        {event: '*', schema: 'public', table: tableName},
+        async (change) => {
+          console.log(tableName, ' changed');
+          if (change.new.state === 'selected') {
+            const data = await requests.current['getTableFromSupabase'](tableName);
+            setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](data.data);
+            if (tableName === 'hdmiSala') {
+              const newView = structuredClone(viewRef.current);
+              newView.selected = data.data.find(el => el.state === 'selected').id;
+              if (newView.selected === 'roku') {
+                newView.cable.channels.category = [];
+              }
+              if (newView.selected === 'cable') {
+                newView.roku.apps.selected = '';
+                newView.roku.apps.youtube.mode = '';
+                newView.roku.apps.youtube.channel = '';
+              }
+              changeView(newView);
+            }
+          }
+        }
+      ).subscribe(status => {
+        console.log(tableName, ' status is: ', status);
+        if (status === 'SUBSCRIBED') {
+          console.log('Subscribed to ', tableName);
+        }
+      });
+    }
+  },[setters]);
+
   const changeView = useCallback(async (params) => {
     // triggerVibrate();
     const newView = structuredClone(params);
@@ -86,8 +122,8 @@ function Main() {
         // was in cable
         if (newView.cable.channels.category.length) {
           // category selected
-          const channels = await requests.current.getTableFromSupabase('cableChannels');
-          setCableChannels(channels.data);       
+          // const channels = await requests.current.getTableFromSupabase('cableChannels');
+          // setCableChannels(channels.data);       
         } else {
           
         }
@@ -174,7 +210,7 @@ function Main() {
       }
     }
     setView(newView);
-  }, [youtubeChannelsLiz.length, viewRef]);
+  }, [youtubeChannelsLiz.length, viewRef, subscribeToSupabaseChannel]);
 
   const changeControl = (params) => {
     requests.current.sendControl(sendDisabled, params);
@@ -344,41 +380,6 @@ function Main() {
     return supabaseChannelsRef.current[name];
   };
 
-  const subscribeToSupabaseChannel = (tableName) => {
-    const channel = getSupabaseChannel(tableName);
-    if (channel?.socket.state !== 'joined') {
-      channel.on(
-        'postgres_changes',
-        {event: '*', schema: 'public', table: tableName},
-        async (change) => {
-          console.log(tableName, ' changed');
-          if (change.new.state === 'selected') {
-            const data = await requests.current['getTableFromSupabase'](tableName);
-            setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](data.data);
-            if (tableName === 'hdmiSala') {
-              const newView = structuredClone(viewRef.current);
-              newView.selected = data.data.find(el => el.state === 'selected').id;
-              if (newView.selected === 'roku') {
-                newView.cable.channels.category = [];
-              }
-              if (newView.selected === 'cable') {
-                newView.roku.apps.selected = '';
-                newView.roku.apps.youtube.mode = '';
-                newView.roku.apps.youtube.channel = '';
-              }
-              changeView(newView);
-            }
-          }
-        }
-      ).subscribe(status => {
-        console.log(tableName, ' status is: ', status);
-        if (status === 'SUBSCRIBED') {
-          console.log('Subscribed to ', tableName);
-        }
-      });
-    }
-  };
-
   function unsubscribeFromSupabaseChannel(tableName) {
     if (supabaseChannelsRef.current[tableName]) {
       console.log(`Removing channel: ${tableName}`);
@@ -450,7 +451,7 @@ function Main() {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [user, view]);
+  }, [user, changeView, subscribeToSupabaseChannel]);
 
   const init = useCallback(async () => {
     let apps = {};
@@ -483,6 +484,10 @@ function Main() {
       }
     }
 
+    const devices = await requests.current.getTableFromSupabase('devices');
+    setDevices(devices.data);
+    subscribeToSupabaseChannel('devices');
+
     if (localStorage.getItem('user')) {
       getMassMediaData(true);
     }
@@ -502,7 +507,7 @@ function Main() {
       window.addEventListener("load", document.body.classList.add("loaded"));
     }
     console.log('version 27');
-  }, [getMassMediaData, getRokuData, getPosition, getVisibility, changeView, user, view]);
+  }, [getMassMediaData, getRokuData, getPosition, getVisibility, changeView, subscribeToSupabaseChannel, user]);
 
   useEffect(() => {
     if (!initialized.current) {
@@ -604,13 +609,14 @@ function Main() {
             triggerVibrateParent={triggerVibrate}
             searchYoutubeParent={searchYoutube}>
           </Controls>
-          {view.roku.apps.selected === '' &&
+          {devices.length && view.roku.apps.selected === '' &&
           <Devices
             credential={credential}
             ownerCredential={ownerCredential.current}
             devCredential={devCredential.current}
             view={view}
             devicesState={devicesState}
+            devices={devices}
             changeViewParent={changeView}
             changeControlParent={triggerControl}>
           </Devices>
