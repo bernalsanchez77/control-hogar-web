@@ -291,7 +291,7 @@ function Main() {
             const device = devices.find(device => device.id === el.device);
             requests.current.updateTableInSupabaseDevices({id: device.id, table: 'devices', state: el.value, date: new Date().toISOString()});
           }
-          if (el.device === 'teleSala' || el.device === 'teleCuarto' || el.device === 'proyectorSala') {
+          if (el.device === 'teleSala' || el.device === 'teleCuarto' || el.device === 'teleCocina' || el.device === 'proyectorSala') {
             const screen = screens.find(screen => screen.id === el.device);
             requests.current.updateTableInSupabaseDevices({id: screen.id, table: 'screens', [el.key]: el.value, date: new Date().toISOString()});
           }
