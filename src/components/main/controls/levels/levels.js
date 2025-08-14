@@ -1,10 +1,11 @@
 import {useRef} from 'react';
 import './levels.css';
 
-function Levels({devicesState, screenSelected, view, cableChannels, changeControlParent, changeViewParent, changeVibrateParent}) {
+function Levels({devicesState, screenSelected, view, screens, cableChannels, changeControlParent, changeViewParent, changeVibrateParent}) {
+  const screen = screens.find(screen => screen.id === screenSelected);
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
-  const volumeChange = useRef('1');
+  const volumeChange = useRef(1);
 
   const changeMute = () => {
     const device = screenSelected;
@@ -55,23 +56,23 @@ function Levels({devicesState, screenSelected, view, cableChannels, changeContro
     const device = screenSelected;
     let newVol = 0;
     if (button === 'up') {
-      newVol = parseInt(devicesState[screenSelected].volume) + parseInt(vol);
+      newVol = screen.volume + vol;
       changeControlParent({
         ifttt: [{device, key: 'volume', value: button + vol}],
-        massMedia: [{device, key: 'volume', value: newVol.toString()}],
+        massMedia: [{device, key: 'volume', value: newVol}],
         ignoreVibration: !vib
       });
 
-    } else if (devicesState[screenSelected].volume !== '0') {
-      if (parseInt(devicesState[screenSelected].volume) - parseInt(vol) >= 0) {
-        newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
+    } else if (screen.volume !== 0) {
+      if (screen.volume - vol >= 0) {
+        newVol = screen.volume - vol;
         changeControlParent({
           ifttt: [{device, key: 'volume', value: button + vol}],
-          massMedia: [{device, key: 'volume', value: newVol.toString()}],
+          massMedia: [{device, key: 'volume', value: newVol}],
           ignoreVibration: !vib
         });
       } else {
-        newVol = parseInt(devicesState[screenSelected].volume) - parseInt(vol);
+        newVol = screen.volume - vol;
         changeControlParent({
           ifttt: [{device, key: 'volume', value: button + vol}],
           massMedia: [{device, key: 'volume', value: '0'}],
@@ -84,13 +85,13 @@ function Levels({devicesState, screenSelected, view, cableChannels, changeContro
   }
 
   const changeVolumeStart = () => {
-    volumeChange.current = '1';
+    volumeChange.current = 1;
     timeout3s.current = setTimeout(() => {
-      volumeChange.current = '5';
+      volumeChange.current = 5;
       changeVibrateParent(200);
     }, 1000);
     timeout6s.current = setTimeout(() => {
-      volumeChange.current = '10';
+      volumeChange.current = 10;
       changeVibrateParent(400);
     }, 2000);
   }
@@ -98,7 +99,7 @@ function Levels({devicesState, screenSelected, view, cableChannels, changeContro
   const changeVolumeEnd = (button) => {
     clearTimeout(timeout3s.current);
     clearTimeout(timeout6s.current);
-    if (volumeChange.current === '1') {
+    if (volumeChange.current === 1) {
       changeVolume(volumeChange.current, button);
     } else {
       changeVolume(volumeChange.current, button, false);
@@ -192,7 +193,7 @@ function Levels({devicesState, screenSelected, view, cableChannels, changeContro
       <div className='controls-levels-row controls-levels-row--middle'>
         <div className='controls-levels-element controls-levels-element--no-margin'>
           <span className='controls-levels-span'>
-            vol {devicesState[screenSelected].volume}
+            vol {screen.volume}
           </span>
         </div>
         <div className='controls-levels-element controls-levels-element--right controls-levels-element--no-margin'>

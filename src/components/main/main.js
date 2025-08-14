@@ -242,28 +242,30 @@ function Main() {
           //devices[el.device][el.key[0]] = {...devices[el.device][el.key[0]], [el.key[1]]: el.value};
         } else {
           //devices[el.device] = {...devices[el.device], [el.key]: el.value};
-          if (el.key === 'video') {
-            const video = youtubeVideosLiz.find(video => video.id === el.value);
-            const currentVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
-            if (video && currentVideo) {
-              requests.current.updateTableInSupabase({id: video.id, table: 'youtubeVideosLiz', date: new Date().toISOString()}, currentVideo.id);
+          if (el.device === 'rokuSala') {
+            if (el.key === 'video') {
+              const video = youtubeVideosLiz.find(video => video.id === el.value);
+              const currentVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
+              if (video && currentVideo) {
+                requests.current.updateTableInSupabase({id: video.id, table: 'youtubeVideosLiz', date: new Date().toISOString()}, currentVideo.id);
+              }
+            }
+            if (el.key === 'app') {
+              const app = rokuApps.find(app => app.id === el.value);
+              const currentApp = rokuApps.find(ap => ap.state === 'selected');
+              if (app && currentApp) {
+                requests.current.updateTableInSupabase({id: app.id, table: 'rokuApps', date: new Date().toISOString()}, currentApp.id);
+              }
             }
           }
-          if (el.device === 'rokuSala' && el.key === 'app') {
-            const app = rokuApps.find(app => app.id === el.value);
-            const currentApp = rokuApps.find(ap => ap.state === 'selected');
-            if (app && currentApp) {
-              requests.current.updateTableInSupabase({id: app.id, table: 'rokuApps', date: new Date().toISOString()}, currentApp.id);
-            }
-          }
-          if (el.device === 'channelsSala' && el.key === 'selected') {
+          if (el.device === 'channelsSala') {
             const channel = cableChannels.find(ch => ch.id === el.value);
             const currentChannel = cableChannels.find(ch => ch.state === 'selected');
             if (channel && currentChannel) {
               requests.current.updateTableInSupabase({id: channel.id, table: 'cableChannels', date: new Date().toISOString()}, currentChannel.id);
             }
           }
-          if (el.device === 'hdmiSala' && el.key === 'state') {
+          if (el.device === 'hdmiSala') {
             const hdmi = hdmiSala.find(hd => hd.id === el.value);
             const currentHdmi = hdmiSala.find(hd => hd.state === 'selected');
             if (hdmi && currentHdmi) {
@@ -289,9 +291,9 @@ function Main() {
             const device = devices.find(device => device.id === el.device);
             requests.current.updateTableInSupabaseDevices({id: device.id, table: 'devices', state: el.value, date: new Date().toISOString()});
           }
-          if (el.device === 'teleSala') {
+          if (el.device === 'teleSala' || el.device === 'teleCuarto' || el.device === 'proyectorSala') {
             const screen = screens.find(screen => screen.id === el.device);
-            requests.current.updateTableInSupabaseDevices({id: screen.id, table: 'screens', state: el.value, date: new Date().toISOString()});
+            requests.current.updateTableInSupabaseDevices({id: screen.id, table: 'screens', [el.key]: el.value, date: new Date().toISOString()});
           }
         }
       });

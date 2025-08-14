@@ -44,15 +44,18 @@ function Controls({devicesState, screens, screenSelected, view, rokuApps, youtub
         <Arrows
           changeControlParent={changeControl}>
         </Arrows>
+        {screens.length &&
         <Levels
           devicesState={devicesState}
           screenSelected={screenSelected}
           view={view}
+          screens={screens}
           cableChannels={cableChannels}
           changeControlParent={changeControl}
           changeViewParent={changeView}
           changeVibrateParent={changeVibrate}>
         </Levels>
+        }
         <Toolbar
           devicesState={devicesState}
           changeControlParent={changeControl}>
