@@ -6,7 +6,7 @@ const supabase = createClient(
 )
 
 export default async function handler(req, res) {
-  const {id, date, table, state, volume} = req.body;
+  const {id, date, table, state, volume, mute} = req.body;
   let data, error;
   ({data, error} = await supabase.from(table).update({date, state, volume}).eq('id', id));
   if (error) {

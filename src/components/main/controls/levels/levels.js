@@ -9,10 +9,10 @@ function Levels({devicesState, screenSelected, view, screens, cableChannels, cha
 
   const changeMute = () => {
     const device = screenSelected;
-    if (devicesState[screenSelected].mute === 'on') {
+    if (screen.mute === 'on') {
       changeControlParent({ifttt: [{device, key: 'mute', value: 'off'}]});
     }
-    if (devicesState[screenSelected].mute === 'off') {
+    if (screen.mute === 'off') {
       changeControlParent({ifttt: [{device, key: 'mute', value: 'on'}]});
     }
   }
@@ -149,14 +149,14 @@ function Levels({devicesState, screenSelected, view, screens, cableChannels, cha
           <button
             className="controls-levels-button controls-levels-button--img"
             onTouchStart={() => changeMute()}>
-            {devicesState[screenSelected].mute === 'off' &&
+            {screen.mute === 'off' &&
               <img
                 className='controls-levels-img controls-levels-img--no-button'
                 src="/imgs/sound-50.png"
                 alt="icono">
               </img>
             }
-            {devicesState[screenSelected].mute === 'on' &&
+            {screen.mute === 'on' &&
               <img
                 className='controls-levels-img controls-levels-img--no-button'
                 src="/imgs/mute-50.png"
