@@ -1,6 +1,7 @@
 import './category.css';
 
 function Category({cableChannels, category, changeControlParent}) {
+  const selectedChannel = cableChannels.find(ch => ch.state === 'selected');
   const changeControl = (channel) => {
     const device = 'channelsSala';
     const ifttt = cableChannels.find(ch => ch.id === channel).ifttt;
@@ -18,7 +19,7 @@ function Category({cableChannels, category, changeControlParent}) {
             cableChannels.map((channel, key) => category.includes(channel.category) ? (
             <li key={key} className='controls-channels-category'>
               <button
-                className={`controls-channels-category-button ${cableChannels.selected === channel.id ? 'controls-channels-category-button--selected' : ''}`}
+                className={`controls-channels-category-button ${selectedChannel.id === channel.id ? 'controls-channels-category-button--selected' : ''}`}
                 onTouchStart={() => changeControl(channel.id)}>
                 <img
                   className='controls-channels-category-img'
