@@ -12,7 +12,7 @@ import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
 import './devices.css';
 
-function Devices({credential, ownerCredential, devCredential, view, devicesState, devices, changeViewParent, changeControlParent}) {
+function Devices({credential, view, devices, changeViewParent, changeControlParent}) {
   const changeControl = (params) => {
     changeControlParent(params);
   }
@@ -22,45 +22,53 @@ function Devices({credential, ownerCredential, devCredential, view, devicesState
     changeViewParent(newView);
   }
   const lamparaComedor = devices.find(device => device.id === 'lamparaComedor');
-
+  const lamparaTurca = devices.find(device => device.id === 'lamparaTurca');
+  const lamparaSala = devices.find(device => device.id === 'lamparaSala');
+  const lamparaRotatoria = devices.find(device => device.id === 'lamparaRotatoria');
+  const chimeneaSala = devices.find(device => device.id === 'chimeneaSala');
+  const parlantesSala = devices.find(device => device.id === 'parlantesSala');
+  const ventiladorSala = devices.find(device => device.id === 'ventiladorSala');
+  const calentadorNegro = devices.find(device => device.id === 'calentadorNegro');
+  const calentadorBlanco = devices.find(device => device.id === 'calentadorBlanco');
+  const luzCuarto = devices.find(device => device.id === 'luzCuarto');
+  const luzEscalera = devices.find(device => device.id === 'luzEscalera');
 
   return (
     <div className="devices">
       <div className='devices-row'>
         <div className='devices-element'>
           <LamparaComedor
-            devicesState={devicesState}
-            deviceEl={lamparaComedor}
+            element={lamparaComedor}
             changeControlParent={changeControl}>
           </LamparaComedor>
         </div>
         <div className='devices-element'>
           <LamparaTurca
-            devicesState={devicesState}
+            element={lamparaTurca}
             changeControlParent={changeControl}>
           </LamparaTurca>
         </div>
         <div className='devices-element'>
           <LamparaSala
-            devicesState={devicesState}
+            element={lamparaSala}
             changeControlParent={changeControl}>
           </LamparaSala>
         </div>
         <div className='devices-element'>
           <LamparaRotatoria
-            devicesState={devicesState}
+            element={lamparaRotatoria}
             changeControlParent={changeControl}>
           </LamparaRotatoria>
         </div>
         <div className='devices-element'>
           <ChimeneaSala
-            devicesState={devicesState}
+            element={chimeneaSala}
             changeControlParent={changeControl}>
           </ChimeneaSala>
         </div>
         <div className='devices-element'>
           <ParlantesSala
-            devicesState={devicesState}
+            element={parlantesSala}
             changeControlParent={changeControl}>
           </ParlantesSala>
         </div> 
@@ -68,45 +76,44 @@ function Devices({credential, ownerCredential, devCredential, view, devicesState
       <div className='devices-row'>
         <div className='devices-element'>
           <VentiladorSala
-            devicesState={devicesState}
+            element={ventiladorSala}
             changeControlParent={changeControl}>
           </VentiladorSala>
         </div>
-        {(credential === ownerCredential || credential === devCredential) &&
+        {(credential === 'owner' || credential === 'dev') &&
         <div className='devices-element'>
           <CalentadorNegro
-            devicesState={devicesState}
+            element={calentadorNegro}
             changeControlParent={changeControl}>
           </CalentadorNegro>
         </div>
         }
-        {(credential === ownerCredential || credential === devCredential) &&
+        {(credential === 'owner' || credential === 'dev') &&
         <div className='devices-element'>
           <CalentadorBlanco
-            devicesState={devicesState}
+            element={calentadorBlanco}
             changeControlParent={changeControl}>
           </CalentadorBlanco>
         </div>
         }
-        <div className='devices-element'>
+        {/* <div className='devices-element'>
           <LamparasAbajo
-            devicesState={devicesState}
             changeControlParent={changeControl}>
           </LamparasAbajo>
-        </div>
-          {(credential === ownerCredential || credential === devCredential) &&
+        </div> */}
+        {(credential === 'owner' || credential === 'dev') &&
         <div className='devices-element'>
           <LuzCuarto
-            devicesState={devicesState}
+            element={luzCuarto}
             changeViewParent={changeView}
             changeControlParent={changeControl}>
           </LuzCuarto>
         </div>
         }
-        {(credential === ownerCredential || credential === devCredential) &&
+        {(credential === 'owner' || credential === 'dev') &&
         <div className='devices-element'>
           <LuzEscalera
-            devicesState={devicesState}
+            element={luzEscalera}
             changeControlParent={changeControl}>
           </LuzEscalera>
         </div>

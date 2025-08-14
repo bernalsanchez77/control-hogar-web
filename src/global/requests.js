@@ -187,8 +187,8 @@ class Requests {
       return await this.normalApiRequest('setDevices', devices, 'put');
     }
   }
-  async sendIfttt(params, sendDisabled) {
-    if (!sendDisabled) {
+  async sendIfttt(params, sendEnabled) {
+    if (sendEnabled) {
       if (window.cordova) {
         return await this.cordovaApiRequest('sendIfttt', params, 'get');
       } else {
@@ -196,7 +196,7 @@ class Requests {
       }
     }
   }
-  async sendControl(sendDisabled, params) {
+  async sendControl(sendEnabled, params) {
     if (params.ifttt) {
       params.ifttt.forEach(el => {
         if (el.device === 'rokuSala') {
@@ -205,14 +205,14 @@ class Requests {
                 device: el.device,
                 key: el.key,
                 value: el.value
-              }, sendDisabled);
+              }, sendEnabled);
           }
         } else {
           this.sendIfttt({
             device: el.device,
             key: el.key,
             value: el.value,
-          }, sendDisabled);
+          }, sendEnabled);
         }
       });
     }
@@ -223,12 +223,12 @@ class Requests {
             key: el.key,
             value: el.value,
             params: el.params,
-          }, sendDisabled);
+          }, sendEnabled);
         }
       });
     }
   }
-  async fetchRoku(params, sendDisabled) {
+  async fetchRoku(params, sendEnabled) {
     let url = '';
     if (params.params) {
       const par = new URLSearchParams(params.params);
@@ -236,7 +236,7 @@ class Requests {
     } else {
       url = `${rokuIp}${params.key}/${params.value}`;
     }
-    if (!sendDisabled) {
+    if (sendEnabled) {
       const sendRequestPromise = new Promise((resolve, reject) => {
         window.cordova.plugin.http.sendRequest(
           url,

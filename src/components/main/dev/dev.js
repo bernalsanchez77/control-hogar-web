@@ -1,9 +1,12 @@
 import './dev.css';
 
-function Dev({sendDisabled, updatesDisabled, changeDevParent}) {
-  const changeDev = (fn) => {
-    navigator.vibrate([100]);
-    changeDevParent(fn);
+function Dev({sendEnabled, changeDevParent, enableSendParent, removeStorageParent}) {
+  const removeStorage = () => {
+    removeStorage();
+  }
+
+  const enableSend = () => {
+    enableSendParent();
   }
 
   return (
@@ -12,35 +15,17 @@ function Dev({sendDisabled, updatesDisabled, changeDevParent}) {
         <div className='dev-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className={`dev-button`}
-            onClick={() => changeDev('resetDevices')}>
-            Reset Devices
-          </button>
-        </div>
-        <div className='dev-element'>
-          <button
-            onContextMenu={(e) => e.preventDefault()}
-            className={`dev-button ${sendDisabled ? "dev-button--on" : "dev-button-off"}`}
-            onClick={() => changeDev('disableIfttt')}>
-              Disable Changes
+            className={`dev-button ${sendEnabled ? "dev-button--on" : "dev-button-off"}`}
+            onClick={() => enableSend()}>
+              Enable Changes
             </button>
         </div>
         <div className='dev-element'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className={`dev-button`}
-            onClick={() => changeDev('removeStorage')}>
+            onClick={() => removeStorage()}>
               Remove Storage
-            </button>
-        </div>
-      </div>
-      <div className='dev-row'>
-        <div className='dev-element'>
-          <button
-            onContextMenu={(e) => e.preventDefault()}
-            className={`dev-button ${updatesDisabled ? "dev-button--on" : "dev-button-off"}`}
-            onClick={() => changeDev('disableUpdates')}>
-              Disable Updates
             </button>
         </div>
       </div>

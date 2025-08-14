@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo} from 'react';
 import eruda from 'eruda';
 import supabase from '../../global/supabase-client';
 import Screens from './screens/screens';
@@ -6,45 +6,25 @@ import Devices from './devices/devices';
 import Controls from './controls/controls';
 import Credentials from './credentials/credentials';
 import Dev from './dev/dev';
-import { devicesOriginal } from '../../global/devices';
 import Utils from '../../global/utils';
 import Requests from '../../global/requests';
 import YoutubeDummyData from '../../global/youtube-dummy-data';
-import CableChannelsDummyData from '../../global/cable-channels-dummy-data';
 import CableChannelCategories from '../../global/cable-channel-categories';
-import RokuAppsDummyData from '../../global/roku-apps-dummy-data';
 import './main.css';
 
+const requests = new Requests();
+const utils = new Utils();
+const user = utils.getUser(`${window.screen.width}x${window.screen.height}`);
+
 function Main() {
-  const utils = useRef({});
-  utils.current = new Utils();
-  const requests = useRef({});
-  requests.current = new Requests();
-  const youtubeDummyData = useRef({});
-  youtubeDummyData.current = new YoutubeDummyData();
-  const cableChannelCategories = useRef({});
-  cableChannelCategories.current = new CableChannelCategories();
-  cableChannelCategories.current = cableChannelCategories.current.getCableChannelCategories();
-  const cableChannelsDummyData = useRef({});
-  cableChannelsDummyData.current = new CableChannelsDummyData();
-  const rokuAppsDummyData = useRef({});
-  rokuAppsDummyData.current = new RokuAppsDummyData();
-  const loadingDevices = useRef(false);
-  const gettingInRange = useRef(false);
-  const userActive = useRef(true);
-  const [userActive2, setUserActive2] = useState(false);
-  const [sendDisabled, setSendDisabled] = useState(false);
-  const [updatesDisabled, setUpdatesDisabled] = useState(false);
-  const updatesDisabledRef = useRef(updatesDisabled);
-  const [credential, setCredential] = useState('');
-  const [devicesState, setDevicesState] = useState(devicesOriginal);
-  const devicesStateUpdated = useRef(devicesState);
+
+  //useState Variables
+
   const [inRange, setInRange] = useState(false);
+  const [userActive, setUserActive] = useState(false);
+  const [credential, setCredential] = useState('');
+  const [sendEnabled, setSendEnabled] = useState(true);
   const [screenSelected, setScreenSelected] = useState('teleSala');
-  const ownerCredential = useRef('owner');
-  const guestCredential = useRef('guest');
-  const devCredential = useRef('dev');
-  const user = useRef(utils.current.getUser(`${window.screen.width}x${window.screen.height}`));
   const [youtubeSearchVideos, setYoutubeSearchVideos] = useState([]);
   const [youtubeVideosLiz, setYoutubeVideosLiz] = useState([]);
   const [youtubeChannelsLiz, setYoutubeChannelsLiz] = useState([]);
@@ -53,29 +33,27 @@ function Main() {
   const [hdmiSala, setHdmiSala] = useState([]);
   const [devices, setDevices] = useState([]);
   const [screens, setScreens] = useState([]);
-  const setters = {setYoutubeVideosLiz, setRokuApps, setCableChannels, setHdmiSala, setDevices, setScreens};
-  //const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  const initialized = useRef(false);
+  const [view, setView] = useState({selected: '', cable: {channels: {category: []}}, roku: {apps: {selected: '', youtube: {mode: '', channel: ''}}}, devices: {device: ''}});
+
+  //normal variables
+  const cableChannelCategories = new CableChannelCategories().getCableChannelCategories();
+  // eslint-disable-next-line
+  const youtubeDummyData = new YoutubeDummyData().getYoutubeDummyData();
+  const setters = useMemo(() => {return {setYoutubeVideosLiz, setRokuApps, setCableChannels, setHdmiSala, setDevices, setScreens}}, []);
+
+  //useRef Variables
+  const initializedRef = useRef(false);
   const supabaseChannelsRef = useRef({});
-  const [view, setView] = useState(
-    {
-      selected: '',
-      cable: {channels: {category: []}},
-      roku: {apps: {selected: '', youtube: {mode: '', channel: ''}}},
-      devices: {device: ''},
-    }
-  );
   const viewRef = useRef(view);
-  const triggerVibrate = (length = 100) => {
-    if (navigator.vibrate) {
-      navigator.vibrate([length]);
-    }
-  };
+  const getRokuDataIntervalRef = useRef(null);
+
+  // useMemo variables (computed)
+
 
   const searchYoutube = async (text) => {
-    const videos = await requests.current.searchYoutube(text);
+    const videos = await requests.searchYoutube(text);
     setYoutubeSearchVideos(videos);
-    // setYoutubeSearchVideos(youtubeDummyData.current.getYoutubeDummyData());
+    // setYoutubeSearchVideos(youtubeDummyData);
   };
 
   const subscribeToSupabaseChannel = useCallback(async (tableName) => {
@@ -87,7 +65,7 @@ function Main() {
         async (change) => {
           console.log(tableName, ' changed');
           if (change.new.state === 'selected') {
-            const data = await requests.current['getTableFromSupabase'](tableName);
+            const data = await requests['getTableFromSupabase'](tableName);
             setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](data.data);
             if (tableName === 'hdmiSala') {
               const newView = structuredClone(viewRef.current);
@@ -121,7 +99,7 @@ function Main() {
         {event: '*', schema: 'public', table: tableName},
         async (change) => {
           console.log(tableName, ' changed');
-          const data = await requests.current['getTableFromSupabase'](tableName);
+          const data = await requests['getTableFromSupabase'](tableName);
           setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](data.data);
         }
       ).subscribe(status => {
@@ -134,7 +112,6 @@ function Main() {
   },[setters]);
 
   const changeView = useCallback(async (params) => {
-    // triggerVibrate();
     const newView = structuredClone(params);
 
     if (newView.selected === 'cable') {
@@ -142,17 +119,13 @@ function Main() {
       if (viewRef.current.selected === 'cable') {
         // was in cable
         if (newView.cable.channels.category.length) {
-          // category selected
-          // const channels = await requests.current.getTableFromSupabase('cableChannels');
-          // setCableChannels(channels.data);       
+          // category selected   
         } else {
-          
         }
-
       }
       if (viewRef.current.selected === 'roku') {
         // was in roku
-        const channels = await requests.current.getTableFromSupabase('cableChannels');
+        const channels = await requests.getTableFromSupabase('cableChannels');
         setCableChannels(channels.data);
         subscribeToSupabaseChannel('cableChannels');
         if (viewRef.current.roku.apps.selected) {
@@ -171,7 +144,6 @@ function Main() {
             unsubscribeFromSupabaseChannel('rokuApps');
           }               
         }
-        
       }
     }
 
@@ -187,7 +159,7 @@ function Main() {
               // app is Youtube
               if (newView.roku.apps.youtube.channel) {
                 // youtube channel selected
-                const videos = await requests.current.getTableFromSupabase('youtubeVideosLiz');
+                const videos = await requests.getTableFromSupabase('youtubeVideosLiz');
                 setYoutubeVideosLiz(videos.data);
                 subscribeToSupabaseChannel('youtubeVideosLiz');
               } else {
@@ -205,7 +177,7 @@ function Main() {
             if (newView.roku.apps.selected === 'youtube') {
               // app is Youtube
               if (!youtubeChannelsLiz.length) {
-                const channels = await requests.current.getTableFromSupabase('youtubeChannelsLiz');
+                const channels = await requests.getTableFromSupabase('youtubeChannelsLiz');
                 setYoutubeChannelsLiz(channels.data);
               }
             }
@@ -214,7 +186,7 @@ function Main() {
           // no app selected
           if (viewRef.current.roku.apps.selected) {
             // was in an app
-            const apps = await requests.current.getTableFromSupabase('rokuApps');
+            const apps = await requests.getTableFromSupabase('rokuApps');
             setRokuApps(apps.data);
             subscribeToSupabaseChannel('rokuApps');
           }
@@ -225,7 +197,7 @@ function Main() {
         if (supabaseChannelsRef.current['cableChannels']) {
           unsubscribeFromSupabaseChannel('cableChannels');
         }      
-        const apps = await requests.current.getTableFromSupabase('rokuApps');
+        const apps = await requests.getTableFromSupabase('rokuApps');
         setRokuApps(apps.data);
         subscribeToSupabaseChannel('rokuApps');
       }
@@ -234,7 +206,10 @@ function Main() {
   }, [youtubeChannelsLiz.length, viewRef, subscribeToSupabaseChannel]);
 
   const changeControl = (params) => {
-    requests.current.sendControl(sendDisabled, params);
+    if (!params.ignoreVibration) {
+      utils.triggerVibrate();
+    }
+    requests.sendControl(sendEnabled, params);
     const media = params.massMedia || params.ifttt || [];
     if (media.length > 0) {
       media.forEach(async el => {
@@ -247,14 +222,14 @@ function Main() {
               const video = youtubeVideosLiz.find(video => video.id === el.value);
               const currentVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
               if (video && currentVideo) {
-                requests.current.updateTableInSupabase({id: video.id, table: 'youtubeVideosLiz', date: new Date().toISOString()}, currentVideo.id);
+                requests.updateTableInSupabase({id: video.id, table: 'youtubeVideosLiz', date: new Date().toISOString()}, currentVideo.id);
               }
             }
             if (el.key === 'app') {
               const app = rokuApps.find(app => app.id === el.value);
               const currentApp = rokuApps.find(ap => ap.state === 'selected');
               if (app && currentApp) {
-                requests.current.updateTableInSupabase({id: app.id, table: 'rokuApps', date: new Date().toISOString()}, currentApp.id);
+                requests.updateTableInSupabase({id: app.id, table: 'rokuApps', date: new Date().toISOString()}, currentApp.id);
               }
             }
           }
@@ -262,14 +237,14 @@ function Main() {
             const channel = cableChannels.find(ch => ch.id === el.value);
             const currentChannel = cableChannels.find(ch => ch.state === 'selected');
             if (channel && currentChannel) {
-              requests.current.updateTableInSupabase({id: channel.id, table: 'cableChannels', date: new Date().toISOString()}, currentChannel.id);
+              requests.updateTableInSupabase({id: channel.id, table: 'cableChannels', date: new Date().toISOString()}, currentChannel.id);
             }
           }
           if (el.device === 'hdmiSala') {
             const hdmi = hdmiSala.find(hd => hd.id === el.value);
             const currentHdmi = hdmiSala.find(hd => hd.state === 'selected');
             if (hdmi && currentHdmi) {
-              requests.current.updateTableInSupabase({id: hdmi.id, table: 'hdmiSala', date: new Date().toISOString()}, currentHdmi.id);
+              requests.updateTableInSupabase({id: hdmi.id, table: 'hdmiSala', date: new Date().toISOString()}, currentHdmi.id);
             }
             const newView = structuredClone(viewRef.current);
             if (el.value === 'roku') {
@@ -287,116 +262,52 @@ function Main() {
             newView.selected = el.value;
             changeView(newView);
           }
-          if (el.device === 'lamparaComedor') {
+          if (el.device === 'luzEscalera' || el.device === 'luzCuarto' || el.device === 'lamparaComedor' || el.device === 'lamparaSala' || el.device === 'lamparaRotatoria' || el.device === 'chimeneaSala' || el.device === 'parlantesSala' || el.device === 'ventiladorSala' || el.device === 'calentadorNegro' || el.device === 'calentadorBlanco' || el.device === 'lamparaTurca') {
             const device = devices.find(device => device.id === el.device);
-            requests.current.updateTableInSupabaseDevices({id: device.id, table: 'devices', state: el.value, date: new Date().toISOString()});
+            requests.updateTableInSupabaseDevices({id: device.id, table: 'devices', state: el.value, date: new Date().toISOString()});
           }
-          if (el.device === 'teleSala' || el.device === 'teleCuarto' || el.device === 'proyectorSala') {
+          if (el.device === 'teleSala' || el.device === 'teleCuarto' || el.device === 'teleCocina' ||el.device === 'proyectorSala') {
             const screen = screens.find(screen => screen.id === el.device);
-            requests.current.updateTableInSupabaseDevices({id: screen.id, table: 'screens', [el.key]: el.value, date: new Date().toISOString()});
+            requests.updateTableInSupabaseDevices({id: screen.id, table: 'screens', [el.key]: el.value, date: new Date().toISOString()});
           }
         }
       });
     }
-  };
-
-  const triggerControl = (params) => {
-    if (validateRangeAndCredential) {
-      if (!loadingDevices.current) {
-        changeControl(params);
-      } else {
-        setTimeout(() => {
-          triggerControl(params);
-        }, 1000);
-      }
-    }
-    if (!params.ignoreVibration) {
-      triggerVibrate();
-    }
-  };
-
-  const changeScreen = (screen) => {
-    triggerVibrate();
-    if (validateRangeAndCredential) {
-      if (!loadingDevices.current) {
-        setScreenSelected(screen);
-        localStorage.setItem('screen', screen);
-      } else {
-        setTimeout(() => {
-          setScreenSelected(screen);
-          localStorage.setItem('screen', screen);
-        }, 1000);
-      }
-    }
-  };
-
-  const validateRangeAndCredential = () => {
-    return inRange || (credential === ownerCredential.current || credential === devCredential.current);
-  };
+};
 
   const setCredentials = async (userCredential) => {
-    if (userCredential === guestCredential.current) {
+    if (userCredential === 'guest') {
       localStorage.setItem('user', userCredential);
       setCredential(userCredential);
     } else {
-      const response = await requests.current.setCredentials(userCredential);
+      const response = await requests.setCredentials(userCredential);
       if (response.status === 200 && response.data.validUser) {
         if (response.data.dev) {
           localStorage.setItem('user', response.data.dev);
-          setCredential(devCredential.current);
+          setCredential('dev');
         } else {
-          localStorage.setItem('user', ownerCredential.current);
-          setCredential(ownerCredential.current);
+          localStorage.setItem('user', 'owner');
+          setCredential('owner');
         }
       }
     }
   };
 
-  const getRokuData = useCallback(async (apps, firstTime) => {
-    let updatesEnabled = !updatesDisabledRef.current;
-    if (firstTime) {
-      updatesEnabled = true;
-    }
-    if (userActive.current && updatesEnabled) {
-      const devices = {...devicesStateUpdated.current};
-      let response = await requests.current.getRokuData('active-app');
-      if (response && response.status === 200) {
-        let newId = response.data['active-app'].app.id;
-        const currentId = apps.find(app => app.state === 'selected').rokuId;
-        if (currentId !== newId) {
-          requests.current.updateTableInSupabase({id: newId, table: 'rokuApps', date: new Date().toISOString()}, currentId);
-        }
-      }
-      response = await requests.current.getRokuData('media-player');
-      if (response && response.status === 200) {
-        if (devicesState.rokuSala.state !== response.data.player.state) {
-          devices.rokuSala.state = response.data.player.state;
-        }
+  const getRokuData = useCallback(async (apps) => {
+    let response = await requests.getRokuData('active-app');
+    if (response && response.status === 200) {
+      let newId = response.data['active-app'].app.id;
+      const currentId = apps.find(app => app.state === 'selected').rokuId;
+      if (currentId !== newId) {
+        requests.updateTableInSupabase({id: newId, table: 'rokuApps', date: new Date().toISOString()}, currentId);
       }
     }
-  }, [devicesState.rokuSala.state]);
-
-  const getMassMediaData = useCallback(async (firstTime) => {
-    let updatesEnabled = !updatesDisabledRef.current;
-    if (firstTime) {
-      updatesEnabled = true;
-    }
-    if (userActive.current && updatesEnabled) {
-      loadingDevices.current = true;
-      const response = await requests.current.getMassMediaData();
-      if (response.status === 200) {
-        setDevicesState(response.data);
-        loadingDevices.current = false;
-      }
-    }
-  }, []);
-
-  const getPosition = useCallback(async () => {
-    if (userActive.current) {
-      gettingInRange.current = true;
-      const inRange = await utils.current.getInRange();
-      setInRange(inRange);
-      gettingInRange.current = false;
+    response = await requests.getRokuData('media-player');
+    if (response && response.status === 200) {
+      console.log('play state: ', response.data.player.state);
+      // if (devicesState.rokuSala.state !== response.data.player.state) {
+      //   devices.rokuSala.state = response.data.player.state;
+      // }
     }
   }, []);
 
@@ -421,12 +332,11 @@ function Main() {
       let message = '';
       const currentView = viewRef.current;
       if (document.visibilityState === 'visible') {
-        userActive.current = true;
-        setUserActive2(true);
+        setUserActive(true);
 
         subscribeToSupabaseChannel('hdmiSala');
         const newView = structuredClone(viewRef.current);
-        const hdmiTable = await requests.current.getTableFromSupabase('hdmiSala');
+        const hdmiTable = await requests.getTableFromSupabase('hdmiSala');
         const hdmiId = hdmiTable.data.find(el => el.state === 'selected').id;
         if (hdmiId !== viewRef.current.selected) {
           setHdmiSala(hdmiTable.data);
@@ -435,32 +345,39 @@ function Main() {
         }
 
         if (currentView.roku.apps.youtube.channel) {
-          const videos = await requests.current.getTableFromSupabase('youtubeVideosLiz');
+          const videos = await requests.getTableFromSupabase('youtubeVideosLiz');
           setYoutubeVideosLiz(videos.data);
           subscribeToSupabaseChannel('youtubeVideosLiz');
         }
         if (currentView.selected === 'roku' & !currentView.roku.apps.selected) {
-          const apps = await requests.current.getTableFromSupabase('rokuApps');
+          const apps = await requests.getTableFromSupabase('rokuApps');
           setRokuApps(apps.data);
           subscribeToSupabaseChannel('rokuApps');
         }
         if (currentView.selected === 'cable') {
-          const channels = await requests.current.getTableFromSupabase('cableChannels');
+          const channels = await requests.getTableFromSupabase('cableChannels');
           setCableChannels(channels.data);
           subscribeToSupabaseChannel('cableChannels');
         }
-        const devices = await requests.current.getTableFromSupabase('devices');
+        const devices = await requests.getTableFromSupabase('devices');
         setDevices(devices.data);
         subscribeToSupabaseChannelDevices('devices');
 
-        const screens = await requests.current.getTableFromSupabase('screens');
+        const screens = await requests.getTableFromSupabase('screens');
         setScreens(screens.data);
         subscribeToSupabaseChannelDevices('screens');
 
-        message = user.current + ' regreso';
+        getRokuDataIntervalRef.current = setInterval(() => {
+          if (localStorage.getItem('user') && viewRef.selected === 'roku') {
+            getRokuData(rokuApps, false);
+          }
+        }, 10000);
+
+        setInRange(await utils.getInRange());
+        message = user + ' regreso';
       } else {
-        userActive.current = false;
-        setUserActive2(false);
+        setUserActive(false);
+        clearInterval(getRokuDataIntervalRef);
         if (supabaseChannelsRef.current['hdmiSala']) {
           unsubscribeFromSupabaseChannel('hdmiSala');
         }
@@ -485,15 +402,15 @@ function Main() {
         if (supabaseChannelsRef.current['screens']) {
           unsubscribeFromSupabaseChannel('screens');
         }
-        message = user.current + ' salio';
+        message = user + ' salio';
       }
-      requests.current.sendLogs(message);
+      requests.sendLogs(message);
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [user, changeView, subscribeToSupabaseChannel]);
+  }, [changeView, subscribeToSupabaseChannel, rokuApps, getRokuData, subscribeToSupabaseChannelDevices]);
 
   const init = useCallback(async () => {
     let apps = {};
@@ -502,50 +419,44 @@ function Main() {
       setScreenSelected(localStorageScreen);
     }
     setCredential(localStorage.getItem('user'));
-    const inRange = await utils.current.getInRange();
-    setInRange(inRange);
+    setInRange(await utils.getInRange());
 
     const newView = structuredClone(viewRef.current);
-    const hdmi = await requests.current.getTableFromSupabase('hdmiSala');
+    const hdmi = await requests.getTableFromSupabase('hdmiSala');
     setHdmiSala(hdmi.data);
     subscribeToSupabaseChannel('hdmiSala');
     newView.selected = hdmi.data.find(el => el.state === 'selected').id;
     changeView(newView);
 
     if (newView.selected === 'cable') {
-      const channels = await requests.current.getTableFromSupabase('cableChannels');
+      const channels = await requests.getTableFromSupabase('cableChannels');
       setCableChannels(channels.data);
       subscribeToSupabaseChannel('cableChannels');
     }
     if (newView.selected === 'roku') {
-      apps = await requests.current.getTableFromSupabase('rokuApps');
+      apps = await requests.getTableFromSupabase('rokuApps');
       setRokuApps(apps.data);
       subscribeToSupabaseChannel('rokuApps');
-      if (localStorage.getItem('user')) {
+      if (localStorage.getItem('user') && newView.selected === 'roku') {
         getRokuData(apps.data, true);
       }
     }
 
-    const devices = await requests.current.getTableFromSupabase('devices');
+    const devices = await requests.getTableFromSupabase('devices');
     setDevices(devices.data);
     subscribeToSupabaseChannelDevices('devices');
 
-    const screens = await requests.current.getTableFromSupabase('screens');
+    const screens = await requests.getTableFromSupabase('screens');
     setScreens(screens.data);
     subscribeToSupabaseChannelDevices('screens');
 
-    if (localStorage.getItem('user')) {
-      // getMassMediaData(true);
-    }
-    // setInterval(() => {
-    //   if (localStorage.getItem('user')) {
-    //     getMassMediaData();
-    //     getRokuData(apps.data, false);
-    //   }
-    // }, 10000);
-    setInterval(() => {getPosition();}, 300000);
+    getRokuDataIntervalRef.current = setInterval(() => {
+      if (localStorage.getItem('user') && userActive && viewRef.selected === 'roku') {
+        getRokuData(apps.data, false);
+      }
+    }, 10000);
 
-    requests.current.sendLogs(user.current + ' entro');
+    requests.sendLogs(user + ' entro');
     getVisibility();
     if (document.readyState === "complete") {
       document.body.classList.add("loaded");
@@ -553,18 +464,14 @@ function Main() {
       window.addEventListener("load", document.body.classList.add("loaded"));
     }
     console.log('version 27');
-  }, [getMassMediaData, getRokuData, getPosition, getVisibility, changeView, subscribeToSupabaseChannel, user]);
+  }, [getRokuData, getVisibility, changeView, subscribeToSupabaseChannel, userActive, subscribeToSupabaseChannelDevices]);
 
   useEffect(() => {
-    if (!initialized.current) {
+    if (!initializedRef.current) {
       init();
     }
-    initialized.current = true;
+    initializedRef.current = true;
   }, [init]);
-
-  useEffect(() => {
-    updatesDisabledRef.current = updatesDisabled;
-  }, [updatesDisabled]);
 
   useEffect(() => {
     viewRef.current = view;
@@ -572,31 +479,16 @@ function Main() {
 
   useEffect(() => {
     if (credential === 'dev') {
-      setSendDisabled(true);
-      setUpdatesDisabled(true);
-    }
-    if (credential === devCredential.current) {
-        eruda.init();
+      setSendEnabled(false);
+      eruda.init();
     }
   }, [credential]);
 
-  const resetDevices = async () => {
-    await requests.current.setDevices(devicesOriginal);
-  };
-
-  const disableIfttt = () => {
-    if (sendDisabled === true) {
-      setSendDisabled(false);
+  const enableSend = () => {
+    if (sendEnabled === true) {
+      setSendEnabled(false);
     } else {
-      setSendDisabled(true);
-    }
-  };
-
-  const disableUpdates = () => {
-    if (updatesDisabled === true) {
-      setUpdatesDisabled(false);
-    } else {
-      setUpdatesDisabled(true);
+      setSendEnabled(true);
     }
   };
 
@@ -604,75 +496,63 @@ function Main() {
     localStorage.setItem('user', '');
   };
 
-  const changeDev = (name) => {
-    const fn = devActions[name];
-    if (typeof fn === 'function') {
-      fn();
-    }
-  };
-
-  const devActions = {
-    resetDevices,
-    disableIfttt,
-    removeStorage,
-    disableUpdates
+  const changeScreen = (screen) => {
+    utils.triggerVibrate();
+    setScreenSelected(screen);
+    localStorage.setItem('screen', screen);
   };
 
   return (
     <div className="main fade-in">
       {!credential &&
       <Credentials
-        credential={credential}
-        guestCredential={guestCredential.current}
         setCredentialsParent={setCredentials}>
       </Credentials>
       }
       {credential &&
       <div className='main-components'>
-        {validateRangeAndCredential() ?
+        {(inRange || (credential === 'owner' || credential === 'dev')) ?
         <div>
+          {screens.length &&
           <Screens
             credential={credential}
-            ownerCredential={ownerCredential.current}
-            devCredential={devCredential.current}
-            devicesState={devicesState}
             screenSelected={screenSelected}
-            userActive={userActive2}
+            screens={screens}
+            userActive={userActive}
             changeScreenParent={changeScreen}>
           </Screens>
+          }
           <Controls
-            devicesState={devicesState}
             screenSelected={screenSelected}
             view={view}
             rokuApps={rokuApps}
+            devices={devices}
             youtubeSearchVideos={youtubeSearchVideos}
             youtubeChannelsLiz={youtubeChannelsLiz}
             youtubeVideosLiz={youtubeVideosLiz}
             cableChannels={cableChannels}
             screens={screens}
+            hdmiSala={hdmiSala}
             cableChannelCategories={cableChannelCategories}
             changeViewParent={changeView}
-            changeControlParent={triggerControl}
-            triggerVibrateParent={triggerVibrate}
+            changeControlParent={changeControl}
+            triggerVibrateParent={utils.triggerVibrate}
             searchYoutubeParent={searchYoutube}>
           </Controls>
           {devices.length && view.roku.apps.selected === '' &&
           <Devices
             credential={credential}
-            ownerCredential={ownerCredential.current}
-            devCredential={devCredential.current}
             view={view}
-            devicesState={devicesState}
             devices={devices}
             changeViewParent={changeView}
-            changeControlParent={triggerControl}>
+            changeControlParent={changeControl}>
           </Devices>
           }
-          {credential === devCredential.current && !view.roku.apps.selected && !view.cable.channels.category.length && !view.devices.device &&
+          {credential === 'dev' && !view.roku.apps.selected && !view.cable.channels.category.length && !view.devices.device &&
           <Dev
-            sendDisabled={sendDisabled}
-            updatesDisabled={updatesDisabled}
-            changeDevParent={changeDev}>
+            sendEnabled={sendEnabled}
+            enableSendParent={enableSend}
+            removeStorageParent={removeStorage}>
           </Dev>
           }
         </div> :

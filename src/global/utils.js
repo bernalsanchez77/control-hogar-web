@@ -80,6 +80,11 @@ class Utils {
         inRange =false;
         return inRange;
     }
+    triggerVibrate(length = 100) {
+      if (navigator.vibrate) {
+        navigator.vibrate([length]);
+      }
+    }
     getUser(screenSize) {
       if (screenSize === '393x873') {
         return 'Bernal Cel';

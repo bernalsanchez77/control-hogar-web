@@ -1,7 +1,7 @@
 import {useRef} from 'react';
 import './all.css';
 
-function Apps({devicesState, view, rokuApps, changeControlParent, changeViewParent}) {
+function Apps({view, rokuApps, changeControlParent, changeViewParent}) {
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   const changeControl = (value) => {

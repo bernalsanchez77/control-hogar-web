@@ -1,6 +1,10 @@
 import './screens.css';
 
-function Screens({credential, ownerCredential, devCredential, devicesState, screenSelected, userActive, changeScreenParent}) {
+function Screens({credential, screens, screenSelected, userActive, changeScreenParent}) {
+  const teleSalaScreen = screens.find(screen => screen.id === 'teleSala');
+  const teleCuartoScreen = screens.find(screen => screen.id === 'teleCuarto');
+  const teleCocinaScreen = screens.find(screen => screen.id === 'teleCocina');
+  const proyectorSalaScreen = screens.find(screen => screen.id === 'proyectorSala');
   const triggerScreen = (screen) => {
     if (screenSelected !== screen) {
       changeScreenParent(screen);
@@ -10,34 +14,34 @@ function Screens({credential, ownerCredential, devCredential, devicesState, scre
     <div>
       <div className='screens'>
         <div className='screens-row'>
-          {(credential === ownerCredential || credential === devCredential) &&
+          {(credential === 'owner' || credential === '') &&
           <div className='screens-element'>
             <button
-              className={`screens-button ${userActive && screenSelected === devicesState.teleCuarto.id ? "flash-shadow" : "no-flash"}  ${screenSelected === devicesState.teleCuarto.id ? "screens-button--on" : "screens-button--off"}`}
-              onTouchStart={() => triggerScreen(devicesState.teleCuarto.id)}>
-                {devicesState.teleCuarto.label}
+              className={`screens-button ${userActive && screenSelected === teleCuartoScreen.id ? "flash-shadow" : "no-flash"}  ${screenSelected === teleCuartoScreen.id ? "screens-button--on" : "screens-button--off"}`}
+              onTouchStart={() => triggerScreen(teleCuartoScreen.id)}>
+                {teleCuartoScreen.label}
               </button>
           </div>
           }
           <div className='screens-element'>
             <button
-              className={`screens-button ${userActive && screenSelected === devicesState.teleSala.id ? "flash-shadow" : "no-flash"} ${screenSelected === devicesState.teleSala.id ? "screens-button--on" : "screens-button--off"}`}
-              onTouchStart={() => triggerScreen(devicesState.teleSala.id)}>
-                {devicesState.teleSala.label}
+              className={`screens-button ${userActive && screenSelected === teleSalaScreen.id ? "flash-shadow" : "no-flash"} ${screenSelected === teleSalaScreen.id ? "screens-button--on" : "screens-button--off"}`}
+              onTouchStart={() => triggerScreen(teleSalaScreen.id)}>
+                {teleSalaScreen.label}
             </button>
           </div>
           <div className='screens-element'>
             <button
-              className={`screens-button ${userActive && screenSelected === devicesState.teleCocina.id ? "flash-shadow" : "no-flash"} ${screenSelected === devicesState.teleCocina.id ? "screens-button--on" : "screens-button--off"}`}
-              onTouchStart={() => triggerScreen(devicesState.teleCocina.id)}>
-                {devicesState.teleCocina.label}
+              className={`screens-button ${userActive && screenSelected === teleCocinaScreen.id ? "flash-shadow" : "no-flash"} ${screenSelected === teleCocinaScreen.id ? "screens-button--on" : "screens-button--off"}`}
+              onTouchStart={() => triggerScreen(teleCocinaScreen.id)}>
+                {teleCocinaScreen.label}
             </button>
           </div>  
           <div className='screens-element'>
             <button
-              className={`screens-button ${userActive && screenSelected === devicesState.proyectorSala.id ? "flash-shadow" : "no-flash"} ${screenSelected === devicesState.proyectorSala.id ? "screens-button--on" : "screens-button--off"}`}
-              onTouchStart={() => triggerScreen(devicesState.proyectorSala.id)}>
-                {devicesState.proyectorSala.label}
+              className={`screens-button ${userActive && screenSelected === proyectorSalaScreen.id ? "flash-shadow" : "no-flash"} ${screenSelected === proyectorSalaScreen.id ? "screens-button--on" : "screens-button--off"}`}
+              onTouchStart={() => triggerScreen(proyectorSalaScreen.id)}>
+                {proyectorSalaScreen.label}
               </button>
           </div>
         </div>

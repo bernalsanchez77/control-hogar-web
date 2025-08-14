@@ -1,7 +1,7 @@
 import {useRef, useState} from 'react';
 import './search.css';
 
-function Search({devicesState, view, changeViewParent, searchYoutubeParent}) {
+function Search({view, changeViewParent, searchYoutubeParent}) {
   const [searchText, setSearchText] = useState('');
   const inputRef = useRef(null);
   const placeholder = view.selected === 'roku' ? 'Buscar en Youtube' : 'Buscar Canal';

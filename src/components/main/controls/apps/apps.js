@@ -2,7 +2,7 @@ import All from './all/all';
 import Youtube from './youtube/youtube';
 import './apps.css';
 
-function Apps({devicesState, view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeViewParent}) {
+function Apps({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeViewParent}) {
   const changeControl = (value) => {
     changeControlParent(value);
   }
@@ -15,7 +15,6 @@ function Apps({devicesState, view, rokuApps, youtubeSearchVideos, youtubeChannel
     <div>
       {view.roku.apps.selected === '' &&
       <All
-        devicesState={devicesState}
         view={view}
         rokuApps={rokuApps}
         changeControlParent={changeControl}
@@ -24,7 +23,6 @@ function Apps({devicesState, view, rokuApps, youtubeSearchVideos, youtubeChannel
       }
       {view.roku.apps.selected === 'youtube' &&
       <Youtube
-        devicesState={devicesState}
         view={view}
         rokuApps={rokuApps}
         youtubeChannelsLiz={youtubeChannelsLiz}

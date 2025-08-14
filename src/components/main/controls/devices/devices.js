@@ -1,15 +1,18 @@
 import LuzCuarto from './luzCuarto/luzCuarto';
 import './devices.css';
 
-function Devices({devicesState, view, changeControlParent}) {
+function Devices({devices, view, changeControlParent}) {
   const changeControl = (value) => {
     changeControlParent(value);
   };
+
+  const luzCuarto = devices.find(device => device.id === 'luzCuarto');
+
   return (
     <div>
       {view.devices.device === 'luzCuarto' && 
       <LuzCuarto
-        devicesState={devicesState}
+        element={luzCuarto}
         changeControlParent={changeControl}>
       </LuzCuarto>
       }

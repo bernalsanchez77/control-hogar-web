@@ -1,9 +1,9 @@
 import './luzCuarto.css';
 
-function LuzCuarto({devicesState, changeControlParent}) {
+function LuzCuarto({element, changeControlParent}) {
   const changeControl = (color) => {
-    const device = devicesState.luzCuarto.id;
-    if (devicesState.luzCuarto.state === 'off') {
+    const device = element.id;
+    if (element.state === 'off') {
       changeControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
     setTimeout(() => {
@@ -17,13 +17,13 @@ function LuzCuarto({devicesState, changeControlParent}) {
         <ul className='controls-devices-luzcuarto-ul'>
           <li className='controls-device-luzcuarto'>
             <button
-              className={`controls-device-luzcuarto-button controls-device-luzcuarto-button--white ${devicesState.luzCuarto.color === 'white' ? 'controls-device-luzcuarto-button--selected' : ''}`}
+              className={`controls-device-luzcuarto-button controls-device-luzcuarto-button--white ${element.color === 'white' ? 'controls-device-luzcuarto-button--selected' : ''}`}
               onTouchStart={() => changeControl('white')}>
             </button>
           </li>
           <li className='controls-device-luzcuarto'>
             <button
-              className={`controls-device-luzcuarto-button controls-device-luzcuarto-button--red ${devicesState.luzCuarto.color === 'red' ? 'controls-device-luzcuarto-button--selected' : ''}`}
+              className={`controls-device-luzcuarto-button controls-device-luzcuarto-button--red ${element.color === 'red' ? 'controls-device-luzcuarto-button--selected' : ''}`}
               onTouchStart={() => changeControl('red')}>
             </button>
           </li>

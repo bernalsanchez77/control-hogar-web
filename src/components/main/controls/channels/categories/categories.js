@@ -10,7 +10,7 @@ function Categories({cableChannels, cableChannelCategories, changeCategoryParent
     <div>
       <div className='controls-channels'>
         <div className='controls-channels-wrapper'>
-        {cableChannelCategories.current.map((row, rowIndex) => (
+        {cableChannelCategories.map((row, rowIndex) => (
           <div key={rowIndex} className={`controls-channels-row controls-channels-row--${['top', 'middle', 'bottom'][rowIndex]}`}>
           {row.map((item, colIndex) => {
             const position = ['left', 'center', 'right'][colIndex];

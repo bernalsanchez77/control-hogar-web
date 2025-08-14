@@ -10,7 +10,7 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({devicesState, screens, screenSelected, view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, changeVibrateParent, searchYoutubeParent}) {
+function Controls({screens, devices, hdmiSala, screenSelected, view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, changeVibrateParent, searchYoutubeParent}) {
   const searchMode = useRef(false);
   const changeControl = (params) => {
     changeControlParent(params);
@@ -34,7 +34,6 @@ function Controls({devicesState, screens, screenSelected, view, rokuApps, youtub
       <div className='controls'>
         {screens.length &&
         <Top
-          devicesState={devicesState}
           screens={screens}
           view={view}
           screenSelected={screenSelected}
@@ -46,7 +45,6 @@ function Controls({devicesState, screens, screenSelected, view, rokuApps, youtub
         </Arrows>
         {screens.length &&
         <Levels
-          devicesState={devicesState}
           screenSelected={screenSelected}
           view={view}
           screens={screens}
@@ -56,19 +54,19 @@ function Controls({devicesState, screens, screenSelected, view, rokuApps, youtub
           changeVibrateParent={changeVibrate}>
         </Levels>
         }
+        {hdmiSala.length &&
         <Toolbar
-          devicesState={devicesState}
+          hdmiSala={hdmiSala}
           changeControlParent={changeControl}>
         </Toolbar>
+        }
         <Search
-          devicesState={devicesState}
           view={view}
           changeViewParent={changeView}
           searchYoutubeParent={searchYoutube}>
         </Search>
         {view.selected === 'roku' &&
         <Apps
-          devicesState={devicesState}
           view={view}
           rokuApps={rokuApps}
           youtubeSearchVideos={youtubeSearchVideos}
@@ -87,10 +85,10 @@ function Controls({devicesState, screens, screenSelected, view, rokuApps, youtub
           changeViewParent={changeView}>
         </Channels>
         }
-        {view.devices.device !== '' &&
+        {view.devices.device !== '' && devices.length &&
         <Devices
-          devicesState={devicesState}
           view={view}
+          devices={devices}
           changeControlParent={changeControl}
           changeViewParent={changeView}>
         </Devices>

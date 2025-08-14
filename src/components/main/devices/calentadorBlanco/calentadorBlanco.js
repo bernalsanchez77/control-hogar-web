@@ -1,11 +1,11 @@
 import './calentadorBlanco.css';
 
-function CalentadorBlanco({devicesState, changeControlParent}) {
+function CalentadorBlanco({element, changeControlParent}) {
   const changeControl = (device) => {
-    if (devicesState[device].state === 'on') {
+    if (element.state === 'on') {
       changeControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
     }
-    if (devicesState[device].state === 'off') {
+    if (element.state === 'off') {
       changeControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
   }
@@ -14,11 +14,11 @@ function CalentadorBlanco({devicesState, changeControlParent}) {
     <div className="calentadorBlanco">
       <div>
         <button
-          className={`devices-button ${devicesState.calentadorBlanco.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => changeControl(devicesState.calentadorBlanco.id)}>
+          className={`devices-button ${element.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
+          onTouchStart={() => changeControl(element.id)}>
           <img
             className='devices-button-img'
-            src={devicesState.calentadorBlanco.img}
+            src={element.img}
             alt="icono">
           </img>
           <div className='devices-led'></div>

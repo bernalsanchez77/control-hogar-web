@@ -1,7 +1,7 @@
 import {useRef} from 'react';
 import './youtube.css';
 
-function Youtube({devicesState, view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeViewParent}) {
+function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeViewParent}) {
   let youtubeSortedVideos = [];
   let youtubeSortedChannels = [];
   let touchMoved = false;

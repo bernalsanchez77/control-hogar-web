@@ -1,11 +1,11 @@
 import './parlantesSala.css';
 
-function ParlantesSala({devicesState, changeControlParent}) {
+function ParlantesSala({element, changeControlParent}) {
   const changeControl = (device) => {
-    if (devicesState[device].state === 'on') {
+    if (element.state === 'on') {
       changeControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
     }
-    if (devicesState[device].state === 'off') {
+    if (element.state === 'off') {
       changeControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
     }
   }
@@ -14,11 +14,11 @@ function ParlantesSala({devicesState, changeControlParent}) {
     <div className="parlantesSala">
       <div>
         <button
-          className={`devices-button ${devicesState.parlantesSala.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => changeControl(devicesState.parlantesSala.id)}>
+          className={`devices-button ${element.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
+          onTouchStart={() => changeControl(element.id)}>
           <img
             className='devices-button-img'
-            src={devicesState.parlantesSala.img}
+            src={element.img}
             alt="icono">
           </img>
           <div className='devices-led'></div>

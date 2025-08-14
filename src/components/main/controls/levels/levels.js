@@ -1,7 +1,7 @@
 import {useRef} from 'react';
 import './levels.css';
 
-function Levels({devicesState, screenSelected, view, screens, cableChannels, changeControlParent, changeViewParent, changeVibrateParent}) {
+function Levels({screenSelected, view, screens, cableChannels, changeControlParent, changeViewParent, changeVibrateParent}) {
   const screen = screens.find(screen => screen.id === screenSelected);
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
@@ -30,8 +30,7 @@ function Levels({devicesState, screenSelected, view, screens, cableChannels, cha
     let newChannel = {};
     const device = 'channelsSala';
     let newChannelOrder = 0;
-    const channelIdSelected = devicesState.channelsSala.selected;
-    const channelOrderSelected = devicesState.channelsSala.channels[channelIdSelected].order;
+    const channelOrderSelected = cableChannels.find(ch => ch.state == 'selected').order;
     if (value === 'up') {
       newChannelOrder = channelOrderSelected + 1; 
     }
