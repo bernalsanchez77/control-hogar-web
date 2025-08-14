@@ -452,7 +452,7 @@ function Main() {
         subscribeToSupabaseChannelDevices('devices');
 
         const screens = await requests.current.getTableFromSupabase('screens');
-        setDevices(screens.data);
+        setScreens(screens.data);
         subscribeToSupabaseChannelDevices('screens');
 
         message = user.current + ' regreso';
