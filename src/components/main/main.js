@@ -52,7 +52,8 @@ function Main() {
   const [rokuApps, setRokuApps] = useState([]);
   const [hdmiSala, setHdmiSala] = useState([]);
   const [devices, setDevices] = useState([]);
-  const setters = {setYoutubeVideosLiz, setRokuApps, setCableChannels, setHdmiSala, setDevices};
+  const [screens, setScreens] = useState([]);
+  const setters = {setYoutubeVideosLiz, setRokuApps, setCableChannels, setHdmiSala, setDevices, setScreens};
   //const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const initialized = useRef(false);
   const supabaseChannelsRef = useRef({});
@@ -288,6 +289,10 @@ function Main() {
             const device = devices.find(device => device.id === el.device);
             requests.current.updateTableInSupabaseDevices({id: device.id, table: 'devices', state: el.value, date: new Date().toISOString()});
           }
+          if (el.device === 'teleSala') {
+            const screen = screens.find(screen => screen.id === el.device);
+            requests.current.updateTableInSupabaseDevices({id: screen.id, table: 'screens', state: el.value, date: new Date().toISOString()});
+          }
         }
       });
     }
@@ -442,6 +447,14 @@ function Main() {
           setCableChannels(channels.data);
           subscribeToSupabaseChannel('cableChannels');
         }
+        const devices = await requests.current.getTableFromSupabase('devices');
+        setDevices(devices.data);
+        subscribeToSupabaseChannelDevices('devices');
+
+        const screens = await requests.current.getTableFromSupabase('screens');
+        setDevices(screens.data);
+        subscribeToSupabaseChannelDevices('screens');
+
         message = user.current + ' regreso';
       } else {
         userActive.current = false;
@@ -463,6 +476,12 @@ function Main() {
           if (supabaseChannelsRef.current['cableChannels']) {
             unsubscribeFromSupabaseChannel('cableChannels');
           }
+        }
+        if (supabaseChannelsRef.current['devices']) {
+          unsubscribeFromSupabaseChannel('devices');
+        }
+        if (supabaseChannelsRef.current['screens']) {
+          unsubscribeFromSupabaseChannel('screens');
         }
         message = user.current + ' salio';
       }
@@ -509,8 +528,12 @@ function Main() {
     setDevices(devices.data);
     subscribeToSupabaseChannelDevices('devices');
 
+    const screens = await requests.current.getTableFromSupabase('screens');
+    setScreens(screens.data);
+    subscribeToSupabaseChannelDevices('screens');
+
     if (localStorage.getItem('user')) {
-      getMassMediaData(true);
+      // getMassMediaData(true);
     }
     // setInterval(() => {
     //   if (localStorage.getItem('user')) {
@@ -624,6 +647,7 @@ function Main() {
             youtubeChannelsLiz={youtubeChannelsLiz}
             youtubeVideosLiz={youtubeVideosLiz}
             cableChannels={cableChannels}
+            screens={screens}
             cableChannelCategories={cableChannelCategories}
             changeViewParent={changeView}
             changeControlParent={triggerControl}

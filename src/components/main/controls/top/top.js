@@ -1,29 +1,30 @@
 import './top.css';
 
-function Controls({devicesState, view, screenSelected, changeControlParent}) {
+function Controls({screens, view, screenSelected, changeControlParent}) {
+  const screen = screens.find(screen => screen.id === screenSelected);
   const changePower = () => {
-    if (screenSelected === devicesState.proyectorSala.id) {
-      if (devicesState[screenSelected].state === 'on') {
+    if (screenSelected === 'proyectorSala') {
+      if (screen.state === 'on') {
         changeControlParent({
           ifttt: [
             [{device: screenSelected, key: 'state', value: 'off'}],
-            [{device: devicesState.parlantesSala.id, key: 'state', value: 'off'}],
-            [{device: devicesState.lamparaSala.id, key: 'state', value: 'off'}],
-            [{device: devicesState.lamparaComedor.id, key: 'state', value: 'off'}],
+            [{device: 'parlantesSala', key: 'state', value: 'off'}],
+            [{device: 'lamparaSala', key: 'state', value: 'off'}],
+            [{device: 'lamparaComedor', key: 'state', value: 'off'}],
           ]
         });
         setTimeout(() => {
           changeControlParent({
-            ifttt: [{device: devicesState.proyectorSwitchSala.id, key: 'state', value: 'off'}],
+            ifttt: [{device: 'proyectorSwitchSala', key: 'state', value: 'off'}],
           });
         }, 60000);
       } else {
         changeControlParent({
           ifttt: [
-            [{device: devicesState.proyectorSwitchSala.id, key: 'state', value: 'on'}],
-            [{device: devicesState.parlantesSala.id, key: 'state', value: 'on'}],
-            [{device: devicesState.lamparaSala.id, key: 'state', value: 'on'}],
-            [{device: devicesState.lamparaComedor.id, key: 'state', value: 'on'}],
+            [{device: 'proyectorSwitchSala', key: 'state', value: 'on'}],
+            [{device: 'parlantesSala', key: 'state', value: 'on'}],
+            [{device: 'lamparaSala', key: 'state', value: 'on'}],
+            [{device: 'lamparaComedor', key: 'state', value: 'on'}],
           ]
         });
 
@@ -32,7 +33,7 @@ function Controls({devicesState, view, screenSelected, changeControlParent}) {
         }, 5000);
       }
     } else {
-      if (devicesState[screenSelected].state === 'on') {
+      if (screen.state === 'on') {
         changeControlParent({ifttt: [{device: screenSelected, key: 'state', value: 'off'}]});
         setTimeout(() => {
           // changeControlParent({ifttt: [{device: screenSelected, key: 'mute', value: 'off'}]});
@@ -52,8 +53,8 @@ function Controls({devicesState, view, screenSelected, changeControlParent}) {
     }
   }
   const changeInput = () => {
-    const device = devicesState[screenSelected].id;
-    if (devicesState[screenSelected].input.state === 'hdmi1') {
+    const device = screenSelected;
+    if (screen.input === 'hdmi1') {
       changeControlParent({
         ifttt: [{device: device, key: 'input', value: 'hdmi2'}],
         massMedia: [{device, key: ['input', 'state'], value: 'hdmi2'}]
@@ -72,14 +73,14 @@ function Controls({devicesState, view, screenSelected, changeControlParent}) {
           <button
             className={`controls-top-button`}
             onTouchStart={() => changePower()}>
-              {devicesState[screenSelected].state === 'on' &&
+              {screen.state === 'on' &&
                 <img
                   className='controls-top-img controls-top-img--button'
                   src="/imgs/power-on-50.png"
                   alt="icono">
                 </img>
               }
-              {devicesState[screenSelected].state === 'off' &&
+              {screen.state === 'off' &&
                 <img
                   className='controls-top-img controls-top-img--button'
                   src="/imgs/power-off-50.png"
@@ -112,7 +113,7 @@ function Controls({devicesState, view, screenSelected, changeControlParent}) {
           <button
             className={`controls-top-button`}
             onTouchStart={() => changeInput()}>
-              {devicesState[screenSelected].input.label[devicesState[screenSelected].input.state]}
+              {screen.inputLabel1}
           </button>
         </div>
       </div>
