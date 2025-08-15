@@ -298,14 +298,16 @@ function Main() {
   const getRokuData = useCallback(async (apps = rokuAppsRef.current) => {
     let update = false;
     let params = {table: 'rokuApps', date: new Date().toISOString()};
-    const currentId = apps.find(app => app.state === 'selected').rokuId;
+    const currentRokuId = apps.find(app => app.state === 'selected').rokuId;
     const currentPlayState = apps.find(app => app.state === 'selected').playState;
+    let appId = apps.find(app => app.state === 'selected').id;
     let activeApp = await requests.getRokuData('active-app');
     if (activeApp && activeApp.status === 200) {
-      let newId = activeApp.data['active-app'].app.id;
-      if (currentId !== newId) {
+      let newRokuId = activeApp.data['active-app'].app.id;
+      if (currentRokuId !== newRokuId) {
+        appId = apps.find(app => app.rokuId === newRokuId).id;
         update = true;
-        params.id = newId;
+        params.id = appId;
       }
     }
     let playState = await requests.getRokuData('media-player');
@@ -317,7 +319,7 @@ function Main() {
       }
     }
     if (update) {
-      requests.updateTableInSupabase(params, currentId);
+      requests.updateTableInSupabase(params, appId);
     }
   }, []);
 
