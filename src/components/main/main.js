@@ -46,6 +46,7 @@ function Main() {
   const initializedRef = useRef(false);
   const supabaseChannelsRef = useRef({});
   const viewRef = useRef(view);
+  const rokuAppsRef = useRef(rokuApps);
   const getRokuDataIntervalRef = useRef(null);
 
   // useMemo variables (computed)
@@ -294,7 +295,7 @@ function Main() {
     }
   };
 
-  const getRokuData = useCallback(async (apps = rokuApps) => {
+  const getRokuData = useCallback(async (apps = rokuAppsRef) => {
     let update = false;
     let params = {table: 'rokuApps', date: new Date().toISOString()};
     const currentId = apps.find(app => app.state === 'selected').rokuId;
@@ -318,7 +319,7 @@ function Main() {
     if (update) {
       requests.updateTableInSupabase(params, currentId);
     }
-  }, [rokuApps]);
+  }, []);
 
   const getSupabaseChannel = (name) => {
     if (!supabaseChannelsRef.current[name]) {
@@ -362,6 +363,7 @@ function Main() {
           const apps = await requests.getTableFromSupabase('rokuApps');
           setRokuApps(apps.data);
           subscribeToSupabaseChannel('rokuApps');
+          getRokuData(apps);
         }
         if (currentView.selected === 'cable') {
           const channels = await requests.getTableFromSupabase('cableChannels');
@@ -376,7 +378,6 @@ function Main() {
         setScreens(screens.data);
         subscribeToSupabaseChannelDevices('screens');
         
-        getRokuData();
         getRokuDataIntervalRef.current = setInterval(() => {
           if (localStorage.getItem('user') && viewRef.current.selected === 'roku') {
             getRokuData();
@@ -420,7 +421,7 @@ function Main() {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [changeView, subscribeToSupabaseChannel, rokuApps, getRokuData, subscribeToSupabaseChannelDevices]);
+  }, [changeView, subscribeToSupabaseChannel, getRokuData, subscribeToSupabaseChannelDevices]);
 
   const init = useCallback(async () => {
     let apps = {};
@@ -485,6 +486,10 @@ function Main() {
   useEffect(() => {
     viewRef.current = view;
   }, [view]);
+
+  useEffect(() => {
+    rokuAppsRef.current = rokuApps;
+  }, [rokuApps]);
 
   useEffect(() => {
     if (credential === 'dev') {
