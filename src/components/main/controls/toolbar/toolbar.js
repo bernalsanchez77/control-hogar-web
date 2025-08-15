@@ -1,11 +1,11 @@
 import './toolbar.css';
 
-function Toolbar({hdmiSala, changeControlParent}) {
-  const hdmi = hdmiSala.find(hdmi => hdmi.id === 'roku');
+function Toolbar({rokuApps, changeControlParent}) {
+  const app = rokuApps.find(app => app.state === 'selected');
   const changeControl = (value) => {
     const device = 'rokuSala';
     if (value === 'play') {
-      if (hdmi.playState === 'play') {
+      if (app.playState === 'play') {
         changeControlParent({
           ifttt: [{device, key: 'state', value: 'pause'}],
           roku: [{device, key: 'keypress', value: 'Play'}]
@@ -43,14 +43,14 @@ function Toolbar({hdmiSala, changeControlParent}) {
             <button
                 className={`controls-toolbar-button`}
                 onTouchStart={() => changeControl('play')}>
-                {(hdmi.playState === 'play' || hdmi.playState === 'none' || hdmi.playState === 'close') &&
+                {(app.playState === 'play' || app.playState === 'none' || app.playState === 'close') &&
                 <img
                   className='controls-toolbar-img controls-toolbar-img--button'
                   src="/imgs/pause-50.png"
                   alt="icono">
                 </img>
                 }
-                {hdmi.playState === 'pause' &&
+                {app.playState === 'pause' &&
                 <img
                   className='controls-toolbar-img controls-toolbar-img--button'
                   src="/imgs/play-50.png"
