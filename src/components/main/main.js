@@ -22,7 +22,7 @@ function Main() {
   //useState Variables
 
   const [inRange, setInRange] = useState(false);
-  const [userActive, setUserActive] = useState(false);
+  const [userActive, setUserActive] = useState(true);
   const [credential, setCredential] = useState('');
   const [sendEnabled, setSendEnabled] = useState(true);
   const [screenSelected, setScreenSelected] = useState('teleSala');
