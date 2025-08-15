@@ -546,7 +546,6 @@ function Main() {
             youtubeVideosLiz={youtubeVideosLiz}
             cableChannels={cableChannels}
             screens={screens}
-            hdmiSala={hdmiSala}
             cableChannelCategories={cableChannelCategories}
             changeViewParent={changeView}
             changeControlParent={changeControl}
