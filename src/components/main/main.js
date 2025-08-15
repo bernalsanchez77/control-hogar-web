@@ -363,8 +363,13 @@ function Main() {
           const apps = await requests.getTableFromSupabase('rokuApps');
           setRokuApps(apps.data);
           subscribeToSupabaseChannel('rokuApps');
-          getRokuData(apps);
+          getRokuData(apps.data);
         }
+        getRokuDataIntervalRef.current = setInterval(() => {
+          if (localStorage.getItem('user') && viewRef.current.selected === 'roku') {
+            getRokuData();
+          }
+        }, 10000);
         if (currentView.selected === 'cable') {
           const channels = await requests.getTableFromSupabase('cableChannels');
           setCableChannels(channels.data);
@@ -377,12 +382,6 @@ function Main() {
         const screens = await requests.getTableFromSupabase('screens');
         setScreens(screens.data);
         subscribeToSupabaseChannelDevices('screens');
-        
-        getRokuDataIntervalRef.current = setInterval(() => {
-          if (localStorage.getItem('user') && viewRef.current.selected === 'roku') {
-            getRokuData();
-          }
-        }, 10000);
 
         setInRange(await utils.getInRange());
         message = user + ' regreso';
@@ -453,8 +452,8 @@ function Main() {
       }
     }
     getRokuDataIntervalRef.current = setInterval(() => {
-      if (localStorage.getItem('user') && userActive && viewRef.current.selected === 'roku') {
-        getRokuData(apps.data, false);
+      if (localStorage.getItem('user') && viewRef.current.selected === 'roku') {
+        getRokuData();
       }
     }, 10000);
 
@@ -474,7 +473,7 @@ function Main() {
       window.addEventListener("load", document.body.classList.add("loaded"));
     }
     console.log('version 27');
-  }, [getRokuData, getVisibility, changeView, subscribeToSupabaseChannel, userActive, subscribeToSupabaseChannelDevices]);
+  }, [getRokuData, getVisibility, changeView, subscribeToSupabaseChannel, subscribeToSupabaseChannelDevices]);
 
   useEffect(() => {
     if (!initializedRef.current) {
