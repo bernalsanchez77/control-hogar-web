@@ -56,7 +56,7 @@ function Controls({screens, devices, hdmiSala, screenSelected, view, rokuApps, y
         }
         {hdmiSala.length &&
         <Toolbar
-          hdmiSala={hdmiSala}
+          rokuApps={rokuApps}
           changeControlParent={changeControl}>
         </Toolbar>
         }
