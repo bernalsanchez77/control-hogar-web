@@ -307,7 +307,6 @@ function Main() {
       if (currentRokuId !== newRokuId) {
         appId = apps.find(app => app.rokuId === newRokuId).id;
         update = true;
-        params.id = appId;
       }
     }
     let playState = await requests.getRokuData('media-player');
