@@ -10,7 +10,7 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({screens, devices, hdmiSala, screenSelected, view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, changeVibrateParent, searchYoutubeParent}) {
+function Controls({screens, devices, screenSelected, view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, changeVibrateParent, searchYoutubeParent}) {
   const searchMode = useRef(false);
   const changeControl = (params) => {
     changeControlParent(params);
