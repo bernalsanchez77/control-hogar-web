@@ -14,13 +14,13 @@ function Screens({credential, screens, screenSelected, userActive, changeScreenP
     <div>
       <div className='screens'>
         <div className='screens-row'>
-          {(credential === 'owner' || credential === '') &&
+          {(credential === 'owner' || credential === 'dev' || credential === '') &&
           <div className='screens-element'>
             <button
               className={`screens-button ${userActive && screenSelected === teleCuartoScreen.id ? "flash-shadow" : "no-flash"}  ${screenSelected === teleCuartoScreen.id ? "screens-button--on" : "screens-button--off"}`}
               onTouchStart={() => triggerScreen(teleCuartoScreen.id)}>
                 {teleCuartoScreen.label}
-              </button>
+            </button>
           </div>
           }
           <div className='screens-element'>
