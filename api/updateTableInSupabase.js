@@ -6,14 +6,14 @@ const supabase = createClient(
 )
 
 export default async function handler(req, res) {
-  const {id, date, table} = req.body;
+  const {id, date, table, playState} = req.body;
 
   let data, error;
 
   if (date) {
     ({ data, error } = await supabase
       .from(table)
-      .update({date, state: 'selected'})
+      .update({date, state: 'selected', playState})
       .eq('id', id));
   } else {
     ({ data, error } = await supabase

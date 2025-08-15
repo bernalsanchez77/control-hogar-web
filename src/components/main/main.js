@@ -11,6 +11,7 @@ import Requests from '../../global/requests';
 import YoutubeDummyData from '../../global/youtube-dummy-data';
 import CableChannelCategories from '../../global/cable-channel-categories';
 import './main.css';
+import { tab } from '@testing-library/user-event/dist/tab';
 
 const requests = new Requests();
 const utils = new Utils();
@@ -293,23 +294,31 @@ function Main() {
     }
   };
 
-  const getRokuData = useCallback(async (apps) => {
-    let response = await requests.getRokuData('active-app');
-    if (response && response.status === 200) {
-      let newId = response.data['active-app'].app.id;
-      const currentId = apps.find(app => app.state === 'selected').rokuId;
+  const getRokuData = useCallback(async (apps = rokuApps) => {
+    let update = false;
+    let params = {table: 'rokuApps', date: new Date().toISOString()};
+    const currentId = apps.find(app => app.state === 'selected').rokuId;
+    const currentPlayState = apps.find(app => app.state === 'selected').playState;
+    let activeApp = await requests.getRokuData('active-app');
+    if (activeApp && activeApp.status === 200) {
+      let newId = activeApp.data['active-app'].app.id;
       if (currentId !== newId) {
-        requests.updateTableInSupabase({id: newId, table: 'rokuApps', date: new Date().toISOString()}, currentId);
+        update = true;
+        params.id = newId;
       }
     }
-    response = await requests.getRokuData('media-player');
-    if (response && response.status === 200) {
-      console.log('play state: ', response.data.player.state);
-      // if (devicesState.rokuSala.state !== response.data.player.state) {
-      //   devices.rokuSala.state = response.data.player.state;
-      // }
+    let playState = await requests.getRokuData('media-player');
+    if (playState && playState.status === 200) {
+      let newPlayState = playState.data.player.state;
+      if (currentPlayState !== newPlayState) {
+        update = true;
+        params.playState = newPlayState;
+      }
     }
-  }, []);
+    if (update) {
+      requests.updateTableInSupabase(params, currentId);
+    }
+  }, [rokuApps]);
 
   const getSupabaseChannel = (name) => {
     if (!supabaseChannelsRef.current[name]) {
@@ -366,10 +375,11 @@ function Main() {
         const screens = await requests.getTableFromSupabase('screens');
         setScreens(screens.data);
         subscribeToSupabaseChannelDevices('screens');
-
+        
+        getRokuData();
         getRokuDataIntervalRef.current = setInterval(() => {
-          if (localStorage.getItem('user') && viewRef.selected === 'roku') {
-            getRokuData(rokuApps, false);
+          if (localStorage.getItem('user') && viewRef.current.selected === 'roku') {
+            getRokuData();
           }
         }, 10000);
 
@@ -441,6 +451,11 @@ function Main() {
         getRokuData(apps.data, true);
       }
     }
+    getRokuDataIntervalRef.current = setInterval(() => {
+      if (localStorage.getItem('user') && userActive && viewRef.current.selected === 'roku') {
+        getRokuData(apps.data, false);
+      }
+    }, 10000);
 
     const devices = await requests.getTableFromSupabase('devices');
     setDevices(devices.data);
@@ -449,12 +464,6 @@ function Main() {
     const screens = await requests.getTableFromSupabase('screens');
     setScreens(screens.data);
     subscribeToSupabaseChannelDevices('screens');
-
-    getRokuDataIntervalRef.current = setInterval(() => {
-      if (localStorage.getItem('user') && userActive && viewRef.selected === 'roku') {
-        getRokuData(apps.data, false);
-      }
-    }, 10000);
 
     requests.sendLogs(user + ' entro');
     getVisibility();
