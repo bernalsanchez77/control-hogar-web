@@ -295,7 +295,7 @@ function Main() {
     }
   };
 
-  const getRokuData = useCallback(async (apps = rokuAppsRef) => {
+  const getRokuData = useCallback(async (apps = rokuAppsRef.current) => {
     let update = false;
     let params = {table: 'rokuApps', date: new Date().toISOString()};
     const currentId = apps.find(app => app.state === 'selected').rokuId;
