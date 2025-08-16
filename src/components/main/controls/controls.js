@@ -54,7 +54,7 @@ function Controls({screens, devices, screenSelected, view, hdmiSala, rokuApps, y
           changeVibrateParent={changeVibrate}>
         </Levels>
         }
-        {rokuApps.length &&
+        {hdmiSala.length &&
         <Toolbar
           hdmiSala={hdmiSala}
           changeControlParent={changeControl}>
