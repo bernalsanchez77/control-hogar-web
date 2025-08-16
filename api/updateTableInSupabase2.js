@@ -6,6 +6,7 @@ export default async function handler(req, res) {
   if (currentId) {
     ({data, error} = await supabase.from(table).update({state: ''}).eq('id', currentId));
     setTimeout(async() => {
+      console.log('updating 2');
       ({data, error} = await supabase.from(table).update({volume, mute, color, date, state: 'selected', playState}).eq('id', id));
     }, 200);
   } else {
