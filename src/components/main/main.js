@@ -548,6 +548,7 @@ function Main() {
             screenSelected={screenSelected}
             view={view}
             rokuApps={rokuApps}
+            hdmiSala={hdmiSala}
             devices={devices}
             youtubeSearchVideos={youtubeSearchVideos}
             youtubeChannelsLiz={youtubeChannelsLiz}
