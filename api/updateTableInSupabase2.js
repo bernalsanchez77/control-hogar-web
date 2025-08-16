@@ -4,13 +4,16 @@ export default async function handler(req, res) {
   const {id, date, table, state, volume, mute, color, playState, currentId} = req.body;
   let data, error;
   if (currentId) {
-    ({data, error} = await supabase.from(table).update({state: ''}).eq('id', currentId));
-    setTimeout(async() => {
-      console.log('updating 2');
-      ({data, error} = await supabase.from(table).update({volume, mute, color, date, state: 'selected', playState}).eq('id', id));
-    }, 200);
+    await supabase.from(table).update({ state: '' }).eq('id', currentId);
+    ({ data, error } = await supabase
+      .from(table)
+      .update({ volume, mute, color, date, state: 'selected', playState })
+      .eq('id', id));
   } else {
-    ({data, error} = await supabase.from(table).update({volume, mute, color, date, state: 'selected', playState}).eq('id', id));
+    ({ data, error } = await supabase
+      .from(table)
+      .update({ volume, mute, color, date, state: 'selected', playState })
+      .eq('id', id));
   }
   if (error) {
     return res.status(500).json({ error: error.message });
