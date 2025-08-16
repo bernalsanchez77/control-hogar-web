@@ -315,6 +315,7 @@ function Main() {
       if (currentPlayState !== newPlayState) {
         update = true;
         params.playState = newPlayState;
+        id: appId;
       }
     }
     if (update) {
