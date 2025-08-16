@@ -235,11 +235,7 @@ function Main() {
               }
             }
             if (el.key === 'state') {
-              const app = rokuApps.find(app => app.id === el.value);
-              const currentApp = rokuApps.find(ap => ap.state === 'selected');
-              if (app && currentApp) {
-                requests.updateTableInSupabase({id: app.id, table: 'rokuApps', date: new Date().toISOString()}, currentApp.id);
-              }
+              requests.updateTableInSupabaseDevices({id: 'roku', playState: el.value, table: 'hdmiSala', date: new Date().toISOString()});
             }
           }
           if (el.device === 'channelsSala') {
