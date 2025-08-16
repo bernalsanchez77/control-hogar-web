@@ -224,7 +224,8 @@ function Main() {
               const video = youtubeVideosLiz.find(video => video.id === el.value);
               const currentVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
               if (video && currentVideo) {
-                requests.updateTableInSupabase({id: video.id, table: 'youtubeVideosLiz', date: new Date().toISOString()}, currentVideo.id);
+                // requests.updateTableInSupabase({id: video.id, table: 'youtubeVideosLiz', date: new Date().toISOString()}, currentVideo.id);
+                requests.updateTableInSupabase2({id: video.id, table: 'youtubeVideosLiz', date: new Date().toISOString(), currentId: currentVideo.id});
               }
             }
             if (el.key === 'app') {
