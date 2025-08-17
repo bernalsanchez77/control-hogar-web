@@ -83,9 +83,9 @@ class Requests {
   }
   async updateTableInSupabase(params) {
     if (window.cordova) {
-      await this.cordovaApiRequest('updateTableInSupabase2', params, 'patch');
+      await this.cordovaApiRequest('updateTableInSupabase', params, 'patch');
     } else {
-      await this.normalApiRequest('updateTableInSupabase2', params, 'patch');
+      await this.normalApiRequest('updateTableInSupabase', params, 'patch');
     }
   }
   async getTableFromSupabase(table) {

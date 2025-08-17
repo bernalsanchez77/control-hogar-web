@@ -1,31 +1,19 @@
 import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-)
-
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 export default async function handler(req, res) {
-  const {id, date, table, playState} = req.body;
-
+  console.log('params: ',req.body);
+  const {newId, date, table, state, volume, mute, color, playState, currentId} = req.body;
   let data, error;
-
-  if (date) {
-    ({ data, error } = await supabase
-      .from(table)
-      .update({date, state: 'selected', playState})
-      .eq('id', id));
+  if (currentId) {
+    await supabase.from(table).update({ state: '' }).eq('id', currentId);
+    ({data, error} = await supabase.from(table).update({ volume, mute, color, date, state: 'selected', playState }).eq('id', newId));
   } else {
-    ({ data, error } = await supabase
-      .from(table)
-      .update({state: ''})
-      .eq('id', id));
+    ({data, error} = await supabase.from(table).update({ volume, mute, color, date, state: 'selected', playState }).eq('id', newId));
   }
-
   if (error) {
     return res.status(500).json({ error: error.message });
   }
-
   res.status(200).json({ message: '✅ Date updated', data });
 }
+
 

@@ -235,7 +235,7 @@ function Main() {
               }
             }
             if (el.key === 'state') {
-              requests.updateTableInSupabase({id: 'roku', playState: el.value, table: 'hdmiSala', date: new Date().toISOString()});
+              requests.updateTableInSupabase({newId: 'roku', playState: el.value, table: 'hdmiSala', date: new Date().toISOString()});
             }
           }
           if (el.device === 'channelsSala') {
@@ -324,7 +324,7 @@ function Main() {
       }
     }
     if (update) {
-      requests.updateTableInSupabase(params, appId);
+      requests.updateTableInSupabase(params);
     }
   }, []);
 
