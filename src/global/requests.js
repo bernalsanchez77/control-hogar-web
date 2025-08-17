@@ -81,31 +81,11 @@ class Requests {
       },
       'post');
   }
-  async updateTableInSupabase(params, id) {
-    if (window.cordova) {
-      await this.cordovaApiRequest('updateTableInSupabase', {id, table: params.table}, 'patch');
-      setTimeout(async () => {
-        await this.cordovaApiRequest('updateTableInSupabase', params, 'patch');
-      }, 1000);
-    } else {
-      await this.normalApiRequest('updateTableInSupabase', {id, table: params.table}, 'patch');
-      setTimeout(async () => {
-        await this.normalApiRequest('updateTableInSupabase', params, 'patch');
-      }, 500);
-    }
-  }
-  async updateTableInSupabase2(params) {
+  async updateTableInSupabase(params) {
     if (window.cordova) {
       await this.cordovaApiRequest('updateTableInSupabase2', params, 'patch');
     } else {
       await this.normalApiRequest('updateTableInSupabase2', params, 'patch');
-    }
-  }
-  async updateTableInSupabaseDevices(params) {
-    if (window.cordova) {
-      await this.cordovaApiRequest('updateTableInSupabaseDevices', params, 'patch');
-    } else {
-      await this.normalApiRequest('updateTableInSupabaseDevices', params, 'patch');
     }
   }
   async getTableFromSupabase(table) {
