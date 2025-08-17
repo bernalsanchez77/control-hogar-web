@@ -269,11 +269,11 @@ function Main() {
           }
           if (el.device === 'luzEscalera' || el.device === 'luzCuarto' || el.device === 'lamparaComedor' || el.device === 'lamparaSala' || el.device === 'lamparaRotatoria' || el.device === 'chimeneaSala' || el.device === 'parlantesSala' || el.device === 'ventiladorSala' || el.device === 'calentadorNegro' || el.device === 'calentadorBlanco' || el.device === 'lamparaTurca') {
             const device = devices.find(device => device.id === el.device);
-            requests.updateTableInSupabase({id: device.id, table: 'devices', state: el.value, date: new Date().toISOString()});
+            requests.updateTableInSupabase({newId: device.id, table: 'devices', state: el.value, date: new Date().toISOString()});
           }
           if (el.device === 'teleSala' || el.device === 'teleCuarto' || el.device === 'teleCocina' || el.device === 'proyectorSala') {
             const screen = screens.find(screen => screen.id === el.device);
-            requests.updateTableInSupabase({id: screen.id, table: 'screens', [el.key]: el.value, date: new Date().toISOString()});
+            requests.updateTableInSupabase({newId: screen.id, table: 'screens', [el.key]: el.value, date: new Date().toISOString()});
           }
         }
       });
