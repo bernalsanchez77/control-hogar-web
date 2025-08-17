@@ -224,15 +224,14 @@ function Main() {
               const video = youtubeVideosLiz.find(video => video.id === el.value);
               const currentVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
               if (video && currentVideo) {
-                // requests.updateTableInSupabase({id: video.id, table: 'youtubeVideosLiz', date: new Date().toISOString()}, currentVideo.id);
-                requests.updateTableInSupabase2({id: video.id, table: 'youtubeVideosLiz', date: new Date().toISOString(), currentId: currentVideo.id});
+                requests.updateTableInSupabase2({newId: video.id, table: 'youtubeVideosLiz', date: new Date().toISOString(), currentId: currentVideo.id});
               }
             }
             if (el.key === 'app') {
               const app = rokuApps.find(app => app.id === el.value);
               const currentApp = rokuApps.find(ap => ap.state === 'selected');
               if (app && currentApp) {
-                requests.updateTableInSupabase({id: app.id, table: 'rokuApps', date: new Date().toISOString()}, currentApp.id);
+                requests.updateTableInSupabase2({newId: app.id, table: 'rokuApps', date: new Date().toISOString(), currentId: currentApp.id});
               }
             }
             if (el.key === 'state') {
@@ -243,14 +242,14 @@ function Main() {
             const channel = cableChannels.find(ch => ch.id === el.value);
             const currentChannel = cableChannels.find(ch => ch.state === 'selected');
             if (channel && currentChannel) {
-              requests.updateTableInSupabase({id: channel.id, table: 'cableChannels', date: new Date().toISOString()}, currentChannel.id);
+              requests.updateTableInSupabase2({newId: channel.id, table: 'cableChannels', date: new Date().toISOString(), currentId: currentChannel.id});
             }
           }
           if (el.device === 'hdmiSala') {
             const hdmi = hdmiSala.find(hd => hd.id === el.value);
             const currentHdmi = hdmiSala.find(hd => hd.state === 'selected');
             if (hdmi && currentHdmi) {
-              requests.updateTableInSupabase({id: hdmi.id, table: 'hdmiSala', date: new Date().toISOString()}, currentHdmi.id);
+              requests.updateTableInSupabase2({newId: hdmi.id, table: 'hdmiSala', date: new Date().toISOString(), currentId: currentHdmi.id});
             }
             const newView = structuredClone(viewRef.current);
             if (el.value === 'roku') {
