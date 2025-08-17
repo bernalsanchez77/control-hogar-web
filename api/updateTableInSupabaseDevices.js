@@ -6,6 +6,7 @@ const supabase = createClient(
 )
 
 export default async function handler(req, res) {
+  console.log('params': req.body);
   const {id, date, table, state, volume, mute, color, playState} = req.body;
   let data, error;
   console.log('volume up');
@@ -15,5 +16,6 @@ export default async function handler(req, res) {
   }
   res.status(200).json({ message: '✅ Date updated', data });
 }
+
 
 
