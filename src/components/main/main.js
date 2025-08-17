@@ -224,32 +224,32 @@ function Main() {
               const video = youtubeVideosLiz.find(video => video.id === el.value);
               const currentVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
               if (video && currentVideo) {
-                requests.updateTableInSupabase2({newId: video.id, table: 'youtubeVideosLiz', date: new Date().toISOString(), currentId: currentVideo.id});
+                requests.updateTableInSupabase({newId: video.id, table: 'youtubeVideosLiz', date: new Date().toISOString(), currentId: currentVideo.id});
               }
             }
             if (el.key === 'app') {
               const app = rokuApps.find(app => app.id === el.value);
               const currentApp = rokuApps.find(ap => ap.state === 'selected');
               if (app && currentApp) {
-                requests.updateTableInSupabase2({newId: app.id, table: 'rokuApps', date: new Date().toISOString(), currentId: currentApp.id});
+                requests.updateTableInSupabase({newId: app.id, table: 'rokuApps', date: new Date().toISOString(), currentId: currentApp.id});
               }
             }
             if (el.key === 'state') {
-              requests.updateTableInSupabaseDevices({id: 'roku', playState: el.value, table: 'hdmiSala', date: new Date().toISOString()});
+              requests.updateTableInSupabase({id: 'roku', playState: el.value, table: 'hdmiSala', date: new Date().toISOString()});
             }
           }
           if (el.device === 'channelsSala') {
             const channel = cableChannels.find(ch => ch.id === el.value);
             const currentChannel = cableChannels.find(ch => ch.state === 'selected');
             if (channel && currentChannel) {
-              requests.updateTableInSupabase2({newId: channel.id, table: 'cableChannels', date: new Date().toISOString(), currentId: currentChannel.id});
+              requests.updateTableInSupabase({newId: channel.id, table: 'cableChannels', date: new Date().toISOString(), currentId: currentChannel.id});
             }
           }
           if (el.device === 'hdmiSala') {
             const hdmi = hdmiSala.find(hd => hd.id === el.value);
             const currentHdmi = hdmiSala.find(hd => hd.state === 'selected');
             if (hdmi && currentHdmi) {
-              requests.updateTableInSupabase2({newId: hdmi.id, table: 'hdmiSala', date: new Date().toISOString(), currentId: currentHdmi.id});
+              requests.updateTableInSupabase({newId: hdmi.id, table: 'hdmiSala', date: new Date().toISOString(), currentId: currentHdmi.id});
             }
             const newView = structuredClone(viewRef.current);
             if (el.value === 'roku') {
@@ -269,11 +269,11 @@ function Main() {
           }
           if (el.device === 'luzEscalera' || el.device === 'luzCuarto' || el.device === 'lamparaComedor' || el.device === 'lamparaSala' || el.device === 'lamparaRotatoria' || el.device === 'chimeneaSala' || el.device === 'parlantesSala' || el.device === 'ventiladorSala' || el.device === 'calentadorNegro' || el.device === 'calentadorBlanco' || el.device === 'lamparaTurca') {
             const device = devices.find(device => device.id === el.device);
-            requests.updateTableInSupabaseDevices({id: device.id, table: 'devices', state: el.value, date: new Date().toISOString()});
+            requests.updateTableInSupabase({id: device.id, table: 'devices', state: el.value, date: new Date().toISOString()});
           }
           if (el.device === 'teleSala' || el.device === 'teleCuarto' || el.device === 'teleCocina' || el.device === 'proyectorSala') {
             const screen = screens.find(screen => screen.id === el.device);
-            requests.updateTableInSupabaseDevices({id: screen.id, table: 'screens', [el.key]: el.value, date: new Date().toISOString()});
+            requests.updateTableInSupabase({id: screen.id, table: 'screens', [el.key]: el.value, date: new Date().toISOString()});
           }
         }
       });
@@ -308,8 +308,10 @@ function Main() {
     if (activeApp && activeApp.status === 200) {
       let newRokuId = activeApp.data['active-app'].app.id;
       if (currentRokuId !== newRokuId) {
-        appId = apps.find(app => app.rokuId === newRokuId).id;
         update = true;
+        params.currentId = appId;
+        appId = apps.find(app => app.rokuId === newRokuId).id;
+        params.newId = appId;
       }
     }
     let playState = await requests.getRokuData('media-player');
@@ -318,7 +320,7 @@ function Main() {
       if (currentPlayState !== newPlayState) {
         update = true;
         params.playState = newPlayState;
-        params.id = appId;
+        params.newId = appId;
       }
     }
     if (update) {
