@@ -233,7 +233,7 @@ function Main() {
               if (currentId && newId) {
                 requests.updateTableInSupabase({
                   current: {currentId, currentTable: 'rokuApps', currentState: ''},
-                  new: {newId, newtable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
+                  new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
                 });
               }
             }

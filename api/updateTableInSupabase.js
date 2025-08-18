@@ -1,44 +1,64 @@
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
-
+import { createClient } from '@supabase/supabase-js'
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 export default async function handler(req, res) {
-  console.log('params: ', req.body);
+  console.log('params: ',req.body);
 
-  const current = req.body.current || {};
-  const next = req.body.new || {};
+  let currentId = null;
+  let currentTable = null;
+  let currentState = null;
 
-  if (!next.newTable || !next.newId) {
-    return res.status(400).json({ error: "Missing newTable or newId" });
+  let newId = null;
+  let newDate = null;
+  let newTable = null;
+  let newState = null;
+  let newVolume = null;
+  let newMute = null;
+  let newColor = null;
+  let newPlayState = null;
+
+  if (req.body.current) {
+    currentId = req.body.current.currentId;
+    currentTable = req.body.current.currentTable;
+    currentState = req.body.current.currentState;
+  };
+  if (req.body.new) {
+    newId = req.body.new.newId;
+    newDate = req.body.new.newDate;
+    newTable = req.body.new.newTable;
+    newState = req.body.new.newState;
+    newVolume = req.body.new.newVolume;
+    newMute = req.body.new.newMute;
+    newColor = req.body.new.newColor;
+    newPlayState = req.body.new.newPlayState;
   }
 
-  // 1) Clear current if exists
-  if (current.currentId && current.currentTable) {
-    const { error: currentError } = await supabase
-      .from(current.currentTable)
-      .update({ state: current.currentState })
-      .eq('id', current.currentId);
-
-    if (currentError) {
-      return res.status(500).json({ error: currentError.message });
-    }
+  let data, error;
+  if (req.body.current) {
+    await supabase.from(currentTable).update({
+      state: currentState
+    }).eq('id', currentId);
+    ({data, error} = await supabase.from(newTable).update({
+      volume: newVolume,
+      mute: newMute,
+      color: newColor,
+      date: newDate,
+      state: newState,
+      playState: newPlayState
+    }).eq('id', newId));
+  } else {
+    ({data, error} = await supabase.from(newTable).update({
+      volume: newVolume,
+      mute: newMute,
+      color: newColor,
+      date: newDate,
+      state: newState,
+      playState: newPlayState
+    }).eq('id', newId));
   }
-
-  // 2) Update next
-  const { data, error } = await supabase
-    .from(next.newTable)
-    .update({
-      date: next.newDate,
-      state: next.newState
-    })
-    .eq('id', next.newId);
-
   if (error) {
     return res.status(500).json({ error: error.message });
   }
-
-  return res.status(200).json({ message: '✅ Record updated', data });
+  res.status(200).json({ message: '✅ Date updated', data });
 }
+
+
