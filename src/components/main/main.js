@@ -47,6 +47,7 @@ function Main() {
   const supabaseChannelsRef = useRef({});
   const viewRef = useRef(view);
   const rokuAppsRef = useRef(rokuApps);
+  const hdmiSalaRef = useRef(hdmiSala);
   const getRokuDataIntervalRef = useRef(null);
 
   // useMemo variables (computed)
@@ -317,39 +318,32 @@ function Main() {
     }
   };
 
-  const getRokuData = useCallback(async (apps = rokuAppsRef.current) => {
-    let update = false;
-    const currentApp = apps.find(app => app.state === 'selected');
-    const currentId = currentApp.id;
-    const currentRokuId = currentApp.rokuId;
-    const currentPlayState = currentApp.playState;
-    const params = {};
-    params.current = {currentId, currentTable: 'rokuApps', currentState: ''};
-    params.new = {newTable: 'rokuApps', newDate: new Date().toISOString()};
+  const getRokuData = useCallback(async (rokuAppsParam = rokuAppsRef.current, hdmiSalaParam = hdmiSalaRef.current) => {
     let activeApp = await requests.getRokuData('active-app');
-    //if (activeApp && activeApp.status === 200) {
-      //const newRokuId = activeApp.data['active-app'].app.id;
-      const newRokuId = 'youtube';
+    if (activeApp && activeApp.status === 200) {
+      const currentApp = rokuAppsParam.find(app => app.state === 'selected');
+      const currentId = currentApp.id;
+      const currentRokuId = currentApp.rokuId;
+      const newRokuId = activeApp.data['active-app'].app.id;
       if (currentRokuId !== newRokuId) {
-        update = true;
-        params.current.currentState = '';
-        params.new.newId = newRokuId;
-        params.new.newState = 'selected';
-        requests.updateTableInSupabase(params);
+        const newId = rokuAppsParam.find(app => app.rokuId === newRokuId).id;
+        requests.updateTableInSupabase({
+          current: {currentId, currentTable: 'rokuApps', currentState: ''},
+          new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
+        });
       }
-    //}
-    // let playState = await requests.getRokuData('media-player');
-    // if (playState && playState.status === 200) {
-    //   let newPlayState = playState.data.player.state;
-    //   if (currentPlayState !== newPlayState) {
-    //     update = true;
-    //     params.playState = newPlayState;
-    //     params.newId = appId;
-    //   }
-    // }
-    // if (update) {
-    //   requests.updateTableInSupabase(params);
-    // }
+    }
+    let playState = await requests.getRokuData('media-player');
+    if (playState && playState.status === 200) {
+      const currentPlayState = hdmiSalaParam.find(hdmi => hdmi.state === 'selected').playState;
+      const newPlayState = playState.data.player.state;
+      if (currentPlayState !== newPlayState) {
+        const newId = 'roku';
+        requests.updateTableInSupabase({
+          new: {newId, newTable: 'hdmiSala', newPlayState, newDate: new Date().toISOString()}
+        });
+      }
+    }
   }, []);
 
   const getSupabaseChannel = (name) => {
@@ -377,24 +371,24 @@ function Main() {
 
         subscribeToSupabaseChannel('hdmiSala');
         const newView = structuredClone(viewRef.current);
-        const hdmiTable = await requests.getTableFromSupabase('hdmiSala');
-        const hdmiId = hdmiTable.data.find(el => el.state === 'selected').id;
+        const hdmiSalaTable = await requests.getTableFromSupabase('hdmiSala');
+        const hdmiId = hdmiSalaTable.data.find(el => el.state === 'selected').id;
         if (hdmiId !== viewRef.current.selected) {
-          setHdmiSala(hdmiTable.data);
+          setHdmiSala(hdmiSalaTable.data);
           newView.selected = hdmiId;
           changeView(newView);
         }
 
         if (currentView.roku.apps.youtube.channel) {
-          const videos = await requests.getTableFromSupabase('youtubeVideosLiz');
-          setYoutubeVideosLiz(videos.data);
+          const youtubeVideosLizTable = await requests.getTableFromSupabase('youtubeVideosLiz');
+          setYoutubeVideosLiz(youtubeVideosLizTable.data);
           subscribeToSupabaseChannel('youtubeVideosLiz');
         }
         if (currentView.selected === 'roku' & !currentView.roku.apps.selected) {
-          const apps = await requests.getTableFromSupabase('rokuApps');
-          setRokuApps(apps.data);
+          const rokuAppsTable = await requests.getTableFromSupabase('rokuApps');
+          setRokuApps(rokuAppsTable.data);
           subscribeToSupabaseChannel('rokuApps');
-          getRokuData(apps.data);
+          getRokuData(rokuAppsTable.data, hdmiSalaTable.data);
         }
         getRokuDataIntervalRef.current = setInterval(() => {
           if (localStorage.getItem('user') && viewRef.current.selected === 'roku') {
@@ -402,16 +396,16 @@ function Main() {
           }
         }, 10000);
         if (currentView.selected === 'cable') {
-          const channels = await requests.getTableFromSupabase('cableChannels');
-          setCableChannels(channels.data);
+          const cableChannelsTable = await requests.getTableFromSupabase('cableChannels');
+          setCableChannels(cableChannelsTable.data);
           subscribeToSupabaseChannel('cableChannels');
         }
-        const devices = await requests.getTableFromSupabase('devices');
-        setDevices(devices.data);
+        const devicesTable = await requests.getTableFromSupabase('devices');
+        setDevices(devicesTable.data);
         subscribeToSupabaseChannelDevices('devices');
 
-        const screens = await requests.getTableFromSupabase('screens');
-        setScreens(screens.data);
+        const screensTable = await requests.getTableFromSupabase('screens');
+        setScreens(screensTable.data);
         subscribeToSupabaseChannelDevices('screens');
 
         setInRange(await utils.getInRange());
@@ -454,7 +448,6 @@ function Main() {
   }, [changeView, subscribeToSupabaseChannel, getRokuData, subscribeToSupabaseChannelDevices]);
 
   const init = useCallback(async () => {
-    let apps = {};
     const localStorageScreen = localStorage.getItem('screen');
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
@@ -463,23 +456,23 @@ function Main() {
     setInRange(await utils.getInRange());
 
     const newView = structuredClone(viewRef.current);
-    const hdmi = await requests.getTableFromSupabase('hdmiSala');
-    setHdmiSala(hdmi.data);
+    const hdmiSalaTable = await requests.getTableFromSupabase('hdmiSala');
+    setHdmiSala(hdmiSalaTable.data);
     subscribeToSupabaseChannel('hdmiSala');
-    newView.selected = hdmi.data.find(el => el.state === 'selected').id;
+    newView.selected = hdmiSalaTable.data.find(el => el.state === 'selected').id;
     changeView(newView);
 
     if (newView.selected === 'cable') {
-      const channels = await requests.getTableFromSupabase('cableChannels');
-      setCableChannels(channels.data);
+      const cableChannelsTable = await requests.getTableFromSupabase('cableChannels');
+      setCableChannels(cableChannelsTable.data);
       subscribeToSupabaseChannel('cableChannels');
     }
     if (newView.selected === 'roku') {
-      apps = await requests.getTableFromSupabase('rokuApps');
-      setRokuApps(apps.data);
+      const rokuAppsTable = await requests.getTableFromSupabase('rokuApps');
+      setRokuApps(rokuAppsTable.data);
       subscribeToSupabaseChannel('rokuApps');
       if (localStorage.getItem('user') && newView.selected === 'roku') {
-        getRokuData(apps.data, true);
+        getRokuData(rokuAppsTable.data, hdmiSalaTable.data);
       }
     }
     getRokuDataIntervalRef.current = setInterval(() => {
@@ -488,12 +481,12 @@ function Main() {
       }
     }, 10000);
 
-    const devices = await requests.getTableFromSupabase('devices');
-    setDevices(devices.data);
+    const devicesTable = await requests.getTableFromSupabase('devices');
+    setDevices(devicesTable.data);
     subscribeToSupabaseChannelDevices('devices');
 
-    const screens = await requests.getTableFromSupabase('screens');
-    setScreens(screens.data);
+    const screensTable = await requests.getTableFromSupabase('screens');
+    setScreens(screensTable.data);
     subscribeToSupabaseChannelDevices('screens');
 
     requests.sendLogs(user + ' entro');
@@ -520,6 +513,10 @@ function Main() {
   useEffect(() => {
     rokuAppsRef.current = rokuApps;
   }, [rokuApps]);
+
+  useEffect(() => {
+    hdmiSalaRef.current = hdmiSala;
+  }, [hdmiSala]);
 
   useEffect(() => {
     if (credential === 'dev') {
