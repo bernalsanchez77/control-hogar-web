@@ -3,18 +3,18 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SER
 export default async function handler(req, res) {
   console.log('params: ',req.body);
 
-  const currentId = null;
-  const currentTable = null;
-  const currentState = null;
+  let currentId = null;
+  let currentTable = null;
+  let currentState = null;
 
-  const newId = null;
-  const newDate = null;
-  const newTable = null;
-  const newState = null;
-  const newVolume = null;
-  const newMute = null;
-  const newColor = null;
-  const newPlayState = null;
+  let newId = null;
+  let newDate = null;
+  let newTable = null;
+  let newState = null;
+  let newVolume = null;
+  let newMute = null;
+  let newColor = null;
+  let newPlayState = null;
 
   if (req.body.current) {
     currentId = req.body.current.currentId;
