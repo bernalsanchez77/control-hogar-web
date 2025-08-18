@@ -66,9 +66,9 @@ function Main() {
         {event: '*', schema: 'public', table: tableName},
         async (change) => {
           console.log(tableName, ' changed');
+          const data = await requests['getTableFromSupabase'](tableName);
+          setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](data.data);
           if (change.new.state === 'selected') {
-            const data = await requests['getTableFromSupabase'](tableName);
-            setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](data.data);
             if (tableName === 'hdmiSala') {
               const newView = structuredClone(viewRef.current);
               newView.selected = data.data.find(el => el.state === 'selected').id;
@@ -83,26 +83,6 @@ function Main() {
               changeView(newView);
             }
           }
-        }
-      ).subscribe(status => {
-        console.log(tableName, ' status is: ', status);
-        if (status === 'SUBSCRIBED') {
-          console.log('Subscribed to ', tableName);
-        }
-      });
-    }
-  },[setters]);
-
-  const subscribeToSupabaseChannelDevices = useCallback(async (tableName) => {
-    const channel = getSupabaseChannel(tableName);
-    if (channel?.socket.state !== 'joined') {
-      channel.on(
-        'postgres_changes',
-        {event: '*', schema: 'public', table: tableName},
-        async (change) => {
-          console.log(tableName, ' changed');
-          const data = await requests['getTableFromSupabase'](tableName);
-          setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](data.data);
         }
       ).subscribe(status => {
         console.log(tableName, ' status is: ', status);
@@ -404,11 +384,11 @@ function Main() {
         }
         const devicesTable = await requests.getTableFromSupabase('devices');
         setDevices(devicesTable.data);
-        subscribeToSupabaseChannelDevices('devices');
+        subscribeToSupabaseChannel('devices');
 
         const screensTable = await requests.getTableFromSupabase('screens');
         setScreens(screensTable.data);
-        subscribeToSupabaseChannelDevices('screens');
+        subscribeToSupabaseChannel('screens');
 
         setInRange(await utils.getInRange());
         message = user + ' regreso';
@@ -447,7 +427,7 @@ function Main() {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [changeView, subscribeToSupabaseChannel, getRokuData, subscribeToSupabaseChannelDevices]);
+  }, [changeView, subscribeToSupabaseChannel, getRokuData]);
 
   const init = useCallback(async () => {
     const localStorageScreen = localStorage.getItem('screen');
@@ -485,11 +465,11 @@ function Main() {
 
     const devicesTable = await requests.getTableFromSupabase('devices');
     setDevices(devicesTable.data);
-    subscribeToSupabaseChannelDevices('devices');
+    subscribeToSupabaseChannel('devices');
 
     const screensTable = await requests.getTableFromSupabase('screens');
     setScreens(screensTable.data);
-    subscribeToSupabaseChannelDevices('screens');
+    subscribeToSupabaseChannel('screens');
 
     requests.sendLogs(user + ' entro');
     getVisibility();
@@ -499,7 +479,7 @@ function Main() {
       window.addEventListener("load", document.body.classList.add("loaded"));
     }
     console.log('version 27');
-  }, [getRokuData, getVisibility, changeView, subscribeToSupabaseChannel, subscribeToSupabaseChannelDevices]);
+  }, [getRokuData, getVisibility, changeView, subscribeToSupabaseChannel]);
 
   useEffect(() => {
     if (!initializedRef.current) {
