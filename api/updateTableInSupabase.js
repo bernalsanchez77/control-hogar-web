@@ -31,12 +31,8 @@ export default async function handler(req, res) {
   const { data, error } = await supabase
     .from(next.newTable)
     .update({
-      volume: next.newVolume,
-      mute: next.newMute,
-      color: next.newColor,
       date: next.newDate,
-      state: next.newState,
-      playState: next.newPlayState,
+      state: next.newState
     })
     .eq('id', next.newId);
 
