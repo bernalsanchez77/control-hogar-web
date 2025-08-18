@@ -230,7 +230,7 @@ function Main() {
             if (el.key === 'app') {
               const currentId = rokuApps.find(app => app.state === 'selected').id;
               const newId = rokuApps.find(app => app.id === el.value).id;
-              if (currentApp && newApp) {
+              if (currentId && newId) {
                 requests.updateTableInSupabase({
                   current: {currentId, currentTable: 'rokuApps', currentState: ''},
                   new: {newId, newtable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
