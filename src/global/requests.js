@@ -42,7 +42,7 @@ class Requests {
       info.params = params || {};
     }
     if (serializer) {
-      info.serializer = serializer || 'json';
+      info.serializer = serializer;
     }
     if (method === 'post' || method === 'put' || method === 'patch') {
       info.data = params;
@@ -83,7 +83,7 @@ class Requests {
   }
   async updateTableInSupabase(params) {
     if (window.cordova) {
-      await this.cordovaApiRequest('updateTableInSupabase', params, 'patch');
+      await this.cordovaApiRequest('updateTableInSupabase', params, 'patch', 'json');
     } else {
       await this.normalApiRequest('updateTableInSupabase', params, 'patch');
     }
