@@ -221,10 +221,13 @@ function Main() {
           //devices[el.device] = {...devices[el.device], [el.key]: el.value};
           if (el.device === 'rokuSala') {
             if (el.key === 'video') {
-              const video = youtubeVideosLiz.find(video => video.id === el.value);
-              const currentVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
-              if (video && currentVideo) {
-                requests.updateTableInSupabase({newId: video.id, table: 'youtubeVideosLiz', date: new Date().toISOString(), currentId: currentVideo.id});
+              const currentId = youtubeVideosLiz.find(vid => vid.state === 'selected').id;
+              const newId = youtubeVideosLiz.find(video => video.id === el.value).id;
+              if (currentId && newId) {
+                requests.updateTableInSupabase({
+                  current: {currentId, currentTable: 'youtubeVideosLiz', currentState: ''},
+                  new: {newId, newTable: 'youtubeVideosLiz', newState: 'selected', newDate: new Date().toISOString()}
+                });
               }
             }
             if (el.key === 'app') {
@@ -237,22 +240,31 @@ function Main() {
                 });
               }
             }
-            if (el.key === 'state') {
-              requests.updateTableInSupabase({newId: 'roku', playState: el.value, table: 'hdmiSala', date: new Date().toISOString()});
+            if (el.key === 'playState') {
+              const newId = 'roku';
+              requests.updateTableInSupabase({
+                new: {newId, newTable: 'hdmiSala', ['new' + el.key.charAt(0).toUpperCase() + el.key.slice(1)]: el.value, newDate: new Date().toISOString()}
+              });
             }
           }
           if (el.device === 'channelsSala') {
-            const channel = cableChannels.find(ch => ch.id === el.value);
-            const currentChannel = cableChannels.find(ch => ch.state === 'selected');
-            if (channel && currentChannel) {
-              requests.updateTableInSupabase({newId: channel.id, table: 'cableChannels', date: new Date().toISOString(), currentId: currentChannel.id});
+            const currentId = cableChannels.find(ch => ch.state === 'selected').id;
+            const newId = cableChannels.find(ch => ch.id === el.value).id;
+            if (currentId && newId) {
+              requests.updateTableInSupabase({
+                current: {currentId, currentTable: 'cableChannels', currentState: ''},
+                new: {newId, newTable: 'cableChannels', newState: 'selected', newDate: new Date().toISOString()}
+              });
             }
           }
           if (el.device === 'hdmiSala') {
-            const hdmi = hdmiSala.find(hd => hd.id === el.value);
-            const currentHdmi = hdmiSala.find(hd => hd.state === 'selected');
-            if (hdmi && currentHdmi) {
-              requests.updateTableInSupabase({newId: hdmi.id, table: 'hdmiSala', date: new Date().toISOString(), currentId: currentHdmi.id});
+            const currentId = hdmiSala.find(hdmi => hdmi.state === 'selected').id;
+            const newId = hdmiSala.find(hdmi => hdmi.id === el.value).id;
+            if (currentId && newId) {
+              requests.updateTableInSupabase({
+                current: {currentId, currentTable: 'hdmiSala', currentState: ''},
+                new: {newId, newTable: 'hdmiSala', newState: 'selected', newDate: new Date().toISOString()}
+              });
             }
             const newView = structuredClone(viewRef.current);
             if (el.value === 'roku') {
@@ -271,16 +283,16 @@ function Main() {
             changeView(newView);
           }
           if (el.device === 'luzEscalera' || el.device === 'luzCuarto' || el.device === 'lamparaComedor' || el.device === 'lamparaSala' || el.device === 'lamparaRotatoria' || el.device === 'chimeneaSala' || el.device === 'parlantesSala' || el.device === 'ventiladorSala' || el.device === 'calentadorNegro' || el.device === 'calentadorBlanco' || el.device === 'lamparaTurca') {
-            const device = devices.find(device => device.id === el.device);
-            requests.updateTableInSupabase({newId: device.id, table: 'devices', state: el.value, date: new Date().toISOString()});
+            const newId = devices.find(device => device.id === el.device).id;
+            requests.updateTableInSupabase({
+              new: {newId, newTable: 'devices', ['new' + el.key.charAt(0).toUpperCase() + el.key.slice(1)]: el.value, newDate: new Date().toISOString()}
+            });
           }
           if (el.device === 'teleSala' || el.device === 'teleCuarto' || el.device === 'teleCocina' || el.device === 'proyectorSala') {
-            const screen = screens.find(screen => screen.id === el.device);
-            requests.updateTableInSupabase(
-              {
-                new: {newId: screen.id, newTable: 'screens', ['new' + el.key.charAt(0).toUpperCase() + el.key.slice(1)]: el.value, newDate: new Date().toISOString()}
-              }
-            );
+            const newId = screens.find(screen => screen.id === el.device).id;
+            requests.updateTableInSupabase({
+              new: {newId, newTable: 'screens', ['new' + el.key.charAt(0).toUpperCase() + el.key.slice(1)]: el.value, newDate: new Date().toISOString()}
+            });
           }
         }
       });
@@ -307,32 +319,37 @@ function Main() {
 
   const getRokuData = useCallback(async (apps = rokuAppsRef.current) => {
     let update = false;
-    let params = {table: 'rokuApps', date: new Date().toISOString()};
-    const currentRokuId = apps.find(app => app.state === 'selected').rokuId;
-    const currentPlayState = apps.find(app => app.state === 'selected').playState;
-    let appId = apps.find(app => app.state === 'selected').id;
+    const currentApp = apps.find(app => app.state === 'selected');
+    const currentId = currentApp.id;
+    const currentRokuId = currentApp.rokuId;
+    const currentPlayState = currentApp.playState;
+    const params = {};
+    params.current = {currentId, currentTable: 'rokuApps', currentState: ''};
+    params.new = {newTable: 'rokuApps', newDate: new Date().toISOString()};
     let activeApp = await requests.getRokuData('active-app');
-    if (activeApp && activeApp.status === 200) {
-      let newRokuId = activeApp.data['active-app'].app.id;
+    //if (activeApp && activeApp.status === 200) {
+      //const newRokuId = activeApp.data['active-app'].app.id;
+      const newRokuId = 'youtube';
       if (currentRokuId !== newRokuId) {
         update = true;
-        params.currentId = appId;
-        appId = apps.find(app => app.rokuId === newRokuId).id;
-        params.newId = appId;
+        params.current.currentState = '';
+        params.new.newId = newRokuId;
+        params.new.newState = 'selected';
+        requests.updateTableInSupabase(params);
       }
-    }
-    let playState = await requests.getRokuData('media-player');
-    if (playState && playState.status === 200) {
-      let newPlayState = playState.data.player.state;
-      if (currentPlayState !== newPlayState) {
-        update = true;
-        params.playState = newPlayState;
-        params.newId = appId;
-      }
-    }
-    if (update) {
-      requests.updateTableInSupabase(params);
-    }
+    //}
+    // let playState = await requests.getRokuData('media-player');
+    // if (playState && playState.status === 200) {
+    //   let newPlayState = playState.data.player.state;
+    //   if (currentPlayState !== newPlayState) {
+    //     update = true;
+    //     params.playState = newPlayState;
+    //     params.newId = appId;
+    //   }
+    // }
+    // if (update) {
+    //   requests.updateTableInSupabase(params);
+    // }
   }, []);
 
   const getSupabaseChannel = (name) => {

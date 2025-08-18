@@ -42,7 +42,7 @@ class Requests {
       info.params = params || {};
     }
     if (serializer) {
-      info.serializer = serializer;
+      info.serializer = serializer || 'json';
     }
     if (method === 'post' || method === 'put' || method === 'patch') {
       info.data = params;

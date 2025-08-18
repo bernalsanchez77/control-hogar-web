@@ -8,12 +8,12 @@ function Toolbar({hdmiSala, changeControlParent}) {
     if (value === 'play') {
       if (roku.playState === 'play') {
         changeControlParent({
-          ifttt: [{device, key: 'state', value: 'pause'}],
+          ifttt: [{device, key: 'playState', value: 'pause'}],
           roku: [{device, key: 'keypress', value: 'Play'}]
         });
       } else {
         changeControlParent({
-          ifttt: [{device, key: 'state', value: 'play'}],
+          ifttt: [{device, key: 'playState', value: 'play'}],
           roku: [{device, key: 'keypress', value: 'Play'}]
         });
       }
