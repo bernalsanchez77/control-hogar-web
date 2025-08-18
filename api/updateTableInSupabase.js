@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 export default async function handler(req, res) {
-  console.log('params: ',req.body);
+  // console.log('params: ',req.body);
 
   let currentId = null;
   let currentTable = null;
