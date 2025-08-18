@@ -38,12 +38,12 @@ export default async function handler(req, res) {
       state: currentState
     }).eq('id', currentId);
     ({data, error} = await supabase.from(newTable).update({
-      volume: newVolume,
-      mute: newMute,
-      color: newColor,
+      // volume: newVolume,
+      // mute: newMute,
+      // color: newColor,
       date: newDate,
       state: newState,
-      playState: newPlayState
+      // playState: newPlayState
     }).eq('id', newId));
   } else {
     ({data, error} = await supabase.from(newTable).update({
