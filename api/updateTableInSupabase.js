@@ -46,7 +46,7 @@ export default async function handler(req, res) {
       playState: newPlayState
     }).eq('id', newId));
   } else {
-    ({data, error} = await supabase.from(table).update({
+    ({data, error} = await supabase.from(newTable).update({
       volume: newVolume,
       mute: newMute,
       color: newColor,
