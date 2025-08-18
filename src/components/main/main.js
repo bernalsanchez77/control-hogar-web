@@ -11,7 +11,6 @@ import Requests from '../../global/requests';
 import YoutubeDummyData from '../../global/youtube-dummy-data';
 import CableChannelCategories from '../../global/cable-channel-categories';
 import './main.css';
-import { tab } from '@testing-library/user-event/dist/tab';
 
 const requests = new Requests();
 const utils = new Utils();
@@ -377,6 +376,9 @@ function Main() {
           setHdmiSala(hdmiSalaTable.data);
           newView.selected = hdmiId;
           changeView(newView);
+        }
+        if (hdmiSalaTable.playState !== hdmiSalaRef.current.playState) {
+          setHdmiSala(hdmiSalaTable.data);
         }
 
         if (currentView.roku.apps.youtube.channel) {
