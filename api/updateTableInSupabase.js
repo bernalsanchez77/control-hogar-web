@@ -2,8 +2,36 @@ import { createClient } from '@supabase/supabase-js'
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 export default async function handler(req, res) {
   console.log('params: ',req.body);
-  const {currentId, currentTable, currentState} = req.body.current;
-  const {newId, newDate, newTable, newState, newVolume, newMute, newColor, newPlayState} = req.body.new;
+
+  const currentId = null;
+  const currentTable = null;
+  const currentState = null;
+
+  const newId = null;
+  const newDate = null;
+  const newTable = null;
+  const newState = null;
+  const newVolume = null;
+  const newMute = null;
+  const newColor = null;
+  const newPlayState = null;
+
+  if (req.body.current) {
+    currentId = req.body.current.currentId;
+    currentTable = req.body.current.currentTable;
+    currentState = req.body.current.currentState;
+  };
+  if (req.body.new) {
+    newId = req.body.new.newId;
+    newDate = req.body.new.newDate;
+    newTable = req.body.new.newTable;
+    newState = req.body.new.newState;
+    newVolume = req.body.new.newVolume;
+    newMute = req.body.new.newMute;
+    newColor = req.body.new.newColor;
+    newPlayState = req.body.new.newPlayState;
+  }
+
   let data, error;
   if (req.body.current) {
     await supabase.from(currentTable).update({
