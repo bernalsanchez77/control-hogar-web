@@ -228,10 +228,13 @@ function Main() {
               }
             }
             if (el.key === 'app') {
-              const app = rokuApps.find(app => app.id === el.value);
-              const currentApp = rokuApps.find(ap => ap.state === 'selected');
-              if (app && currentApp) {
-                requests.updateTableInSupabase({newId: app.id, table: 'rokuApps', date: new Date().toISOString(), currentId: currentApp.id});
+              const currentId = rokuApps.find(app => app.state === 'selected').id;
+              const newId = rokuApps.find(app => app.id === el.value).id;
+              if (currentApp && newApp) {
+                requests.updateTableInSupabase({
+                  current: {currentId, currentTable: 'rokuApps', currentState: ''},
+                  new: {newId, newtable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
+                });
               }
             }
             if (el.key === 'state') {
