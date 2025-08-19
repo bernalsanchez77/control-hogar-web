@@ -172,6 +172,13 @@ function Main() {
     }
   };
 
+  const setData = useCallback(async (tableName) => {
+    const table = await requests.getTableFromSupabase(tableName);
+    setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](table.data);
+    subscribeToSupabaseChannel(tableName);
+    return table;
+  }, [subscribeToSupabaseChannel, setters]);
+
   const getRokuData = useCallback(async (rokuAppsParam = rokuAppsRef.current, hdmiSalaParam = hdmiSalaRef.current) => {
     let activeApp = await requests.getRokuData('active-app');
     if (activeApp && activeApp.status === 200) {
@@ -234,16 +241,11 @@ function Main() {
         if (hdmiSalaTable.playState !== hdmiSalaRef.current.playState) {
           setHdmiSala(hdmiSalaTable.data);
         }
-
         if (currentView.roku.apps.youtube.channel) {
-          const youtubeVideosLizTable = await requests.getTableFromSupabase('youtubeVideosLiz');
-          setYoutubeVideosLiz(youtubeVideosLizTable.data);
-          subscribeToSupabaseChannel('youtubeVideosLiz');
+          await setData('youtubeVideosLiz');
         }
         if (currentView.selected === 'roku' & !currentView.roku.apps.selected) {
-          const rokuAppsTable = await requests.getTableFromSupabase('rokuApps');
-          setRokuApps(rokuAppsTable.data);
-          subscribeToSupabaseChannel('rokuApps');
+          const rokuAppsTable = await setData('rokuApps');
           getRokuData(rokuAppsTable.data, hdmiSalaTable.data);
         }
         getRokuDataIntervalRef.current = setInterval(() => {
@@ -252,17 +254,10 @@ function Main() {
           }
         }, 10000);
         if (currentView.selected === 'cable') {
-          const cableChannelsTable = await requests.getTableFromSupabase('cableChannels');
-          setCableChannels(cableChannelsTable.data);
-          subscribeToSupabaseChannel('cableChannels');
+          await setData('cableChannels');
         }
-        const devicesTable = await requests.getTableFromSupabase('devices');
-        setDevices(devicesTable.data);
-        subscribeToSupabaseChannel('devices');
-
-        const screensTable = await requests.getTableFromSupabase('screens');
-        setScreens(screensTable.data);
-        subscribeToSupabaseChannel('screens');
+        await setData('devices');
+        await setData('screens');
 
         setInRange(await utils.getInRange());
         message = user + ' regreso';
@@ -289,7 +284,7 @@ function Main() {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [changeView, subscribeToSupabaseChannel, getRokuData, hdmiChangeInSupabseChannel, unsubscribeFromSupabaseChannel]);  
+  }, [setData, changeView, subscribeToSupabaseChannel, getRokuData, hdmiChangeInSupabseChannel, unsubscribeFromSupabaseChannel]);  
 
   const init = useCallback(async () => {
     const localStorageScreen = localStorage.getItem('screen');
@@ -309,14 +304,11 @@ function Main() {
     setView(await viewRouter.changeView(newView, viewRef.current, youtubeChannelsLiz, setters));
 
     if (newView.selected === 'cable') {
-      const cableChannelsTable = await requests.getTableFromSupabase('cableChannels');
-      setCableChannels(cableChannelsTable.data);
-      subscribeToSupabaseChannel('cableChannels');
+      await setData('cableChannels');
     }
+
     if (newView.selected === 'roku') {
-      const rokuAppsTable = await requests.getTableFromSupabase('rokuApps');
-      setRokuApps(rokuAppsTable.data);
-      subscribeToSupabaseChannel('rokuApps');
+      const rokuAppsTable = await setData('youtubeChannelsLiz');
       if (localStorage.getItem('user') && newView.selected === 'roku') {
         getRokuData(rokuAppsTable.data, hdmiSalaTable.data);
       }
@@ -327,13 +319,8 @@ function Main() {
       }
     }, 10000);
 
-    const devicesTable = await requests.getTableFromSupabase('devices');
-    setDevices(devicesTable.data);
-    subscribeToSupabaseChannel('devices');
-
-    const screensTable = await requests.getTableFromSupabase('screens');
-    setScreens(screensTable.data);
-    subscribeToSupabaseChannel('screens');
+    await setData('devices');
+    await setData('screens');
 
     requests.sendLogs(user + ' entro');
     getVisibility();
@@ -343,7 +330,7 @@ function Main() {
       window.addEventListener("load", document.body.classList.add("loaded"));
     }
     console.log('version 27');
-  }, [youtubeChannelsLiz, setters, getRokuData, getVisibility, subscribeToSupabaseChannel, hdmiChangeInSupabseChannel]);
+  }, [setData, youtubeChannelsLiz, setters, getRokuData, getVisibility, subscribeToSupabaseChannel, hdmiChangeInSupabseChannel]);
 
   useEffect(() => {
     if (!initializedRef.current) {
