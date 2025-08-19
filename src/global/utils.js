@@ -1,3 +1,4 @@
+import supabase from './supabase-client';
 class Utils {
     isHome(lat, lon) {
         const latCentro = 9.9333;
@@ -97,5 +98,45 @@ class Utils {
     firstCharToUpperCase(text) {
       return text.charAt(0).toUpperCase() + text.slice(1)
     }
+
+    subscribeToSupabaseChannel(tableName, supabaseChannelsRef, callback) {
+      const select = tableName !== 'devices' && tableName !== 'screens';
+      const channel = this.getSupabaseChannel(tableName, supabaseChannelsRef);
+      if (channel?.socket.state !== 'joined') {
+        channel.on(
+          'postgres_changes',
+          {event: '*', schema: 'public', table: tableName},
+          async (change) => {
+            console.log(change.table, ' changed');
+            const name = 'set' + change.table.charAt(0).toUpperCase() + change.table.slice(1);
+            if (select) {
+              if (change.new.state === 'selected') {
+                if (callback) {
+                  callback(name, change.new);
+                }
+              }
+            } else {
+              if (callback) {
+                callback(name, change.new);
+              }
+            }
+          }
+        ).subscribe(status => {
+          console.log(tableName, ' status is: ', status);
+          if (status === 'SUBSCRIBED') {
+            console.log('Subscribed to ', tableName);
+          }
+        });
+      }
+    }
+
+    getSupabaseChannel(name, supabaseChannelsRef) {
+      if (!supabaseChannelsRef.current[name]) {
+        console.log(`Creating channel: ${name}`);
+        supabaseChannelsRef.current[name] = supabase.channel(name);
+      }
+      return supabaseChannelsRef.current[name];
+    }
+
 }
 export default Utils;

@@ -473,7 +473,9 @@ function Main() {
     if (newView.selected === 'roku') {
       const rokuAppsTable = await requests.getTableFromSupabase('rokuApps');
       setRokuApps(rokuAppsTable.data);
-      subscribeToSupabaseChannel('rokuApps');
+      utils.subscribeToSupabaseChannel('rokuApps', supabaseChannelsRef, (name, change) => {
+        setters[name](change);
+      });
       if (localStorage.getItem('user') && newView.selected === 'roku') {
         getRokuData(rokuAppsTable.data, hdmiSalaTable.data);
       }
@@ -500,7 +502,7 @@ function Main() {
       window.addEventListener("load", document.body.classList.add("loaded"));
     }
     console.log('version 27');
-  }, [getRokuData, getVisibility, changeView, subscribeToSupabaseChannel]);
+  }, [getRokuData, getVisibility, changeView, subscribeToSupabaseChannel, setters]);
 
   useEffect(() => {
     if (!initializedRef.current) {
