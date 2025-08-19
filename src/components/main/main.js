@@ -42,7 +42,7 @@ function Main() {
   const cableChannelCategories = new CableChannelCategories().getCableChannelCategories();
   // eslint-disable-next-line
   const youtubeDummyData = new YoutubeDummyData().getYoutubeDummyData();
-  const setters = useMemo(() => {return {setYoutubeVideosLiz, setRokuApps, setCableChannels, setHdmiSala, setDevices, setScreens}}, []);
+  const setters = useMemo(() => {return {setYoutubeVideosLiz, setYoutubeChannelsLiz, setRokuApps, setCableChannels, setHdmiSala, setDevices, setScreens}}, []);
 
   //useRef Variables
   const initializedRef = useRef(false);
@@ -73,89 +73,9 @@ function Main() {
     supabaseChannels.unsubscribeFromSupabaseChannel(tableName);
   }, []);
 
-  const changeView = useCallback(async (params) => {
-    const newView = structuredClone(params);
-
-    if (newView.selected === 'cable') {
-      // cable selected
-      if (viewRef.current.selected === 'cable') {
-        // was in cable
-        if (newView.cable.channels.category.length) {
-          // category selected   
-        } else {
-        }
-      }
-      if (viewRef.current.selected === 'roku') {
-        // was in roku
-        const channels = await requests.getTableFromSupabase('cableChannels');
-        setCableChannels(channels.data);
-        subscribeToSupabaseChannel('cableChannels');
-        if (viewRef.current.roku.apps.selected) {
-          // was in an app 
-          if (viewRef.current.roku.apps.selected === 'youtube') {
-            // app was Youtube
-            if (viewRef.current.roku.apps.youtube.channel) {
-             unsubscribeFromSupabaseChannel('youtubeVideosLiz');     
-            }
-          } 
-        } else {
-          // was in home
-          unsubscribeFromSupabaseChannel('rokuApps');             
-        }
-      }
-    }
-
-    if (newView.selected === 'roku') {
-      // roku selected
-      if (viewRef.current.selected === 'roku') {
-        // was in roku
-        if (newView.roku.apps.selected) {
-          // app is selected
-          if (viewRef.current.roku.apps.selected) {
-            // was in an app
-            if (newView.roku.apps.selected === 'youtube') {
-              // app is Youtube
-              if (newView.roku.apps.youtube.channel) {
-                // youtube channel selected
-                const videos = await requests.getTableFromSupabase('youtubeVideosLiz');
-                setYoutubeVideosLiz(videos.data);
-                subscribeToSupabaseChannel('youtubeVideosLiz');
-              } else {
-                // youtube channel is not selected
-                unsubscribeFromSupabaseChannel('youtubeVideosLiz');
-              }
-            }
-          } else {
-            // was in home
-            unsubscribeFromSupabaseChannel('rokuApps');
-            if (newView.roku.apps.selected === 'youtube') {
-              // app is Youtube
-              if (!youtubeChannelsLiz.length) {
-                const channels = await requests.getTableFromSupabase('youtubeChannelsLiz');
-                setYoutubeChannelsLiz(channels.data);
-              }
-            }
-          }
-        } else {
-          // no app selected
-          if (viewRef.current.roku.apps.selected) {
-            // was in an app
-            const apps = await requests.getTableFromSupabase('rokuApps');
-            setRokuApps(apps.data);
-            subscribeToSupabaseChannel('rokuApps');
-          }
-        }
-      }
-      if (viewRef.current.selected === 'cable') {
-        //was in cable
-        unsubscribeFromSupabaseChannel('cableChannels');
-        const apps = await requests.getTableFromSupabase('rokuApps');
-        setRokuApps(apps.data);
-        subscribeToSupabaseChannel('rokuApps');
-      }
-    }
-    setView(newView);
-  }, [youtubeChannelsLiz.length, viewRef, subscribeToSupabaseChannel, unsubscribeFromSupabaseChannel]);
+  const changeView = useCallback(async (newView) => {
+    setView(await viewRouter.changeView(newView, viewRef.current, youtubeChannelsLiz, setters));
+  }, [youtubeChannelsLiz, viewRef, setters]);
 
   const changeControl = (params) => {
     if (!params.ignoreVibration) {
@@ -232,7 +152,7 @@ function Main() {
         }
       });
     }
-};
+  };
 
   const setCredentials = async (userCredential) => {
     if (userCredential === 'guest') {
@@ -291,8 +211,8 @@ function Main() {
       newView.roku.apps.youtube.mode = '';
       newView.roku.apps.youtube.channel = '';
     }
-    setView(viewRouter.changeView(newView, viewRef.current, youtubeChannelsLiz, setters));
-  }, [youtubeChannelsLiz, setters]);
+    changeView(newView);
+  }, [changeView]);
 
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = async () => {
@@ -386,7 +306,7 @@ function Main() {
       hdmiChangeInSupabseChannel(change.id);
     });
     newView.selected = hdmiSalaTable.data.find(el => el.state === 'selected').id;
-    changeView(newView);
+    setView(await viewRouter.changeView(newView, viewRef.current, youtubeChannelsLiz, setters));
 
     if (newView.selected === 'cable') {
       const cableChannelsTable = await requests.getTableFromSupabase('cableChannels');
@@ -423,7 +343,7 @@ function Main() {
       window.addEventListener("load", document.body.classList.add("loaded"));
     }
     console.log('version 27');
-  }, [getRokuData, getVisibility, changeView, subscribeToSupabaseChannel, hdmiChangeInSupabseChannel]);
+  }, [youtubeChannelsLiz, setters, getRokuData, getVisibility, subscribeToSupabaseChannel, hdmiChangeInSupabseChannel]);
 
   useEffect(() => {
     if (!initializedRef.current) {
