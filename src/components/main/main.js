@@ -6,6 +6,8 @@ import Controls from './controls/controls';
 import Credentials from './credentials/credentials';
 import Dev from './dev/dev';
 import Utils from '../../global/utils';
+import SupabaseChannels from '../../global/supabase-channels';
+import ViewRouter from '../../global/view-router';
 import Requests from '../../global/requests';
 import YoutubeDummyData from '../../global/youtube-dummy-data';
 import CableChannelCategories from '../../global/cable-channel-categories';
@@ -13,6 +15,8 @@ import './main.css';
 
 const requests = new Requests();
 const utils = new Utils();
+const supabaseChannels = new SupabaseChannels();
+const viewRouter = new ViewRouter();
 const user = utils.getUser(`${window.screen.width}x${window.screen.height}`);
 
 function Main() {
@@ -42,7 +46,6 @@ function Main() {
 
   //useRef Variables
   const initializedRef = useRef(false);
-  const supabaseChannelsRef = useRef({});
   const viewRef = useRef(view);
   const rokuAppsRef = useRef(rokuApps);
   const hdmiSalaRef = useRef(hdmiSala);
@@ -58,7 +61,7 @@ function Main() {
   };
 
   const subscribeToSupabaseChannel = useCallback(async (tableName, callback) => {
-    utils.subscribeToSupabaseChannel(tableName, supabaseChannelsRef, (itemName, newItem) => {
+    supabaseChannels.subscribeToSupabaseChannel(tableName, (itemName, newItem) => {
       setters[itemName](items => items.map(item => item.id === newItem.id ? newItem : item));
       if (callback) {
         callback(newItem);
@@ -67,7 +70,7 @@ function Main() {
   },[setters]);
 
   const unsubscribeFromSupabaseChannel = useCallback((tableName) => {
-    utils.unsubscribeFromSupabaseChannel(tableName, supabaseChannelsRef);
+    supabaseChannels.unsubscribeFromSupabaseChannel(tableName);
   }, []);
 
   const changeView = useCallback(async (params) => {
@@ -303,7 +306,7 @@ function Main() {
       newView.roku.apps.youtube.mode = '';
       newView.roku.apps.youtube.channel = '';
     }
-    changeView(newView);
+    viewRouter.changeView(newView);
   }, [changeView]);     
 
   const getVisibility = useCallback(() => {

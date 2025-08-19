@@ -1,6 +1,5 @@
-import supabase from './supabase-client';
 class Utils {
-    supabaseChannelsRef = {};
+    supabaseChannels = {};
     isHome(lat, lon) {
         const latCentro = 9.9333;
         const lonCentro = -84.0845;
@@ -98,44 +97,6 @@ class Utils {
     }
     firstCharToUpperCase(text) {
       return text.charAt(0).toUpperCase() + text.slice(1)
-    }
-
-    subscribeToSupabaseChannel(tableName, supabaseChannelsRef, callback) {
-      // const select = tableName !== 'devices' && tableName !== 'screens';
-      const channel = this.getSupabaseChannel(tableName, supabaseChannelsRef);
-      if (channel?.socket.state !== 'joined') {
-        channel.on(
-          'postgres_changes',
-          {event: '*', schema: 'public', table: tableName},
-          async (change) => {
-            console.log(change.table, ' changed');
-            if (callback) {
-              callback('set' + this.firstCharToUpperCase(change.table), change.new);
-            }
-          }
-        ).subscribe(status => {
-          console.log(tableName, ' status is: ', status);
-          if (status === 'SUBSCRIBED') {
-            console.log('Subscribed to ', tableName);
-          }
-        });
-      }
-    }
-
-    getSupabaseChannel(name) {
-      if (!this.supabaseChannelsRef[name]) {
-        console.log(`Creating channel: ${name}`);
-        this.supabaseChannelsRef[name] = supabase.channel(name);
-      }
-      return this.supabaseChannelsRef[name];
-    }
-
-    unsubscribeFromSupabaseChannel(tableName) {
-      if (this.supabaseChannelsRef[tableName]) {
-        console.log(`Removing channel: ${tableName}`);
-        this.supabaseChannelsRef[tableName].unsubscribe();
-        delete this.supabaseChannelsRef[tableName];
-      }
     }
 }
 export default Utils;
