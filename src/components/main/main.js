@@ -216,21 +216,6 @@ function Main() {
                 new: {newId, newTable: 'hdmiSala', newState: 'selected', newDate: new Date().toISOString()}
               });
             }
-            const newView = structuredClone(viewRef.current);
-            if (el.value === 'roku') {
-              if (newView.selected === 'cable') {
-                newView.cable.channels.category = [];
-              }
-            }
-            if (el.value === 'cable') {
-              if (newView.selected === 'roku') {
-                  newView.roku.apps.selected = '';
-                  newView.roku.apps.youtube.mode = '';
-                  newView.roku.apps.youtube.channel = '';
-              }
-            }
-            newView.selected = el.value;
-            changeView(newView);
           }
           if (el.device === 'luzEscalera' || el.device === 'luzCuarto' || el.device === 'lamparaComedor' || el.device === 'lamparaSala' || el.device === 'lamparaRotatoria' || el.device === 'chimeneaSala' || el.device === 'parlantesSala' || el.device === 'ventiladorSala' || el.device === 'calentadorNegro' || el.device === 'calentadorBlanco' || el.device === 'lamparaTurca') {
             const newId = devices.find(device => device.id === el.device).id;
@@ -306,8 +291,8 @@ function Main() {
       newView.roku.apps.youtube.mode = '';
       newView.roku.apps.youtube.channel = '';
     }
-    viewRouter.changeView(newView, viewRef, youtubeChannelsLiz, setView, setCableChannels, setRokuApps, setYoutubeVideosLiz, setYoutubeChannelsLiz);
-  }, [changeView]);     
+    setView(viewRouter.changeView(newView, viewRef.current, youtubeChannelsLiz, setters));
+  }, [youtubeChannelsLiz, setters]);
 
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = async () => {
