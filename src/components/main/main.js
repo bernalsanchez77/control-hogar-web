@@ -58,30 +58,29 @@ function Main() {
     // setYoutubeSearchVideos(youtubeDummyData);
   };
 
-  const subscribeToSupabaseChannel = useCallback(async (tableName) => {
+  const subscribeToSupabaseChannel = useCallback(async (tableName, callback) => {
     const channel = getSupabaseChannel(tableName);
     if (channel?.socket.state !== 'joined') {
       channel.on(
         'postgres_changes',
         {event: '*', schema: 'public', table: tableName},
         async (change) => {
-          console.log(tableName, ' changed');
-          const data = await requests['getTableFromSupabase'](tableName);
-          setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](data.data);
-          if (change.new.state === 'selected') {
-            if (tableName === 'hdmiSala') {
-              const newView = structuredClone(viewRef.current);
-              newView.selected = data.data.find(el => el.state === 'selected').id;
-              if (newView.selected === 'roku') {
-                newView.cable.channels.category = [];
-              }
-              if (newView.selected === 'cable') {
-                newView.roku.apps.selected = '';
-                newView.roku.apps.youtube.mode = '';
-                newView.roku.apps.youtube.channel = '';
-              }
-              changeView(newView);
+          console.log(change.table, ' changed');
+          // const table = await requests['getTableFromSupabase'](tableName);
+          setters['set' + change.table.charAt(0).toUpperCase() + change.table.slice(1)](change.new);
+          callback();
+          if (change.table === 'hdmiSala' && change.new.state === 'selected') {
+            const newView = structuredClone(viewRef.current);
+            newView.selected = change.new.find(el => el.state === 'selected').id;
+            if (newView.selected === 'roku') {
+              newView.cable.channels.category = [];
             }
+            if (newView.selected === 'cable') {
+              newView.roku.apps.selected = '';
+              newView.roku.apps.youtube.mode = '';
+              newView.roku.apps.youtube.channel = '';
+            }
+            changeView(newView);
           }
         }
       ).subscribe(status => {
