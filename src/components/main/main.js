@@ -59,6 +59,7 @@ function Main() {
   };
 
   const subscribeToSupabaseChannel = useCallback(async (tableName, callback) => {
+    const select = tableName !== 'devices' && tableName !== 'screens';
     const channel = getSupabaseChannel(tableName);
     if (channel?.socket.state !== 'joined') {
       channel.on(
@@ -66,21 +67,18 @@ function Main() {
         {event: '*', schema: 'public', table: tableName},
         async (change) => {
           console.log(change.table, ' changed');
-          // const table = await requests['getTableFromSupabase'](tableName);
-          setters['set' + change.table.charAt(0).toUpperCase() + change.table.slice(1)](change.new);
-          //callback();
-          if (change.table === 'hdmiSala' && change.new.state === 'selected') {
-            const newView = structuredClone(viewRef.current);
-            newView.selected = change.new.find(el => el.state === 'selected').id;
-            if (newView.selected === 'roku') {
-              newView.cable.channels.category = [];
+          if (select) {
+            if (change.new.state === 'selected') {
+              setters['set' + change.table.charAt(0).toUpperCase() + change.table.slice(1)](change.new);
+              if (callback) {
+                callback(change);
+              }
             }
-            if (newView.selected === 'cable') {
-              newView.roku.apps.selected = '';
-              newView.roku.apps.youtube.mode = '';
-              newView.roku.apps.youtube.channel = '';
+          } else {
+            setters['set' + change.table.charAt(0).toUpperCase() + change.table.slice(1)](change.new);
+            if (callback) {
+              callback(change);
             }
-            changeView(newView);
           }
         }
       ).subscribe(status => {
@@ -347,7 +345,19 @@ function Main() {
       if (document.visibilityState === 'visible') {
         setUserActive(true);
 
-        subscribeToSupabaseChannel('hdmiSala');
+        subscribeToSupabaseChannel('hdmiSala', async (change) => {
+          const newView = structuredClone(viewRef.current);
+          newView.selected = change.new.id;
+          if (newView.selected === 'roku') {
+            newView.cable.channels.category = [];
+          }
+          if (newView.selected === 'cable') {
+            newView.roku.apps.selected = '';
+            newView.roku.apps.youtube.mode = '';
+            newView.roku.apps.youtube.channel = '';
+          }
+          changeView(newView);
+        });
         const newView = structuredClone(viewRef.current);
         const hdmiSalaTable = await requests.getTableFromSupabase('hdmiSala');
         const hdmiId = hdmiSalaTable.data.find(el => el.state === 'selected').id;
@@ -439,7 +449,19 @@ function Main() {
     const newView = structuredClone(viewRef.current);
     const hdmiSalaTable = await requests.getTableFromSupabase('hdmiSala');
     setHdmiSala(hdmiSalaTable.data);
-    subscribeToSupabaseChannel('hdmiSala');
+    subscribeToSupabaseChannel('hdmiSala', (change) => {
+      const newView = structuredClone(viewRef.current);
+      newView.selected = change.new.id;
+      if (newView.selected === 'roku') {
+        newView.cable.channels.category = [];
+      }
+      if (newView.selected === 'cable') {
+        newView.roku.apps.selected = '';
+        newView.roku.apps.youtube.mode = '';
+        newView.roku.apps.youtube.channel = '';
+      }
+      changeView(newView);
+    });
     newView.selected = hdmiSalaTable.data.find(el => el.state === 'selected').id;
     changeView(newView);
 
