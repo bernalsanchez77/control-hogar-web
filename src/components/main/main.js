@@ -306,7 +306,7 @@ function Main() {
       newView.roku.apps.youtube.mode = '';
       newView.roku.apps.youtube.channel = '';
     }
-    viewRouter.changeView(newView);
+    viewRouter.changeView(newView, viewRef, youtubeChannelsLiz, setView, setCableChannels, setRokuApps, setYoutubeVideosLiz, setYoutubeChannelsLiz);
   }, [changeView]);     
 
   const getVisibility = useCallback(() => {
