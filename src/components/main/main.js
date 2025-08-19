@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo} from 'react';
 import eruda from 'eruda';
-import supabase from '../../global/supabase-client';
 import Screens from './screens/screens';
 import Devices from './devices/devices';
 import Controls from './controls/controls';
@@ -59,36 +58,17 @@ function Main() {
   };
 
   const subscribeToSupabaseChannel = useCallback(async (tableName, callback) => {
-    const select = tableName !== 'devices' && tableName !== 'screens';
-    const channel = getSupabaseChannel(tableName);
-    if (channel?.socket.state !== 'joined') {
-      channel.on(
-        'postgres_changes',
-        {event: '*', schema: 'public', table: tableName},
-        async (change) => {
-          console.log(change.table, ' changed');
-          if (select) {
-            if (change.new.state === 'selected') {
-              setters['set' + change.table.charAt(0).toUpperCase() + change.table.slice(1)](change.new);
-              if (callback) {
-                callback(change);
-              }
-            }
-          } else {
-            setters['set' + change.table.charAt(0).toUpperCase() + change.table.slice(1)](change.new);
-            if (callback) {
-              callback(change);
-            }
-          }
-        }
-      ).subscribe(status => {
-        console.log(tableName, ' status is: ', status);
-        if (status === 'SUBSCRIBED') {
-          console.log('Subscribed to ', tableName);
-        }
-      });
-    }
+    utils.subscribeToSupabaseChannel(tableName, supabaseChannelsRef, (itemName, newItem) => {
+      setters[itemName](items => items.map(item => item.id === newItem.id ? newItem : item));
+      if (callback) {
+        callback(newItem);
+      }
+    });
   },[setters]);
+
+  const unsubscribeFromSupabaseChannel = useCallback((tableName) => {
+    utils.unsubscribeFromSupabaseChannel(tableName, supabaseChannelsRef);
+  }, []);
 
   const changeView = useCallback(async (params) => {
     const newView = structuredClone(params);
@@ -109,19 +89,15 @@ function Main() {
         subscribeToSupabaseChannel('cableChannels');
         if (viewRef.current.roku.apps.selected) {
           // was in an app 
-         if (viewRef.current.roku.apps.selected === 'youtube') {
-           // app was Youtube
-           if (viewRef.current.roku.apps.youtube.channel) {
-             if (supabaseChannelsRef.current['youtubeVideosLiz']) {
-               unsubscribeFromSupabaseChannel('youtubeVideosLiz');
-             }      
-           }
-         } 
+          if (viewRef.current.roku.apps.selected === 'youtube') {
+            // app was Youtube
+            if (viewRef.current.roku.apps.youtube.channel) {
+             unsubscribeFromSupabaseChannel('youtubeVideosLiz');     
+            }
+          } 
         } else {
           // was in home
-          if (supabaseChannelsRef.current['rokuApps']) {
-            unsubscribeFromSupabaseChannel('rokuApps');
-          }               
+          unsubscribeFromSupabaseChannel('rokuApps');             
         }
       }
     }
@@ -143,16 +119,12 @@ function Main() {
                 subscribeToSupabaseChannel('youtubeVideosLiz');
               } else {
                 // youtube channel is not selected
-                if (supabaseChannelsRef.current['youtubeVideosLiz']) {
-                  unsubscribeFromSupabaseChannel('youtubeVideosLiz');
-                }
+                unsubscribeFromSupabaseChannel('youtubeVideosLiz');
               }
             }
           } else {
             // was in home
-            if (supabaseChannelsRef.current['rokuApps']) {
-              unsubscribeFromSupabaseChannel('rokuApps');
-            }
+            unsubscribeFromSupabaseChannel('rokuApps');
             if (newView.roku.apps.selected === 'youtube') {
               // app is Youtube
               if (!youtubeChannelsLiz.length) {
@@ -173,16 +145,14 @@ function Main() {
       }
       if (viewRef.current.selected === 'cable') {
         //was in cable
-        if (supabaseChannelsRef.current['cableChannels']) {
-          unsubscribeFromSupabaseChannel('cableChannels');
-        }      
+        unsubscribeFromSupabaseChannel('cableChannels');
         const apps = await requests.getTableFromSupabase('rokuApps');
         setRokuApps(apps.data);
         subscribeToSupabaseChannel('rokuApps');
       }
     }
     setView(newView);
-  }, [youtubeChannelsLiz.length, viewRef, subscribeToSupabaseChannel]);
+  }, [youtubeChannelsLiz.length, viewRef, subscribeToSupabaseChannel, unsubscribeFromSupabaseChannel]);
 
   const changeControl = (params) => {
     if (!params.ignoreVibration) {
@@ -322,21 +292,19 @@ function Main() {
     }
   }, []);
 
-  const getSupabaseChannel = (name) => {
-    if (!supabaseChannelsRef.current[name]) {
-      console.log(`Creating channel: ${name}`);
-      supabaseChannelsRef.current[name] = supabase.channel(name);
+  const hdmiChangeInSupabseChannel = useCallback(async (id) => {
+    const newView = structuredClone(viewRef.current);
+    newView.selected = id;
+    if (newView.selected === 'roku') {
+      newView.cable.channels.category = [];
     }
-    return supabaseChannelsRef.current[name];
-  };
-
-  function unsubscribeFromSupabaseChannel(tableName) {
-    if (supabaseChannelsRef.current[tableName]) {
-      console.log(`Removing channel: ${tableName}`);
-      supabaseChannelsRef.current[tableName].unsubscribe();
-      delete supabaseChannelsRef.current[tableName];
+    if (newView.selected === 'cable') {
+      newView.roku.apps.selected = '';
+      newView.roku.apps.youtube.mode = '';
+      newView.roku.apps.youtube.channel = '';
     }
-  }
+    changeView(newView);
+  }, [changeView]);     
 
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = async () => {
@@ -344,19 +312,8 @@ function Main() {
       const currentView = viewRef.current;
       if (document.visibilityState === 'visible') {
         setUserActive(true);
-
-        subscribeToSupabaseChannel('hdmiSala', async (change) => {
-          const newView = structuredClone(viewRef.current);
-          newView.selected = change.new.id;
-          if (newView.selected === 'roku') {
-            newView.cable.channels.category = [];
-          }
-          if (newView.selected === 'cable') {
-            newView.roku.apps.selected = '';
-            newView.roku.apps.youtube.mode = '';
-            newView.roku.apps.youtube.channel = '';
-          }
-          changeView(newView);
+        subscribeToSupabaseChannel('hdmiSala', (change) => {
+          hdmiChangeInSupabseChannel(change.id);
         });
         const newView = structuredClone(viewRef.current);
         const hdmiSalaTable = await requests.getTableFromSupabase('hdmiSala');
@@ -404,30 +361,18 @@ function Main() {
       } else {
         setUserActive(false);
         clearInterval(getRokuDataIntervalRef);
-        if (supabaseChannelsRef.current['hdmiSala']) {
-          unsubscribeFromSupabaseChannel('hdmiSala');
-        }
+        unsubscribeFromSupabaseChannel('hdmiSala');
         if (currentView.roku.apps.youtube.channel) {
-          if (supabaseChannelsRef.current['youtubeVideosLiz']) {
-            unsubscribeFromSupabaseChannel('youtubeVideosLiz');
-          }
+          unsubscribeFromSupabaseChannel('youtubeVideosLiz');
         }
         if (currentView.selected === 'roku' & !currentView.roku.apps.selected) {
-          if (supabaseChannelsRef.current['rokuApps']) {
-            unsubscribeFromSupabaseChannel('rokuApps');
-          }
+          unsubscribeFromSupabaseChannel('rokuApps');
         }
         if (currentView.selected === 'cable') {
-          if (supabaseChannelsRef.current['cableChannels']) {
-            unsubscribeFromSupabaseChannel('cableChannels');
-          }
+          unsubscribeFromSupabaseChannel('cableChannels');
         }
-        if (supabaseChannelsRef.current['devices']) {
-          unsubscribeFromSupabaseChannel('devices');
-        }
-        if (supabaseChannelsRef.current['screens']) {
-          unsubscribeFromSupabaseChannel('screens');
-        }
+        unsubscribeFromSupabaseChannel('devices');
+        unsubscribeFromSupabaseChannel('screens');
         message = user + ' salio';
       }
       requests.sendLogs(message);
@@ -436,7 +381,7 @@ function Main() {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [changeView, subscribeToSupabaseChannel, getRokuData]);
+  }, [changeView, subscribeToSupabaseChannel, getRokuData, hdmiChangeInSupabseChannel, unsubscribeFromSupabaseChannel]);  
 
   const init = useCallback(async () => {
     const localStorageScreen = localStorage.getItem('screen');
@@ -450,17 +395,7 @@ function Main() {
     const hdmiSalaTable = await requests.getTableFromSupabase('hdmiSala');
     setHdmiSala(hdmiSalaTable.data);
     subscribeToSupabaseChannel('hdmiSala', (change) => {
-      const newView = structuredClone(viewRef.current);
-      newView.selected = change.new.id;
-      if (newView.selected === 'roku') {
-        newView.cable.channels.category = [];
-      }
-      if (newView.selected === 'cable') {
-        newView.roku.apps.selected = '';
-        newView.roku.apps.youtube.mode = '';
-        newView.roku.apps.youtube.channel = '';
-      }
-      changeView(newView);
+      hdmiChangeInSupabseChannel(change.id);
     });
     newView.selected = hdmiSalaTable.data.find(el => el.state === 'selected').id;
     changeView(newView);
@@ -473,9 +408,7 @@ function Main() {
     if (newView.selected === 'roku') {
       const rokuAppsTable = await requests.getTableFromSupabase('rokuApps');
       setRokuApps(rokuAppsTable.data);
-      utils.subscribeToSupabaseChannel('rokuApps', supabaseChannelsRef, (name, change) => {
-        setters[name](change);
-      });
+      subscribeToSupabaseChannel('rokuApps');
       if (localStorage.getItem('user') && newView.selected === 'roku') {
         getRokuData(rokuAppsTable.data, hdmiSalaTable.data);
       }
@@ -502,7 +435,7 @@ function Main() {
       window.addEventListener("load", document.body.classList.add("loaded"));
     }
     console.log('version 27');
-  }, [getRokuData, getVisibility, changeView, subscribeToSupabaseChannel, setters]);
+  }, [getRokuData, getVisibility, changeView, subscribeToSupabaseChannel, hdmiChangeInSupabseChannel]);
 
   useEffect(() => {
     if (!initializedRef.current) {

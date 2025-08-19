@@ -1,5 +1,6 @@
 import supabase from './supabase-client';
 class Utils {
+    supabaseChannelsRef = {};
     isHome(lat, lon) {
         const latCentro = 9.9333;
         const lonCentro = -84.0845;
@@ -100,7 +101,7 @@ class Utils {
     }
 
     subscribeToSupabaseChannel(tableName, supabaseChannelsRef, callback) {
-      const select = tableName !== 'devices' && tableName !== 'screens';
+      // const select = tableName !== 'devices' && tableName !== 'screens';
       const channel = this.getSupabaseChannel(tableName, supabaseChannelsRef);
       if (channel?.socket.state !== 'joined') {
         channel.on(
@@ -108,17 +109,8 @@ class Utils {
           {event: '*', schema: 'public', table: tableName},
           async (change) => {
             console.log(change.table, ' changed');
-            const name = 'set' + change.table.charAt(0).toUpperCase() + change.table.slice(1);
-            if (select) {
-              if (change.new.state === 'selected') {
-                if (callback) {
-                  callback(name, change.new);
-                }
-              }
-            } else {
-              if (callback) {
-                callback(name, change.new);
-              }
+            if (callback) {
+              callback('set' + this.firstCharToUpperCase(change.table), change.new);
             }
           }
         ).subscribe(status => {
@@ -130,13 +122,20 @@ class Utils {
       }
     }
 
-    getSupabaseChannel(name, supabaseChannelsRef) {
-      if (!supabaseChannelsRef.current[name]) {
+    getSupabaseChannel(name) {
+      if (!this.supabaseChannelsRef[name]) {
         console.log(`Creating channel: ${name}`);
-        supabaseChannelsRef.current[name] = supabase.channel(name);
+        this.supabaseChannelsRef[name] = supabase.channel(name);
       }
-      return supabaseChannelsRef.current[name];
+      return this.supabaseChannelsRef[name];
     }
 
+    unsubscribeFromSupabaseChannel(tableName) {
+      if (this.supabaseChannelsRef[tableName]) {
+        console.log(`Removing channel: ${tableName}`);
+        this.supabaseChannelsRef[tableName].unsubscribe();
+        delete this.supabaseChannelsRef[tableName];
+      }
+    }
 }
 export default Utils;
