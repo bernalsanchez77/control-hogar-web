@@ -68,7 +68,7 @@ function Main() {
           console.log(change.table, ' changed');
           // const table = await requests['getTableFromSupabase'](tableName);
           setters['set' + change.table.charAt(0).toUpperCase() + change.table.slice(1)](change.new);
-          callback();
+          //callback();
           if (change.table === 'hdmiSala' && change.new.state === 'selected') {
             const newView = structuredClone(viewRef.current);
             newView.selected = change.new.find(el => el.state === 'selected').id;
