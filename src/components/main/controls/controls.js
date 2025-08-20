@@ -60,6 +60,7 @@ function Controls({screens, devices, rokuSearchMode, changeRokuSearchModeParent,
           changeControlParent={changeControl}>
         </Toolbar>
         }
+        {((view.selected === 'roku' && rokuApps.length) || (view.selected === 'cable' && cableChannels.length)) &&
         <Search
           view={view}
           rokuSearchMode={rokuSearchMode}
@@ -70,6 +71,7 @@ function Controls({screens, devices, rokuSearchMode, changeRokuSearchModeParent,
           changeRokuSearchModeParent={changeRokuSearchMode}
           changeControlParent={changeControl}>
         </Search>
+        }
         {view.selected === 'roku' &&
         <Apps
           view={view}

@@ -7,7 +7,22 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
   const [searchText, setSearchText] = useState('');
   const [modeVisibility, setModeVisibility] = useState(false);
   const inputRef = useRef(null);
-  const placeholder = view.selected === 'roku' ? 'Buscar en Youtube' : 'Buscar Canal';
+  let placeholder = '';
+  const appSelected = rokuApps.find(app => app.state === 'selected');
+  if (view.selected === 'roku' && appSelected) {
+    if (appSelected.id === 'home') {
+      placeholder = 'Buscar en Youtube';
+    } else {
+      if (rokuSearchMode) {
+        placeholder = `Buscar en ${appSelected.label} TV`;
+      } else {
+        placeholder = `Buscar en ${appSelected.label}`;
+      }
+    }
+  }
+  if (view.selected === 'cable') {
+    placeholder = 'Buscar Canal';
+  }
 
   const searchQuery = () => {
     if (searchText) {
@@ -42,13 +57,14 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
     e.preventDefault();
     clearTimeout(timeout3s.current);
     if (longClick.current) {
-      if (view.roku.apps.selected) {
+      const home = rokuApps.find(app => app.id === 'home').state;
+      if (!home) {
         setSearchText('');
         setModeVisibility(true);
         if (rokuSearchMode) {
           changeRokuSearchMode(false);
         } else {
-          const youtubeSelected = rokuApps.find(app => app.id === 'youtube').selected;
+          const youtubeSelected = rokuApps.find(app => app.id === 'youtube').state;
           if (youtubeSelected) {
             const device = 'rokuSala';
             changeControlParent({
@@ -78,10 +94,25 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
   }
 
   const onChange = (e) => {
-    setSearchText(e.target.value);
+    const newValue = e.target.value;
+    const oldValue = searchText;
+
     if (rokuSearchMode) {
-      searchRokuModeParent(e.target.value[e.target.value.length - 1]);
+      if (newValue.length > oldValue.length) {
+        // Characters were added
+        const addedText = newValue.slice(oldValue.length);
+        for (const char of addedText) {
+          searchRokuModeParent(`Lit_${char}`);
+        }
+      } else if (newValue.length < oldValue.length) {
+        // Characters were deleted
+        const numDeleted = oldValue.length - newValue.length;
+        for (let i = 0; i < numDeleted; i++) {
+          searchRokuModeParent('Backspace');
+        }
+      }
     }
+    setSearchText(e.target.value);
   }
 
   return (

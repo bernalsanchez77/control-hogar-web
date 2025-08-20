@@ -63,7 +63,7 @@ function Main() {
 
   const seachRokuMode = (text) => {
     requests.sendControl(sendEnabled, {
-      roku: [{key: 'keypress', value: 'Lit_' + text}]
+      roku: [{key: 'keypress', value: text}]
     });
   }
 
@@ -101,6 +101,9 @@ function Main() {
         } else {
           //devices[el.device] = {...devices[el.device], [el.key]: el.value};
           if (el.device === 'rokuSala') {
+            if (el.key === 'app' && el.value === 'home') {
+              setRokuSearchMode(false);
+            }
             if (el.key === 'video') {
               const currentId = youtubeVideosLiz.find(vid => vid.state === 'selected').id;
               const newId = youtubeVideosLiz.find(video => video.id === el.value).id;
