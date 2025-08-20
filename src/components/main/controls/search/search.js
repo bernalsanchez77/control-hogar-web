@@ -1,7 +1,7 @@
 import {useRef, useState} from 'react';
 import './search.css';
 
-function Search({view, rokuSearchMode, changeViewParent, searchYoutubeParent, searchRokuModeParent, changeRokuSearchModeParent}) {
+function Search({view, rokuSearchMode, changeViewParent, searchYoutubeParent, searchRokuModeParent, changeRokuSearchModeParent, changeControlParent}) {
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   const [searchText, setSearchText] = useState('');
@@ -48,11 +48,17 @@ function Search({view, rokuSearchMode, changeViewParent, searchYoutubeParent, se
         if (rokuSearchMode) {
           changeRokuSearchMode(false);
         } else {
+          if (view.roku.apps.selected === 'youtube') {
+            const device = 'rokuSala';
+            changeControlParent({
+              roku: [{device, key: 'keypress', value: 'Up'}],
+            });
+            changeControlParent({
+              roku: [{device, key: 'keypress', value: 'Select'}],
+            });
+          }
           inputRef.current.focus();
           changeRokuSearchMode(true);
-        }
-        if (view.roku.apps.selected === 'youtube') {
-          console.log('en youtube');
         }
         setTimeout(() => {
           setModeVisibility(false);

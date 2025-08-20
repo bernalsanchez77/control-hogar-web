@@ -22,7 +22,8 @@ class ViewRouter {
         setters.setCableChannels(channels.data);
         supabaseChannels.subscribeToSupabaseChannel('cableChannels');
         if (currentView.roku.apps.selected) {
-          // was in an app 
+          // was in an app
+          setters.setRokuSearchMode(false);
           if (currentView.roku.apps.selected === 'youtube') {
             // app was Youtube
             if (currentView.roku.apps.youtube.channel) {
@@ -74,6 +75,7 @@ class ViewRouter {
             const apps = await requests.getTableFromSupabase('rokuApps');
             setters.setRokuApps(apps.data);
             supabaseChannels.subscribeToSupabaseChannel('rokuApps');
+            setters.setRokuSearchMode(false);
           }
         }
       }

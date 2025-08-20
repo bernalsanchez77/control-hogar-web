@@ -23,6 +23,7 @@ function Main() {
 
   //useState Variables
 
+  const [rokuSearchMode, setRokuSearchMode] = useState(false);
   const [inRange, setInRange] = useState(false);
   const [userActive, setUserActive] = useState(true);
   const [credential, setCredential] = useState('');
@@ -42,7 +43,7 @@ function Main() {
   const cableChannelCategories = new CableChannelCategories().getCableChannelCategories();
   // eslint-disable-next-line
   const youtubeDummyData = new YoutubeDummyData().getYoutubeDummyData();
-  const setters = useMemo(() => {return {setYoutubeVideosLiz, setYoutubeChannelsLiz, setRokuApps, setCableChannels, setHdmiSala, setDevices, setScreens}}, []);
+  const setters = useMemo(() => {return {setRokuSearchMode, setYoutubeVideosLiz, setYoutubeChannelsLiz, setRokuApps, setCableChannels, setHdmiSala, setDevices, setScreens}}, []);
 
   //useRef Variables
   const initializedRef = useRef(false);
@@ -64,6 +65,10 @@ function Main() {
     requests.sendControl(sendEnabled, {
       roku: [{key: 'keypress', value: 'Lit_' + text}]
     });
+  }
+
+  const changeRokuSearchMode = (mode) => {
+    setRokuSearchMode(mode);
   }
 
   const subscribeToSupabaseChannel = useCallback(async (tableName, callback) => {
@@ -403,6 +408,7 @@ function Main() {
           <Controls
             screenSelected={screenSelected}
             view={view}
+            rokuSearchMode={rokuSearchMode}
             rokuApps={rokuApps}
             hdmiSala={hdmiSala}
             devices={devices}
@@ -416,7 +422,8 @@ function Main() {
             changeControlParent={changeControl}
             triggerVibrateParent={utils.triggerVibrate}
             searchYoutubeParent={searchYoutube}
-            searchRokuModeParent={seachRokuMode}>
+            searchRokuModeParent={seachRokuMode}
+            changeRokuSearchModeParent={changeRokuSearchMode}>
           </Controls>
           {devices.length && view.roku.apps.selected === '' &&
           <Devices
