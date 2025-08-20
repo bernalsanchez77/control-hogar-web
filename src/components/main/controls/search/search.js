@@ -41,11 +41,11 @@ function Search({view, changeViewParent, searchYoutubeParent, searchRokuModePare
       setSearchText('');
       if (rokuSearchMode.current) {
         rokuSearchMode.current = false;
-        consolw.log('roku search inactive');
+        console.log('roku search inactive');
       } else {
         inputRef.current.focus();
         rokuSearchMode.current = true;
-        consolw.log('roku search active');
+        console.log('roku search active');
       }
     } else {
       searchQuery();
