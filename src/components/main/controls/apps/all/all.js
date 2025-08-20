@@ -20,7 +20,6 @@ function Apps({view, rokuApps, changeControlParent, changeViewParent}) {
   }
 
   const onTouchStart = (e) => {
-    // e.preventDefault();
     timeout3s.current = setTimeout(() => {
       longClick.current = true;
     }, 500);

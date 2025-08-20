@@ -2,7 +2,6 @@ import './toolbar.css';
 
 function Toolbar({hdmiSala, changeControlParent}) {
   const roku = hdmiSala.find(hdmi => hdmi.id === 'roku');
-  console.log(roku);
   const changeControl = (value) => {
     const device = 'rokuSala';
     if (value === 'play') {

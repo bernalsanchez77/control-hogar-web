@@ -60,6 +60,12 @@ function Main() {
     // setYoutubeSearchVideos(youtubeDummyData);
   };
 
+  const seachRokuMode = (text) => {
+    requests.sendControl(sendEnabled, {
+      roku: [{key: 'keypress', value: 'Lit_' + text}]
+    });
+  }
+
   const subscribeToSupabaseChannel = useCallback(async (tableName, callback) => {
     supabaseChannels.subscribeToSupabaseChannel(tableName, (itemName, newItem) => {
       setters[itemName](items => items.map(item => item.id === newItem.id ? newItem : item));
@@ -409,7 +415,8 @@ function Main() {
             changeViewParent={changeView}
             changeControlParent={changeControl}
             triggerVibrateParent={utils.triggerVibrate}
-            searchYoutubeParent={searchYoutube}>
+            searchYoutubeParent={searchYoutube}
+            searchRokuModeParent={seachRokuMode}>
           </Controls>
           {devices.length && view.roku.apps.selected === '' &&
           <Devices
