@@ -39,7 +39,14 @@ function Search({view, changeViewParent, searchYoutubeParent, searchRokuModePare
     clearTimeout(timeout3s.current);
     if (longClick.current) {
       setSearchText('');
-      inputRef.current.focus();
+      if (rokuSearchMode.current) {
+        rokuSearchMode.current = false;
+        consolw.log('roku search inactive');
+      } else {
+        inputRef.current.focus();
+        rokuSearchMode.current = true;
+        consolw.log('roku search active');
+      }
     } else {
       searchQuery();
     }
