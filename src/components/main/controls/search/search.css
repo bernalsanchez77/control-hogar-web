@@ -43,9 +43,14 @@
     position: absolute;
     width: 230px;
     padding: 2px 0;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.5s;
 }
 .controls-search-mode span {
     color: white;
     width: 100%;
     font-size: 12px;
+}
+.controls-search-mode--visible {
+    opacity: 1;
 }

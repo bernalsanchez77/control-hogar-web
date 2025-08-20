@@ -1,12 +1,12 @@
 import {useRef, useState} from 'react';
 import './search.css';
 
-function Search({view, changeViewParent, searchYoutubeParent, searchRokuModeParent}) {
+function Search({view, rokuSearchMode, changeViewParent, searchYoutubeParent, searchRokuModeParent, changeRokuSearchModeParent}) {
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   const [searchText, setSearchText] = useState('');
+  const [modeVisibility, setModeVisibility] = useState(false);
   const inputRef = useRef(null);
-  const [rokuSearchMode, setRokuSearchMode] = useState('');
   const placeholder = view.selected === 'roku' ? 'Buscar en Youtube' : 'Buscar Canal';
 
   const searchQuery = () => {
@@ -29,6 +29,10 @@ function Search({view, changeViewParent, searchYoutubeParent, searchRokuModePare
     }
   };
 
+  const changeRokuSearchMode = (mode) => {
+    changeRokuSearchModeParent(mode);
+  }
+
   const onTouchStart = (e) => {
     timeout3s.current = setTimeout(() => {
       longClick.current = true;
@@ -38,14 +42,21 @@ function Search({view, changeViewParent, searchYoutubeParent, searchRokuModePare
     e.preventDefault();
     clearTimeout(timeout3s.current);
     if (longClick.current) {
-      setSearchText('');
-      if (rokuSearchMode) {
-        setRokuSearchMode(false);
-        console.log('roku search inactive');
-      } else {
-        inputRef.current.focus();
-        setRokuSearchMode(true);
-        console.log('roku search active');
+      if (view.roku.apps.selected) {
+        setSearchText('');
+        setModeVisibility(true);
+        if (rokuSearchMode) {
+          changeRokuSearchMode(false);
+        } else {
+          inputRef.current.focus();
+          changeRokuSearchMode(true);
+        }
+        if (view.roku.apps.selected === 'youtube') {
+          console.log('en youtube');
+        }
+        setTimeout(() => {
+          setModeVisibility(false);
+        }, 3000);
       }
     } else {
       searchQuery();
@@ -91,7 +102,7 @@ function Search({view, changeViewParent, searchYoutubeParent, searchRokuModePare
           </button>
         </div>
       </div>
-      <div className='controls-search-mode'>
+      <div className={`controls-search-mode ${modeVisibility ? 'controls-search-mode--visible' : ''}`}>
         <span>{rokuSearchMode ? 'Modo busqueda en Roku activo' : 'Modo busqueda en Roku inactivo'}</span>
       </div>
     </div>

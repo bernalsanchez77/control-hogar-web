@@ -334,7 +334,7 @@ function Main() {
       window.addEventListener("load", document.body.classList.add("loaded"));
     }
     console.log('version 27');
-  }, [setData, youtubeChannelsLiz, setters, getRokuData, getVisibility, subscribeToSupabaseChannel, hdmiChangeInSupabaseChannel]);
+  }, [setData, youtubeChannelsLiz, setters, getRokuData, getVisibility, hdmiChangeInSupabaseChannel]);
 
   useEffect(() => {
     if (!initializedRef.current) {

@@ -1,4 +1,4 @@
-import {useRef} from 'react';
+import {useState} from 'react';
 
 import Top from './top/top';
 import Arrows from './arrows/arrows';
@@ -11,7 +11,7 @@ import Apps from './apps/apps';
 import './controls.css';
 
 function Controls({screens, devices, screenSelected, view, hdmiSala, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, changeVibrateParent, searchYoutubeParent, searchRokuModeParent}) {
-  const searchMode = useRef(false);
+  const [rokuSearchMode, setRokuSearchMode] = useState(false);
   const changeControl = (params) => {
     changeControlParent(params);
   }
@@ -25,8 +25,11 @@ function Controls({screens, devices, screenSelected, view, hdmiSala, rokuApps, y
   }
 
   const searchYoutube = (text) => {
-    searchMode.current = true;
     searchYoutubeParent(text);
+  }
+
+  const changeRokuSearchMode = (mode) => {
+    setRokuSearchMode(mode);
   }
 
   return (
@@ -62,9 +65,11 @@ function Controls({screens, devices, screenSelected, view, hdmiSala, rokuApps, y
         }
         <Search
           view={view}
+          rokuSearchMode={rokuSearchMode}
           changeViewParent={changeView}
           searchYoutubeParent={searchYoutube}
-          searchRokuModeParent={searchRokuModeParent}>
+          searchRokuModeParent={searchRokuModeParent}
+          changeRokuSearchModeParent={changeRokuSearchMode}>
         </Search>
         {view.selected === 'roku' &&
         <Apps
