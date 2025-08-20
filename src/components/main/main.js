@@ -56,27 +56,21 @@ function Main() {
 
 
   const searchYoutube = async (text) => {
-    if (!params.ignoreVibration) {
-      utils.triggerVibrate();
-    }
+    utils.triggerVibrate();
     const videos = await requests.searchYoutube(text);
     setYoutubeSearchVideos(videos);
     // setYoutubeSearchVideos(youtubeDummyData);
   };
 
   const seachRokuMode = (text) => {
-    if (!params.ignoreVibration) {
-      utils.triggerVibrate();
-    }
+    utils.triggerVibrate();
     requests.sendControl(sendEnabled, {
       roku: [{key: 'keypress', value: text}]
     });
   }
 
   const changeRokuSearchMode = (mode) => {
-    if (!params.ignoreVibration) {
-      utils.triggerVibrate();
-    }
+    utils.triggerVibrate();
     setRokuSearchMode(mode);
   }
 
@@ -113,7 +107,7 @@ function Main() {
             if (el.key === 'app' && el.value === 'home') {
               setRokuSearchMode(false);
             }
-            if (el.key === 'video') {
+            if (el.key === 'video' && viewRef.current.roku.apps.youtube.mode === 'channel') {
               const currentId = youtubeVideosLiz.find(vid => vid.state === 'selected').id;
               const newId = youtubeVideosLiz.find(video => video.id === el.value).id;
               if (currentId && newId) {

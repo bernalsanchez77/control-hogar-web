@@ -17,7 +17,7 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
   };
   const changeControl = (video) => {
     const currentVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
-    if (currentVideo.id !== video) {
+    if (currentVideo?.id !== video) {
       const device = 'rokuSala';
       const rokuId = rokuApps.find(app => app.id === 'youtube').rokuId;
       changeControlParent({
@@ -54,9 +54,14 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
     }
   }
 
-  const onTouchEnd = (e, video) => {
+  const onTouchEnd = (type ,video) => {
     if (!touchMoved) {
-      changeControl(video);
+      if (type === 'channel') {
+        changeView(video);
+      }
+      if (type === 'video') {
+        changeControl(video);
+      }
     }
   }
 
@@ -70,7 +75,9 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
             <li key={key} className='controls-apps-youtube-li'>
               <button
                 className={'controls-apps-youtube-channel-button'}
-                onTouchStart={() => changeView(channel.id)}>
+                onTouchStart={(e) => onTouchStart(e)}
+                onTouchMove={(e) => onTouchMove(e)}
+                onTouchEnd={(e) => onTouchEnd('channel', channel.id)}>
                 <img
                   className='controls-apps-youtube-channel-img'
                   src={channel.img}
@@ -94,9 +101,9 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
             <li key={key} className='controls-apps-youtube-li'>
               <button
                 className={`controls-apps-youtube-video-button ${video.state === 'selected' ? 'controls-apps-youtube-video-button--selected' : ''}`}
-                onTouchStart={(e) => onTouchStart(e, video.id)}
-                onTouchMove={(e) => onTouchMove(e, video.id)}
-                onTouchEnd={(e) => onTouchEnd(e, video.id)}>
+                onTouchStart={(e) => onTouchStart(e)}
+                onTouchMove={(e) => onTouchMove(e)}
+                onTouchEnd={(e) => onTouchEnd('video', video.id)}>
                 <img
                   className='controls-apps-youtube-video-img'
                   src={video.img}
