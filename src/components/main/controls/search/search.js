@@ -6,13 +6,13 @@ function Search({view, changeViewParent, searchYoutubeParent, searchRokuModePare
   const longClick = useRef(false);
   const [searchText, setSearchText] = useState('');
   const inputRef = useRef(null);
-  const rokuSearchMode = useRef(false);
+  const [rokuSearchMode, setRokuSearchMode] = useState('');
   const placeholder = view.selected === 'roku' ? 'Buscar en Youtube' : 'Buscar Canal';
 
   const searchQuery = () => {
     if (searchText) {
       if (view.selected === 'roku') {
-        if (rokuSearchMode.current) {
+        if (rokuSearchMode) {
           searchRokuModeParent(searchText);
         } else {
           const newView = structuredClone(view);
@@ -39,15 +39,13 @@ function Search({view, changeViewParent, searchYoutubeParent, searchRokuModePare
     clearTimeout(timeout3s.current);
     if (longClick.current) {
       setSearchText('');
-      if (rokuSearchMode.current) {
-        rokuSearchMode.current = false;
+      if (rokuSearchMode) {
+        setRokuSearchMode(false);
         console.log('roku search inactive');
-        alert('Modo busqueda en Roku desactivado');
       } else {
         inputRef.current.focus();
-        rokuSearchMode.current = true;
+        setRokuSearchMode(true);
         console.log('roku search active');
-        alert('Modo busqueda en Roku activado');
       }
     } else {
       searchQuery();
@@ -63,7 +61,7 @@ function Search({view, changeViewParent, searchYoutubeParent, searchRokuModePare
 
   const onChange = (e) => {
     setSearchText(e.target.value);
-    if (rokuSearchMode.current) {
+    if (rokuSearchMode) {
       searchRokuModeParent(e.target.value[e.target.value.length - 1]);
     }
   }
@@ -92,6 +90,9 @@ function Search({view, changeViewParent, searchYoutubeParent, searchRokuModePare
             Buscar
           </button>
         </div>
+      </div>
+      <div className='controls-search-mode'>
+        <span>{rokuSearchMode ? 'Modo busqueda en Roku activo' : 'Modo busqueda en Roku inactivo'}</span>
       </div>
     </div>
   )
