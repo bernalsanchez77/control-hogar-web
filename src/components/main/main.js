@@ -56,18 +56,27 @@ function Main() {
 
 
   const searchYoutube = async (text) => {
+    if (!params.ignoreVibration) {
+      utils.triggerVibrate();
+    }
     const videos = await requests.searchYoutube(text);
     setYoutubeSearchVideos(videos);
     // setYoutubeSearchVideos(youtubeDummyData);
   };
 
   const seachRokuMode = (text) => {
+    if (!params.ignoreVibration) {
+      utils.triggerVibrate();
+    }
     requests.sendControl(sendEnabled, {
       roku: [{key: 'keypress', value: text}]
     });
   }
 
   const changeRokuSearchMode = (mode) => {
+    if (!params.ignoreVibration) {
+      utils.triggerVibrate();
+    }
     setRokuSearchMode(mode);
   }
 
