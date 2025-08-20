@@ -42,10 +42,12 @@ function Search({view, changeViewParent, searchYoutubeParent, searchRokuModePare
       if (rokuSearchMode.current) {
         rokuSearchMode.current = false;
         console.log('roku search inactive');
+        alert('Modo busqueda en Roku desactivado');
       } else {
         inputRef.current.focus();
         rokuSearchMode.current = true;
         console.log('roku search active');
+        alert('Modo busqueda en Roku activado');
       }
     } else {
       searchQuery();
@@ -61,6 +63,9 @@ function Search({view, changeViewParent, searchYoutubeParent, searchRokuModePare
 
   const onChange = (e) => {
     setSearchText(e.target.value);
+    if (rokuSearchMode.current) {
+      searchRokuModeParent(e.target.value[e.target.value.length - 1]);
+    }
   }
 
   return (
