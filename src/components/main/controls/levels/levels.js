@@ -169,10 +169,10 @@ function Levels({screenSelected, view, screens, cableChannels, changeControlPare
           <div className='controls-levels-element controls-levels-element--right'>
             <button
               className={`controls-levels-button`}
-              onTouchStart={() => changeControl('home')}>
+              onTouchStart={() => changeControl('back', false)}>
               <img
                 className='controls-levels-img controls-levels-img--button'
-                src="/imgs/home-50.png"
+                src="/imgs/back-50.png"
                 alt="icono">
               </img>
             </button>
