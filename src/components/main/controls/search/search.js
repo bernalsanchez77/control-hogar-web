@@ -30,13 +30,15 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
         if (rokuSearchMode) {
           searchRokuModeParent('Enter');
         } else {
-          const newView = structuredClone(view);
-          newView.roku.apps.youtube.mode = 'search';
-          newView.roku.apps.youtube.channel = '';
-          newView.roku.apps.selected = 'youtube';
-          newView.devices.device = '';
-          changeViewParent(newView);
-          searchYoutubeParent(searchText);
+          if (view.roku.apps.selected === 'youtube' && view.roku.apps.youtube.mode === '') {
+            const newView = structuredClone(view);
+            newView.roku.apps.youtube.mode = 'search';
+            newView.roku.apps.youtube.channel = '';
+            newView.roku.apps.selected = 'youtube';
+            newView.devices.device = '';
+            changeViewParent(newView);
+            searchYoutubeParent(searchText);
+          }
         }
       }
       if (view.selected === 'cable') {

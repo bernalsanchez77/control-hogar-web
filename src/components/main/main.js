@@ -406,10 +406,10 @@ function Main() {
         changeView(newView);
       }
     }
-    document.addEventListener("backbutton", handleBackButton, false);
+    //document.addEventListener("backbutton", handleBackButton, false);
     return () => {
       // cleanup
-      document.removeEventListener("backbutton", handleBackButton, false);
+      //document.removeEventListener("backbutton", handleBackButton, false);
     };
   }, [changeView, viewRef]);
 

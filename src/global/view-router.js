@@ -15,7 +15,6 @@ class ViewRouter {
           // category selected
           const cableCategory = newView.cable.channels.category[0];
           window.history.pushState({page: cableCategory}, cableCategory, '#' + cableCategory);
-
         } else {
         }
       }
@@ -50,16 +49,23 @@ class ViewRouter {
             // was in an app
             if (newView.roku.apps.selected === 'youtube') {
               // app is Youtube
-              if (newView.roku.apps.youtube.channel) {
-                // youtube channel selected
-                const youtubeChannel = newView.roku.apps.youtube.channel;
-                window.history.pushState({page: youtubeChannel}, youtubeChannel, '#' + youtubeChannel);
-                const videos = await requests.getTableFromSupabase('youtubeVideosLiz');
-                setters.setYoutubeVideosLiz(videos.data);
-                supabaseChannels.subscribeToSupabaseChannel('youtubeVideosLiz');
+              if (newView.roku.apps.youtube.mode) {
+                // youtube is in a mode
+                if (newView.roku.apps.youtube.mode === 'channel') {
+                  // youtube is in channel mode
+                  const youtubeChannel = newView.roku.apps.youtube.channel;
+                  window.history.pushState({page: youtubeChannel}, youtubeChannel, '#' + youtubeChannel);
+                  const videos = await requests.getTableFromSupabase('youtubeVideosLiz');
+                  setters.setYoutubeVideosLiz(videos.data);
+                  supabaseChannels.subscribeToSupabaseChannel('youtubeVideosLiz');
+                }
+                if (newView.roku.apps.youtube.mode === 'search') {
+                  // youtube is in search mode
+                  supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideosLiz');
+                  window.history.pushState({page: 'search'}, 'search', '#' + 'search');
+                }
               } else {
-                // youtube channel is not selected
-                supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideosLiz');
+                // youtube is in home mode
               }
             }
           } else {
@@ -92,6 +98,12 @@ class ViewRouter {
         const apps = await requests.getTableFromSupabase('rokuApps');
         setters.setRokuApps(apps.data);
         supabaseChannels.subscribeToSupabaseChannel('rokuApps');
+      }
+    }
+
+    if (newView.selected === 'cable' || newView.selected === 'roku' ) {
+      if (newView.devices.device) {
+        window.history.pushState({page: 'devices'}, 'devices', '#' + 'devices');
       }
     }
     return newView;
