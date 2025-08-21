@@ -93,10 +93,17 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
   }
 
   const onKeyDown = (e) => {
-    if (e.key === "Enter" || e.keyCode === 13) {
-      console.log('enter pressed');
-      searchRokuModeParent('Enter');
-    } 
+    if (rokuSearchMode) {
+      if (e.key === "Backspace") {
+        searchRokuModeParent("Backspace");
+      } else if (e.key === "Enter") {
+        searchRokuModeParent("Enter");
+      } else if (e.key === " ") {
+        searchRokuModeParent("Lit_%20");
+      } else if (e.key.length === 1) {
+        searchRokuModeParent(`Lit_${encodeURIComponent(e.key)}`);
+      }
+    }
   }
 
   const onChange = (e) => {
@@ -108,16 +115,16 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
         const addedText = newValue.slice(oldValue.length);
         for (const char of addedText) {
           if (char === ' ') {
-            searchRokuModeParent('Lit_%20');
+            // searchRokuModeParent('Lit_%20');
           } else {
-            searchRokuModeParent(`Lit_${encodeURIComponent(char)}`);
+            // searchRokuModeParent(`Lit_${encodeURIComponent(char)}`);
           }
         }
       } else if (newValue.length < oldValue.length) {
         // Characters were deleted
         const numDeleted = oldValue.length - newValue.length;
         for (let i = 0; i < numDeleted; i++) {
-          searchRokuModeParent('Backspace');
+          // searchRokuModeParent('Backspace');
         }
       }
     }

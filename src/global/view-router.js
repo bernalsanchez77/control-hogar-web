@@ -12,7 +12,10 @@ class ViewRouter {
       if (currentView.selected === 'cable') {
         // was in cable
         if (newView.cable.channels.category.length) {
-          // category selected   
+          // category selected
+          const cableCategory = newView.cable.channels.category[0];
+          window.history.pushState({page: cableCategory}, cableCategory, '#' + cableCategory);
+
         } else {
         }
       }
@@ -49,6 +52,8 @@ class ViewRouter {
               // app is Youtube
               if (newView.roku.apps.youtube.channel) {
                 // youtube channel selected
+                const youtubeChannel = newView.roku.apps.youtube.channel;
+                window.history.pushState({page: youtubeChannel}, youtubeChannel, '#' + youtubeChannel);
                 const videos = await requests.getTableFromSupabase('youtubeVideosLiz');
                 setters.setYoutubeVideosLiz(videos.data);
                 supabaseChannels.subscribeToSupabaseChannel('youtubeVideosLiz');
@@ -59,8 +64,10 @@ class ViewRouter {
             }
           } else {
             // was in home
+            const app = newView.roku.apps.selected;
+            window.history.pushState({page: app}, app, '#' + app);
             supabaseChannels.unsubscribeFromSupabaseChannel('rokuApps');
-            if (newView.roku.apps.selected === 'youtube') {
+            if (app === 'youtube') {
               // app is Youtube
               if (!youtubeChannelsLiz.length) {
                 const channels = await requests.getTableFromSupabase('youtubeChannelsLiz');

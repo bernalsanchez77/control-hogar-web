@@ -30,7 +30,7 @@ function Levels({screenSelected, view, screens, cableChannels, changeControlPare
     let newChannel = {};
     const device = 'channelsSala';
     let newChannelOrder = 0;
-    const channelOrderSelected = cableChannels.find(ch => ch.state == 'selected').order;
+    const channelOrderSelected = cableChannels.find(ch => ch.state === 'selected').order;
     if (value === 'up') {
       newChannelOrder = channelOrderSelected + 1; 
     }
