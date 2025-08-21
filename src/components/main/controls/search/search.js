@@ -91,30 +91,32 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
     inputRef.current.blur();
   }
 
+  const onKeyDown = (e) => {
+    if (e.key === "Enter" || e.keyCode === 13) {
+      console.log('enter pressed');
+      searchRokuModeParent('Enter');
+    } 
+  }
+
   const onChange = (e) => {
     const newValue = e.target.value;
     const oldValue = searchText;
-
     if (rokuSearchMode) {
-      if (e.key === "Enter") {
-        searchRokuModeParent('Enter');
-      } else {
-        if (newValue.length > oldValue.length) {
-          // Characters were added
-          const addedText = newValue.slice(oldValue.length);
-          for (const char of addedText) {
-            if (char === ' ') {
-              searchRokuModeParent('Lit_%20');
-            } else {
-              searchRokuModeParent(`Lit_${encodeURIComponent(char)}`);
-            }
+      if (newValue.length > oldValue.length) {
+        // Characters were added
+        const addedText = newValue.slice(oldValue.length);
+        for (const char of addedText) {
+          if (char === ' ') {
+            searchRokuModeParent('Lit_%20');
+          } else {
+            searchRokuModeParent(`Lit_${encodeURIComponent(char)}`);
           }
-        } else if (newValue.length < oldValue.length) {
-          // Characters were deleted
-          const numDeleted = oldValue.length - newValue.length;
-          for (let i = 0; i < numDeleted; i++) {
-            searchRokuModeParent('Backspace');
-          }
+        }
+      } else if (newValue.length < oldValue.length) {
+        // Characters were deleted
+        const numDeleted = oldValue.length - newValue.length;
+        for (let i = 0; i < numDeleted; i++) {
+          searchRokuModeParent('Backspace');
         }
       }
     }
@@ -135,7 +137,8 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
             enterKeyHint="search"
             placeholder={placeholder}
             value={searchText}
-            onChange={(e) => onChange(e)}>
+            onChange={(e) => onChange(e)}
+            onKeyDown={onKeyDown}>
           </input>
         </form>
         <div className="controls-search-button-wrapper">
@@ -146,9 +149,9 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
           </button>
         </div>
       </div>
-      <div className={`controls-search-mode ${modeVisibility ? 'controls-search-mode--visible' : ''}`}>
+      {/* <div className={`controls-search-mode ${modeVisibility ? 'controls-search-mode--visible' : ''}`}>
         <span>{rokuSearchMode ? 'Modo busqueda en Roku activo' : ''}</span>
-      </div>
+      </div> */}
     </div>
   )
 }
