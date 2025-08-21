@@ -373,6 +373,43 @@ function Main() {
     }
   }, [credential]);
 
+  useEffect(() => {
+    function handleBackButton(e) {
+      e.preventDefault();
+      console.log('back button triggered');
+      const newView = structuredClone(view);
+      if (view.selected === 'roku') {
+        if (view.roku.apps.selected) {
+          if (view.roku.apps.youtube.mode === 'channel' || view.roku.apps.youtube.mode === 'search') {
+            newView.roku.apps.youtube.mode = '';
+            if (view.roku.apps.youtube.channel !== '') {
+              newView.roku.apps.youtube.channel = '';
+            }
+            changeView(newView);
+          } else {
+            newView.roku.apps.selected = '';
+            changeView(newView);
+          }
+        }
+      }
+      if (view.selected === 'cable') {
+        if (view.cable.channels.category.length) {
+          newView.cable.channels.category = [];
+          changeView(newView);
+        }
+      }
+      if (view.devices.device) {
+        newView.devices.device = '';
+        changeView(newView);
+      }
+    }
+    document.addEventListener("backbutton", handleBackButton, false);
+    return () => {
+      // cleanup
+      document.removeEventListener("backbutton", handleBackButton, false);
+    };
+  }, []);
+
   const enableSend = () => {
     if (sendEnabled === true) {
       setSendEnabled(false);

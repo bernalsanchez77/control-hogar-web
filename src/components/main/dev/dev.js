@@ -12,7 +12,7 @@ function Dev({sendEnabled, changeDevParent, enableSendParent, removeStorageParen
   return (
     <div className='dev'>
       <div className='dev-row'>
-        <div className='dev-element'>
+        <div className='dev-element dev-element--send'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className={`dev-button ${sendEnabled ? "dev-button--on" : "dev-button-off"}`}
@@ -20,7 +20,7 @@ function Dev({sendEnabled, changeDevParent, enableSendParent, removeStorageParen
               Enable Changes
             </button>
         </div>
-        <div className='dev-element'>
+        <div className='dev-element dev-element--remove'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className={`dev-button`}

@@ -67,12 +67,9 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
           const youtubeSelected = rokuApps.find(app => app.id === 'youtube').state;
           if (youtubeSelected) {
             const device = 'rokuSala';
-            changeControlParent({
-              roku: [{device, key: 'keypress', value: 'Up'}],
-            });
-            changeControlParent({
-              roku: [{device, key: 'keypress', value: 'Select'}],
-            });
+            // changeControlParent({
+            //   roku: [{device, key: 'keypress', value: 'Up'}],
+            // });
           }
           inputRef.current.focus();
           changeRokuSearchMode(true);
@@ -102,7 +99,11 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
         // Characters were added
         const addedText = newValue.slice(oldValue.length);
         for (const char of addedText) {
-          searchRokuModeParent(`Lit_${char}`);
+          if (char === ' ') {
+            searchRokuModeParent('Lit_%20');
+          } else {
+            searchRokuModeParent(`Lit_${encodeURIComponent(char)}`);
+          }
         }
       } else if (newValue.length < oldValue.length) {
         // Characters were deleted
