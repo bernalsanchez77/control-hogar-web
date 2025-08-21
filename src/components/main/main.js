@@ -375,7 +375,6 @@ function Main() {
 
   useEffect(() => {
     function handleBackButton(e) {
-      e.preventDefault();
       console.log('back button triggered');
       const newView = structuredClone(viewRef.current);
       if (viewRef.current.selected === 'roku') {
@@ -385,9 +384,11 @@ function Main() {
             if (viewRef.current.roku.apps.youtube.channel !== '') {
               newView.roku.apps.youtube.channel = '';
             }
+            e.preventDefault();
             changeView(newView);
           } else {
             newView.roku.apps.selected = '';
+            e.preventDefault();
             changeView(newView);
           }
         }
@@ -395,11 +396,13 @@ function Main() {
       if (viewRef.current.selected === 'cable') {
         if (viewRef.current.cable.channels.category.length) {
           newView.cable.channels.category = [];
+          e.preventDefault();
           changeView(newView);
         }
       }
       if (viewRef.current.devices.device) {
         newView.devices.device = '';
+        e.preventDefault();
         changeView(newView);
       }
     }

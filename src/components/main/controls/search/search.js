@@ -60,10 +60,11 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
       const home = rokuApps.find(app => app.id === 'home').state;
       if (!home) {
         setSearchText('');
-        setModeVisibility(true);
         if (rokuSearchMode) {
+          setModeVisibility(false);
           changeRokuSearchMode(false);
         } else {
+          setModeVisibility(true);
           const youtubeSelected = rokuApps.find(app => app.id === 'youtube').state;
           if (youtubeSelected) {
             const device = 'rokuSala';
@@ -74,9 +75,9 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
           inputRef.current.focus();
           changeRokuSearchMode(true);
         }
-        setTimeout(() => {
-          setModeVisibility(false);
-        }, 3000);
+        // setTimeout(() => {
+        //   setModeVisibility(false);
+        // }, 3000);
       }
     } else {
       searchQuery();
@@ -99,10 +100,14 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
         // Characters were added
         const addedText = newValue.slice(oldValue.length);
         for (const char of addedText) {
-          if (char === ' ') {
-            searchRokuModeParent('Lit_%20');
+          if (e.key === "Enter") {
+            searchRokuModeParent('Enter');
           } else {
-            searchRokuModeParent(`Lit_${encodeURIComponent(char)}`);
+            if (char === ' ') {
+              searchRokuModeParent('Lit_%20');
+            } else {
+              searchRokuModeParent(`Lit_${encodeURIComponent(char)}`);
+            }
           }
         }
       } else if (newValue.length < oldValue.length) {
@@ -134,7 +139,7 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
           </input>
         </form>
         <div className="controls-search-button-wrapper">
-          <button className="controls-search-button"
+          <button className={`controls-search-button ${rokuSearchMode ? 'controls-search-button--search-mode' : ''}`}
             onTouchStart={(e) => onTouchStart(e)}
             onTouchEnd={(e) => onTouchEnd(e)}>
             Buscar
@@ -142,7 +147,7 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
         </div>
       </div>
       <div className={`controls-search-mode ${modeVisibility ? 'controls-search-mode--visible' : ''}`}>
-        <span>{rokuSearchMode ? 'Modo busqueda en Roku activo' : 'Modo busqueda en Roku inactivo'}</span>
+        <span>{rokuSearchMode ? 'Modo busqueda en Roku activo' : ''}</span>
       </div>
     </div>
   )

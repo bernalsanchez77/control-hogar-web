@@ -216,7 +216,7 @@ function Levels({screenSelected, view, screens, cableChannels, changeControlPare
           </button>
         </div>
         <div className='controls-levels-element controls-levels-element--back'>
-          <button
+          {/* <button
             className='controls-levels-button controls-levels-button--img'
             onTouchStart={() => backButtonTriggered()}>
             <img
@@ -224,7 +224,7 @@ function Levels({screenSelected, view, screens, cableChannels, changeControlPare
               src="/imgs/back-50.png"
               alt="icono">
             </img>
-          </button>
+          </button> */}
         </div>
         {
         view.selected === 'roku' &&

@@ -39,6 +39,9 @@
   -webkit-user-select: none;
   -webkit-touch-callout: none;
 }
+.controls-search-button--search-mode {
+  color: aqua;
+}
 .controls-search-mode {
     position: absolute;
     width: 230px;
