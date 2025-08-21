@@ -28,7 +28,7 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
     if (searchText) {
       if (view.selected === 'roku') {
         if (rokuSearchMode) {
-          searchRokuModeParent(searchText);
+          searchRokuModeParent('Enter');
         } else {
           const newView = structuredClone(view);
           newView.roku.apps.youtube.mode = 'search';
@@ -49,6 +49,7 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
   }
 
   const onTouchStart = (e) => {
+
     timeout3s.current = setTimeout(() => {
       longClick.current = true;
     }, 500);

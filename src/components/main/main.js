@@ -65,7 +65,7 @@ function Main() {
   const seachRokuMode = (text) => {
     utils.triggerVibrate();
     requests.sendControl(sendEnabled, {
-      roku: [{key: 'keypress', value: text}]
+      roku: [{key: 'keypress', value: text, params: ''}]
     });
   }
 

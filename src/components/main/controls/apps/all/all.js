@@ -17,6 +17,7 @@ function Apps({view, rokuApps, changeControlParent, changeViewParent}) {
     const newView = structuredClone(view);
     newView.roku.apps.selected = app;
     changeViewParent(newView);
+    
   }
 
   const onTouchStart = (e) => {
