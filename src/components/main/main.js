@@ -377,12 +377,12 @@ function Main() {
     function handleBackButton(e) {
       e.preventDefault();
       console.log('back button triggered');
-      const newView = structuredClone(view);
-      if (view.selected === 'roku') {
-        if (view.roku.apps.selected) {
-          if (view.roku.apps.youtube.mode === 'channel' || view.roku.apps.youtube.mode === 'search') {
+      const newView = structuredClone(viewRef.current);
+      if (viewRef.current.selected === 'roku') {
+        if (viewRef.current.roku.apps.selected) {
+          if (viewRef.current.roku.apps.youtube.mode === 'channel' || viewRef.current.roku.apps.youtube.mode === 'search') {
             newView.roku.apps.youtube.mode = '';
-            if (view.roku.apps.youtube.channel !== '') {
+            if (viewRef.current.roku.apps.youtube.channel !== '') {
               newView.roku.apps.youtube.channel = '';
             }
             changeView(newView);
@@ -392,13 +392,13 @@ function Main() {
           }
         }
       }
-      if (view.selected === 'cable') {
-        if (view.cable.channels.category.length) {
+      if (viewRef.current.selected === 'cable') {
+        if (viewRef.current.cable.channels.category.length) {
           newView.cable.channels.category = [];
           changeView(newView);
         }
       }
-      if (view.devices.device) {
+      if (viewRef.current.devices.device) {
         newView.devices.device = '';
         changeView(newView);
       }
@@ -477,7 +477,7 @@ function Main() {
             changeControlParent={changeControl}>
           </Devices>
           }
-          {credential === 'dev' && !view.roku.apps.selected && !view.cable.channels.category.length && !view.devices.device &&
+          {credential === 'dev' &&
           <Dev
             sendEnabled={sendEnabled}
             enableSendParent={enableSend}

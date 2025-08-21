@@ -12,10 +12,14 @@
     top: 95px;
   }
   .dev-element--send {
-    left: 85px;
+    left: 90px;
+    margin-right: 0;
+    margin-left: 0;
   }
   .dev-element--remove {
-    right: 85px;
+    right: 90px;
+    margin-right: 0;
+    margin-left: 0;
   }
   .dev-button {
     background-color: rgb(0, 44, 16, 0.8);

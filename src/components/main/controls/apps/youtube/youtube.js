@@ -80,7 +80,7 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
                 onTouchEnd={(e) => onTouchEnd('channel', channel.id)}>
                 <img
                   className='controls-apps-youtube-channel-img'
-                  src={channel.img}
+                  src={'/imgs/youtube-channels/' + channel.id + '.png'}
                   alt="icono">
                 </img>
                 <p className='controls-apps-youtube-channel-title'>
@@ -106,7 +106,7 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
                 onTouchEnd={(e) => onTouchEnd('video', video.id)}>
                 <img
                   className='controls-apps-youtube-video-img'
-                  src={video.img}
+                  src={view.roku.apps.youtube.mode === 'channel' ? 'https://img.youtube.com/vi/' + video.id + '/sddefault.jpg' : video.img}
                   alt="icono">
                 </img>
                 <p className='controls-apps-youtube-video-title'>
