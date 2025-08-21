@@ -96,25 +96,25 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
     const oldValue = searchText;
 
     if (rokuSearchMode) {
-      if (newValue.length > oldValue.length) {
-        // Characters were added
-        const addedText = newValue.slice(oldValue.length);
-        for (const char of addedText) {
-          if (e.key === "Enter") {
-            searchRokuModeParent('Enter');
-          } else {
+      if (e.key === "Enter") {
+        searchRokuModeParent('Enter');
+      } else {
+        if (newValue.length > oldValue.length) {
+          // Characters were added
+          const addedText = newValue.slice(oldValue.length);
+          for (const char of addedText) {
             if (char === ' ') {
               searchRokuModeParent('Lit_%20');
             } else {
               searchRokuModeParent(`Lit_${encodeURIComponent(char)}`);
             }
           }
-        }
-      } else if (newValue.length < oldValue.length) {
-        // Characters were deleted
-        const numDeleted = oldValue.length - newValue.length;
-        for (let i = 0; i < numDeleted; i++) {
-          searchRokuModeParent('Backspace');
+        } else if (newValue.length < oldValue.length) {
+          // Characters were deleted
+          const numDeleted = oldValue.length - newValue.length;
+          for (let i = 0; i < numDeleted; i++) {
+            searchRokuModeParent('Backspace');
+          }
         }
       }
     }
