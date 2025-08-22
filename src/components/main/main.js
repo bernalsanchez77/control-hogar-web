@@ -90,7 +90,6 @@ function Main() {
   }, []);
 
   const changeView = useCallback(async (newView) => {
-            handleVolumeUpButton();
     setView(await viewRouter.changeView(newView, viewRef.current, youtubeChannelsLizRef.current.data, setters, rokuAppsRef.current.data));
   }, [viewRef, setters, rokuAppsRef, youtubeChannelsLizRef]);
 
@@ -161,7 +160,7 @@ function Main() {
             });
           }
           if (el.device === 'teleSala' || el.device === 'teleCuarto' || el.device === 'teleCocina' || el.device === 'proyectorSala') {
-            const newId = screensRef.find(screen => screen.id === el.device).id;
+            const newId = screensRef.current.find(screen => screen.id === el.device).id;
             requests.updateTableInSupabase({
               new: {newId, newTable: 'screens', ['new' + el.key.charAt(0).toUpperCase() + el.key.slice(1)]: el.value, newDate: new Date().toISOString()}
             });
@@ -351,7 +350,25 @@ function Main() {
 
   const handleVolumeDownButton = useCallback((e) => {
     console.log('volume down triggered');
-
+    const screen = screensRef.current.find(screen => screen.id === screenSelectedRef.current);
+    let newVol = 0;
+    if (screen.volume !== 0) {
+      if (screen.volume - 1 >= 0) {
+        newVol = screen.volume - 1;
+        changeControl({
+          ifttt: [{device: screen.id, key: 'volume', value: 'down' + 1}],
+          massMedia: [{device: screen.id, key: 'volume', value: newVol}],
+        });
+      } else {
+        newVol = screen.volume - 1;
+        changeControl({
+          ifttt: [{device: screen.id, key: 'volume', value: 'down' + 1}],
+          massMedia: [{device: screen.id, key: 'volume', value: '0'}],
+        });
+      }
+    } else {
+      changeControl({ifttt: [{device: screen.id, key: 'volume', value: 'down' + 1}], massMedia: []}); 
+    }
   }, []);
 
   const onLoad = () => {
