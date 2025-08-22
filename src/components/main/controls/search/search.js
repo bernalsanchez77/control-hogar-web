@@ -100,10 +100,6 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
         searchRokuModeParent("Backspace");
       } else if (e.key === "Enter") {
         searchRokuModeParent("Enter");
-      } else if (e.key === " ") {
-        searchRokuModeParent("Lit_%20");
-      } else if (e.key.length === 1) {
-        searchRokuModeParent(`Lit_${encodeURIComponent(e.key)}`);
       }
     }
   }
@@ -117,9 +113,9 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
         const addedText = newValue.slice(oldValue.length);
         for (const char of addedText) {
           if (char === ' ') {
-            // searchRokuModeParent('Lit_%20');
+            searchRokuModeParent('Lit_%20');
           } else {
-            // searchRokuModeParent(`Lit_${encodeURIComponent(char)}`);
+            searchRokuModeParent(`Lit_${encodeURIComponent(char)}`);
           }
         }
       } else if (newValue.length < oldValue.length) {

@@ -376,42 +376,13 @@ function Main() {
   useEffect(() => {
     function handleBackButton(e) {
       console.log('back button triggered');
-      const newView = structuredClone(viewRef.current);
-      if (viewRef.current.selected === 'roku') {
-        if (viewRef.current.roku.apps.selected) {
-          if (viewRef.current.roku.apps.youtube.mode === 'channel' || viewRef.current.roku.apps.youtube.mode === 'search') {
-            newView.roku.apps.youtube.mode = '';
-            if (viewRef.current.roku.apps.youtube.channel !== '') {
-              newView.roku.apps.youtube.channel = '';
-            }
-            e.preventDefault();
-            changeView(newView);
-          } else {
-            newView.roku.apps.selected = '';
-            e.preventDefault();
-            changeView(newView);
-          }
-        }
-      }
-      if (viewRef.current.selected === 'cable') {
-        if (viewRef.current.cable.channels.category.length) {
-          newView.cable.channels.category = [];
-          e.preventDefault();
-          changeView(newView);
-        }
-      }
-      if (viewRef.current.devices.device) {
-        newView.devices.device = '';
-        e.preventDefault();
-        changeView(newView);
-      }
     }
-    //document.addEventListener("backbutton", handleBackButton, false);
+    document.addEventListener("backbutton", handleBackButton, false);
     return () => {
       // cleanup
-      //document.removeEventListener("backbutton", handleBackButton, false);
+      document.removeEventListener("backbutton", handleBackButton, false);
     };
-  }, [changeView, viewRef]);
+  }, []);
 
     useEffect(() => {
     function handleBackButton2(e) {

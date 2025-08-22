@@ -62,7 +62,7 @@ class ViewRouter {
                 if (newView.roku.apps.youtube.mode === 'search') {
                   // youtube is in search mode
                   supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideosLiz');
-                  window.history.pushState({page: 'search'}, 'search', '#' + 'search');
+                  window.history.pushState({page: 'search'}, 'search', '#search');
                 }
               } else {
                 // youtube is in home mode
@@ -103,7 +103,7 @@ class ViewRouter {
 
     if (newView.selected === 'cable' || newView.selected === 'roku' ) {
       if (newView.devices.device) {
-        window.history.pushState({page: 'devices'}, 'devices', '#' + 'devices');
+        window.history.pushState({page: 'devices'}, 'devices', '#devices');
       }
     }
     return newView;
