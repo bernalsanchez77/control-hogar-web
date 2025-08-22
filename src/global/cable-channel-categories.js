@@ -13,7 +13,7 @@ class CableChannelCategories {
                 "label": "Noticias",
                 "id": "noticias",
                 "img": "",
-                "categories": ['noticias'],
+                "categories": ['news'],
                 "state": "",
             },
             {

@@ -6,7 +6,7 @@ import Controls from './controls/controls';
 import Credentials from './credentials/credentials';
 import Dev from './dev/dev';
 import Utils from '../../global/utils';
-import SupabaseChannels from '../../global/supabase-channels';
+import supabaseChannels from '../../global/supabase-channels';
 import ViewRouter from '../../global/view-router';
 import Requests from '../../global/requests';
 import YoutubeDummyData from '../../global/youtube-dummy-data';
@@ -15,7 +15,6 @@ import './main.css';
 
 const requests = new Requests();
 const utils = new Utils();
-const supabaseChannels = new SupabaseChannels();
 const viewRouter = new ViewRouter();
 const user = utils.getUser(`${window.screen.width}x${window.screen.height}`);
 

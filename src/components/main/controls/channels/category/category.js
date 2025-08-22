@@ -19,7 +19,7 @@ function Category({cableChannels, category, changeControlParent}) {
             cableChannels.map((channel, key) => category.includes(channel.category) ? (
             <li key={key} className='controls-channels-category'>
               <button
-                className={`controls-channels-category-button ${selectedChannel.id === channel.id ? 'controls-channels-category-button--selected' : ''}`}
+                className={`controls-channels-category-button ${selectedChannel?.id === channel.id ? 'controls-channels-category-button--selected' : ''}`}
                 onTouchStart={() => changeControl(channel.id)}>
                 <img
                   className='controls-channels-category-img'

@@ -37,4 +37,5 @@ class SupabaseChannels {
       }
     }
 }
-export default SupabaseChannels;
+const supabaseChannelsInstance = new SupabaseChannels();
+export default supabaseChannelsInstance;

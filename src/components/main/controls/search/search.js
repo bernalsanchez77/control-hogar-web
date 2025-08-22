@@ -70,29 +70,29 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
     e.preventDefault();
     clearTimeout(timeout3s.current);
     if (longClick.current) {
-      const home = rokuApps.find(app => app.id === 'home').state;
-      if (!home) {
-        setSearchText('');
-        if (rokuSearchMode === 'roku') {
-          inputRef.current.focus();
-          setModeVisibility(true);
-          changeRokuSearchMode('app');
-        }
-        if (rokuSearchMode === 'app') {
-          setModeVisibility(true);
-          const youtubeSelected = rokuApps.find(app => app.id === 'youtube').state;
-          if (youtubeSelected) {
-            const device = 'rokuSala';
-            // changeControlParent({
-            //   roku: [{device, key: 'keypress', value: 'Up'}],
-            // });
-          }
-          changeRokuSearchMode('roku');
-        }
-        setTimeout(() => {
-          setModeVisibility(false);
-        }, 3000);
-      }
+      // const home = rokuApps.find(app => app.id === 'home').state;
+      // if (!home) {
+      //   setSearchText('');
+      //   if (rokuSearchMode === 'roku') {
+      //     inputRef.current.focus();
+      //     setModeVisibility(true);
+      //     changeRokuSearchMode('app');
+      //   }
+      //   if (rokuSearchMode === 'app') {
+      //     setModeVisibility(true);
+      //     const youtubeSelected = rokuApps.find(app => app.id === 'youtube').state;
+      //     if (youtubeSelected) {
+      //       const device = 'rokuSala';
+      //       // changeControlParent({
+      //       //   roku: [{device, key: 'keypress', value: 'Up'}],
+      //       // });
+      //     }
+      //     changeRokuSearchMode('roku');
+      //   }
+      //   setTimeout(() => {
+      //     setModeVisibility(false);
+      //   }, 3000);
+      // }
     } else {
       searchQuery();
     }
