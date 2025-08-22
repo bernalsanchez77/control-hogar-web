@@ -161,7 +161,7 @@ function Main() {
             });
           }
           if (el.device === 'teleSala' || el.device === 'teleCuarto' || el.device === 'teleCocina' || el.device === 'proyectorSala') {
-            const newId = screens.find(screen => screen.id === el.device).id;
+            const newId = screensRef.find(screen => screen.id === el.device).id;
             requests.updateTableInSupabase({
               new: {newId, newTable: 'screens', ['new' + el.key.charAt(0).toUpperCase() + el.key.slice(1)]: el.value, newDate: new Date().toISOString()}
             });
