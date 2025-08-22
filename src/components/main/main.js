@@ -475,12 +475,12 @@ function Main() {
     document.addEventListener("volumeupbutton", handleVolumeUpButton, false);
     return () => {
       // cleanup
-      document.removeEventListener("volumedownbutton", handleVolumeUpButton, false);
+      document.removeEventListener("volumeupbutton", handleVolumeUpButton, false);
     };
   }, [handleVolumeUpButton]);
 
   useEffect(() => {
-    document.addEventListener("volumeupbutton", handleVolumeDownButton, false);
+    document.addEventListener("volumedownbutton", handleVolumeDownButton, false);
     return () => {
       // cleanup
       document.removeEventListener("volumedownbutton", handleVolumeDownButton, false);
