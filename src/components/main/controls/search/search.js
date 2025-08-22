@@ -53,6 +53,10 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
       }
       if (view.selected === 'cable') {
       }
+      const active = document.activeElement;
+      if (active && active.blur) {
+        active.blur();
+      }
     }
   };
 

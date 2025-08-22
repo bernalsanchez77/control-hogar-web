@@ -387,7 +387,7 @@ function Main() {
       window.addEventListener("load", onLoad);
     }
     console.log('version 27');
-  }, [setData, youtubeChannelsLiz, setters, getRokuData, getVisibility, hdmiChangeInSupabaseChannel]);
+  }, [setData, setters, getRokuData, getVisibility, hdmiChangeInSupabaseChannel]);
 
   useEffect(() => {
     if (!initializedRef.current) {
