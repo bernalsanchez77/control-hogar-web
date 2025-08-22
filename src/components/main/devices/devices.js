@@ -96,11 +96,15 @@ function Devices({credential, view, devices, changeViewParent, changeControlPare
           </CalentadorBlanco>
         </div>
         }
-        {/* <div className='devices-element'>
+        <div className='devices-element'>
           <LamparasAbajo
+            chimeneaSala={chimeneaSala}
+            lamparaTurca={lamparaTurca}
+            lamparaSala={lamparaSala}
+            lamparaComedor={lamparaComedor}
             changeControlParent={changeControl}>
           </LamparasAbajo>
-        </div> */}
+        </div>
         {(credential === 'owner' || credential === 'dev') &&
         <div className='devices-element'>
           <LuzCuarto

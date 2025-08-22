@@ -1,24 +1,24 @@
 import {useEffect, useState, useCallback, useMemo} from 'react';
 import './lamparasAbajo.css';
 
-function LamparasAbajo({devicesState, changeControlParent}) {
+function LamparasAbajo({lamparaSala, lamparaComedor, chimeneaSala, lamparaTurca, changeControlParent}) {
   const [state, setState] = useState('off');
   const lamparasOn = [
-    devicesState.lamparaComedor.id,
-    devicesState.lamparaSala.id,
-    devicesState.chimeneaSala.id
+    lamparaComedor,
+    lamparaSala,
+    chimeneaSala,
+    lamparaTurca,
   ];
   const lamparasOff = useMemo(() => [
-    devicesState.lamparaComedor.id,
-    devicesState.lamparaSala.id,
-    devicesState.lamparaTurca.id,
-    devicesState.lamparaRotatoria.id,
-    devicesState.chimeneaSala.id,
-  ], [devicesState]);
+    lamparaComedor,
+    lamparaSala,
+    chimeneaSala,
+    lamparaTurca,
+  ], [lamparaComedor, lamparaSala, lamparaTurca, chimeneaSala]);
   const setLamparasState = useCallback(async () => {
     let lamps = 0;
     lamparasOff.forEach(lampara => {
-      if (devicesState[lampara].state === 'on') {
+      if (lampara.state === 'on') {
         lamps++;
       }
     });
@@ -27,21 +27,21 @@ function LamparasAbajo({devicesState, changeControlParent}) {
     } else {
       setState('off');
     }
-  }, [devicesState, lamparasOff]);
+  }, [lamparasOff]);
   const changeControl = () => {
     let ifttt = [];
     if (state === 'on') {
       lamparasOff.forEach(lampara => {
-        if (devicesState[lampara].state === 'on') {
-          ifttt.push({device: lampara, key: 'state', value: 'off'});
+        if (lampara.state === 'on') {
+          ifttt.push({device: lampara.id, key: 'state', value: 'off'});
         }
       });
       changeControlParent({ifttt});
       setState('off');
     } else {
       lamparasOn.forEach(lampara => {
-        if (devicesState[lampara].state === 'off') {
-          ifttt.push({device: lampara, key: 'state', value: 'on'});
+        if (lampara.state === 'off') {
+          ifttt.push({device: lampara.id, key: 'state', value: 'on'});
         }
       });
       changeControlParent({ifttt});

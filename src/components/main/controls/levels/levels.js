@@ -61,7 +61,6 @@ function Levels({screenSelected, view, screens, cableChannels, changeControlPare
         massMedia: [{device, key: 'volume', value: newVol}],
         ignoreVibration: !vib
       });
-
     } else if (screen.volume !== 0) {
       if (screen.volume - vol >= 0) {
         newVol = screen.volume - vol;

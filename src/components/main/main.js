@@ -49,6 +49,8 @@ function Main() {
   const viewRef = useRef(view);
   const rokuAppsRef = useRef(rokuApps);
   const hdmiSalaRef = useRef(hdmiSala);
+  const screensRef = useRef(screens);
+  const screenSelectedRef = useRef(screenSelected);
   const youtubeChannelsLizRef = useRef(youtubeChannelsLiz);
   const getRokuDataIntervalRef = useRef(null);
 
@@ -88,6 +90,7 @@ function Main() {
   }, []);
 
   const changeView = useCallback(async (newView) => {
+            handleVolumeUpButton();
     setView(await viewRouter.changeView(newView, viewRef.current, youtubeChannelsLizRef.current.data, setters, rokuAppsRef.current.data));
   }, [viewRef, setters, rokuAppsRef, youtubeChannelsLizRef]);
 
@@ -151,7 +154,7 @@ function Main() {
               });
             }
           }
-          if (el.device === 'luzEscalera' || el.device === 'luzCuarto' || el.device === 'lamparaComedor' || el.device === 'lamparaSala' || el.device === 'lamparaRotatoria' || el.device === 'chimeneaSala' || el.device === 'parlantesSala' || el.device === 'ventiladorSala' || el.device === 'calentadorNegro' || el.device === 'calentadorBlanco' || el.device === 'lamparaTurca') {
+          if (el.device === 'luzEscalera' || el.device === 'luzCuarto' || el.device === 'lamparaComedor' || el.device === 'lamparaSala' || el.device === 'lamparaRotatoria' || el.device === 'chimeneaSala' || el.device === 'parlantesSala' || el.device === 'ventiladorSala' || el.device === 'calentadorNegro' || el.device === 'calentadorBlanco' || el.device === 'lamparaTurca'|| el.device === 'proyectorSalaSwitch') {
             const newId = devices.find(device => device.id === el.device).id;
             requests.updateTableInSupabase({
               new: {newId, newTable: 'devices', ['new' + el.key.charAt(0).toUpperCase() + el.key.slice(1)]: el.value, newDate: new Date().toISOString()}
@@ -335,6 +338,22 @@ function Main() {
     }
   }, [changeView]);
 
+  const handleVolumeUpButton = useCallback((e) => {
+    console.log('volume up triggered');
+    const screen = screensRef.current.find(screen => screen.id === screenSelectedRef.current);
+    let newVol = 0;
+    newVol = screen.volume + 1;
+    changeControl({
+      ifttt: [{device: screen.id, key: 'volume', value: 'up' + 1}],
+      massMedia: [{device: screen.id, key: 'volume', value: newVol}],
+    });
+  }, [changeControl, screenSelectedRef, screensRef]);
+
+  const handleVolumeDownButton = useCallback((e) => {
+    console.log('volume down triggered');
+
+  }, []);
+
   const onLoad = () => {
     window.history.replaceState(null, "", window.location.pathname + window.location.search);
     document.body.classList.add("loaded");
@@ -405,8 +424,16 @@ function Main() {
   }, [rokuApps]);
 
   useEffect(() => {
+    screensRef.current = screens;
+  }, [screens]);
+
+  useEffect(() => {
     hdmiSalaRef.current = hdmiSala;
   }, [hdmiSala]);
+
+  useEffect(() => {
+    screenSelectedRef.current = screenSelected;
+  }, [screenSelected]);
 
   useEffect(() => {
     youtubeChannelsLizRef.current = youtubeChannelsLiz;
@@ -426,6 +453,22 @@ function Main() {
       document.removeEventListener("backbutton", handleBack, false);
     };
   }, [handleBack]);
+
+  useEffect(() => {
+    document.addEventListener("volumeupbutton", handleVolumeUpButton, false);
+    return () => {
+      // cleanup
+      document.removeEventListener("volumedownbutton", handleVolumeUpButton, false);
+    };
+  }, [handleVolumeUpButton]);
+
+  useEffect(() => {
+    document.addEventListener("volumeupbutton", handleVolumeDownButton, false);
+    return () => {
+      // cleanup
+      document.removeEventListener("volumedownbutton", handleVolumeDownButton, false);
+    };
+  }, [handleVolumeDownButton]);
 
   useEffect(() => {
     window.addEventListener("popstate", handleBack, false);

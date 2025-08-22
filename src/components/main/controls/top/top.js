@@ -7,10 +7,10 @@ function Controls({screens, view, screenSelected, changeControlParent}) {
       if (screen.state === 'on') {
         changeControlParent({
           ifttt: [
-            [{device: screenSelected, key: 'state', value: 'off'}],
-            [{device: 'parlantesSala', key: 'state', value: 'off'}],
-            [{device: 'lamparaSala', key: 'state', value: 'off'}],
-            [{device: 'lamparaComedor', key: 'state', value: 'off'}],
+            {device: screenSelected, key: 'state', value: 'off'},
+            {device: 'parlantesSala', key: 'state', value: 'off'},
+            {device: 'lamparaSala', key: 'state', value: 'off'},
+            {device: 'lamparaComedor', key: 'state', value: 'off'},
           ]
         });
         setTimeout(() => {
@@ -21,10 +21,10 @@ function Controls({screens, view, screenSelected, changeControlParent}) {
       } else {
         changeControlParent({
           ifttt: [
-            [{device: 'proyectorSwitchSala', key: 'state', value: 'on'}],
-            [{device: 'parlantesSala', key: 'state', value: 'on'}],
-            [{device: 'lamparaSala', key: 'state', value: 'on'}],
-            [{device: 'lamparaComedor', key: 'state', value: 'on'}],
+            {device: 'proyectorSwitchSala', key: 'state', value: 'on'},
+            {device: 'parlantesSala', key: 'state', value: 'on'},
+            {device: 'lamparaSala', key: 'state', value: 'on'},
+            {device: 'lamparaComedor', key: 'state', value: 'on'},
           ]
         });
 
