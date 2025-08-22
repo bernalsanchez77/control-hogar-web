@@ -23,7 +23,7 @@ function Main() {
 
   //useState Variables
 
-  const [rokuSearchMode, setRokuSearchMode] = useState(false);
+  const [rokuSearchMode, setRokuSearchMode] = useState('default');
   const [inRange, setInRange] = useState(false);
   const [userActive, setUserActive] = useState(true);
   const [credential, setCredential] = useState('');
@@ -50,6 +50,7 @@ function Main() {
   const viewRef = useRef(view);
   const rokuAppsRef = useRef(rokuApps);
   const hdmiSalaRef = useRef(hdmiSala);
+  const youtubeChannelsLizRef = useRef(youtubeChannelsLiz);
   const getRokuDataIntervalRef = useRef(null);
 
   // useMemo variables (computed)
@@ -88,8 +89,8 @@ function Main() {
   }, []);
 
   const changeView = useCallback(async (newView) => {
-    setView(await viewRouter.changeView(newView, viewRef.current, youtubeChannelsLiz, setters));
-  }, [youtubeChannelsLiz, viewRef, setters]);
+    setView(await viewRouter.changeView(newView, viewRef.current, youtubeChannelsLizRef.current.data, setters, rokuAppsRef.current.data));
+  }, [viewRef, setters, rokuAppsRef, youtubeChannelsLizRef]);
 
   const changeControl = (params) => {
     if (!params.ignoreVibration) {
@@ -104,9 +105,6 @@ function Main() {
         } else {
           //devices[el.device] = {...devices[el.device], [el.key]: el.value};
           if (el.device === 'rokuSala') {
-            if (el.key === 'app' && el.value === 'home') {
-              setRokuSearchMode(false);
-            }
             if (el.key === 'video' && viewRef.current.roku.apps.youtube.mode === 'channel') {
               const currentId = youtubeVideosLiz.find(vid => vid.state === 'selected').id;
               const newId = youtubeVideosLiz.find(video => video.id === el.value).id;
@@ -225,17 +223,19 @@ function Main() {
   }, []);
 
   const hdmiChangeInSupabaseChannel = useCallback(async (id) => {
-    const newView = structuredClone(viewRef.current);
-    newView.selected = id;
-    if (newView.selected === 'roku') {
-      newView.cable.channels.category = [];
+    if (viewRef.current.selected !== id) {
+      const newView = structuredClone(viewRef.current);
+      newView.selected = id;
+      if (newView.selected === 'roku') {
+        newView.cable.channels.category = [];
+      }
+      if (newView.selected === 'cable') {
+        newView.roku.apps.selected = '';
+        newView.roku.apps.youtube.mode = '';
+        newView.roku.apps.youtube.channel = '';
+      }
+      changeView(newView);
     }
-    if (newView.selected === 'cable') {
-      newView.roku.apps.selected = '';
-      newView.roku.apps.youtube.mode = '';
-      newView.roku.apps.youtube.channel = '';
-    }
-    changeView(newView);
   }, [changeView]);
 
   const getVisibility = useCallback(() => {
@@ -303,7 +303,47 @@ function Main() {
     };
   }, [setData, changeView, subscribeToSupabaseChannel, getRokuData, hdmiChangeInSupabaseChannel, unsubscribeFromSupabaseChannel]);  
 
+  const handleBack = useCallback((e) => {
+    console.log('back triggered');
+    const newView = structuredClone(viewRef.current);
+    if (viewRef.current.selected === 'roku') {
+      if (viewRef.current.roku.apps.selected) {
+        if (viewRef.current.roku.apps.youtube.mode === 'channel' || viewRef.current.roku.apps.youtube.mode === 'search') {
+          newView.roku.apps.youtube.mode = '';
+          if (viewRef.current.roku.apps.youtube.channel !== '') {
+            newView.roku.apps.youtube.channel = '';
+          }
+          e.preventDefault();
+          changeView(newView);
+        } else {
+          newView.roku.apps.selected = '';
+          e.preventDefault();
+          changeView(newView);
+        }
+      }
+    }
+    if (viewRef.current.selected === 'cable') {
+      if (viewRef.current.cable.channels.category.length) {
+        newView.cable.channels.category = [];
+        e.preventDefault();
+        changeView(newView);
+      }
+    }
+    if (viewRef.current.devices.device) {
+      newView.devices.device = '';
+      e.preventDefault();
+      changeView(newView);
+    }
+  }, [changeView]);
+
+  const onLoad = () => {
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    document.body.classList.add("loaded");
+  };
+
   const init = useCallback(async () => {
+    let rokuAppsTable = {};
+    let hdmiSalaTable = {};
     const localStorageScreen = localStorage.getItem('screen');
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
@@ -312,22 +352,25 @@ function Main() {
     setInRange(await utils.getInRange());
 
     const newView = structuredClone(viewRef.current);
-    const hdmiSalaTable = await setData('hdmiSala', (change) => {
+    hdmiSalaTable = await setData('hdmiSala', (change) => {
       hdmiChangeInSupabaseChannel(change.id);
     });
     newView.selected = hdmiSalaTable.data.find(el => el.state === 'selected').id;
-    setView(await viewRouter.changeView(newView, viewRef.current, youtubeChannelsLiz, setters));
 
     if (newView.selected === 'cable') {
       await setData('cableChannels');
     }
 
     if (newView.selected === 'roku') {
-      const rokuAppsTable = await setData('rokuApps');
+      rokuAppsTable = await setData('rokuApps');
+      if (rokuAppsTable.data.find(row => row.state === 'selected').id !== 'home') {
+        setters.setRokuSearchMode('roku');
+      }
       if (localStorage.getItem('user') && newView.selected === 'roku') {
         getRokuData(rokuAppsTable.data, hdmiSalaTable.data);
       }
     }
+    setView(await viewRouter.changeView(newView, viewRef.current, [], setters, rokuAppsTable.data));
     getRokuDataIntervalRef.current = setInterval(() => {
       if (localStorage.getItem('user') && viewRef.current.selected === 'roku') {
         getRokuData();
@@ -340,9 +383,9 @@ function Main() {
     requests.sendLogs(user + ' entro');
     getVisibility();
     if (document.readyState === "complete") {
-      document.body.classList.add("loaded");
+      onLoad();
     } else {
-      window.addEventListener("load", document.body.classList.add("loaded"));
+      window.addEventListener("load", onLoad);
     }
     console.log('version 27');
   }, [setData, youtubeChannelsLiz, setters, getRokuData, getVisibility, hdmiChangeInSupabaseChannel]);
@@ -367,6 +410,10 @@ function Main() {
   }, [hdmiSala]);
 
   useEffect(() => {
+    youtubeChannelsLizRef.current = youtubeChannelsLiz;
+  }, [youtubeChannelsLiz]);
+
+  useEffect(() => {
     if (credential === 'dev') {
       setSendEnabled(false);
       eruda.init();
@@ -374,55 +421,20 @@ function Main() {
   }, [credential]);
 
   useEffect(() => {
-    function handleBackButton(e) {
-      console.log('back button triggered');
-    }
-    document.addEventListener("backbutton", handleBackButton, false);
+    document.addEventListener("backbutton", handleBack, false);
     return () => {
       // cleanup
-      document.removeEventListener("backbutton", handleBackButton, false);
+      document.removeEventListener("backbutton", handleBack, false);
     };
-  }, []);
+  }, [handleBack]);
 
-    useEffect(() => {
-    function handleBackButton2(e) {
-      console.log('back button triggered');
-      const newView = structuredClone(viewRef.current);
-      if (viewRef.current.selected === 'roku') {
-        if (viewRef.current.roku.apps.selected) {
-          if (viewRef.current.roku.apps.youtube.mode === 'channel' || viewRef.current.roku.apps.youtube.mode === 'search') {
-            newView.roku.apps.youtube.mode = '';
-            if (viewRef.current.roku.apps.youtube.channel !== '') {
-              newView.roku.apps.youtube.channel = '';
-            }
-            e.preventDefault();
-            changeView(newView);
-          } else {
-            newView.roku.apps.selected = '';
-            e.preventDefault();
-            changeView(newView);
-          }
-        }
-      }
-      if (viewRef.current.selected === 'cable') {
-        if (viewRef.current.cable.channels.category.length) {
-          newView.cable.channels.category = [];
-          e.preventDefault();
-          changeView(newView);
-        }
-      }
-      if (viewRef.current.devices.device) {
-        newView.devices.device = '';
-        e.preventDefault();
-        changeView(newView);
-      }
-    }
-    window.addEventListener("popstate", handleBackButton2, false);
+  useEffect(() => {
+    window.addEventListener("popstate", handleBack, false);
     return () => {
       // cleanup
-      window.removeEventListener("popstate", handleBackButton2, false);
+      window.removeEventListener("popstate", handleBack, false);
     };
-  }, [changeView, viewRef]);
+  }, [handleBack, changeView, viewRef]);
 
   const enableSend = () => {
     if (sendEnabled === true) {

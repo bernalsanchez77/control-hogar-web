@@ -1,15 +1,20 @@
 import {useRef} from 'react';
 import './all.css';
 
-function Apps({view, rokuApps, changeControlParent, changeViewParent}) {
+function Apps({view, rokuApps, rokuSearchMode, changeControlParent, changeRokuSearchModeParent, changeViewParent}) {
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   const changeControl = (value) => {
     const device = 'rokuSala';
-    let rokuValue = rokuApps.find(app => app.id === value).rokuId;
+    let app = rokuApps.find(app => app.id === value);
+    if (app.id === 'home') {
+      changeRokuSearchModeParent('default');
+    } else {
+      changeRokuSearchModeParent('roku');
+    }
     changeControlParent({
       ifttt: [{device, key: 'app', value}],
-      roku: [{device, key: 'launch', value: rokuValue}],
+      roku: [{device, key: 'launch', value: app.rokuId}],
     });
   }
 

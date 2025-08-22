@@ -28,7 +28,7 @@
   height: 100%;
 }
 .controls-search-button {
-  color: #fff;
+  color: white;
   height: 100%;
   border: grey 1px solid;
   border-radius: 5px;
@@ -39,8 +39,8 @@
   -webkit-user-select: none;
   -webkit-touch-callout: none;
 }
-.controls-search-button--search-mode {
-  color: aqua;
+.controls-search-button--no-mode {
+  pointer-events: none;
 }
 .controls-search-mode {
     position: absolute;

@@ -76,10 +76,12 @@ function Controls({screens, devices, rokuSearchMode, changeRokuSearchModeParent,
         <Apps
           view={view}
           rokuApps={rokuApps}
+          rokuSearchMode={rokuSearchMode}
           youtubeSearchVideos={youtubeSearchVideos}
           youtubeChannelsLiz={youtubeChannelsLiz}
           youtubeVideosLiz={youtubeVideosLiz}
           changeControlParent={changeControl}
+          changeRokuSearchModeParent={changeRokuSearchMode}
           changeViewParent={changeView}>
         </Apps>
         }

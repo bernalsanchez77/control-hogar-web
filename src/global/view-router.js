@@ -4,7 +4,7 @@ import Requests from './requests';
 const supabaseChannels = new SupabaseChannels();
 const requests = new Requests();
 class ViewRouter {
-  async changeView(params, currentView, youtubeChannelsLiz, setters) {
+  async changeView(params, currentView, youtubeChannelsLiz, setters, rokuApps) {
     const newView = structuredClone(params);
 
     if (newView.selected === 'cable') {
@@ -22,20 +22,25 @@ class ViewRouter {
         // was in roku
         const channels = await requests.getTableFromSupabase('cableChannels');
         setters.setCableChannels(channels.data);
+        setters.setRokuSearchMode('default');
         supabaseChannels.subscribeToSupabaseChannel('cableChannels');
         if (currentView.roku.apps.selected) {
           // was in an app
-          setters.setRokuSearchMode(false);
           if (currentView.roku.apps.selected === 'youtube') {
             // app was Youtube
             if (currentView.roku.apps.youtube.channel) {
              supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideosLiz');     
+            } else {
+              setters.setRokuSearchMode('roku');
             }
           } 
         } else {
           // was in home
           supabaseChannels.unsubscribeFromSupabaseChannel('rokuApps');             
         }
+      }
+      if (currentView.selected === '') {
+
       }
     }
 
@@ -58,6 +63,7 @@ class ViewRouter {
                   const videos = await requests.getTableFromSupabase('youtubeVideosLiz');
                   setters.setYoutubeVideosLiz(videos.data);
                   supabaseChannels.subscribeToSupabaseChannel('youtubeVideosLiz');
+                  setters.setRokuSearchMode('roku');
                 }
                 if (newView.roku.apps.youtube.mode === 'search') {
                   // youtube is in search mode
@@ -66,6 +72,7 @@ class ViewRouter {
                 }
               } else {
                 // youtube is in home mode
+                setters.setRokuSearchMode('app');
               }
             }
           } else {
@@ -79,6 +86,7 @@ class ViewRouter {
                 const channels = await requests.getTableFromSupabase('youtubeChannelsLiz');
                 setters.setYoutubeChannelsLiz(channels.data);
               }
+              setters.setRokuSearchMode('app');
             }
           }
         } else {
@@ -88,7 +96,7 @@ class ViewRouter {
             const apps = await requests.getTableFromSupabase('rokuApps');
             setters.setRokuApps(apps.data);
             supabaseChannels.subscribeToSupabaseChannel('rokuApps');
-            setters.setRokuSearchMode(false);
+            setters.setRokuSearchMode('roku');
           }
         }
       }
@@ -98,6 +106,14 @@ class ViewRouter {
         const apps = await requests.getTableFromSupabase('rokuApps');
         setters.setRokuApps(apps.data);
         supabaseChannels.subscribeToSupabaseChannel('rokuApps');
+        if (apps.data.find(app => app.state === 'selected')?.id !== 'home') {
+          setters.setRokuSearchMode('roku');
+        }
+      }
+      if (currentView.selected === '') {
+        if (rokuApps.find(app => app.state === 'selected')?.id !== 'home') {
+          setters.setRokuSearchMode('roku');
+        }
       }
     }
 
