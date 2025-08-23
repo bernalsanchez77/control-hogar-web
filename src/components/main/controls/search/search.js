@@ -37,7 +37,7 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
     if (searchText) {
       if (view.selected === 'roku') {
         if (rokuSearchMode === 'roku') {
-          searchRokuModeParent('Enter');
+          // searchRokuModeParent('Enter');
         }
         if (rokuSearchMode === 'app') {
           if (view.roku.apps.selected === 'youtube' && (view.roku.apps.youtube.mode === '' || view.roku.apps.youtube.mode === 'search')) {
