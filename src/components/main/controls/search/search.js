@@ -144,6 +144,11 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
     setSearchText(e.target.value);
   };
 
+  useEffect(() => {
+    searchText = '';
+  }, [rokuSearchMode]);
+
+
   return (
     <div className='controls-search'>
       <div className='controls-search-row'>
