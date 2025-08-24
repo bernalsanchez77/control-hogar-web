@@ -145,7 +145,7 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
   };
 
   useEffect(() => {
-    searchText = '';
+    setSearchText('');
   }, [rokuSearchMode]);
 
 
