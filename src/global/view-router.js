@@ -67,7 +67,7 @@ class ViewRouter {
                   const videos = await requests.getTableFromSupabase('youtubeVideosLiz');
                   setters.setYoutubeVideosLiz(videos.data);
                   this.subscribeToSupabaseChannel('youtubeVideosLiz', setters);
-                  setters.setRokuSearchMode('roku');
+                  setters.setRokuSearchMode('default');
                 }
                 if (newView.roku.apps.youtube.mode === 'search') {
                   // youtube is in search mode
