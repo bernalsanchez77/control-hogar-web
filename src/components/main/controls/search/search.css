@@ -9,7 +9,7 @@
 }
 .controls-search-input-wrapper {
   float: left;
-  width: 150px;
+  width: 230px;
   height: 100%;
 }
 .controls-search-input {
@@ -26,6 +26,7 @@
   float: right;
   width: 70px;
   height: 100%;
+  display: none;
 }
 .controls-search-button {
   color: white;
