@@ -41,6 +41,7 @@
 }
 .controls-search-button--no-mode {
   pointer-events: none;
+  visibility: hidden;
 }
 .controls-search-mode {
     position: absolute;
