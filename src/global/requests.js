@@ -147,13 +147,13 @@ class Requests {
         );
       });
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Roku not responding")), 500)
+        setTimeout(() => reject(new Error('Roku not responding')), 300)
       );
       return Promise.race([getRequestPromise, timeoutPromise]).then((response) => {
-        console.log("Get request to Roku succeeded");
+        console.log('Get request to Roku succeeded');
         return {status: response.status, data: xmlParser.parse(response.data)};
       }).catch((error) => {
-        console.error("Get request to Roku failed:", error);
+        console.error('Get request to Roku failed');
       });
     } else {
       return null;

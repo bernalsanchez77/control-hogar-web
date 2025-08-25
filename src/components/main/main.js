@@ -200,17 +200,19 @@ function Main() {
   const testRokuData = useCallback(async () => {
     try {
       let apps = await requests.getRokuData('apps');
-      console.log('apps: ', apps);
       if (apps && apps.status === 200) {
         console.log('connected to Roku');
         setConnectedToRoku(true);
+        return true;
       } else {
         console.log('not connected to Roku');
         setConnectedToRoku(false);
+        return false;
       }
     } catch (err) {
       console.log('not connected to Roku');
       setConnectedToRoku(false);
+      return false;
     }
   }, []);
 
@@ -261,13 +263,14 @@ function Main() {
   const getVisibility = useCallback(() => {
     const handleVisibilityChange = async () => {
       let message = '';
+      let rokuConnected = false;
       const currentView = viewRef.current;
       if (document.visibilityState === 'visible') {
         setUserActive(true);
-        await testRokuData();
-        testRokuDataIntervalRef.current = setInterval(() => {
+        rokuConnected = await testRokuData();
+        testRokuDataIntervalRef.current = setInterval(async () => {
           if (localStorage.getItem('user')) {
-            testRokuData();
+            rokuConnected = await testRokuData();
           }
         }, 5000);
         subscribeToSupabaseChannel('hdmiSala', (change) => {
@@ -287,13 +290,13 @@ function Main() {
         if (currentView.roku.apps.youtube.channel) {
           await setData('youtubeVideosLiz');
         }
-        if (currentView.selected === 'roku' & !currentView.roku.apps.selected) {
+        if (rokuConnected && currentView.selected === 'roku' && !currentView.roku.apps.selected) {
           const rokuAppsTable = await setData('rokuApps');
-          getRokuData(rokuAppsTable.data, hdmiSalaTable.data);
+          await getRokuData(rokuAppsTable.data, hdmiSalaTable.data);
         }
-        getRokuDataIntervalRef.current = setInterval(() => {
-          if (localStorage.getItem('user') && viewRef.current.selected === 'roku') {
-            getRokuData();
+        getRokuDataIntervalRef.current = setInterval(async () => {
+          if (rokuConnected && localStorage.getItem('user') && viewRef.current.selected === 'roku') {
+            await getRokuData();
           }
         }, 5000);
         if (currentView.selected === 'cable') {
@@ -402,16 +405,17 @@ function Main() {
   const init = useCallback(async () => {
     let rokuAppsTable = {};
     let hdmiSalaTable = {};
+    let rokuConnected = false;
     const localStorageScreen = localStorage.getItem('screen');
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
     }
     setCredential(localStorage.getItem('user'));
     setInRange(await utils.getInRange());
-    await testRokuData();
-    testRokuDataIntervalRef.current = setInterval(() => {
+    rokuConnected = await testRokuData();
+    testRokuDataIntervalRef.current = setInterval(async () => {
       if (localStorage.getItem('user')) {
-        testRokuData();
+        rokuConnected = await testRokuData();
       }
     }, 5000);
     const newView = structuredClone(viewRef.current);
@@ -429,14 +433,14 @@ function Main() {
       if (rokuAppsTable.data.find(row => row.state === 'selected').id !== 'home') {
         setters.setRokuSearchMode('roku');
       }
-      if (localStorage.getItem('user') && newView.selected === 'roku') {
-        getRokuData(rokuAppsTable.data, hdmiSalaTable.data);
+      if (rokuConnected && localStorage.getItem('user') && newView.selected === 'roku') {
+        await getRokuData(rokuAppsTable.data, hdmiSalaTable.data);
       }
     }
     setView(await viewRouter.changeView(newView, viewRef.current, [], setters, rokuAppsTable.data));
-    getRokuDataIntervalRef.current = setInterval(() => {
-      if (localStorage.getItem('user') && viewRef.current.selected === 'roku') {
-        getRokuData();
+    getRokuDataIntervalRef.current = setInterval(async () => {
+      if (rokuConnected && localStorage.getItem('user') && viewRef.current.selected === 'roku') {
+        await getRokuData();
       }
     }, 5000);
 
