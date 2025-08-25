@@ -35,7 +35,7 @@ button.screens-button:active {
 }
 @keyframes flash-shadow {
   0%, 100% {
-    box-shadow: 0 0 10px #fff;
+    box-shadow: 0 0 15px #fff;
   }
   50% {
     box-shadow: 0 0 0px #fff;
