@@ -138,23 +138,22 @@ class Requests {
   }
   async getRokuData(param) {
     if (window.cordova) {
-      return new Promise((resolve, reject) => {
+      const getRequestPromise = new Promise((resolve, reject) => {
         window.cordova.plugin.http.sendRequest(
           `${rokuIp}query/${param}`,
-          {
-            method: 'get',
-            headers: {},
-            params: {}
-          },
-          function onSuccess(response) {
-            console.log(`get request to roku succeeded`);
-            resolve({status: response.status, data: xmlParser.parse(response.data)});
-          },
-          function onError(error) {
-            console.error(`get request to roku failed: `, error);
-            reject(error);
-          }
+          {method: 'get', headers: {}, params: {}},
+          (response) => {resolve(response);},
+          (error) => {reject(error);}
         );
+      });
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Roku not responding")), 500)
+      );
+      return Promise.race([getRequestPromise, timeoutPromise]).then((response) => {
+        console.log("Get request to Roku succeeded");
+        return {status: response.status, data: xmlParser.parse(response.data)};
+      }).catch((error) => {
+        console.error("Get request to Roku failed:", error);
       });
     } else {
       return null;

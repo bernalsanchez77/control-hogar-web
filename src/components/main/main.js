@@ -26,6 +26,7 @@ function Main() {
   const [inRange, setInRange] = useState(false);
   const [userActive, setUserActive] = useState(true);
   const [credential, setCredential] = useState('');
+  const [connectedToRoku, setConnectedToRoku] = useState(false);
   const [sendEnabled, setSendEnabled] = useState(true);
   const [screenSelected, setScreenSelected] = useState('teleSala');
   const [youtubeSearchVideos, setYoutubeSearchVideos] = useState([]);
@@ -53,6 +54,7 @@ function Main() {
   const screenSelectedRef = useRef(screenSelected);
   const youtubeChannelsLizRef = useRef(youtubeChannelsLiz);
   const getRokuDataIntervalRef = useRef(null);
+  const testRokuDataIntervalRef = useRef(null);
 
   // useMemo variables (computed)
 
@@ -195,6 +197,23 @@ function Main() {
     return table;
   }, [subscribeToSupabaseChannel, setters]);
 
+  const testRokuData = useCallback(async () => {
+    try {
+      let apps = await requests.getRokuData('apps');
+      console.log('apps: ', apps);
+      if (apps && apps.status === 200) {
+        console.log('connected to Roku');
+        setConnectedToRoku(true);
+      } else {
+        console.log('not connected to Roku');
+        setConnectedToRoku(false);
+      }
+    } catch (err) {
+      console.log('not connected to Roku');
+      setConnectedToRoku(false);
+    }
+  }, []);
+
   const getRokuData = useCallback(async (rokuAppsParam = rokuAppsRef.current, hdmiSalaParam = hdmiSalaRef.current) => {
     let activeApp = await requests.getRokuData('active-app');
     if (activeApp && activeApp.status === 200) {
@@ -209,16 +228,16 @@ function Main() {
           new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
         });
       }
-    }
-    let playState = await requests.getRokuData('media-player');
-    if (playState && playState.status === 200) {
-      const currentPlayState = hdmiSalaParam.find(hdmi => hdmi.state === 'selected').playState;
-      const newPlayState = playState.data.player.state;
-      if (currentPlayState !== newPlayState) {
-        const newId = 'roku';
-        requests.updateTableInSupabase({
-          new: {newId, newTable: 'hdmiSala', newPlayState, newDate: new Date().toISOString()}
-        });
+      let playState = await requests.getRokuData('media-player');
+      if (playState && playState.status === 200) {
+        const currentPlayState = hdmiSalaParam.find(hdmi => hdmi.state === 'selected').playState;
+        const newPlayState = playState.data.player.state;
+        if (currentPlayState !== newPlayState) {
+          const newId = 'roku';
+          requests.updateTableInSupabase({
+            new: {newId, newTable: 'hdmiSala', newPlayState, newDate: new Date().toISOString()}
+          });
+        }
       }
     }
   }, []);
@@ -245,6 +264,12 @@ function Main() {
       const currentView = viewRef.current;
       if (document.visibilityState === 'visible') {
         setUserActive(true);
+        await testRokuData();
+        testRokuDataIntervalRef.current = setInterval(() => {
+          if (localStorage.getItem('user')) {
+            testRokuData();
+          }
+        }, 5000);
         subscribeToSupabaseChannel('hdmiSala', (change) => {
           hdmiChangeInSupabaseChannel(change.id);
         });
@@ -270,7 +295,7 @@ function Main() {
           if (localStorage.getItem('user') && viewRef.current.selected === 'roku') {
             getRokuData();
           }
-        }, 10000);
+        }, 5000);
         if (currentView.selected === 'cable') {
           await setData('cableChannels');
         }
@@ -281,6 +306,7 @@ function Main() {
         message = user + ' regreso';
       } else {
         setUserActive(false);
+        clearInterval(testRokuDataIntervalRef);
         clearInterval(getRokuDataIntervalRef);
         unsubscribeFromSupabaseChannel('hdmiSala');
         if (currentView.roku.apps.youtube.channel) {
@@ -305,7 +331,6 @@ function Main() {
   }, [setData, changeView, subscribeToSupabaseChannel, getRokuData, hdmiChangeInSupabaseChannel, unsubscribeFromSupabaseChannel]);  
 
   const handleBack = useCallback((e) => {
-    console.log('back triggered');
     const newView = structuredClone(viewRef.current);
     if (viewRef.current.selected === 'roku') {
       if (viewRef.current.roku.apps.selected) {
@@ -338,7 +363,6 @@ function Main() {
   }, [changeView]);
 
   const handleVolumeUpButton = useCallback((e) => {
-    console.log('volume up triggered');
     const screen = screensRef.current.find(screen => screen.id === screenSelectedRef.current);
     let newVol = 0;
     newVol = screen.volume + 1;
@@ -349,7 +373,6 @@ function Main() {
   }, [changeControl, screenSelectedRef, screensRef]);
 
   const handleVolumeDownButton = useCallback((e) => {
-    console.log('volume down triggered');
     const screen = screensRef.current.find(screen => screen.id === screenSelectedRef.current);
     let newVol = 0;
     if (screen.volume !== 0) {
@@ -385,7 +408,12 @@ function Main() {
     }
     setCredential(localStorage.getItem('user'));
     setInRange(await utils.getInRange());
-
+    await testRokuData();
+    testRokuDataIntervalRef.current = setInterval(() => {
+      if (localStorage.getItem('user')) {
+        testRokuData();
+      }
+    }, 5000);
     const newView = structuredClone(viewRef.current);
     hdmiSalaTable = await setData('hdmiSala', (change) => {
       hdmiChangeInSupabaseChannel(change.id);
@@ -410,7 +438,7 @@ function Main() {
       if (localStorage.getItem('user') && viewRef.current.selected === 'roku') {
         getRokuData();
       }
-    }, 10000);
+    }, 5000);
 
     await setData('devices');
     await setData('screens');
@@ -422,8 +450,7 @@ function Main() {
     } else {
       window.addEventListener("load", onLoad);
     }
-    console.log('version 27');
-  }, [setData, setters, getRokuData, getVisibility, hdmiChangeInSupabaseChannel]);
+  }, [setData, setters, getRokuData, testRokuData, getVisibility, hdmiChangeInSupabaseChannel]);
 
   useEffect(() => {
     if (!initializedRef.current) {
@@ -524,6 +551,11 @@ function Main() {
       <div className='main-components'>
         {(inRange || (credential === 'owner' || credential === 'dev')) ?
         <div>
+          {!connectedToRoku &&
+          <div className='notifications'>
+             No hay conexion con Roku
+          </div>
+          }
           {screens.length &&
           <Screens
             credential={credential}

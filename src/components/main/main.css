@@ -17,3 +17,13 @@
 body.loaded .fade-in {
   opacity: 1;
 }
+
+.notifications {
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  left: 50%;
+  width: 300px;
+  margin-left: -150px;
+  margin-top: -20px;
+}

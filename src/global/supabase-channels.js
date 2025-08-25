@@ -15,7 +15,6 @@ class SupabaseChannels {
             }
           }
         ).subscribe(status => {
-          console.log(tableName, ' status is: ', status);
           if (status === 'SUBSCRIBED') {
             console.log('Subscribed to ', tableName);
           }
@@ -24,14 +23,12 @@ class SupabaseChannels {
     }
     getSupabaseChannel(name) {
       if (!this.supabaseChannels[name]) {
-        console.log(`Creating channel: ${name}`);
         this.supabaseChannels[name] = supabase.channel(name);
       }
       return this.supabaseChannels[name];
     }
     unsubscribeFromSupabaseChannel(tableName) {
       if (this.supabaseChannels[tableName]) {
-        console.log(`Removing channel: ${tableName}`);
         this.supabaseChannels[tableName].unsubscribe();
         delete this.supabaseChannels[tableName];
       }
