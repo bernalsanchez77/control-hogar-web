@@ -153,7 +153,7 @@ class Requests {
         console.log('Get request to Roku succeeded');
         return {status: response.status, data: xmlParser.parse(response.data)};
       }).catch((error) => {
-        console.error('Get request to Roku failed');
+        console.log('Get request to Roku failed');
       });
     } else {
       return null;
