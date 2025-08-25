@@ -93,8 +93,34 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
         </ul>
       </div>
       }
-      {(view.roku.apps.youtube.mode === 'channel' || view.roku.apps.youtube.mode === 'search') &&
-      <div className='controls-apps-youtube'>
+      {(view.roku.apps.youtube.mode === 'channel') &&
+      <div className='controls-apps-youtube controls-apps-youtube--channel'>
+        <ul className='controls-apps-youtube-ul'>
+          {
+            youtubeSortedVideos.map((video, key) => (
+            <li key={key} className='controls-apps-youtube-li'>
+              <button
+                className={`controls-apps-youtube-video-button ${video.state === 'selected' ? 'controls-apps-youtube-video-button--selected' : ''}`}
+                onTouchStart={(e) => onTouchStart(e)}
+                onTouchMove={(e) => onTouchMove(e)}
+                onTouchEnd={(e) => onTouchEnd('video', video.id)}>
+                <img
+                  className='controls-apps-youtube-video-img'
+                  src={view.roku.apps.youtube.mode === 'channel' ? 'https://img.youtube.com/vi/' + video.id + '/sddefault.jpg' : video.img}
+                  alt="icono">
+                </img>
+                <p className='controls-apps-youtube-video-title'>
+                  {video.title}
+                </p>
+              </button>
+            </li>
+            ))
+          }
+        </ul>
+      </div>
+      }
+      {(view.roku.apps.youtube.mode === 'search') &&
+      <div className='controls-apps-youtube controls-apps-youtube--search'>
         <ul className='controls-apps-youtube-ul'>
           {
             youtubeSortedVideos.map((video, key) => (

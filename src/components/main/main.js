@@ -90,7 +90,7 @@ function Main() {
   }, []);
 
   const changeView = useCallback(async (newView) => {
-    setView(await viewRouter.changeView(newView, viewRef.current, youtubeChannelsLizRef.current.data, setters, rokuAppsRef.current.data));
+    setView(await viewRouter.changeView(newView, viewRef.current, youtubeChannelsLizRef.current, setters, rokuAppsRef.current));
   }, [viewRef, setters, rokuAppsRef, youtubeChannelsLizRef]);
 
   const changeControl = (params) => {

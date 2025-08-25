@@ -100,7 +100,11 @@ class ViewRouter {
             const apps = await requests.getTableFromSupabase('rokuApps');
             setters.setRokuApps(apps.data);
             this.subscribeToSupabaseChannel('rokuApps', setters);
-            setters.setRokuSearchMode('roku');
+            if (rokuApps.find(app => app.state === 'selected')?.id !== 'home') {
+              setters.setRokuSearchMode('roku');
+            } else {
+              setters.setRokuSearchMode('default');
+            }
           }
         }
       }
