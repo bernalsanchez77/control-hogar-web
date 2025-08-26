@@ -292,7 +292,13 @@ function Main() {
     }
 
     if (newView.selected === 'roku') {
-      rokuAppsTable = await setData('rokuApps');
+      rokuAppsTable = await setData('rokuApps', (change) => {
+        if (change.id === 'home') {
+          setters.setRokuSearchMode('default');
+        } else {
+          setters.setRokuSearchMode('app');
+        }
+      });
       if (rokuAppsTable.data.find(row => row.state === 'selected').id !== 'home') {
         setters.setRokuSearchMode('roku');
       }
@@ -491,7 +497,13 @@ function Main() {
       await setData('youtubeVideosLiz');
     }
     if (rokuConnected && viewRef.current.selected === 'roku' && !viewRef.current.roku.apps.selected) {
-      const rokuAppsTable = await setData('rokuApps');
+      const rokuAppsTable = await setData('rokuApps', (change) => {
+        if (change.id === 'home') {
+          setters.setRokuSearchMode('default');
+        } else {
+          setters.setRokuSearchMode('app');
+        }
+      });
       await getRokuData(rokuAppsTable.data, hdmiSalaTable.data);
     }
     getRokuDataIntervalRef.current = setInterval(async () => {
