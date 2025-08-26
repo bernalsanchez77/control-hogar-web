@@ -528,7 +528,7 @@ function Main() {
   }, [changeView, getRokuData, hdmiChangeInSupabaseChannel, setData, subscribeToSupabaseChannel, testRokuData]);
 
   useEffect(() => {
-    window.addEventListener("popstate", onBack, false);
+    //window.addEventListener("popstate", onBack, false);
     document.addEventListener("backbutton", onBack, false);
     document.addEventListener("volumeupbutton", onVolumeUp, false);
     document.addEventListener("volumedownbutton", onVolumeDown, false);
@@ -536,7 +536,7 @@ function Main() {
     document.addEventListener("resume", onResume, false);
 
     return () => {
-      window.removeEventListener("popstate", onBack, false);
+      //window.removeEventListener("popstate", onBack, false);
       document.removeEventListener("backbutton", onBack, false);
       document.removeEventListener("volumeupbutton", onVolumeUp, false);
       document.removeEventListener("volumedownbutton", onVolumeDown, false);
