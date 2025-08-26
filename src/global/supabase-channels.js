@@ -29,6 +29,7 @@ class SupabaseChannels {
     }
     unsubscribeFromSupabaseChannel(tableName) {
       if (this.supabaseChannels[tableName]) {
+        console.log('Unsubscribed from ', tableName);
         this.supabaseChannels[tableName].unsubscribe();
         delete this.supabaseChannels[tableName];
       }

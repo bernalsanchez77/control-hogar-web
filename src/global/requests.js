@@ -122,11 +122,11 @@ class Requests {
     }
     return res.data.items;
   }
-  async sendLogs(message) {
+  async sendLogs(message, user) {
     if (window.cordova) {
-      return await this.cordovaApiRequest('sendLogs', {message: message}, 'post');
+      return await this.cordovaApiRequest('sendLogs', {message: window.device.model + message}, 'post');
     } else {
-      return await this.normalApiRequest('sendLogs', {message: message}, 'post');
+      return await this.normalApiRequest('sendLogs', {message: user + message}, 'post');
     }
   }
   async getMassMediaData() {
