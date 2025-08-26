@@ -201,16 +201,13 @@ function Main() {
     try {
       let apps = await requests.getRokuData('apps');
       if (apps && apps.status === 200) {
-        console.log('connected to Roku');
         setConnectedToRoku(true);
         return true;
       } else {
-        console.log('not connected to Roku');
         setConnectedToRoku(false);
         return false;
       }
     } catch (err) {
-      console.log('not connected to Roku');
       setConnectedToRoku(false);
       return false;
     }
@@ -265,22 +262,24 @@ function Main() {
     document.body.classList.add("loaded");
   };
 
+  const getRokuState = useCallback(async () => {
+    const rokuConnected = await testRokuData();
+    testRokuDataIntervalRef.current = setInterval(async () => {
+      await testRokuData();
+    }, 5000);
+    return rokuConnected;
+  }, [testRokuData]);
+
   const init = useCallback(async () => {
     let rokuAppsTable = {};
     let hdmiSalaTable = {};
-    let rokuConnected = false;
     const localStorageScreen = localStorage.getItem('screen');
     if (localStorageScreen) {
       setScreenSelected(localStorageScreen);
     }
     setCredential(localStorage.getItem('user'));
     setInRange(await utils.getInRange());
-    rokuConnected = await testRokuData();
-    testRokuDataIntervalRef.current = setInterval(async () => {
-      if (localStorage.getItem('user')) {
-        rokuConnected = await testRokuData();
-      }
-    }, 5000);
+    const rokuConnected = await getRokuState();
     const newView = structuredClone(viewRef.current);
     hdmiSalaTable = await setData('hdmiSala', (change) => {
       hdmiChangeInSupabaseChannel(change.id);
@@ -322,7 +321,7 @@ function Main() {
     } else {
       window.addEventListener("load", onLoad);
     }
-  }, [setData, setters, getRokuData, testRokuData, hdmiChangeInSupabaseChannel]);
+  }, [getRokuState, setData, setters, getRokuData, hdmiChangeInSupabaseChannel]);
 
   useEffect(() => {
     if (!initializedRef.current) {
@@ -451,7 +450,6 @@ function Main() {
   }, []);
 
   const onPause = useCallback((e) => {
-    console.warn('on pause');
     setUserActive(false);
     clearInterval(testRokuDataIntervalRef);
     clearInterval(getRokuDataIntervalRef);
@@ -471,14 +469,8 @@ function Main() {
   }, [unsubscribeFromSupabaseChannel]);
 
   const onResume = useCallback(async (e) => {
-    console.warn('on resume');
     setUserActive(true);
-    let rokuConnected = await testRokuData();
-    testRokuDataIntervalRef.current = setInterval(async () => {
-      if (localStorage.getItem('user')) {
-        rokuConnected = await testRokuData();
-      }
-    }, 5000);
+    const rokuConnected = await getRokuState();
     subscribeToSupabaseChannel('hdmiSala', (change) => {
       hdmiChangeInSupabaseChannel(change.id);
     });
@@ -519,7 +511,7 @@ function Main() {
 
     setInRange(await utils.getInRange());
     requests.sendLogs(' entro', user);
-  }, [changeView, getRokuData, hdmiChangeInSupabaseChannel, setData, subscribeToSupabaseChannel, testRokuData]);
+  }, [getRokuState, setters, changeView, getRokuData, hdmiChangeInSupabaseChannel, setData, subscribeToSupabaseChannel]);
 
   const onVisibilityChange = useCallback(() => {
     if (document.visibilityState === 'visible') {
