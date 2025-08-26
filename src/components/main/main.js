@@ -393,6 +393,7 @@ function Main() {
   };
 
   const onBack = useCallback((e) => {
+    e.preventDefault();
     const newView = structuredClone(viewRef.current);
     if (viewRef.current.selected === 'roku') {
       if (viewRef.current.roku.apps.selected) {
@@ -403,13 +404,13 @@ function Main() {
           }
           e.preventDefault();
           changeView(newView);
+          return;
         } else {
           newView.roku.apps.selected = '';
           e.preventDefault();
           changeView(newView);
+          return;
         }
-      } else {
-        window.navigator.app.exitApp();
       }
     }
     if (viewRef.current.selected === 'cable') {
@@ -417,17 +418,16 @@ function Main() {
         newView.cable.channels.category = [];
         e.preventDefault();
         changeView(newView);
-      } else {
-        window.navigator.app.exitApp();
+        return;
       }
     }
     if (viewRef.current.devices.device) {
       newView.devices.device = '';
       e.preventDefault();
       changeView(newView);
-    } else {
-      window.navigator.app.exitApp();
+      return;
     }
+    window.navigator.app.exitApp();
   }, [changeView]);
 
   const onVolumeUp = useCallback((e) => {
