@@ -129,13 +129,6 @@ class Requests {
       return await this.normalApiRequest('sendLogs', {message: user + message}, 'post');
     }
   }
-  async getMassMediaData() {
-    if (window.cordova) {
-      return await this.cordovaApiRequest('getDevices', null, 'get');
-    } else {
-      return await this.normalApiRequest('getDevices', null, 'get');
-    }
-  }
   async getRokuData(param) {
     if (window.cordova) {
       const getRequestPromise = new Promise((resolve, reject) => {
@@ -164,13 +157,6 @@ class Requests {
       return await this.cordovaApiRequest('validateCredentials', {key: userCredential}, 'post');
     } else {
       return await this.normalApiRequest('validateCredentials', {key: userCredential}, 'post');
-    }
-  }
-  async setDevices(devices) {
-    if (window.cordova) {
-      return await this.cordovaApiRequest('setDevices', devices, 'put', 'json');
-    } else {
-      return await this.normalApiRequest('setDevices', devices, 'put');
     }
   }
   async sendIfttt(params, sendEnabled) {

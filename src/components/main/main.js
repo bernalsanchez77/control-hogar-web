@@ -17,7 +17,6 @@ const requests = new Requests();
 const utils = new Utils();
 const viewRouter = new ViewRouter();
 const user = utils.getUser(`${window.screen.width}x${window.screen.height}`);
-const isApp = window.cordova;
 
 function Main() {
 
@@ -218,31 +217,31 @@ function Main() {
   }, []);
 
   const getRokuData = useCallback(async (rokuAppsParam = rokuAppsRef.current, hdmiSalaParam = hdmiSalaRef.current) => {
-    let activeApp = await requests.getRokuData('active-app');
-    if (activeApp && activeApp.status === 200) {
-      const currentApp = rokuAppsParam.find(app => app.state === 'selected');
-      const currentId = currentApp.id;
-      const currentRokuId = currentApp.rokuId;
-      const newRokuId = activeApp.data['active-app'].app.id;
-      if (currentRokuId !== newRokuId) {
-        const newId = rokuAppsParam.find(app => app.rokuId === newRokuId).id;
-        requests.updateTableInSupabase({
-          current: {currentId, currentTable: 'rokuApps', currentState: ''},
-          new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
-        });
-      }
-      let playState = await requests.getRokuData('media-player');
-      if (playState && playState.status === 200) {
-        const currentPlayState = hdmiSalaParam.find(hdmi => hdmi.state === 'selected').playState;
-        const newPlayState = playState.data.player.state;
-        if (currentPlayState !== newPlayState) {
-          const newId = 'roku';
-          requests.updateTableInSupabase({
-            new: {newId, newTable: 'hdmiSala', newPlayState, newDate: new Date().toISOString()}
-          });
-        }
-      }
-    }
+    // let activeApp = await requests.getRokuData('active-app');
+    // if (activeApp && activeApp.status === 200) {
+    //   const currentApp = rokuAppsParam.find(app => app.state === 'selected');
+    //   const currentId = currentApp.id;
+    //   const currentRokuId = currentApp.rokuId;
+    //   const newRokuId = activeApp.data['active-app'].app.id;
+    //   if (currentRokuId !== newRokuId) {
+    //     const newId = rokuAppsParam.find(app => app.rokuId === newRokuId).id;
+    //     requests.updateTableInSupabase({
+    //       current: {currentId, currentTable: 'rokuApps', currentState: ''},
+    //       new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
+    //     });
+    //   }
+    //   let playState = await requests.getRokuData('media-player');
+    //   if (playState && playState.status === 200) {
+    //     const currentPlayState = hdmiSalaParam.find(hdmi => hdmi.state === 'selected').playState;
+    //     const newPlayState = playState.data.player.state;
+    //     if (currentPlayState !== newPlayState) {
+    //       const newId = 'roku';
+    //       requests.updateTableInSupabase({
+    //         new: {newId, newTable: 'hdmiSala', newPlayState, newDate: new Date().toISOString()}
+    //       });
+    //     }
+    //   }
+    // }
   }, []);
 
   const hdmiChangeInSupabaseChannel = useCallback(async (id) => {
@@ -260,20 +259,6 @@ function Main() {
       changeView(newView);
     }
   }, [changeView]);
-
-  const getVisibility = useCallback(() => {
-    const handleVisibilityChange = async () => {
-      if (document.visibilityState === 'visible') {
-        onResume();
-      } else {
-        onPause();
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [setData, changeView, subscribeToSupabaseChannel, getRokuData, hdmiChangeInSupabaseChannel, unsubscribeFromSupabaseChannel]);  
 
   const onLoad = () => {
     window.history.replaceState(null, "", window.location.pathname + window.location.search);
@@ -326,15 +311,12 @@ function Main() {
     await setData('screens');
 
     requests.sendLogs(user + ' entro');
-    if (!isApp) {
-      getVisibility();
-    }
     if (document.readyState === "complete") {
       onLoad();
     } else {
       window.addEventListener("load", onLoad);
     }
-  }, [setData, setters, getRokuData, testRokuData, getVisibility, hdmiChangeInSupabaseChannel]);
+  }, [setData, setters, getRokuData, testRokuData, hdmiChangeInSupabaseChannel]);
 
   useEffect(() => {
     if (!initializedRef.current) {
@@ -527,6 +509,14 @@ function Main() {
     requests.sendLogs(' entro', user);
   }, [changeView, getRokuData, hdmiChangeInSupabaseChannel, setData, subscribeToSupabaseChannel, testRokuData]);
 
+  const onVisibilityChange = useCallback(() => {
+    if (document.visibilityState === 'visible') {
+      onResume();
+    } else {
+      onPause();
+    }
+  }, [onPause, onResume]); 
+
   useEffect(() => {
     window.addEventListener("popstate", onBack, false);
     document.addEventListener("backbutton", onBack, false);
@@ -534,6 +524,7 @@ function Main() {
     document.addEventListener("volumedownbutton", onVolumeDown, false);
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
       window.removeEventListener("popstate", onBack, false);
@@ -542,8 +533,9 @@ function Main() {
       document.removeEventListener("volumedownbutton", onVolumeDown, false);
       document.removeEventListener("pause", onPause, false);
       document.removeEventListener("resume", onResume, false);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
-  }, [onBack, onVolumeUp, onVolumeDown, onPause, onResume]);
+  }, [onBack, onVolumeUp, onVolumeDown, onPause, onResume, onVisibilityChange]);
 
   return (
     <div className="main fade-in">
