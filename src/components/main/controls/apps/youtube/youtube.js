@@ -112,6 +112,9 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
                 <p className='controls-apps-youtube-video-title'>
                   {video.title}
                 </p>
+                <p className='controls-apps-youtube-video-duration'>
+                  {video.duration}
+                </p>
               </button>
             </li>
             ))

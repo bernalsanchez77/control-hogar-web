@@ -61,7 +61,8 @@
   animation: flashing 2s ease-in-out infinite;
 }
 .controls-apps-youtube-video-title,
-.controls-apps-youtube-channel-title {
+.controls-apps-youtube-channel-title,
+.controls-apps-youtube-video-duration {
   padding: 3px 0 0;
   margin: 0;
   width: 100px;
@@ -71,6 +72,9 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+.controls-apps-youtube-video-duration {
+  font-size: 12px;
 }
 button.controls-apps-youtube-video-button:active {
   background-color: white;
