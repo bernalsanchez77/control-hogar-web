@@ -451,8 +451,8 @@ function Main() {
 
   const onPause = useCallback((e) => {
     setUserActive(false);
-    clearInterval(testRokuDataIntervalRef);
-    clearInterval(getRokuDataIntervalRef);
+    clearInterval(testRokuDataIntervalRef.current);
+    clearInterval(getRokuDataIntervalRef.current);
     unsubscribeFromSupabaseChannel('hdmiSala');
     if (viewRef.current.roku.apps.youtube.channel) {
       unsubscribeFromSupabaseChannel('youtubeVideosLiz');
