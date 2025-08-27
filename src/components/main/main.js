@@ -198,6 +198,7 @@ function Main() {
   }, [subscribeToSupabaseChannel, setters]);
 
   const testRokuData = useCallback(async () => {
+    console.warn('testing');
     try {
       let apps = await requests.getRokuData('apps');
       if (apps && apps.status === 200) {
