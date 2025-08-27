@@ -124,7 +124,7 @@ class Requests {
   }
   async sendLogs(message, user) {
     if (window.cordova) {
-      return await this.cordovaApiRequest('sendLogs', {message: window.device.model + message}, 'post');
+      return await this.cordovaApiRequest('sendLogs', {message: window.device.model + ' ' + message}, 'post');
     } else {
       return await this.normalApiRequest('sendLogs', {message: user + message}, 'post');
     }

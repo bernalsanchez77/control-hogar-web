@@ -8,9 +8,7 @@ class ViewRouter {
       setters[itemName](items => items.map(item => item.id === newItem.id ? newItem : item));
     });
   };
-  async changeView(params, currentView, youtubeChannelsLiz, setters, rokuApps) {
-    const newView = structuredClone(params);
-
+  async changeView(newView, currentView, youtubeChannelsLiz, setters, rokuApps) {
     if (newView.selected === 'cable') {
       // cable selected
       if (currentView.selected === 'cable') {
