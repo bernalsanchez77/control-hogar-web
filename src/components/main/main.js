@@ -451,6 +451,7 @@ function Main() {
   }, []);
 
   const onPause = useCallback((e) => {
+    console.warn('pausing');
     setUserActive(false);
     clearInterval(testRokuDataIntervalRef.current);
     clearInterval(getRokuDataIntervalRef.current);
@@ -470,6 +471,7 @@ function Main() {
   }, [unsubscribeFromSupabaseChannel]);
 
   const onResume = useCallback(async (e) => {
+    console.warn('resuming');
     setUserActive(true);
     const rokuConnected = await getRokuState();
     subscribeToSupabaseChannel('hdmiSala', (change) => {
@@ -515,6 +517,7 @@ function Main() {
   }, [getRokuState, setters, changeView, getRokuData, hdmiChangeInSupabaseChannel, setData, subscribeToSupabaseChannel]);
 
   const onVisibilityChange = useCallback(() => {
+    console.warn('visibility');
     if (document.visibilityState === 'visible') {
       onResume();
     } else {
