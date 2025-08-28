@@ -62,6 +62,7 @@ function Main() {
 
   const changeTheme = (theme) => {
     setTheme(theme);
+    localStorage.setItem('theme', theme);
   };
 
   const searchYoutube = async (text) => {
@@ -307,6 +308,7 @@ function Main() {
   }, [getRokuPlayState, testRokuData, hdmiChangeInSupabaseChannel, setData, setters]);
 
   const init = useCallback(async () => {
+    setTheme(localStorage.getItem('theme'));
     setScreenSelected(localStorage.getItem('screen') || screenSelected);
     setCredential(localStorage.getItem('user'));
     const {newView, rokuAppsTable} = await setElements('entro');

@@ -3,23 +3,23 @@
   width: 100vw;
 }
 
-.main-black {
+.main-dark {
   background-color: black;
 }
 
-.main-cyan {
-  background-color: darkcyan;
+.main-light {
+  background: radial-gradient(circle, black 0%, #666 60%, #ccc 100%);
 }
 
 .main-blue {
   background-color: darkslateblue;
 }
 
-.main-grey {
+.main-red {
   background-color: darkslategray;
 }
 
-.main-purple {
+.main-green {
   background-color: rebeccapurple;
 }
 

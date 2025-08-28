@@ -43,11 +43,11 @@ function Options({changeThemeParent, theme}) {
         {optionView === 'theme' &&
         <div className='options-element options-element--select'>
           <select value={theme} onChange={changeTheme}>
-            <option value="black">Negro</option>
-            <option value="grey">Gris</option>
-            <option value="purple">Purpura</option>
-            <option value="cyan">Cyan</option>
-            <option value="blue">Azul</option>
+            <option value="dark">Oscuro</option>
+            <option value="light">Claro</option>
+            <option value="blue">Mar</option>
+            <option value="red">Atardecer</option>
+            <option value="green">Naturaleza</option>
           </select>
         </div>
 }
