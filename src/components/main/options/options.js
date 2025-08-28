@@ -1,24 +1,27 @@
 import './options.css';
 
-function Options({sendEnabled, enableSendParent}) {
+function Options({sendEnabled, enableOptionsParent}) {
   const removeStorage = () => {
     removeStorage();
   }
 
-  const enableSend = () => {
-    enableSendParent();
+  const enableOptions = () => {
+    enableOptionsParent();
   }
 
   return (
     <div className='options'>
       <div className='options-row'>
         <div className='options-element options-element--send'>
-          <button
-            onContextMenu={(e) => e.preventDefault()}
-            className={`options-button ${sendEnabled ? "options-button--on" : "options-button-off"}`}
-            onClick={() => enableSend()}>
-            Temas
-          </button>
+            <button
+                className={`options-button`}
+                onTouchStart={() => enableOptions()}>
+                <img
+                className='options-img options-img--button'
+                src="/imgs/options.png"
+                alt="icono">
+                </img>
+            </button>
         </div>
       </div>
     </div>
