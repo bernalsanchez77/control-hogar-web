@@ -44,10 +44,15 @@ function Options({changeThemeParent, theme}) {
         <div className='options-element options-element--select'>
           <select value={theme} onChange={changeTheme}>
             <option value="dark">Oscuro</option>
+            <option value="darkcarbon">Carbon</option>
             <option value="light">Claro</option>
-            <option value="blue">Mar</option>
-            <option value="red">Atardecer</option>
-            <option value="green">Naturaleza</option>
+            <option value="nightblue">Azul Noche</option>
+            <option value="deepblue">Azul Profundo</option>
+            <option value="darkpurple">Purpura Oscuro</option>
+            <option value="greenforest">Verde Bosque</option>
+            <option value="turquesa">Turquesa</option>
+            <option value="aqua">Aqua</option>
+            <option value="velvet">Velvet</option>
           </select>
         </div>
 }

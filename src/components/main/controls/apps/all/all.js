@@ -52,7 +52,7 @@ function Apps({view, rokuApps, rokuSearchMode, changeControlParent, changeRokuSe
               onTouchEnd={(e) => onTouchEnd(e, app.id)}>
                 <img
                   className='controls-apps-img controls-apps-img--button'
-                  src={app.img}
+                  src={'https://control-hogar-psi.vercel.app/imgs/apps/' + app.id + '.png'}
                   alt="icono">
                 </img>
             </button>

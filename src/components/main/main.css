@@ -2,43 +2,41 @@
   height: 100vh;
   width: 100vw;
 }
-
 .main-dark {
   background-color: black;
 }
-
 .main-light {
-  background: radial-gradient(ellipse, black 0%, #444 40%, #ccc 100%);
-}
-
-.main-blue {
-  background: radial-gradient(ellipse, #000059 0%, #733C85 40%, #BDBDFF 100%);
-}
-
-.main-red {
-  background: radial-gradient(ellipse, #00223D 0%, #00537A 40%, #9ADBF9 100%);
-}
-
-.main-green {
-  background: radial-gradient(circle, #2C003E 0%, #662E9B 65%, #E2C2FF 100%);
-}
-
-.main-deepblue {
-  background: radial-gradient(ellipse, #001933 0%, #66A3FF 100%);
-}
-
-.main-nightblue {
-  background: radial-gradient(ellipse, #000814 0%, #003566 100%);
-}
-.main-greenforest {
-  background: radial-gradient(ellipse, #001a0f 0%, #004d26 100%);
-}
-.main-darkpurple {
-  background: radial-gradient(ellipse, #0d001a 0%, #33004d 100%);
+  background: radial-gradient(ellipse, black 0%, #333 40%, #ccc 100%);
 }
 .main-darkcarbon {
   background: radial-gradient(ellipse, #000000 0%, #333333 100%);
 }
+.main-deepblue {
+  background: radial-gradient(ellipse, #001933 0%, #66A3FF 100%);
+}
+.main-nightblue {
+  background: radial-gradient(ellipse, #000814 0%, #003566 100%);
+}
+.main-darkpurple {
+  background: radial-gradient(ellipse, #0d001a 0%, #33004d 100%);
+}
+.main-greenforest {
+  background: radial-gradient(ellipse, #001a0f 0%, #004d26 100%);
+}
+.main-turquesa {
+  background: radial-gradient(ellipse, #000059 0%, #733C85 40%, #BDBDFF 100%);
+}
+.main-aqua {
+  background: radial-gradient(ellipse, #00223D 0%, #00537A 40%, #9ADBF9 100%);
+}
+.main-velvet {
+  background: radial-gradient(circle, #2C003E 0%, #662E9B 65%, #E2C2FF 100%);
+}
+
+
+
+
+
 
 .main-components {
   position: absolute;

@@ -509,8 +509,6 @@ function Main() {
     <div className={`main fade-in main-${theme}`}>
       {!credential &&
       <Credentials
-        theme={theme}
-        changeThemeParent={changeTheme}
         setCredentialsParent={setCredentials}>
       </Credentials>
       }
