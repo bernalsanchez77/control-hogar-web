@@ -1,21 +1,27 @@
-import {useState} from 'react';
+import {useState, useRef} from 'react';
 import './options.css';
 
 function Options({changeThemeParent, theme}) {
   const [optionView, setOptionView] = useState('default');
+  const setTimeOutRef = useRef(null);
   const removeStorage = () => {
     removeStorage();
   }
 
   const changeOptionView = (option) => {
     setOptionView(option);
-    // setTimeout(() => {
-    //   setOptionView('default');
-    // }, 5000);
+    setTimeOutRef.current = setTimeout(() => {
+      setOptionView('default');
+    }, 10000);
   }
 
   const changeTheme = (e) => {
     changeThemeParent(e.target.value);
+    clearInterval(setTimeOutRef.current);
+    setTimeOutRef.current = setTimeout(() => {
+      setOptionView('default');
+      clearInterval(setTimeOutRef.current);
+    }, 10000);
   };
 
   return (
