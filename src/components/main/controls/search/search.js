@@ -1,7 +1,7 @@
 import {useRef, useState, useEffect} from 'react';
 import './search.css';
 
-function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutubeParent, searchRokuModeParent, changeRokuSearchModeParent, changeControlParent}) {
+function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutubeParent, searchRokuModeParent, changeRokuSearchModeParent}) {
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   const [searchText, setSearchText] = useState('');

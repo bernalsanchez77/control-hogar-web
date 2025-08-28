@@ -68,8 +68,7 @@ function Controls({screens, devices, rokuSearchMode, changeRokuSearchModeParent,
           changeViewParent={changeView}
           searchYoutubeParent={searchYoutube}
           searchRokuModeParent={searchRokuModeParent}
-          changeRokuSearchModeParent={changeRokuSearchMode}
-          changeControlParent={changeControl}>
+          changeRokuSearchModeParent={changeRokuSearchMode}>
         </Search>
         }
         {view.selected === 'roku' &&

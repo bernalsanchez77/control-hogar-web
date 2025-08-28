@@ -5,6 +5,7 @@
   width: 240px;
   left: 50%;
   margin-left: -120px;
+  z-index: 1;
 }
 .controls-search-row {
   width: 230px;
@@ -63,5 +64,4 @@
 }
 .controls-search-mode--visible {
     opacity: 1;
-    z-index: 1;
 }
