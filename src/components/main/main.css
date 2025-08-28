@@ -23,6 +23,23 @@
   background: radial-gradient(circle, #2C003E 0%, #662E9B 65%, #E2C2FF 100%);
 }
 
+.main-deepblue {
+  background: radial-gradient(ellipse, #001933 0%, #66A3FF 100%);
+}
+
+.main-nightblue {
+  background: radial-gradient(ellipse, #000814 0%, #003566 100%);
+}
+.main-greenforest {
+  background: radial-gradient(ellipse, #001a0f 0%, #004d26 100%);
+}
+.main-darkpurple {
+  background: radial-gradient(ellipse, #0d001a 0%, #33004d 100%);
+}
+.main-darkcarbon {
+  background: radial-gradient(ellipse, #000000 0%, #333333 100%);
+}
+
 .main-components {
   position: absolute;
   top: 50%;
