@@ -3,6 +3,9 @@
   display: inline-block;
   height: 110px;
 }
+.devices-row {
+  display: inline-block;
+}
 .devices-element {
   float: left;
   width: 35px;

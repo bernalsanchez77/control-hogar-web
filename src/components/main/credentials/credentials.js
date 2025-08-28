@@ -1,15 +1,18 @@
 import React, {useState} from 'react';
 import './credentials.css';
 
-function Credentials({setCredentialsParent}) {
+function Credentials({setCredentialsParent, changeThemeParent, theme}) {
   const [credentialValue, setCredentialValue] = useState('');
   const setGuestCredential = () => {
     setCredentialsParent('guest');
-  }
+  };
   const setOwnerCredential = (e) => {
     setCredentialValue(e.target.value);
     setCredentialsParent(e.target.value);
-  }
+  };
+  const changeTheme = (e) => {
+    changeThemeParent(e.target.value);
+  };
   return (
     <div className="credentials">
       <div>
@@ -30,13 +33,15 @@ function Credentials({setCredentialsParent}) {
         </div>
       </div>
       <div className='credentials-theme'>
-        <div>
-          <label for="myDropdown">Escoja el tema:</label>
+        <div className='credentials-theme-label'>
+          <span>Escoja el tema:</span>
         </div>
-          <select id="myDropdown" name="selectedOption">
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
+          <select value={theme} onChange={changeTheme}>
+            <option value="black">Negro</option>
+            <option value="grey">Gris</option>
+            <option value="purple">Purpura</option>
+            <option value="cyan">Cyan</option>
+            <option value="blue">Azul</option>
           </select>
       </div>
     </div>

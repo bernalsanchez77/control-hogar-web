@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo} from 'react';
 import eruda from 'eruda';
 import Screens from './screens/screens';
 import Devices from './devices/devices';
+import Options from './options/options';
 import Controls from './controls/controls';
 import Credentials from './credentials/credentials';
 import Dev from './dev/dev';
@@ -23,6 +24,7 @@ function Main() {
 
   //useState Variables
 
+  const [theme, setTheme] = useState("black");
   const [rokuSearchMode, setRokuSearchMode] = useState('default');
   const [inRange, setInRange] = useState(false);
   const [userActive, setUserActive] = useState(true);
@@ -58,6 +60,9 @@ function Main() {
 
   // useMemo variables (computed)
 
+  const changeTheme = (theme) => {
+    setTheme(theme);
+  };
 
   const searchYoutube = async (text) => {
     utils.triggerVibrate();
@@ -499,15 +504,17 @@ function Main() {
   }, [onBack, onVolumeUp, onVolumeDown, onPause, onResume, onVisibilityChange]);
 
   return (
-    <div className="main fade-in">
+    <div className={`main fade-in main-${theme}`}>
       {!credential &&
       <Credentials
+        theme={theme}
+        changeThemeParent={changeTheme}
         setCredentialsParent={setCredentials}>
       </Credentials>
       }
       {credential &&
       <div className='main-components'>
-        {(inRange || (credential === 'owner' || credential === 'dev')) ?
+        {(inRange || (credential === 'owner' || credential === 'dev' || credential === 'guest')) ?
         <div>
           {!connectedToRoku &&
           <div className='notifications'>
@@ -552,6 +559,8 @@ function Main() {
             changeControlParent={changeControl}>
           </Devices>
           }
+          <Options>
+          </Options>
           {credential === 'dev' &&
           <Dev
             sendEnabled={sendEnabled}
