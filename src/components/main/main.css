@@ -8,19 +8,19 @@
 }
 
 .main-light {
-  background: radial-gradient(circle, black 0%, #666 60%, #ccc 100%);
+  background: radial-gradient(ellipse, black 0%, #444 40%, #ccc 100%);
 }
 
 .main-blue {
-  background-color: darkslateblue;
+  background: radial-gradient(ellipse, #000059 0%, #733C85 40%, #BDBDFF 100%);
 }
 
 .main-red {
-  background-color: darkslategray;
+  background: radial-gradient(ellipse, #00223D 0%, #00537A 40%, #9ADBF9 100%);
 }
 
 .main-green {
-  background-color: rebeccapurple;
+  background: radial-gradient(circle, #2C003E 0%, #662E9B 65%, #E2C2FF 100%);
 }
 
 .main-components {
