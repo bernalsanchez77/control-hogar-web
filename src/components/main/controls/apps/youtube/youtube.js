@@ -80,7 +80,7 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
                 onTouchEnd={(e) => onTouchEnd('channel', channel.id)}>
                 <img
                   className='controls-apps-youtube-channel-img'
-                  src={'/imgs/youtube-channels/' + channel.id + '.png'}
+                  src={'https://control-hogar-psi.vercel.app/imgs/youtube-channels/' + channel.id + '.png'}
                   alt="icono">
                 </img>
                 <p className='controls-apps-youtube-channel-title'>
@@ -98,7 +98,7 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
         <ul className='controls-apps-youtube-ul'>
           {
             youtubeSortedVideos.map((video, key) => (
-            <li key={key} className='controls-apps-youtube-li'>
+            <li key={key} className='controls-apps-youtube-li-channel'>
               <button
                 className={`controls-apps-youtube-video-button ${video.state === 'selected' ? 'controls-apps-youtube-video-button--selected' : ''}`}
                 onTouchStart={(e) => onTouchStart(e)}
@@ -127,7 +127,7 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
         <ul className='controls-apps-youtube-ul'>
           {
             youtubeSortedVideos.map((video, key) => (
-            <li key={key} className='controls-apps-youtube-li'>
+            <li key={key} className='controls-apps-youtube-li-search'>
               <button
                 className={`controls-apps-youtube-video-button ${video.state === 'selected' ? 'controls-apps-youtube-video-button--selected' : ''}`}
                 onTouchStart={(e) => onTouchStart(e)}

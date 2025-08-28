@@ -26,12 +26,15 @@
   padding: 0;
   height: 100%;
 }
-.controls-apps-youtube-li {
+.controls-apps-youtube-li-channel {
   height: 120px;
   padding: 0 5px 5px;
   list-style-type: none;
-  display: flex;
-  align-items: center;
+}
+.controls-apps-youtube-li-search {
+  height: 120px;
+  padding: 0 5px 5px;
+  list-style-type: none;
 }
 .controls-apps-youtube-channel-img {
   width: 50px;
@@ -66,7 +69,7 @@
   padding: 3px 0 0;
   margin: 0;
   width: 100px;
-  font-size: 10px;
+  font-size: 11px;
   display: -webkit-box;
   line-clamp: 3;
   -webkit-line-clamp: 3;
