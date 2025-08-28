@@ -563,6 +563,7 @@ function Main() {
           }
           {!view.roku.apps.selected && !view.devices.device &&
           <Options
+            theme={theme}
             changeThemeParent={changeTheme}>
           </Options>
           }
