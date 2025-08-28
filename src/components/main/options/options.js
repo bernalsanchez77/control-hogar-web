@@ -53,6 +53,7 @@ function Options({changeThemeParent, theme}) {
             <option value="turquesa">Turquesa</option>
             <option value="aqua">Aqua</option>
             <option value="velvet">Velvet</option>
+            <option value="burnedred">Rojo Quemado</option>
           </select>
         </div>
 }
