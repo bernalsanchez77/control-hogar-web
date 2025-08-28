@@ -550,7 +550,7 @@ function Main() {
             searchRokuModeParent={seachRokuMode}
             changeRokuSearchModeParent={changeRokuSearchMode}>
           </Controls>
-          {devices.length && view.roku.apps.selected === '' &&
+          {devices.length && !view.roku.apps.selected && !view.devices.device &&
           <Devices
             credential={credential}
             view={view}
@@ -559,8 +559,11 @@ function Main() {
             changeControlParent={changeControl}>
           </Devices>
           }
-          <Options>
+          {!view.roku.apps.selected && !view.devices.device &&
+          <Options
+            changeThemeParent={changeTheme}>
           </Options>
+          }
           {credential === 'dev' &&
           <Dev
             sendEnabled={sendEnabled}

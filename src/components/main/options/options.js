@@ -1,21 +1,31 @@
+import {useState} from 'react';
 import './options.css';
 
-function Options({sendEnabled, enableOptionsParent}) {
+function Options({changeThemeParent, theme}) {
+  const [optionView, setOptionView] = useState('default');
   const removeStorage = () => {
     removeStorage();
   }
 
-  const enableOptions = () => {
-    enableOptionsParent();
+  const changeOptionView = (option) => {
+    setOptionView(option);
+    // setTimeout(() => {
+    //   setOptionView('default');
+    // }, 5000);
   }
+
+  const changeTheme = (e) => {
+    changeThemeParent(e.target.value);
+  };
 
   return (
     <div className='options'>
       <div className='options-row'>
-        <div className='options-element options-element--send'>
+        {optionView === 'default' &&
+        <div className='options-element options-element--options'>
             <button
                 className={`options-button`}
-                onTouchStart={() => enableOptions()}>
+                onTouchStart={() => changeOptionView('theme')}>
                 <img
                 className='options-img options-img--button'
                 src="/imgs/options.png"
@@ -23,6 +33,18 @@ function Options({sendEnabled, enableOptionsParent}) {
                 </img>
             </button>
         </div>
+        }
+        {optionView === 'theme' &&
+        <div className='options-element options-element--select'>
+          <select value={theme} onChange={changeTheme}>
+            <option value="black">Negro</option>
+            <option value="grey">Gris</option>
+            <option value="purple">Purpura</option>
+            <option value="cyan">Cyan</option>
+            <option value="blue">Azul</option>
+          </select>
+        </div>
+}
       </div>
     </div>
   )

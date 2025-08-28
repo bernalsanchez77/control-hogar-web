@@ -1,14 +1,17 @@
 .options {
     display: inline-block;
+    height: 35px;
+    margin-top: 10px;
   }
   .options-row {
     display: inline-block;
   }
   .options-element {
     display: inline-block;
-    margin: 10px 0 0px;
     width: 70px;
     left: 0;
+  }
+  .options-element--select {
   }
   .options-button {
     background-color: transparent;
