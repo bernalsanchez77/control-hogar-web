@@ -6,10 +6,9 @@
   }
   .options-element {
     display: inline-block;
-    margin: 5px 0 0px;
+    margin: 10px 0 0px;
     width: 70px;
     left: 0;
-
   }
   .options-button {
     background-color: transparent;
@@ -24,7 +23,6 @@
     border: none;
   }
   .options-img--button {
-    width: 20px;
-    margin-top: 5px;
+    width: 30px;
   }
   
