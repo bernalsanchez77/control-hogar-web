@@ -1,14 +1,14 @@
 .options {
-    display: inline-block;
-    height: 35px;
-    margin-top: 10px;
+    position: relative;
   }
   .options-row {
-    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 10px);
   }
   .options-element {
     display: inline-block;
-    width: 70px;
     left: 0;
   }
   .options-button {
@@ -24,6 +24,6 @@
     border: none;
   }
   .options-img--button {
-    width: 20px;
+    width: 15px;
   }
   
