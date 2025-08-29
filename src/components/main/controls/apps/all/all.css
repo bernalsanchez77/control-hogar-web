@@ -24,7 +24,7 @@
   font-size: 11px;
   width: 100%;
   border: gray 1px solid;
-  height: 35px;
+  height: 4vh;
   border-radius: 5px;
   user-select: none;
   -webkit-user-select: none;
@@ -37,16 +37,17 @@
   border: none;
 }
 .controls-apps-img--button {
-  width: 40px;
-  position: absolute;
-  left: 15px;
-  top: -3px;
   user-select: none;
-  -webkit-user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
-  user-select: none;
-  pointer-events: none; 
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 4.5vh;
+  margin: auto;
 }
 .controls-apps-span {
     color: white;

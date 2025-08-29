@@ -5,17 +5,12 @@
     display: inline-block;
   }
   .dev-element {
-    /* float: left;
-    width: 70px;
-    margin: 5px;
-    position: absolute;
-    top: 95px; */
     display: inline-block;
     margin: 5px 0 10px;
     position: absolute;
     width: 70px;
     left: 50%;
-    top: 95px;
+    top: 16vh;
   }
   .dev-element--send {
     margin-left: -115px;
@@ -35,7 +30,7 @@
     padding: 3px;
     width: 100%;
     border: gray 1px solid;
-    height: 35px;
+    height: 4vh;
     border-radius: 5px;
     user-select: none;
     -webkit-user-select: none;

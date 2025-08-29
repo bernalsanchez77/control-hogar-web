@@ -517,10 +517,9 @@ function Main() {
       <div className='main-components'>
         {(inRange || (credential === 'owner' || credential === 'dev' || credential === 'guest')) ?
         <div>
-          {!connectedToRoku &&
-          <Notifications>
+          <Notifications
+            connectedToRoku={connectedToRoku}>
           </Notifications>
-          }
           {screens.length &&
           <Screens
             credential={credential}

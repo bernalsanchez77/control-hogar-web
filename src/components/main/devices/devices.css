@@ -6,16 +6,14 @@
   align-items: center;
   justify-content: center;
   flex-flow: wrap;
+  width: 100%;
 }
 .devices-row {
   display: inline-block;
 }
 .devices-element {
   float: left;
-  width: 35px;
-  height: 35px;
-  margin: 10px;
-
+  margin: 1vh;
 }
 .devices-button {
   background-color: transparent;

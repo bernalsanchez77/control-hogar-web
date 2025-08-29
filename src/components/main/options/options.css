@@ -17,7 +17,7 @@
     background-color: transparent;
     width: 100%;
     border: none;
-    height: 35px;
+    height: 4vh;
     user-select: none;
     -webkit-user-select: none;
   }
@@ -26,6 +26,6 @@
     border: none;
   }
   .options-img--button {
-    width: 15px;
+    width: 1.5vh;
   }
   

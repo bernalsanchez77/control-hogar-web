@@ -20,22 +20,30 @@
     padding: 3px;
     width: 100%;
     border: grey 1px solid;
-    height: 35px;
+    height: 4vh;
     border-radius: 5px;
     user-select: none;
     -webkit-user-select: none;
   }
   .controls-top-img--roku {
-    width: 40px;
     position: absolute;
-    left: 15px;
-    top: -3px;
+    width: 6vh;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 6vh;
+    margin: auto;
   }
-    .controls-top-img--telecable {
-    width: 50px;
+  .controls-top-img--telecable {
     position: absolute;
-    left: 10px;
-    top: -7px;
+    width: 6vh;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 6vh;
+    margin: auto;
   }
   .controls-top-button--img {
     background-color: transparent;
@@ -45,8 +53,11 @@
     width: 30px;
   }
   .controls-top-img--button {
-    width: 20px;
-    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    width: 2.5vh;
   }
   button.controls-top-button:active {
     background-color: white;

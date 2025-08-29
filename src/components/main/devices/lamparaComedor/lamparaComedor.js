@@ -11,20 +11,16 @@ function LamparaComedor({element, changeControlParent}) {
   }
 
   return (
-    <div className="lamparaComedor">
-      <div>
-        <button
-          className={`devices-button ${element.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => changeControl(element.id)}>
-          <img
-            className='devices-button-img'
-            src={element.img}
-            alt="icono">
-          </img>
-          <div className='devices-led'></div>
-        </button>
-      </div>
-    </div>
+    <button
+      className={`devices-button ${element.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
+      onTouchStart={() => changeControl(element.id)}>
+      <img
+        className='devices-button-img'
+        src={element.img}
+        alt="icono">
+      </img>
+      <div className='devices-led'></div>
+    </button>
   );
 }
 
