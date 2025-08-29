@@ -1,7 +1,11 @@
 .devices {
-  margin: 0 10px;
-  display: inline-block;
-  height: 110px;
+  height: 15vh;
+  position: fixed;
+  bottom: 5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: wrap;
 }
 .devices-row {
   display: inline-block;

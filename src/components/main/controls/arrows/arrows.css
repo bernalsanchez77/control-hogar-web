@@ -1,5 +1,10 @@
 .controls-arrows {
-    margin: 5px 0;
+  height: 20vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  }
+  .controls-arrows-wrapper {
   }
   .controls-arrows-row {
     display: inline-block;

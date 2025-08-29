@@ -1,11 +1,8 @@
 .controls-search {
-  display: inline-block;
-  margin: 50px 0 10px;
-  position: absolute;
-  width: 240px;
-  left: 50%;
-  margin-left: -120px;
-  z-index: 1;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .controls-search-row {
   width: 230px;
@@ -55,6 +52,7 @@
     width: 230px;
     padding: 2px 0;
     opacity: 0;
+    display: none;
     transition: opacity 0.5s ease 0.5s;
 }
 .controls-search-mode span {

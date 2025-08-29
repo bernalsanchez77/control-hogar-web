@@ -134,121 +134,123 @@ function Levels({screenSelected, view, screens, cableChannels, changeControlPare
       
   return (
     <div className='controls-levels'>
-      <div className='controls-levels-row controls-levels-row--top'>
-        <div className='controls-levels-element controls-levels-element--left'>
-          <button
-            className='controls-levels-button'
-            onTouchStart={() => changeVolumeStart('up')}
-            onTouchEnd={() => changeVolumeEnd('up')}>
-            &#9650;
-          </button>
-        </div>
-        <div className='controls-levels-element controls-levels-element--mute-icon'>
-          <button
-            className="controls-levels-button controls-levels-button--img"
-            onTouchStart={() => changeMute()}>
-            {screen.mute === 'off' &&
-              <img
-                className='controls-levels-img controls-levels-img--no-button'
-                src="/imgs/sound-50.png"
-                alt="icono">
-              </img>
-            }
-            {screen.mute === 'on' &&
-              <img
-                className='controls-levels-img controls-levels-img--no-button'
-                src="/imgs/mute-50.png"
-                alt="icono">
-              </img>
-            }
-          </button>
-        </div>
-        {
-          view.selected === 'roku' &&
-          <div className='controls-levels-element controls-levels-element--right'>
+      <div className='controls-levels-wrapper'>
+        <div className='controls-levels-row controls-levels-row--top'>
+          <div className='controls-levels-element controls-levels-element--left'>
             <button
-              className={`controls-levels-button`}
-              onTouchStart={() => changeControl('back', false)}>
-              <img
-                className='controls-levels-img controls-levels-img--button'
-                src="/imgs/back-50.png"
-                alt="icono">
-              </img>
-            </button>
-          </div>
-        }
-        {
-          view.selected === 'cable' &&
-          <div className='controls-levels-element controls-levels-element--right'>
-            <button
-              className={'controls-levels-button'}
-              onTouchStart={() => changeChannel('up')}>
+              className='controls-levels-button'
+              onTouchStart={() => changeVolumeStart('up')}
+              onTouchEnd={() => changeVolumeEnd('up')}>
               &#9650;
             </button>
           </div>
-        }
-      </div>
-      <div className='controls-levels-row controls-levels-row--middle'>
-        <div className='controls-levels-element controls-levels-element--no-margin'>
-          <span className='controls-levels-span'>
-            vol {screen.volume}
-          </span>
-        </div>
-        <div className='controls-levels-element controls-levels-element--right controls-levels-element--no-margin'>
-          <span className='controls-levels-span'>
-            {view.selected === 'roku'  &&
-              'op'
-            }
-            {view.selected === 'cable'  &&
-              'ch'
-            }
-          </span>
-        </div>
-      </div>
-      <div className='controls-levels-row controls-levels-row--bottom'>
-        <div className='controls-levels-element controls-levels-element--left'>
-          <button
-            className='controls-levels-button'
-            onTouchStart={() => changeVolumeStart('down')}
-            onTouchEnd={() => changeVolumeEnd('down')}>
-            &#9660;
-          </button>
-        </div>
-        <div className='controls-levels-element controls-levels-element--back'>
-          {/* <button
-            className='controls-levels-button controls-levels-button--img'
-            onTouchStart={() => backButtonTriggered()}>
-            <img
-              className='controls-levels-img controls-levels-img--no-button'
-              src="/imgs/back-50.png"
-              alt="icono">
-            </img>
-          </button> */}
-        </div>
-        {
-        view.selected === 'roku' &&
-          <div className='controls-levels-element controls-levels-element--right'>
+          <div className='controls-levels-element controls-levels-element--mute-icon'>
             <button
-              className={`controls-levels-button`}
-              onTouchStart={() => changeControl('info', false)}>
-              <img
-                className='controls-levels-img controls-levels-img--button'
-                src="/imgs/asterisk-24.png"
-                alt="icono">
-              </img>
+              className="controls-levels-button controls-levels-button--img"
+              onTouchStart={() => changeMute()}>
+              {screen.mute === 'off' &&
+                <img
+                  className='controls-levels-img controls-levels-img--no-button'
+                  src="/imgs/sound-50.png"
+                  alt="icono">
+                </img>
+              }
+              {screen.mute === 'on' &&
+                <img
+                  className='controls-levels-img controls-levels-img--no-button'
+                  src="/imgs/mute-50.png"
+                  alt="icono">
+                </img>
+              }
             </button>
           </div>
-        }
-        {
-        view.selected === 'cable' &&
-          <div className='controls-levels-element controls-levels-element--right'>
+          {
+            view.selected === 'roku' &&
+            <div className='controls-levels-element controls-levels-element--right'>
+              <button
+                className={`controls-levels-button`}
+                onTouchStart={() => changeControl('back', false)}>
+                <img
+                  className='controls-levels-img controls-levels-img--button'
+                  src="/imgs/back-50.png"
+                  alt="icono">
+                </img>
+              </button>
+            </div>
+          }
+          {
+            view.selected === 'cable' &&
+            <div className='controls-levels-element controls-levels-element--right'>
+              <button
+                className={'controls-levels-button'}
+                onTouchStart={() => changeChannel('up')}>
+                &#9650;
+              </button>
+            </div>
+          }
+        </div>
+        <div className='controls-levels-row controls-levels-row--middle'>
+          <div className='controls-levels-element controls-levels-element--no-margin'>
+            <span className='controls-levels-span'>
+              vol {screen.volume}
+            </span>
+          </div>
+          <div className='controls-levels-element controls-levels-element--right controls-levels-element--no-margin'>
+            <span className='controls-levels-span'>
+              {view.selected === 'roku'  &&
+                'op'
+              }
+              {view.selected === 'cable'  &&
+                'ch'
+              }
+            </span>
+          </div>
+        </div>
+        <div className='controls-levels-row controls-levels-row--bottom'>
+          <div className='controls-levels-element controls-levels-element--left'>
             <button
-              className={`controls-levels-button`}
-              onTouchStart={() => changeChannel('down')}>
+              className='controls-levels-button'
+              onTouchStart={() => changeVolumeStart('down')}
+              onTouchEnd={() => changeVolumeEnd('down')}>
               &#9660;
             </button>
           </div>
-        }
+          <div className='controls-levels-element controls-levels-element--back'>
+            {/* <button
+              className='controls-levels-button controls-levels-button--img'
+              onTouchStart={() => backButtonTriggered()}>
+              <img
+                className='controls-levels-img controls-levels-img--no-button'
+                src="/imgs/back-50.png"
+                alt="icono">
+              </img>
+            </button> */}
+          </div>
+          {
+          view.selected === 'roku' &&
+            <div className='controls-levels-element controls-levels-element--right'>
+              <button
+                className={`controls-levels-button`}
+                onTouchStart={() => changeControl('info', false)}>
+                <img
+                  className='controls-levels-img controls-levels-img--button'
+                  src="/imgs/asterisk-24.png"
+                  alt="icono">
+                </img>
+              </button>
+            </div>
+          }
+          {
+          view.selected === 'cable' &&
+            <div className='controls-levels-element controls-levels-element--right'>
+              <button
+                className={`controls-levels-button`}
+                onTouchStart={() => changeChannel('down')}>
+                &#9660;
+              </button>
+            </div>
+          }
+        </div>
       </div>
     </div>
   )

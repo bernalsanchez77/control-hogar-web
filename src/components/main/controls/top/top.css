@@ -1,6 +1,11 @@
 .controls-top {
-    margin-bottom: 10px;
-    display: inline-block;
+    height: 5vh;
+  }
+  .controls-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
   .controls-top-element {
     float: left;

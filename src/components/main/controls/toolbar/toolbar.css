@@ -1,6 +1,8 @@
 .controls-toolbar {
-    display: inline-block;
-    margin: 5px 0 5px;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .controls-toolbar-row {
     width: 240px;

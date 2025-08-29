@@ -1,6 +1,8 @@
 .controls-levels {
-    margin: 5px 0 5px;
-    display: inline-block;
+  height: 15vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   }
   .controls-levels-row {
     display: inline-block;

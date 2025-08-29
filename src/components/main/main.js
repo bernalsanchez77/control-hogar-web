@@ -3,6 +3,7 @@ import eruda from 'eruda';
 import Screens from './screens/screens';
 import Devices from './devices/devices';
 import Options from './options/options';
+import Notifications from './notifications/notifications';
 import Controls from './controls/controls';
 import Credentials from './credentials/credentials';
 import Dev from './dev/dev';
@@ -517,9 +518,8 @@ function Main() {
         {(inRange || (credential === 'owner' || credential === 'dev' || credential === 'guest')) ?
         <div>
           {!connectedToRoku &&
-          <div className='notifications'>
-             No hay conexion con Roku
-          </div>
+          <Notifications>
+          </Notifications>
           }
           {screens.length &&
           <Screens

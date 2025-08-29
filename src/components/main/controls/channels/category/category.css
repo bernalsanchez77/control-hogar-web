@@ -1,7 +1,7 @@
 .controls-channels-categories {
-  height: 215px;
+  height: 25vh;
   position: relative;
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
 }
 .controls-channels-category {

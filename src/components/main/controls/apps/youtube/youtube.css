@@ -1,14 +1,9 @@
 .controls-apps-youtube {
-  height: 325px;
+  height: 40vh;
   position: relative;
-  width: 100%;
-  margin: 0;
   overflow-y: scroll;
-  transform: translateY(40px);
 }
 .controls-apps-youtube--channel {
-  transform: translateY(10px);
-
 }
 .controls-apps-youtube--search {
 
