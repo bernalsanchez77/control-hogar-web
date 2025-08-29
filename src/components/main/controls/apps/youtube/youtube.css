@@ -22,20 +22,18 @@
   height: 100%;
 }
 .controls-apps-youtube-li-channel {
-  height: 120px;
-  padding: 0 5px 5px;
+  padding: 0 2px 2px;
   list-style-type: none;
 }
 .controls-apps-youtube-li-search {
-  height: 120px;
-  padding: 0 5px 5px;
+  padding: 0 2px 15px;
   list-style-type: none;
 }
 .controls-apps-youtube-channel-img {
   width: 8vh;
 }
 .controls-apps-youtube-video-img {
-  width: 10vh;
+  width: 12vh;
 }
 .controls-apps-youtube-video-button {
   background-color: transparent;
