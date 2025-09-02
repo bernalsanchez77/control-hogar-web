@@ -278,7 +278,7 @@ function Main() {
         if (change.id === 'home') {
           setters.setRokuSearchMode('default');
         } else {
-          setters.setRokuSearchMode('app');
+          setters.setRokuSearchMode('roku');
         }
       });
       const supabaseAppSelected = rokuAppsTable.data.find(row => row.state === 'selected');
