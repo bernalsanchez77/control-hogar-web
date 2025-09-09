@@ -29,10 +29,10 @@ class Requests {
       response = await axios.patch(url, params);
     }
     if (response.status === 200) {
-      console.log(`${method} request to ${api} succeeded`);
+      // console.log(`${method} request to ${api} succeeded`);
       return {status: response.status, data: response.data};
     } else {
-      console.log(`${method} request to ${api} failed`);
+      // console.log(`${method} request to ${api} failed`);
       return {status: response.status, data: ''};
     }
   }
@@ -56,11 +56,11 @@ class Requests {
         longApiUrl + api,
         info,
         function onSuccess(response) {
-          console.log(`${method} request to ${api} succeeded`);
+          // console.log(`${method} request to ${api} succeeded`);
           resolve({status: response.status, data: JSON.parse(response.data)});
         },
         function onError(error) {
-          console.error(`${method} request to ${api} failed: `, error);
+          // console.error(`${method} request to ${api} failed: `, error);
           reject(error);
         }
       );
@@ -143,10 +143,10 @@ class Requests {
         setTimeout(() => reject(new Error('Roku not responding')), 500)
       );
       return Promise.race([getRequestPromise, timeoutPromise]).then((response) => {
-        console.log('Get request to Roku succeeded');
+        // console.log('Get request to Roku succeeded');
         return {status: response.status, data: xmlParser.parse(response.data)};
       }).catch((error) => {
-        console.log('Get request to Roku failed');
+        // console.log('Get request to Roku failed');
       });
     } else {
       return null;

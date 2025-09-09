@@ -205,7 +205,6 @@ function Main() {
   }, [subscribeToSupabaseChannel, setters]);
 
   const testRokuData = useCallback(async () => {
-    console.warn('testing');
     try {
       let activeApp = await requests.getRokuData('active-app');
       if (activeApp && activeApp.status === 200) {
@@ -472,7 +471,6 @@ function Main() {
   }, [setElements, changeView]);
 
   const onVisibilityChange = useCallback(() => {
-    console.warn('visibility');
     if (document.visibilityState === 'visible') {
       onResume();
     } else {

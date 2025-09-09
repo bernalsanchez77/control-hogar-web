@@ -2,9 +2,9 @@ import supabase from './supabase-client';
 class SupabaseChannels {
     supabaseChannels = {};
     subscribeToSupabaseChannel(tableName, callback) {
-      // const select = tableName !== 'devices' && tableName !== 'screens';
       const channel = this.getSupabaseChannel(tableName);
       if (channel?.socket.state !== 'joined') {
+        console.log('joining');
         channel.on(
           'postgres_changes',
           {event: '*', schema: 'public', table: tableName},
@@ -15,6 +15,7 @@ class SupabaseChannels {
             }
           }
         ).subscribe(status => {
+          console.log('status: ', status);
           if (status === 'SUBSCRIBED') {
             console.log('Subscribed to ', tableName);
           }
