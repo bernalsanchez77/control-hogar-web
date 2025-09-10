@@ -25,6 +25,8 @@ function Main() {
 
   //useState Variables
 
+  const [loaded, setLoaded] = useState(false);
+  const [show, setShow] = useState(true);
   const [theme, setTheme] = useState("black");
   const [rokuSearchMode, setRokuSearchMode] = useState('default');
   const [inRange, setInRange] = useState(false);
@@ -86,7 +88,7 @@ function Main() {
   }
 
   const subscribeToSupabaseChannel = useCallback(async (tableName, callback) => {
-    supabaseChannels.subscribeToSupabaseChannel(tableName, (itemName, newItem) => {
+    await supabaseChannels.subscribeToSupabaseChannel(tableName, (itemName, newItem) => {
       setters[itemName](items => items.map(item => item.id === newItem.id ? newItem : item));
       if (callback) {
         callback(newItem);
@@ -94,8 +96,8 @@ function Main() {
     });
   },[setters]);
 
-  const unsubscribeFromSupabaseChannel = useCallback((tableName) => {
-    supabaseChannels.unsubscribeFromSupabaseChannel(tableName);
+  const unsubscribeFromSupabaseChannel = useCallback(async (tableName) => {
+    await supabaseChannels.unsubscribeFromSupabaseChannel(tableName);
   }, []);
 
   const changeView = useCallback(async (newView) => {
@@ -200,7 +202,7 @@ function Main() {
   const setData = useCallback(async (tableName, callback) => {
     const table = await requests.getTableFromSupabase(tableName);
     setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](table.data);
-    subscribeToSupabaseChannel(tableName, callback);
+    await subscribeToSupabaseChannel(tableName, callback);
     return table;
   }, [subscribeToSupabaseChannel, setters]);
 
@@ -252,7 +254,7 @@ function Main() {
 
   const onLoad = () => {
     window.history.replaceState(null, "", window.location.pathname + window.location.search);
-    document.body.classList.add("loaded");
+    setLoaded(true);
   };
 
   const setElements = useCallback(async (message) => {
@@ -358,6 +360,24 @@ function Main() {
     }
   }, [credential]);
 
+  useEffect(() => {
+    console.log('cambio');
+    document.body.classList.add("transition");
+    if (loaded) {
+      document.body.classList.remove("loaded");
+      setTimeout(() => {
+        setShow(true);
+        document.body.classList.add("loaded");
+      }, 250);
+    } else {
+      document.body.classList.remove("loaded");
+      setTimeout(() => {
+        setShow(false);
+        document.body.classList.add("loaded");
+      }, 250);
+    }
+  }, [loaded]);
+
   const enableSend = () => {
     if (sendEnabled === true) {
       setSendEnabled(false);
@@ -446,28 +466,31 @@ function Main() {
     }
   }, [changeControl]);
 
-  const onPause = useCallback((e) => {
+  const onPause = useCallback(async (e) => {
+    document.body.classList.remove("transition");
     setUserActive(false);
     clearInterval(testRokuDataIntervalRef.current);
-    unsubscribeFromSupabaseChannel('hdmiSala');
+    await unsubscribeFromSupabaseChannel('hdmiSala');
     if (viewRef.current.roku.apps.youtube.channel) {
-      unsubscribeFromSupabaseChannel('youtubeVideosLiz');
+      await unsubscribeFromSupabaseChannel('youtubeVideosLiz');
     }
     if (viewRef.current.selected === 'roku' & !viewRef.current.roku.apps.selected) {
-      unsubscribeFromSupabaseChannel('rokuApps');
+      await unsubscribeFromSupabaseChannel('rokuApps');
     }
     if (viewRef.current.selected === 'cable') {
-      unsubscribeFromSupabaseChannel('cableChannels');
+      await unsubscribeFromSupabaseChannel('cableChannels');
     }
-    unsubscribeFromSupabaseChannel('devices');
-    unsubscribeFromSupabaseChannel('screens');
+    await unsubscribeFromSupabaseChannel('devices');
+    await unsubscribeFromSupabaseChannel('screens');
     requests.sendLogs('salio', user);
+    setLoaded(false);
   }, [unsubscribeFromSupabaseChannel]);
 
   const onResume = useCallback(async (e) => {
     setUserActive(true);
     const {newView} = await setElements('regreso');
     changeView(newView);
+    setLoaded(true);
   }, [setElements, changeView]);
 
   const onVisibilityChange = useCallback(() => {
@@ -515,59 +538,73 @@ function Main() {
       <div className='main-components'>
         {(inRange || (credential === 'owner' || credential === 'dev' || credential === 'guest')) ?
         <div>
-          <Notifications
-            connectedToRoku={connectedToRoku}>
-          </Notifications>
-          {screens.length &&
-          <Screens
-            credential={credential}
-            screenSelected={screenSelected}
-            screens={screens}
-            userActive={userActive}
-            changeScreenParent={changeScreen}>
-          </Screens>
-          }
-          <Controls
-            screenSelected={screenSelected}
-            view={view}
-            rokuSearchMode={rokuSearchMode}
-            rokuApps={rokuApps}
-            hdmiSala={hdmiSala}
-            devices={devices}
-            youtubeSearchVideos={youtubeSearchVideos}
-            youtubeChannelsLiz={youtubeChannelsLiz}
-            youtubeVideosLiz={youtubeVideosLiz}
-            cableChannels={cableChannels}
-            screens={screens}
-            cableChannelCategories={cableChannelCategories}
-            changeViewParent={changeView}
-            changeControlParent={changeControl}
-            triggerVibrateParent={utils.triggerVibrate}
-            searchYoutubeParent={searchYoutube}
-            searchRokuModeParent={seachRokuMode}
-            changeRokuSearchModeParent={changeRokuSearchMode}>
-          </Controls>
-          {devices.length && !view.roku.apps.selected && !view.devices.device &&
-          <Devices
-            credential={credential}
-            view={view}
-            devices={devices}
-            changeViewParent={changeView}
-            changeControlParent={changeControl}>
-          </Devices>
-          }
-          {!view.roku.apps.selected && !view.devices.device &&
-          <Options
-            theme={theme}
-            changeThemeParent={changeTheme}>
-          </Options>
-          }
-          {credential === 'dev' &&
-          <Dev
-            sendEnabled={sendEnabled}
-            enableSendParent={enableSend}
-            removeStorageParent={removeStorage}>
-          </Dev>
+          {show ?
+          <div className='main-components--loaded'>
+            <Notifications
+              connectedToRoku={connectedToRoku}>
+            </Notifications>
+            {screens.length &&
+            <Screens
+              credential={credential}
+              screenSelected={screenSelected}
+              screens={screens}
+              userActive={userActive}
+              changeScreenParent={changeScreen}>
+            </Screens>
+            }
+            <Controls
+              screenSelected={screenSelected}
+              view={view}
+              rokuSearchMode={rokuSearchMode}
+              rokuApps={rokuApps}
+              hdmiSala={hdmiSala}
+              devices={devices}
+              youtubeSearchVideos={youtubeSearchVideos}
+              youtubeChannelsLiz={youtubeChannelsLiz}
+              youtubeVideosLiz={youtubeVideosLiz}
+              cableChannels={cableChannels}
+              screens={screens}
+              cableChannelCategories={cableChannelCategories}
+              changeViewParent={changeView}
+              changeControlParent={changeControl}
+              triggerVibrateParent={utils.triggerVibrate}
+              searchYoutubeParent={searchYoutube}
+              searchRokuModeParent={seachRokuMode}
+              changeRokuSearchModeParent={changeRokuSearchMode}>
+            </Controls>
+            {devices.length && !view.roku.apps.selected && !view.devices.device &&
+            <Devices
+              credential={credential}
+              view={view}
+              devices={devices}
+              changeViewParent={changeView}
+              changeControlParent={changeControl}>
+            </Devices>
+            }
+            {!view.roku.apps.selected && !view.devices.device &&
+            <Options
+              theme={theme}
+              changeThemeParent={changeTheme}>
+            </Options>
+            }
+            {credential === 'dev' &&
+            <Dev
+              sendEnabled={sendEnabled}
+              enableSendParent={enableSend}
+              removeStorageParent={removeStorage}>
+            </Dev>
+            }
+          </div> : 
+          <div className='main-components--loading'>
+            <div class="loading-container">
+              <span class="loading-text">Cargando</span>
+              <div class="loading-dots">
+                <span class="dot">.</span>
+                <span class="dot">.</span>
+                <span class="dot">.</span>
+              </div>
+            </div>
+          </div>
           }
         </div> :
         <div>

@@ -4,6 +4,9 @@
   align-items: center;
   justify-content: center;
   }
+.controls-levels-wrapper {
+  width: 240px;
+}
   .controls-levels-row {
     display: inline-block;
   }
