@@ -106,7 +106,7 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
                 onTouchEnd={(e) => onTouchEnd('video', video.id)}>
                 <img
                   className='controls-apps-youtube-video-img'
-                  src={view.roku.apps.youtube.mode === 'channel' ? 'https://img.youtube.com/vi/' + video.id + '/sddefault.jpg' : video.img}
+                  src={view.roku.apps.youtube.mode === 'channel' ? video.img || 'https://img.youtube.com/vi/' + video.id + '/sddefault.jpg' : video.img}
                   alt="icono">
                 </img>
                 <p className='controls-apps-youtube-video-title'>

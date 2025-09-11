@@ -31,8 +31,7 @@ class SupabaseChannels {
               resolve(true);
             } else {
               console.warn('Error status for', tableName, ':', status);
-              this.supabaseChannels[tableName].channel = null;
-
+              window.location.reload();
               try {
                 const retry = await this.subscribeToSupabaseChannel(tableName, callback);
                 resolve(retry);

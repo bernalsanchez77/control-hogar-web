@@ -361,7 +361,6 @@ function Main() {
   }, [credential]);
 
   useEffect(() => {
-    console.log('cambio');
     document.body.classList.add("transition");
     if (loaded) {
       document.body.classList.remove("loaded");
