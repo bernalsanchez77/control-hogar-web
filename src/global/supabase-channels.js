@@ -7,7 +7,7 @@ class SupabaseChannels {
       }
       this.supabaseChannels[tableName].channel = supabase.channel(tableName);
       this.supabaseChannels[tableName].subscribed = true;
-      console.log('joining');
+      console.log('joining to: ', tableName);
       this.supabaseChannels[tableName].channel.on(
         'postgres_changes',
         { event: '*', schema: 'public', table: tableName },
@@ -40,7 +40,7 @@ class SupabaseChannels {
               }
             }
           } else {
-            console.log('Unsubscribed:', status);
+            console.log('Unsubscribed from: ', tableName + ' ' + status);
             this.supabaseChannels[tableName].channel = null;
             reject(new Error(`Unsubscribed from ${tableName}`));
           }

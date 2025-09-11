@@ -69,12 +69,14 @@ class ViewRouter {
                 }
                 if (newView.roku.apps.youtube.mode === 'search') {
                   // youtube is in search mode
-                  supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideosLiz');
                   window.history.pushState({page: 'search'}, 'search', '#search');
                 }
               } else {
                 // youtube is in home mode
                 setters.setRokuSearchMode('app');
+                if (currentView.roku.apps.youtube.mode === 'channel') {
+                  supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideosLiz');
+                }
               }
             }
           } else {

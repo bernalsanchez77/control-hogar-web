@@ -274,7 +274,7 @@ function Main() {
     newView.selected = hdmiSalaTable.data.find(el => el.state === 'selected').id;
 
     // apps
-    if (newView.selected === 'roku') {
+    if (newView.selected === 'roku' && !viewRef.current.roku.apps.selected) {
       rokuAppsTable = await setData('rokuApps', (change) => {
         if (change.id === 'home') {
           setters.setRokuSearchMode('default');
@@ -473,7 +473,7 @@ function Main() {
     if (viewRef.current.roku.apps.youtube.channel) {
       await unsubscribeFromSupabaseChannel('youtubeVideosLiz');
     }
-    if (viewRef.current.selected === 'roku' & !viewRef.current.roku.apps.selected) {
+    if (viewRef.current.selected === 'roku' && !viewRef.current.roku.apps.selected) {
       await unsubscribeFromSupabaseChannel('rokuApps');
     }
     if (viewRef.current.selected === 'cable') {

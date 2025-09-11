@@ -9,6 +9,7 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
   const channelSelected = useRef('');
 
   const changeView = (channel) => {
+    localStorage.setItem('channelSelected', channel);
     channelSelected.current = channel;
     const newView = structuredClone(view);
     newView.roku.apps.youtube.channel = channel;
@@ -30,6 +31,7 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
     youtubeSortedChannels = Object.values(youtubeChannelsLiz).sort((a, b) => a.order - b.order);
   }
   if (view.roku.apps.youtube.mode === 'channel') {
+    channelSelected.current = channelSelected.current || localStorage.getItem('channelSelected');
     youtubeSortedVideos = youtubeVideosLiz.filter(video => video.channelId === channelSelected.current);
     youtubeSortedVideos = Object.values(youtubeSortedVideos).sort((a, b) => new Date(a.videoDate) - new Date(b.videoDate));
   }
