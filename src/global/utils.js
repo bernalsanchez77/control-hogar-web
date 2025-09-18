@@ -43,12 +43,15 @@ class Utils {
           );
       });
     }
-    getIpApiPosition() {
-      return new Promise((resolve, reject) => {
-        fetch('https://get.geojs.io/v1/ip/geo.json')
-        .then(res => res.json())
-        .then(data => {resolve(data);}).catch(err => {reject(err);});
-      });
+    async getIpApiPosition() {
+      try {
+        const response = await fetch('https://get.geojs.io/v1/ip/geo.json');
+        const data = await response.json();
+        return data;
+      } catch (err) {
+        console.log('Failed to fetch IP geo data:', err);
+        return null;
+      }
     }
     async getGeolocationPosition() {
         let inRange = false;

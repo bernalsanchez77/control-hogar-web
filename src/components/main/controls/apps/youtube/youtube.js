@@ -47,14 +47,14 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
   const onTouchStart = (e) => {
     touchStartY = e.touches[0].clientY;
     touchMoved = false;
-  }
+  };
 
   const onTouchMove = (e) => {
     const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
     if (deltaY > 10) {
       touchMoved = true;
     }
-  }
+  };
 
   const onTouchEnd = (type ,video) => {
     if (!touchMoved) {
@@ -65,6 +65,15 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
         changeControl(video);
       }
     }
+  };
+
+  const timeToSeconds = (timeString) => {
+    const parts = timeString.split(':');
+    const hours = parseInt(parts[0], 10);
+    const minutes = parseInt(parts[1], 10);
+    const seconds = parseInt(parts[2], 10);
+    const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+    return totalSeconds;
   }
 
   return (
