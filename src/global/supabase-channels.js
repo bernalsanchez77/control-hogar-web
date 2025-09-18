@@ -49,8 +49,10 @@ class SupabaseChannels {
     }
 
     async unsubscribeFromSupabaseChannel(tableName) {
-      this.supabaseChannels[tableName].subscribed = false;
-      await this.supabaseChannels[tableName].channel.unsubscribe();
+      if (this.supabaseChannels[tableName] && this.supabaseChannels[tableName].channel) {
+        this.supabaseChannels[tableName].subscribed = false;
+        await this.supabaseChannels[tableName].channel.unsubscribe();
+      }
     }
 }
 const supabaseChannelsInstance = new SupabaseChannels();
