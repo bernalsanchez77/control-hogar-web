@@ -25,6 +25,7 @@ function Main() {
 
   //useState Variables
 
+  const [rokuPlayState, setRokuPlayState] = useState({});
   const [loaded, setLoaded] = useState(false);
   const [show, setShow] = useState(true);
   const [theme, setTheme] = useState("black");
@@ -60,6 +61,7 @@ function Main() {
   const screenSelectedRef = useRef(screenSelected);
   const youtubeChannelsLizRef = useRef(youtubeChannelsLiz);
   const testRokuDataIntervalRef = useRef(null);
+  const testRokuPlayStateIntervalRef = useRef(null);
 
   // useMemo variables (computed)
 
@@ -208,10 +210,10 @@ function Main() {
 
   const testRokuData = useCallback(async () => {
     try {
-      let activeApp = await requests.getRokuData('active-app');
+      const activeApp = await requests.getRokuData('active-app');
       if (activeApp && activeApp.status === 200) {
         setConnectedToRoku(true);
-        return activeApp.data['active-app'].app.id;
+        return activeApp.data['active-app'].app.id; 
       } else {
         setConnectedToRoku(false);
         return null;
@@ -222,9 +224,26 @@ function Main() {
     }
   }, []);
 
+  const testRokuPlayState = useCallback(async () => {
+    try {
+      const playState = await requests.getRokuData('media-player');
+      if (playState && playState.status === 200) {
+        setRokuPlayState(playState.data['player']);
+        return playState.data['player'];
+      } else {
+        setRokuPlayState({});
+        return null;
+      }
+    } catch (err) {
+      setRokuPlayState({});
+      return null;
+    }
+  }, []);
+
   const getRokuPlayState = useCallback(async (hdmiSalaParam = hdmiSalaRef.current) => {
     let playState = await requests.getRokuData('media-player');
     if (playState && playState.status === 200) {
+      setRokuPlayState(playState.data['player']);
       const currentPlayState = hdmiSalaParam.find(hdmi => hdmi.state === 'selected').playState;
       const newPlayState = playState.data.player.state;
       if (currentPlayState !== newPlayState) {
@@ -233,6 +252,8 @@ function Main() {
           new: {newId, newTable: 'hdmiSala', newPlayState, newDate: new Date().toISOString()}
         });
       }
+    } else {
+      setRokuPlayState({});
     }
   }, []);
 
@@ -314,13 +335,20 @@ function Main() {
     setScreenSelected(localStorage.getItem('screen') || screenSelected);
     setCredential(localStorage.getItem('user'));
     const {newView, rokuAppsTable} = await setElements('entro');
+    await testRokuPlayState();
+    testRokuPlayStateIntervalRef.current = setInterval(async () => {
+      await testRokuPlayState();
+      // if (rokuPlayState && rokuPlayState.state === 'play') {
+      //   console.log('position repetition: ', parseInt(rokuPlayState.position) / 1000);
+      // }
+    }, 5000);
     setView(await viewRouter.changeView(newView, viewRef.current, [], setters, rokuAppsTable.data));
     if (document.readyState === "complete") {
       onLoad();
     } else {
       window.addEventListener("load", onLoad);
     }
-  }, [screenSelected, setElements, setters]);
+  }, [screenSelected, setElements, testRokuPlayState, setters]);
 
   useEffect(() => {
     if (!initializedRef.current) {
@@ -552,6 +580,7 @@ function Main() {
             </Screens>
             }
             <Controls
+              rokuPlayState={rokuPlayState}
               screenSelected={screenSelected}
               view={view}
               rokuSearchMode={rokuSearchMode}

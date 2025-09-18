@@ -1,7 +1,9 @@
-import {useRef} from 'react';
+import {useRef, useEffect} from 'react';
 import './youtube.css';
 
-function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeViewParent}) {
+function Youtube({rokuPlayState, view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeViewParent}) {
+  const timeout3s = useRef(null);
+  const longClick = useRef(false);
   let youtubeSortedVideos = [];
   let youtubeSortedChannels = [];
   let touchMoved = false;
@@ -47,6 +49,9 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
   const onTouchStart = (e) => {
     touchStartY = e.touches[0].clientY;
     touchMoved = false;
+    timeout3s.current = setTimeout(() => {
+      longClick.current = true;
+    }, 500);
   };
 
   const onTouchMove = (e) => {
@@ -56,16 +61,30 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
     }
   };
 
-  const onTouchEnd = (type ,video) => {
+  const onTouchEnd = (e, type, video) => {
+    e.preventDefault();
+    clearTimeout(timeout3s.current);
     if (!touchMoved) {
-      if (type === 'channel') {
-        changeView(video);
-      }
-      if (type === 'video') {
-        changeControl(video);
+      if (longClick.current) {
+        console.log('long click');
+        video.state = 'queue';
+      } else {
+        if (type === 'channel') {
+          changeView(video.id);
+        }
+        if (type === 'video') {
+          changeControl(video.id);
+        }
       }
     }
+    longClick.current = false;
   };
+
+  useEffect(() => {
+    if (rokuPlayState && rokuPlayState.state === 'play') {
+      console.log('position effect: ', parseInt(rokuPlayState.position) / 1000);
+    }
+  }, [rokuPlayState]);
 
   const timeToSeconds = (timeString) => {
     const parts = timeString.split(':');
@@ -88,7 +107,7 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
                 className={'controls-apps-youtube-channel-button'}
                 onTouchStart={(e) => onTouchStart(e)}
                 onTouchMove={(e) => onTouchMove(e)}
-                onTouchEnd={(e) => onTouchEnd('channel', channel.id)}>
+                onTouchEnd={(e) => onTouchEnd(e, 'channel', channel)}>
                 <img
                   className='controls-apps-youtube-channel-img'
                   src={channel.img || 'https://control-hogar-psi.vercel.app/imgs/youtube-channels/' + channel.id + '.png'}
@@ -114,10 +133,10 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
                 className={`controls-apps-youtube-video-button ${video.state === 'selected' ? 'controls-apps-youtube-video-button--selected' : ''}`}
                 onTouchStart={(e) => onTouchStart(e)}
                 onTouchMove={(e) => onTouchMove(e)}
-                onTouchEnd={(e) => onTouchEnd('video', video.id)}>
+                onTouchEnd={(e) => onTouchEnd(e, 'video', video)}>
                 <div>
                   <img
-                    className='controls-apps-youtube-video-img'
+                    className={`controls-apps-youtube-video-img ${video.state === 'queue' ? 'controls-apps-youtube-video-img--queue' : ''}`}
                     src={view.roku.apps.youtube.mode === 'channel' ? video.img || 'https://img.youtube.com/vi/' + video.id + '/sddefault.jpg' : video.img}
                     alt="icono">
                   </img>
@@ -127,6 +146,9 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
                 </p>
                 <p className='controls-apps-youtube-video-duration'>
                   {video.duration}
+                </p>
+                <p className='controls-apps-youtube-video-duration'>
+                  {rokuPlayState && rokuPlayState.state === 'play' ? `${parseInt(rokuPlayState.position) / 1000}`: ''}
                 </p>
               </button>
             </li>
@@ -145,7 +167,7 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
                 className={`controls-apps-youtube-video-button ${video.state === 'selected' ? 'controls-apps-youtube-video-button--selected' : ''}`}
                 onTouchStart={(e) => onTouchStart(e)}
                 onTouchMove={(e) => onTouchMove(e)}
-                onTouchEnd={(e) => onTouchEnd('video', video.id)}>
+                onTouchEnd={(e) => onTouchEnd(e, 'video', video)}>
                 <img
                   className='controls-apps-youtube-video-img'
                   src={view.roku.apps.youtube.mode === 'channel' ? 'https://img.youtube.com/vi/' + video.id + '/sddefault.jpg' : video.img}

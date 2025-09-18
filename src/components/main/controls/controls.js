@@ -8,7 +8,7 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({screens, devices, rokuSearchMode, changeRokuSearchModeParent, screenSelected, view, hdmiSala, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, changeVibrateParent, searchYoutubeParent, searchRokuModeParent}) {
+function Controls({rokuPlayState, screens, devices, rokuSearchMode, changeRokuSearchModeParent, screenSelected, view, hdmiSala, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, changeVibrateParent, searchYoutubeParent, searchRokuModeParent}) {
   const changeControl = (params) => {
     changeControlParent(params);
   }
@@ -73,6 +73,7 @@ function Controls({screens, devices, rokuSearchMode, changeRokuSearchModeParent,
         }
         {view.selected === 'roku' &&
         <Apps
+          rokuPlayState={rokuPlayState}
           view={view}
           rokuApps={rokuApps}
           rokuSearchMode={rokuSearchMode}
