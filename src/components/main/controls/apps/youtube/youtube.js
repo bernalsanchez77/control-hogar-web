@@ -82,7 +82,7 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
                 onTouchEnd={(e) => onTouchEnd('channel', channel.id)}>
                 <img
                   className='controls-apps-youtube-channel-img'
-                  src={'https://control-hogar-psi.vercel.app/imgs/youtube-channels/' + channel.id + '.png'}
+                  src={channel.img || 'https://control-hogar-psi.vercel.app/imgs/youtube-channels/' + channel.id + '.png'}
                   alt="icono">
                 </img>
                 <p className='controls-apps-youtube-channel-title'>
@@ -106,11 +106,13 @@ function Youtube({view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtu
                 onTouchStart={(e) => onTouchStart(e)}
                 onTouchMove={(e) => onTouchMove(e)}
                 onTouchEnd={(e) => onTouchEnd('video', video.id)}>
-                <img
-                  className='controls-apps-youtube-video-img'
-                  src={view.roku.apps.youtube.mode === 'channel' ? video.img || 'https://img.youtube.com/vi/' + video.id + '/sddefault.jpg' : video.img}
-                  alt="icono">
-                </img>
+                <div>
+                  <img
+                    className='controls-apps-youtube-video-img'
+                    src={view.roku.apps.youtube.mode === 'channel' ? video.img || 'https://img.youtube.com/vi/' + video.id + '/sddefault.jpg' : video.img}
+                    alt="icono">
+                  </img>
+                </div>
                 <p className='controls-apps-youtube-video-title'>
                   {video.title}
                 </p>
