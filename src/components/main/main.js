@@ -343,11 +343,18 @@ function Main() {
       // }
     }, 5000);
     setView(await viewRouter.changeView(newView, viewRef.current, [], setters, rokuAppsTable.data));
-    if (document.readyState === "complete") {
+  
+    if (isApp) {
+      document.addEventListener('deviceready', () => {
+        onLoad();
+        window.cordova.plugins.foregroundService.start('Control Hogar', 'Aplicacion en uso', 'icon');
+      });
+    } else if (document.readyState === 'complete') {
       onLoad();
     } else {
-      window.addEventListener("load", onLoad);
+      window.addEventListener('load', onLoad);
     }
+
   }, [screenSelected, setElements, testRokuPlayState, setters]);
 
   useEffect(() => {
@@ -624,12 +631,12 @@ function Main() {
             }
           </div> : 
           <div className='main-components--loading'>
-            <div class="loading-container">
-              <span class="loading-text">Cargando</span>
-              <div class="loading-dots">
-                <span class="dot">.</span>
-                <span class="dot">.</span>
-                <span class="dot">.</span>
+            <div className="loading-container">
+              <span className="loading-text">Cargando</span>
+              <div className="loading-dots">
+                <span className="dot">.</span>
+                <span className="dot">.</span>
+                <span className="dot">.</span>
               </div>
             </div>
           </div>

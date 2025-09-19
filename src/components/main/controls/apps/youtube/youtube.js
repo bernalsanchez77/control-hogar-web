@@ -9,6 +9,7 @@ function Youtube({rokuPlayState, view, rokuApps, youtubeSearchVideos, youtubeCha
   let touchMoved = false;
   let touchStartY = 0;
   const channelSelected = useRef('');
+  const currentVideoRef = useRef({});
 
   const changeView = (channel) => {
     localStorage.setItem('channelSelected', channel);
@@ -20,6 +21,7 @@ function Youtube({rokuPlayState, view, rokuApps, youtubeSearchVideos, youtubeCha
   };
   const changeControl = (video) => {
     const currentVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
+    currentVideoRef.current = currentVideo;
     if (currentVideo?.id !== video) {
       const device = 'rokuSala';
       const rokuId = rokuApps.find(app => app.id === 'youtube').rokuId;
@@ -35,7 +37,7 @@ function Youtube({rokuPlayState, view, rokuApps, youtubeSearchVideos, youtubeCha
   if (view.roku.apps.youtube.mode === 'channel') {
     channelSelected.current = channelSelected.current || localStorage.getItem('channelSelected');
     youtubeSortedVideos = youtubeVideosLiz.filter(video => video.channelId === channelSelected.current);
-    youtubeSortedVideos = Object.values(youtubeSortedVideos).sort((a, b) => new Date(a.videoDate) - new Date(b.videoDate));
+    youtubeSortedVideos = Object.values(youtubeSortedVideos).sort((a, b) => new Date(a.date) - new Date(b.date));
   }
   if (view.roku.apps.youtube.mode === 'search') {
     youtubeSortedVideos = youtubeSearchVideos.map(item => ({
@@ -81,7 +83,8 @@ function Youtube({rokuPlayState, view, rokuApps, youtubeSearchVideos, youtubeCha
   };
 
   useEffect(() => {
-    if (rokuPlayState && rokuPlayState.state === 'play') {
+    if (rokuPlayState && rokuPlayState.plugin?.id === '837' && rokuPlayState.state === 'play') {
+      console.log('player: ', rokuPlayState.plugin.id);
       console.log('position effect: ', parseInt(rokuPlayState.position) / 1000);
     }
   }, [rokuPlayState]);
