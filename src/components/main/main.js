@@ -345,8 +345,44 @@ function Main() {
     setView(await viewRouter.changeView(newView, viewRef.current, [], setters, rokuAppsTable.data));
   
     if (isApp) {
+      console.log('is app');
       document.addEventListener('deviceready', () => {
+
+      if (window.cordova.plugins && window.cordova.plugins.permissions) {
+        const permissions = window.cordova.plugins.permissions;
+        if (window.device.platform === 'Android' && parseInt(window.device.version) >= 13) {
+          permissions.hasPermission(permissions.POST_NOTIFICATIONS, function(status) {
+            if (!status.hasPermission) {
+              permissions.requestPermission(permissions.POST_NOTIFICATIONS, function(status2) {
+                if (!status2.hasPermission) {
+                  console.warn('Notification permission denied');
+                }
+              }, function() {
+                console.error('Permission request failed');
+              });
+            }
+          }, null);
+        }
+      }
+
+        // if (window.cordova.plugins && window.cordova.plugins.diagnostic) {
+        //   window.cordova.plugins.diagnostic.getPermissionAuthorizationStatus(function (status) {
+        //     if (status !== window.cordova.plugins.diagnostic.permissionStatus.GRANTED) {
+        //       window.cordova.plugins.diagnostic.requestRuntimePermission(function (result) {
+        //         console.log('Notification permission result:', result);
+        //       }, function (error) {
+        //         console.error('Permission request failed:', error);
+        //       }, window.cordova.plugins.diagnostic.permission.POST_NOTIFICATIONS);
+        //     }
+        //   }, function (error) {
+        //     console.error('Permission check failed:', error);
+        //   }, window.cordova.plugins.diagnostic.permission.POST_NOTIFICATIONS);
+        // }
+
+
+        console.log('device ready');
         onLoad();
+        console.log(window.cordova.plugins);
         window.cordova.plugins.foregroundService.start('Control Hogar', 'Aplicacion en uso', 'icon');
       });
     } else if (document.readyState === 'complete') {
