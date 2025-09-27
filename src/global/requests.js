@@ -83,14 +83,23 @@ class Requests {
   }
   async updateTableInSupabase(params) {
     if (window.cordova) {
-      await this.cordovaApiRequest('updateTableInSupabase', params, 'patch', 'json');
+      if (window.cordova?.plugin?.http) {
+        await this.cordovaApiRequest('updateTableInSupabase', params, 'patch', 'json');
+      } else {
+        console.log('fallo updateTableInSubabase por http');
+      }
     } else {
       await this.normalApiRequest('updateTableInSupabase', params, 'patch');
     }
   }
   async getTableFromSupabase(table) {
     if (window.cordova) {
-      return await this.cordovaApiRequest('getTableFromSupabase', {table}, 'get');
+      if (window.cordova?.plugin?.http) {
+        return await this.cordovaApiRequest('getTableFromSupabase', {table}, 'get');
+      } else {
+        console.log('failed getTableFromSupabase due to http not ready yet');
+        return null;
+      }
     } else {
       return await this.normalApiRequest('getTableFromSupabase', {table}, 'get');
     }
@@ -115,46 +124,69 @@ class Requests {
 
   async searchYoutube(text) {
     let res = {};
+    console.log('searchYoutube', text);
     if (window.cordova) {
-      res = await this.cordovaApiRequest('getVideosFromYoutube', {q: text}, 'get');
+      if (window.cordova?.plugin?.http) {
+        res = await this.cordovaApiRequest('getVideosFromYoutube', {q: text}, 'get');
+      } else {
+        console.log('fallo getVideosFromYoutube por http');
+      }
     } else {
       res = await this.normalApiRequest('getVideosFromYoutube', {q: text}, 'get');
     }
-    return res.data.items;
+    if (res.status !== 200) {
+      return res.data.items;
+    } else {
+      return null;
+    }
   }
   async sendLogs(message, user) {
     if (window.cordova) {
-      return await this.cordovaApiRequest('sendLogs', {message: window.device.model + ' ' + message}, 'post');
+      if (window.cordova?.plugin?.http) {
+        return await this.cordovaApiRequest('sendLogs', {message: window.device.model + ' ' + message}, 'post');
+      } else {
+        console.log('fallo sendLogs por http');
+      }
     } else {
       return await this.normalApiRequest('sendLogs', {message: user + message}, 'post');
     }
   }
   async getRokuData(param) {
     if (window.cordova) {
-      const getRequestPromise = new Promise((resolve, reject) => {
-        window.cordova.plugin.http.sendRequest(
-          `${rokuIp}query/${param}`,
-          {method: 'get', headers: {}, params: {}},
-          (response) => {resolve(response);},
-          (error) => {reject(error);}
+      if (window.cordova?.plugin?.http) {
+        console.log('Sending get request to Roku');
+        const getRequestPromise = new Promise((resolve, reject) => {
+          window.cordova.plugin.http.sendRequest(
+            `${rokuIp}query/${param}`,
+            {method: 'get', headers: {}, params: {}},
+            (response) => {resolve(response);},
+            (error) => {reject(error);}
+          );
+        });
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Roku not responding')), 2000)
         );
-      });
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Roku not responding')), 500)
-      );
-      return Promise.race([getRequestPromise, timeoutPromise]).then((response) => {
-        // console.log('Get request to Roku succeeded');
-        return {status: response.status, data: xmlParser.parse(response.data)};
-      }).catch((error) => {
-        // console.log('Get request to Roku failed');
-      });
+        return Promise.race([getRequestPromise, timeoutPromise]).then((response) => {
+          // console.log('Get request to Roku succeeded');
+          return {status: response.status, data: xmlParser.parse(response.data)};
+        }).catch((error) => {
+          // console.log('Get request to Roku failed');
+        });
+      } else {
+        console.log('Cordova HTTP plugin not available');
+        return null;
+      }
     } else {
       return null;
     }
   }
   async setCredentials(userCredential) {
     if (window.cordova) {
-      return await this.cordovaApiRequest('validateCredentials', {key: userCredential}, 'post');
+      if (window.cordova?.plugin?.http) {
+        return await this.cordovaApiRequest('validateCredentials', {key: userCredential}, 'post');
+      } else {
+        console.log('fallo validateCredentials por http');
+      }
     } else {
       return await this.normalApiRequest('validateCredentials', {key: userCredential}, 'post');
     }
@@ -162,7 +194,11 @@ class Requests {
   async sendIfttt(params, sendEnabled) {
     if (sendEnabled) {
       if (window.cordova) {
-        return await this.cordovaApiRequest('sendIfttt', params, 'get');
+        if (window.cordova?.plugin?.http) {
+          return await this.cordovaApiRequest('sendIfttt', params, 'get');
+        } else {
+          console.log('fallo sendIfttt por http');
+        }
       } else {
         return await this.normalApiRequest('sendIfttt', params, 'get');
       }
@@ -209,22 +245,29 @@ class Requests {
       url = `${rokuIp}${params.key}/${params.value}`;
     }
     if (sendEnabled) {
-      const sendRequestPromise = new Promise((resolve, reject) => {
-        window.cordova.plugin.http.sendRequest(
-          url,
-          {method: 'post', headers: contentTypeX, data: {}, serializer: 'urlencoded'},
-          () => {resolve(true);},
-          (error) => {reject(error);}
+      if (window.cordova?.plugin?.http) {
+        const sendRequestPromise = new Promise((resolve, reject) => {
+          window.cordova.plugin.http.sendRequest(
+            url,
+            {method: 'post', headers: contentTypeX, data: {}, serializer: 'urlencoded'},
+            () => {resolve(true);},
+            (error) => {reject(error);}
+          );
+        });
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Roku not responding")), 500)
         );
-      });
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Roku not responding")), 500)
-      );
-      Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
-        console.log('Request to Roku succeeded');
-      }).catch(async() => {
-        return await this.cordovaApiRequest('sendIfttt', params, 'get');
-      });
+        Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
+        }).catch(async() => {
+          if (window.cordova?.plugin?.http) {
+            return await this.cordovaApiRequest('sendIfttt', params, 'get');
+          } else {
+            console.log('fallo sendIfttt ult por http');
+          }
+        });
+      } else {
+        console.log('Cordova HTTP plugin not available');
+      }
     }
   }
 }

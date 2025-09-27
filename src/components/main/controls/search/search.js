@@ -5,7 +5,7 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   const [searchText, setSearchText] = useState('');
-  const [modeVisibility, setModeVisibility] = useState(false);
+  const [modeVisibility] = useState(false);
   const inputRef = useRef(null);
   let placeholder = '';
 
@@ -60,9 +60,9 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
     }
   };
 
-  const changeRokuSearchMode = (mode) => {
-    changeRokuSearchModeParent(mode);
-  };
+  // const changeRokuSearchMode = (mode) => {
+  //   changeRokuSearchModeParent(mode);
+  // };
 
   const onTouchStart = (e) => {
     timeout3s.current = setTimeout(() => {

@@ -23,22 +23,24 @@ class ViewRouter {
       if (currentView.selected === 'roku') {
         // was in roku
         const channelsTable = await requests.getTableFromSupabase('cableChannels');
-        setters.setCableChannels(channelsTable.data);
-        setters.setRokuSearchMode('default');
-        this.subscribeToSupabaseChannel('cableChannels', setters);
-        if (currentView.roku.apps.selected) {
-          // was in an app
-          if (currentView.roku.apps.selected === 'youtube') {
-            // app was Youtube
-            if (currentView.roku.apps.youtube.channel) {
-             supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideosLiz');     
-            } else {
-              setters.setRokuSearchMode('roku');
-            }
-          } 
-        } else {
-          // was in home
-          supabaseChannels.unsubscribeFromSupabaseChannel('rokuApps');             
+        if (channelsTable) {
+          setters.setCableChannels(channelsTable.data);
+          setters.setRokuSearchMode('default');
+          this.subscribeToSupabaseChannel('cableChannels', setters);
+          if (currentView.roku.apps.selected) {
+            // was in an app
+            if (currentView.roku.apps.selected === 'youtube') {
+              // app was Youtube
+              if (currentView.roku.apps.youtube.channel) {
+              supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideosLiz');     
+              } else {
+                setters.setRokuSearchMode('roku');
+              }
+            } 
+          } else {
+            // was in home
+            supabaseChannels.unsubscribeFromSupabaseChannel('rokuApps');             
+          }
         }
       }
       if (currentView.selected === '') {
@@ -63,9 +65,11 @@ class ViewRouter {
                   const youtubeChannel = newView.roku.apps.youtube.channel;
                   window.history.pushState({page: youtubeChannel}, youtubeChannel, '#' + youtubeChannel);
                   const videos = await requests.getTableFromSupabase('youtubeVideosLiz');
-                  setters.setYoutubeVideosLiz(videos.data);
-                  this.subscribeToSupabaseChannel('youtubeVideosLiz', setters);
-                  setters.setRokuSearchMode('default');
+                  if (videos) {
+                    setters.setYoutubeVideosLiz(videos.data);
+                    this.subscribeToSupabaseChannel('youtubeVideosLiz', setters);
+                    setters.setRokuSearchMode('default');
+                  }
                 }
                 if (newView.roku.apps.youtube.mode === 'search') {
                   // youtube is in search mode
@@ -88,7 +92,9 @@ class ViewRouter {
               // app is Youtube
               if (!youtubeChannelsLiz?.length) {
                 const channels = await requests.getTableFromSupabase('youtubeChannelsLiz');
-                setters.setYoutubeChannelsLiz(channels.data);
+                if (channels) {
+                  setters.setYoutubeChannelsLiz(channels.data);
+                }
               }
               setters.setRokuSearchMode('app');
             }
@@ -98,12 +104,14 @@ class ViewRouter {
           if (currentView.roku.apps.selected) {
             // was in an app
             const apps = await requests.getTableFromSupabase('rokuApps');
-            setters.setRokuApps(apps.data);
-            this.subscribeToSupabaseChannel('rokuApps', setters);
-            if (rokuApps.find(app => app.state === 'selected')?.id !== 'home') {
-              setters.setRokuSearchMode('roku');
-            } else {
-              setters.setRokuSearchMode('default');
+            if (apps) {
+              setters.setRokuApps(apps.data);
+              this.subscribeToSupabaseChannel('rokuApps', setters);
+              if (rokuApps.find(app => app.state === 'selected')?.id !== 'home') {
+                setters.setRokuSearchMode('roku');
+              } else {
+                setters.setRokuSearchMode('default');
+              }
             }
           }
         }
@@ -112,10 +120,12 @@ class ViewRouter {
         //was in cable
         supabaseChannels.unsubscribeFromSupabaseChannel('cableChannels');
         const apps = await requests.getTableFromSupabase('rokuApps');
-        setters.setRokuApps(apps.data);
-        this.subscribeToSupabaseChannel('rokuApps', setters);
-        if (apps.data.find(app => app.state === 'selected')?.id !== 'home') {
-          setters.setRokuSearchMode('roku');
+        if (apps) {
+          setters.setRokuApps(apps.data);
+          this.subscribeToSupabaseChannel('rokuApps', setters);
+          if (apps.data.find(app => app.state === 'selected')?.id !== 'home') {
+            setters.setRokuSearchMode('roku');
+          }
         }
       }
       if (currentView.selected === '') {

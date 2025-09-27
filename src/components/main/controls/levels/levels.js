@@ -104,33 +104,33 @@ function Levels({screenSelected, view, screens, cableChannels, changeControlPare
     }
   }
 
-  const backButtonTriggered = () => {
-    const newView = structuredClone(view);
-    if (view.selected === 'roku') {
-      if (view.roku.apps.selected) {
-        if (view.roku.apps.youtube.mode === 'channel' || view.roku.apps.youtube.mode === 'search') {
-          newView.roku.apps.youtube.mode = '';
-          if (view.roku.apps.youtube.channel !== '') {
-            newView.roku.apps.youtube.channel = '';
-          }
-          changeViewParent(newView);
-        } else {
-          newView.roku.apps.selected = '';
-          changeViewParent(newView);
-        }
-      }
-    }
-    if (view.selected === 'cable') {
-      if (view.cable.channels.category.length) {
-        newView.cable.channels.category = [];
-        changeViewParent(newView);
-      }
-    }
-    if (view.devices.device) {
-      newView.devices.device = '';
-      changeViewParent(newView);
-    }
-  }
+  // const backButtonTriggered = () => {
+  //   const newView = structuredClone(view);
+  //   if (view.selected === 'roku') {
+  //     if (view.roku.apps.selected) {
+  //       if (view.roku.apps.youtube.mode === 'channel' || view.roku.apps.youtube.mode === 'search') {
+  //         newView.roku.apps.youtube.mode = '';
+  //         if (view.roku.apps.youtube.channel !== '') {
+  //           newView.roku.apps.youtube.channel = '';
+  //         }
+  //         changeViewParent(newView);
+  //       } else {
+  //         newView.roku.apps.selected = '';
+  //         changeViewParent(newView);
+  //       }
+  //     }
+  //   }
+  //   if (view.selected === 'cable') {
+  //     if (view.cable.channels.category.length) {
+  //       newView.cable.channels.category = [];
+  //       changeViewParent(newView);
+  //     }
+  //   }
+  //   if (view.devices.device) {
+  //     newView.devices.device = '';
+  //     changeViewParent(newView);
+  //   }
+  // }
       
   return (
     <div className='controls-levels'>

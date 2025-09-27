@@ -21,6 +21,10 @@ class SupabaseChannels {
           }
         }
       );
+      this.supabaseChannels[tableName].channel.on('subscription_error', (err) => {
+        this.supabaseChannels[tableName].subscribed = false;
+        console.warn('Channel ' + tableName + ' subscription error:', err);
+      });
 
       // Wrap subscription in a Promise
       return new Promise((resolve, reject) => {
@@ -31,13 +35,14 @@ class SupabaseChannels {
               resolve(true);
             } else {
               console.warn('Error status for', tableName, ':', status);
-              window.location.reload();
-              try {
-                const retry = await this.subscribeToSupabaseChannel(tableName, callback);
-                resolve(retry);
-              } catch (err) {
-                reject(err);
-              }
+              // window.location.reload();
+              await this.supabaseChannels[tableName].channel.unsubscribe();
+              // try {
+              //   const retry = await this.subscribeToSupabaseChannel(tableName, callback);
+              //   resolve(retry);
+              // } catch (err) {
+              //   reject(err);
+              // }
             }
           } else {
             console.log('Unsubscribed from: ', tableName + ' ' + status);
@@ -47,6 +52,14 @@ class SupabaseChannels {
         });
       });
     }
+
+    getChannelState(tableName) {
+      if (this.supabaseChannels[tableName]) {
+        return this.supabaseChannels[tableName];
+      } else {
+        return 'no channel for: ' + tableName;
+      }
+    };
 
     async unsubscribeFromSupabaseChannel(tableName) {
       if (this.supabaseChannels[tableName] && this.supabaseChannels[tableName].channel) {

@@ -89,14 +89,14 @@ function Youtube({rokuPlayState, view, rokuApps, youtubeSearchVideos, youtubeCha
     }
   }, [rokuPlayState]);
 
-  const timeToSeconds = (timeString) => {
-    const parts = timeString.split(':');
-    const hours = parseInt(parts[0], 10);
-    const minutes = parseInt(parts[1], 10);
-    const seconds = parseInt(parts[2], 10);
-    const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
-    return totalSeconds;
-  }
+  // const timeToSeconds = (timeString) => {
+  //   const parts = timeString.split(':');
+  //   const hours = parseInt(parts[0], 10);
+  //   const minutes = parseInt(parts[1], 10);
+  //   const seconds = parseInt(parts[2], 10);
+  //   const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+  //   return totalSeconds;
+  // }
 
   return (
     <div>

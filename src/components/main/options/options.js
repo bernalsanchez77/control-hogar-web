@@ -4,9 +4,6 @@ import './options.css';
 function Options({changeThemeParent, theme}) {
   const [optionView, setOptionView] = useState('default');
   const setTimeOutRef = useRef(null);
-  const removeStorage = () => {
-    removeStorage();
-  }
 
   const changeOptionView = (option) => {
     setOptionView(option);

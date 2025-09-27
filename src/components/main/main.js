@@ -73,7 +73,9 @@ function Main() {
   const searchYoutube = async (text) => {
     utils.triggerVibrate();
     const videos = await requests.searchYoutube(text);
-    setYoutubeSearchVideos(videos);
+    if (videos) {
+      setYoutubeSearchVideos(videos);
+    }
     // setYoutubeSearchVideos(youtubeDummyData);
   };
 
@@ -201,11 +203,17 @@ function Main() {
     }
   };
 
-  const setData = useCallback(async (tableName, callback) => {
+  const setData = useCallback(async (tableName, isInit, callback) => {
     const table = await requests.getTableFromSupabase(tableName);
-    setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](table.data);
-    await subscribeToSupabaseChannel(tableName, callback);
-    return table;
+    if (table && table.status === 200 && table.data) {
+      setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](table.data);
+      if (isInit) {
+        await subscribeToSupabaseChannel(tableName, callback);
+      }
+      return table;
+    } else {
+      return null;
+    }
   }, [subscribeToSupabaseChannel, setters]);
 
   const testRokuData = useCallback(async () => {
@@ -278,9 +286,30 @@ function Main() {
     setLoaded(true);
   };
 
-  const setElements = useCallback(async (message) => {
+  const startForegroundService = () => {
+      window.cordova.plugins.foregroundService.start('Control Hogar', 'Aplicacion en uso', 'ic_notification', 3, 1, true);
+  };
+
+  const startNotificationService = () => {
+    window.cordova.plugins.notification.local.schedule({
+        id: 1,
+        title: 'Control Hogar',
+        text: 'Aplicación en uso',
+        foreground: true,
+        ongoing: true,
+        actions: [
+            { id: 'open', title: 'Abrir' },
+            { id: 'exit', title: 'Salir' }
+        ]
+    });
+  };
+
+  const setElements = useCallback(async (isInit) => {
     let rokuAppsTable = {};
     let hdmiSalaTable = {};
+    let cableChannelsTable = {};
+    let devicesTable = {};
+    let screensTable = {};
     const newView = structuredClone(viewRef.current);
     let rokuActiveApp = await testRokuData();
     setInRange(await utils.getInRange());
@@ -289,52 +318,71 @@ function Main() {
     }, 5000);
 
     // hdmi
-    hdmiSalaTable = await setData('hdmiSala', (change) => {
+    console.log('hdmiSala channel state: ', supabaseChannels.getChannelState('hdmiSala'));
+    hdmiSalaTable = await setData('hdmiSala', isInit, (change) => {
       hdmiChangeInSupabaseChannel(change.id);
     });
-    newView.selected = hdmiSalaTable.data.find(el => el.state === 'selected').id;
+    if (hdmiSalaTable) {
+      newView.selected = hdmiSalaTable.data.find(el => el.state === 'selected').id;
 
-    // apps
-    if (newView.selected === 'roku' && !viewRef.current.roku.apps.selected) {
-      rokuAppsTable = await setData('rokuApps', (change) => {
-        if (change.id === 'home') {
-          setters.setRokuSearchMode('default');
-        } else {
-          setters.setRokuSearchMode('roku');
-        }
-      });
-      const supabaseAppSelected = rokuAppsTable.data.find(row => row.state === 'selected');
-      if (supabaseAppSelected.id !== 'home') {
-        setters.setRokuSearchMode('roku');
-      }
-      if (rokuActiveApp && supabaseAppSelected.rokuId !== rokuActiveApp) {
-        const newId = rokuAppsTable.data.find(app => app.rokuId === rokuActiveApp).id;
-        requests.updateTableInSupabase({
-          current: {currentId: supabaseAppSelected.id, currentTable: 'rokuApps', currentState: ''},
-          new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
+      // apps
+      if (newView.selected === 'roku' && !viewRef.current.roku.apps.selected) {
+        rokuAppsTable = await setData('rokuApps', isInit, (change) => {
+          if (change.id === 'home') {
+            setters.setRokuSearchMode('default');
+          } else {
+            setters.setRokuSearchMode('roku');
+          }
         });
+        if (rokuAppsTable) {
+          const supabaseAppSelected = rokuAppsTable.data.find(row => row.state === 'selected');
+          if (supabaseAppSelected.id !== 'home') {
+            setters.setRokuSearchMode('roku');
+          }
+          if (rokuActiveApp && supabaseAppSelected.rokuId !== rokuActiveApp) {
+            const newId = rokuAppsTable.data.find(app => app.rokuId === rokuActiveApp).id;
+            requests.updateTableInSupabase({
+              current: {currentId: supabaseAppSelected.id, currentTable: 'rokuApps', currentState: ''},
+              new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
+            });
+          }
+          if (rokuActiveApp) {
+            await getRokuPlayState(hdmiSalaTable.data);
+          }
+        } else {
+          return {};
+        }
       }
-      if (rokuActiveApp) {
-        await getRokuPlayState(hdmiSalaTable.data);
+    
+      // cable
+      if (newView.selected === 'cable') {
+        cableChannelsTable = await setData('cableChannels', isInit);
+        if (!cableChannelsTable) {
+          return {};
+        }
       }
-    }
-   
-    // cable
-    if (newView.selected === 'cable') {
-      await setData('cableChannels');
-    }
 
-    await setData('devices');
-    await setData('screens');
-    requests.sendLogs(message, user);
-    return {newView, rokuAppsTable};
+      devicesTable = await setData('devices', isInit);
+      if (!devicesTable) {
+        return {};
+      }
+      screensTable = await setData('screens', isInit);
+      if (!screensTable) {
+        return {};
+      }
+      requests.sendLogs(isInit ? 'entro': 'regreso', user);
+      return {newView, rokuAppsTable};
+    } else {
+      return {};
+    }
   }, [getRokuPlayState, testRokuData, hdmiChangeInSupabaseChannel, setData, setters]);
 
   const init = useCallback(async () => {
     setTheme(localStorage.getItem('theme'));
     setScreenSelected(localStorage.getItem('screen') || screenSelected);
     setCredential(localStorage.getItem('user'));
-    const {newView, rokuAppsTable} = await setElements('entro');
+    const {newView, rokuAppsTable} = await setElements(true);
+    console.log('version 3.1');
     await testRokuPlayState();
     testRokuPlayStateIntervalRef.current = setInterval(async () => {
       await testRokuPlayState();
@@ -345,45 +393,21 @@ function Main() {
     setView(await viewRouter.changeView(newView, viewRef.current, [], setters, rokuAppsTable.data));
   
     if (isApp) {
-      console.log('is app');
       document.addEventListener('deviceready', () => {
-
-      if (window.cordova.plugins && window.cordova.plugins.permissions) {
-        const permissions = window.cordova.plugins.permissions;
-        if (window.device.platform === 'Android' && parseInt(window.device.version) >= 13) {
-          permissions.hasPermission(permissions.POST_NOTIFICATIONS, function(status) {
-            if (!status.hasPermission) {
-              permissions.requestPermission(permissions.POST_NOTIFICATIONS, function(status2) {
-                if (!status2.hasPermission) {
-                  console.warn('Notification permission denied');
-                }
-              }, function() {
-                console.error('Permission request failed');
-              });
-            }
-          }, null);
-        }
-      }
-
-        // if (window.cordova.plugins && window.cordova.plugins.diagnostic) {
-        //   window.cordova.plugins.diagnostic.getPermissionAuthorizationStatus(function (status) {
-        //     if (status !== window.cordova.plugins.diagnostic.permissionStatus.GRANTED) {
-        //       window.cordova.plugins.diagnostic.requestRuntimePermission(function (result) {
-        //         console.log('Notification permission result:', result);
-        //       }, function (error) {
-        //         console.error('Permission request failed:', error);
-        //       }, window.cordova.plugins.diagnostic.permission.POST_NOTIFICATIONS);
-        //     }
-        //   }, function (error) {
-        //     console.error('Permission check failed:', error);
-        //   }, window.cordova.plugins.diagnostic.permission.POST_NOTIFICATIONS);
-        // }
-
-
-        console.log('device ready');
+        // window.cordova.plugins.notification.local.requestPermission(function (granted) {
+        //     console.log("Permission granted? ", granted);
+        // });
+        startForegroundService();
+        // startNotificationService();
+        // window.cordova.plugins.notification.local.on('action', function (notification, eopts) {
+        //   if (eopts.actionId === 'open') {
+        //     navigator.app.resumeApp ? navigator.app.resumeApp() : console.log("Open pressed – app already in foreground");
+        //   }
+        //   if (eopts.actionId === 'exit') {
+        //     window.navigator.app.exitApp();
+        //   }
+        // });
         onLoad();
-        console.log(window.cordova.plugins);
-        window.cordova.plugins.foregroundService.start('Control Hogar', 'Aplicacion en uso', 'icon');
       });
     } else if (document.readyState === 'complete') {
       onLoad();
@@ -540,27 +564,48 @@ function Main() {
     document.body.classList.remove("transition");
     setUserActive(false);
     clearInterval(testRokuDataIntervalRef.current);
-    await unsubscribeFromSupabaseChannel('hdmiSala');
+    // await unsubscribeFromSupabaseChannel('hdmiSala');
     if (viewRef.current.roku.apps.youtube.channel) {
-      await unsubscribeFromSupabaseChannel('youtubeVideosLiz');
+      // await unsubscribeFromSupabaseChannel('youtubeVideosLiz');
     }
     if (viewRef.current.selected === 'roku' && !viewRef.current.roku.apps.selected) {
-      await unsubscribeFromSupabaseChannel('rokuApps');
+      // await unsubscribeFromSupabaseChannel('rokuApps');
     }
     if (viewRef.current.selected === 'cable') {
-      await unsubscribeFromSupabaseChannel('cableChannels');
+      // await unsubscribeFromSupabaseChannel('cableChannels');
     }
-    await unsubscribeFromSupabaseChannel('devices');
-    await unsubscribeFromSupabaseChannel('screens');
+    // await unsubscribeFromSupabaseChannel('devices');
+    // await unsubscribeFromSupabaseChannel('screens');
     requests.sendLogs('salio', user);
     setLoaded(false);
   }, [unsubscribeFromSupabaseChannel]);
 
   const onResume = useCallback(async (e) => {
-    setUserActive(true);
-    const {newView} = await setElements('regreso');
-    changeView(newView);
-    setLoaded(true);
+    console.log('resume');
+    let isInit = false;
+    const hdmiSalaChannel = supabaseChannels.getChannelState('hdmiSala');
+    if (hdmiSalaChannel.channel.state !== 'joined') {
+      console.log('HdmiSala not joined, subscribing again');
+      isInit = true;
+    } else {
+      console.log('HdmiSala already joined');
+    }
+    if (window.cordova?.plugin?.http) {
+      console.log('resume http');
+      setUserActive(true);
+      if (isApp) {
+        // startForegroundService();
+      }
+      const {newView} = await setElements(isInit);
+      if (newView) {
+        changeView(newView);
+        setLoaded(true);
+      } else {
+        console.log('no hdmiSala when resume');
+      }
+    } else {
+      console.log('no http when resume');
+    }
   }, [setElements, changeView]);
 
   const onVisibilityChange = useCallback(() => {
