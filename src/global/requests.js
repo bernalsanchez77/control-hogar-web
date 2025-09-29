@@ -154,7 +154,7 @@ class Requests {
   async getRokuData(param) {
     if (window.cordova) {
       if (window.cordova?.plugin?.http) {
-        console.log('Sending get request to Roku');
+        // console.log('Sending get request to Roku');
         const getRequestPromise = new Promise((resolve, reject) => {
           window.cordova.plugin.http.sendRequest(
             `${rokuIp}query/${param}`,

@@ -317,8 +317,7 @@ function Main() {
       await testRokuData();
     }, 5000);
 
-    // hdmi
-    console.log('hdmiSala channel state: ', supabaseChannels.getChannelState('hdmiSala'));
+    // hdmiSala
     hdmiSalaTable = await setData('hdmiSala', isInit, (change) => {
       hdmiChangeInSupabaseChannel(change.id);
     });
@@ -581,31 +580,30 @@ function Main() {
   }, [unsubscribeFromSupabaseChannel]);
 
   const onResume = useCallback(async (e) => {
-    console.log('resume');
-    let isInit = false;
-    const hdmiSalaChannel = supabaseChannels.getChannelState('hdmiSala');
-    if (hdmiSalaChannel.channel.state !== 'joined') {
-      console.log('HdmiSala not joined, subscribing again');
-      isInit = true;
-    } else {
-      console.log('HdmiSala already joined');
-    }
-    if (window.cordova?.plugin?.http) {
-      console.log('resume http');
-      setUserActive(true);
-      if (isApp) {
-        // startForegroundService();
-      }
-      const {newView} = await setElements(isInit);
-      if (newView) {
-        changeView(newView);
-        setLoaded(true);
+    setTimeout(async () => {
+      let isInit = false;
+      const hdmiSalaChannel = supabaseChannels.getChannelState('hdmiSala');
+      console.log('hdmiSalaChannel state on resume: ', hdmiSalaChannel.channel.state);
+      if (hdmiSalaChannel.channel.state !== 'joined') {
+        console.log('HdmiSala not joined, subscribing again');
+        isInit = true;
       } else {
-        console.log('no hdmiSala when resume');
+        console.log('HdmiSala already joined');
       }
-    } else {
-      console.log('no http when resume');
-    }
+      if (window.cordova?.plugin?.http) {
+        console.log('http exists when resume');
+        setUserActive(true);
+        const {newView} = await setElements(isInit);
+        if (newView) {
+          changeView(newView);
+          setLoaded(true);
+        } else {
+          console.log('no hdmiSala when resume');
+        }
+      } else {
+        console.log('http doesnt exist when resume');
+      }
+    }, 1000);
   }, [setElements, changeView]);
 
   const onVisibilityChange = useCallback(() => {

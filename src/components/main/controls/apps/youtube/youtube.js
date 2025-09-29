@@ -68,7 +68,7 @@ function Youtube({rokuPlayState, view, rokuApps, youtubeSearchVideos, youtubeCha
     clearTimeout(timeout3s.current);
     if (!touchMoved) {
       if (longClick.current) {
-        console.log('long click');
+        // console.log('long click');
         video.state = 'queue';
       } else {
         if (type === 'channel') {
@@ -84,8 +84,8 @@ function Youtube({rokuPlayState, view, rokuApps, youtubeSearchVideos, youtubeCha
 
   useEffect(() => {
     if (rokuPlayState && rokuPlayState.plugin?.id === '837' && rokuPlayState.state === 'play') {
-      console.log('player: ', rokuPlayState.plugin.id);
-      console.log('position effect: ', parseInt(rokuPlayState.position) / 1000);
+      // console.log('player: ', rokuPlayState.plugin.id);
+      // console.log('position effect: ', parseInt(rokuPlayState.position) / 1000);
     }
   }, [rokuPlayState]);
 
