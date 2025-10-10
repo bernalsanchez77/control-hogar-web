@@ -1,41 +1,62 @@
 import supabase from './supabase-client';
 class SupabaseChannels {
     supabaseChannels = {};
-
-    async subscribeToSupabaseChannel(tableName, callback) {
+    async subscribeToSupabaseChannel(tableName, callback, timeoutMs = 200) {
       if (!this.supabaseChannels[tableName]) {
         this.supabaseChannels[tableName] = {};
       }
+
       const channel = supabase.channel(tableName);
       this.supabaseChannels[tableName].channel = channel;
       this.supabaseChannels[tableName].subscribed = true;
       this.supabaseChannels[tableName].errorHandled = false;
-      channel.on('postgres_changes', {event: '*', schema: 'public', table: tableName}, async (change) => {
-        console.log(change.table, ' changed');
+      this.supabaseChannels[tableName].errorType = '';
+
+      channel.on('postgres_changes', { event: '*', schema: 'public', table: tableName }, async (change) => {
+        console.log(change.table, 'changed');
         if (callback) {
           callback('set' + change.table.charAt(0).toUpperCase() + change.table.slice(1), change.new);
         }
       });
+
       channel.on('subscription_error', async (err) => {
+        console.log('error en la subcription');
         await this.handleSubscriptionError(tableName, err, 'subscription_error');
       });
+
       return new Promise((resolve, reject) => {
+        // let settled = false;
+
+        // timeout handling
+        // const timer = setTimeout(async () => {
+        //   if (!settled) {
+        //     settled = true;
+        //     await this.handleSubscriptionError(tableName, 'Timeout', 'TIMEOUT');
+        //     resolve({response: false, error: 'timeout'});
+        //   }
+        // }, timeoutMs);
+
         channel.subscribe(async (status) => {
+          // if (settled) return; // ignore late events
+
           if (this.supabaseChannels[tableName].subscribed) {
             if (status === 'SUBSCRIBED') {
-              console.log('Subscribed to: ', tableName);
-              resolve(true);
+              // clearTimeout(timer);
+              // settled = true;
+              console.log('✅ Subscribed to:', tableName);
+              resolve({response: true, error: ''});
+            } else if (['CHANNEL_ERROR', 'TIMED_OUT', 'CLOSED'].includes(status)) {
+              const now = new Date();
+              const hours = String(now.getHours()).padStart(2, '0');
+              const minutes = String(now.getMinutes()).padStart(2, '0');
+              const seconds = String(now.getSeconds()).padStart(2, '0');
+              console.log('Subscription error on ', tableName, 'status: ', status, 'at time: ', `${hours}:${minutes}:${seconds}`);
+              // clearTimeout(timer);
+              // settled = true;
+              await this.handleSubscriptionError(tableName, status, status);
+              resolve({response: false, error: status});
             } else {
-              if (status === 'CHANNEL_ERROR') {
-                await this.handleSubscriptionError(tableName, status, 'CHANNEL_ERROR');
-              }
-              if (status === 'TIMED_OUT') {
-                await this.handleSubscriptionError(tableName, status, 'TIMED_OUT');
-              }
-              if (status === 'CLOSED') {
-                await this.handleSubscriptionError(tableName, status, 'CLOSED');
-              }
-              resolve(false);
+              console.log('Subscription error for other reason');
             }
           }
         });
@@ -44,13 +65,14 @@ class SupabaseChannels {
 
     async handleSubscriptionError(tableName, err, type) {
       if (this.supabaseChannels[tableName] && !this.supabaseChannels[tableName].errorHandled) {
+        this.supabaseChannels[tableName].errorType = type;
         this.supabaseChannels[tableName].errorHandled = true;
         console.log('Channel ' + tableName + ' failed type: ' + type + ' error: ', err);
         await this.unsubscribeFromSupabaseChannel(tableName);
         // setTimeout(async () => {
         //   console.log('Rejoining channel: ' + tableName);
         //   await this.subscribeToSupabaseChannel(tableName);
-        // }, 2000);
+        // }, 5000);
       }
     }
 
@@ -58,7 +80,8 @@ class SupabaseChannels {
       if (this.supabaseChannels[tableName]) {
         return this.supabaseChannels[tableName];
       } else {
-        return 'no channel for: ' + tableName;
+        console.log('no channel for: ' + tableName);
+        return null;
       }
     }
 

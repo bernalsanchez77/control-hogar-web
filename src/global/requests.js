@@ -170,7 +170,7 @@ class Requests {
           // console.log('Get request to Roku succeeded');
           return {status: response.status, data: xmlParser.parse(response.data)};
         }).catch((error) => {
-          // console.log('Get request to Roku failed');
+          console.log('Get request to Roku failed', error);
         });
       } else {
         console.log('Cordova HTTP plugin not available');

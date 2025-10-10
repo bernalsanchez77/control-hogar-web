@@ -1,5 +1,5 @@
 
-import supabaseChannels from './supabase-channels';
+import supabaseChannels from './supabase/supabase-channels';
 import Requests from './requests';
 const requests = new Requests();
 class ViewRouter {
