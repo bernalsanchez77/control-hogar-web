@@ -107,11 +107,11 @@ class ViewRouter {
             if (apps) {
               setters.setRokuApps(apps.data);
               this.subscribeToSupabaseChannel('rokuApps', setters);
-              if (rokuApps.find(app => app.state === 'selected')?.id !== 'home') {
+              // if (rokuApps.find(app => app.state === 'selected')?.id !== 'home') {
                 setters.setRokuSearchMode('roku');
-              } else {
-                setters.setRokuSearchMode('default');
-              }
+              // } else {
+                // setters.setRokuSearchMode('default');
+              // }
             }
           }
         }
@@ -123,15 +123,15 @@ class ViewRouter {
         if (apps) {
           setters.setRokuApps(apps.data);
           this.subscribeToSupabaseChannel('rokuApps', setters);
-          if (apps.data.find(app => app.state === 'selected')?.id !== 'home') {
+          // if (apps.data.find(app => app.state === 'selected')?.id !== 'home') {
             setters.setRokuSearchMode('roku');
-          }
+          // }
         }
       }
       if (currentView.selected === '') {
-        if (rokuApps.find(app => app.state === 'selected')?.id !== 'home') {
+        // if (rokuApps.find(app => app.state === 'selected')?.id !== 'home') {
           setters.setRokuSearchMode('roku');
-        }
+        // }
       }
     }
 

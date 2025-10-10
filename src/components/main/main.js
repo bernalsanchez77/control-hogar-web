@@ -94,30 +94,12 @@ function Main() {
   }
 
   const subscribeToSupabaseChannel = useCallback(async (tableName, callback) => {
-    await supabaseChannels.subscribeToSupabaseChannel(tableName, (itemName, newItem) => {
+    await supabaseChannels.subscribeToSupabaseChannel(tableName, async (itemName, newItem) => {
       setters[itemName](items => items.map(item => item.id === newItem.id ? newItem : item));
       if (callback) {
-        callback(newItem);
+        await callback(newItem);
       }
-    }).then((res) => {
-      // console.log(res);
-    }).catch((res) => {
-      console.log(res);
-    });
-
-    // await supabaseChannels.subscribeToSupabaseChannel(tableName, (event, data) => {
-    //   console.log("Callback fired:", event, data);
-    // }).then((ok) => {
-    //     if (ok) {
-    //       console.log("Subscription successful ✅");
-    //     } else {
-    //       console.log("Subscription failed but handled gracefully ⚠️");
-    //     }
-    //   }).catch((err) => {
-    //     console.error("❌ Subscription error:", err.message);
-    //   });
-
-
+    }).then((res) => {}).catch((res) => {console.log(res);});
   },[setters]);
 
   // const unsubscribeFromSupabaseChannel = useCallback(async (tableName) => {
@@ -221,7 +203,6 @@ function Main() {
           localStorage.setItem('user', response.data.dev);
           setCredential('dev');
           setSendEnabled(false);
-          eruda.init();
         } else {
           localStorage.setItem('user', 'owner');
           setCredential('owner');
@@ -306,25 +287,25 @@ function Main() {
     // setInRange(await utils.getInRange());
     const newView = structuredClone(viewRef.current);
 
-    const hdmiSalaTable = await setData('hdmiSala', isInit, (change) => {
-      hdmiChangeInSupabaseChannel(change.id);
+    const hdmiSalaTable = await setData('hdmiSala', isInit, async (change) => {
+      await hdmiChangeInSupabaseChannel(change.id);
     });
     if (hdmiSalaTable) {
       newView.selected = hdmiSalaTable.data.find(el => el.state === 'selected').id;
 
       if (newView.selected === 'roku' && !viewRef.current.roku.apps.selected) {
         rokuAppsTable = await setData('rokuApps', isInit, (change) => {
-          if (change.id === 'home') {
-            setters.setRokuSearchMode('default');
-          } else {
+          // if (change.id === 'home') {
+            // setters.setRokuSearchMode('default');
+          // } else {
             setters.setRokuSearchMode('roku');
-          }
+          // }
         });
         if (rokuAppsTable) {
           const supabaseAppSelected = rokuAppsTable.data.find(row => row.state === 'selected');
-          if (supabaseAppSelected.id !== 'home') {
+          // if (supabaseAppSelected.id !== 'home') {
             setters.setRokuSearchMode('roku');
-          }
+          // }
           if (rokuActiveApp) {
             if (supabaseAppSelected.rokuId !== rokuActiveApp) {
               const newId = rokuAppsTable.data.find(app => app.rokuId === rokuActiveApp).id;
@@ -417,22 +398,6 @@ function Main() {
     setScreenSelected(localStorage.getItem('screen') || screenSelected);
     const {newView, rokuAppsTable} = await getTableData(true, rokuActiveApp);
     setView(await viewRouter.changeView(newView, viewRef.current, [], setters, rokuAppsTable.data));
-  }, [getTableData, setters, screenSelected, resume]);
-
-  const init = useCallback(async () => {
-    // eruda.init();
-    const userCredential = localStorage.getItem('user');
-    setCredential(userCredential);
-    if (userCredential) {
-      if (isApp) {
-        document.addEventListener('deviceready', async () => {
-          await onLoad(userCredential, true);
-        });
-      } else {
-        await onLoad(userCredential);
-      }
-    }
-    console.log('loaded');
     if (document.readyState === 'complete') {
       window.history.replaceState(null, "", window.location.pathname + window.location.search);
       setLoaded(true);
@@ -441,6 +406,23 @@ function Main() {
         window.history.replaceState(null, "", window.location.pathname + window.location.search);
         setLoaded(true);
       });
+    }
+  }, [getTableData, setters, screenSelected, resume]);
+
+  const init = useCallback(async () => {
+    const userCredential = localStorage.getItem('user');
+    setCredential(userCredential);
+    if (userCredential) {
+      if (userCredential === 'dev') {
+        eruda.init();
+      }
+      if (isApp) {
+        document.addEventListener('deviceready', async () => {
+          await onLoad(userCredential, true);
+        });
+      } else {
+        await onLoad(userCredential);
+      }
     }
   }, [onLoad, setCredential]);
 

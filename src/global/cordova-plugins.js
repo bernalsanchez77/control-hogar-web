@@ -17,7 +17,7 @@ class CordovaPlugins {
                   if (!backgroundInterval) {
                     backgroundInterval = setInterval(function () {
                       console.log('Running in background...');
-                    }, 30000);
+                    }, 60000);
                   }
                 });
                 window.cordova.plugins.backgroundMode.on('deactivate', function () {

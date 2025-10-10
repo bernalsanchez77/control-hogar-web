@@ -7,11 +7,11 @@ function Apps({view, rokuApps, rokuSearchMode, changeControlParent, changeRokuSe
   const changeControl = (value) => {
     const device = 'rokuSala';
     let app = rokuApps.find(app => app.id === value);
-    if (app.id === 'home') {
-      changeRokuSearchModeParent('default');
-    } else {
+    // if (app.id === 'home') {
+      // changeRokuSearchModeParent('default');
+    // } else {
       changeRokuSearchModeParent('roku');
-    }
+    // }
     changeControlParent({
       ifttt: [{device, key: 'app', value}],
       roku: [{device, key: 'launch', value: app.rokuId}],

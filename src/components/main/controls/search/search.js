@@ -10,11 +10,11 @@ function Search({view, rokuApps, rokuSearchMode, changeViewParent, searchYoutube
   let placeholder = '';
 
   if (view.selected === 'roku') {
-    if (rokuApps.find(app => app.state === 'selected')?.id === 'home') {
-      placeholder = '';
-    } else {
+    //if (rokuApps.find(app => app.state === 'selected')?.id === 'home') {
+      //placeholder = 'Buscar en Roku';
+    //} else {
       placeholder = 'Buscar en ' + rokuApps.find(app => app.state === 'selected')?.label;
-    }
+    //}
     if (view.roku.apps.selected === 'youtube') {
       if (view.roku.apps.youtube.mode) {
         if (view.roku.apps.youtube.mode === 'channel') {
