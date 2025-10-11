@@ -8,13 +8,13 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({rokuPlayState, screens, devices, rokuSearchMode, changeRokuSearchModeParent, screenSelected, view, hdmiSala, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, changeVibrateParent, searchYoutubeParent, searchRokuModeParent}) {
+function Controls({rokuPlayState, screens, devices, rokuSearchMode, changeRokuSearchModeParent, screenSelected, view, hdmiSala, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, triggerVibrateParent, searchYoutubeParent, searchRokuModeParent}) {
   const changeControl = (params) => {
     changeControlParent(params);
   }
 
-  const changeVibrate = (length) => {
-    changeVibrateParent(length);
+  const triggerVibrate = (length) => {
+    triggerVibrateParent(length);
   }
 
   const changeView = (view) => {
@@ -51,7 +51,7 @@ function Controls({rokuPlayState, screens, devices, rokuSearchMode, changeRokuSe
           cableChannels={cableChannels}
           changeControlParent={changeControl}
           changeViewParent={changeView}
-          changeVibrateParent={changeVibrate}>
+          triggerVibrateParent={triggerVibrate}>
         </Levels>
         }
         {hdmiSala.length &&

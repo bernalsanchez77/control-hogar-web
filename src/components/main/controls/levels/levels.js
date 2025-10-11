@@ -1,7 +1,7 @@
 import {useRef} from 'react';
 import './levels.css';
 
-function Levels({screenSelected, view, screens, cableChannels, changeControlParent, changeViewParent, changeVibrateParent}) {
+function Levels({screenSelected, view, screens, cableChannels, changeControlParent, changeViewParent, triggerVibrateParent}) {
   const screen = screens.find(screen => screen.id === screenSelected);
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
@@ -86,11 +86,11 @@ function Levels({screenSelected, view, screens, cableChannels, changeControlPare
     volumeChange.current = 1;
     timeout3s.current = setTimeout(() => {
       volumeChange.current = 5;
-      changeVibrateParent(200);
+      triggerVibrateParent(200);
     }, 1000);
     timeout6s.current = setTimeout(() => {
       volumeChange.current = 10;
-      changeVibrateParent(400);
+      triggerVibrateParent(400);
     }, 2000);
   }
 

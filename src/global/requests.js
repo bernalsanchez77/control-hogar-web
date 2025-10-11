@@ -134,7 +134,7 @@ class Requests {
     } else {
       res = await this.normalApiRequest('getVideosFromYoutube', {q: text}, 'get');
     }
-    if (res.status !== 200) {
+    if (res.status === 200) {
       return res.data.items;
     } else {
       return null;
