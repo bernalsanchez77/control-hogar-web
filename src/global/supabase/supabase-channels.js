@@ -1,7 +1,7 @@
 import supabase from './supabase-client';
 class SupabaseChannels {
     supabaseChannels = {};
-    async subscribeToSupabaseChannel(tableName, callback, timeoutMs = 200) {
+    async subscribeToSupabaseChannel(tableName, callback) {
       if (!this.supabaseChannels[tableName]) {
         this.supabaseChannels[tableName] = {};
       }
@@ -19,70 +19,67 @@ class SupabaseChannels {
         }
       });
 
-      channel.on('subscription_error', async (err) => {
-        console.log('error en la subcription');
-        await this.handleSubscriptionError(tableName, err, 'subscription_error');
-      });
-
       return new Promise((resolve, reject) => {
-        // let settled = false;
-
-        // timeout handling
-        // const timer = setTimeout(async () => {
-        //   if (!settled) {
-        //     settled = true;
-        //     await this.handleSubscriptionError(tableName, 'Timeout', 'TIMEOUT');
-        //     resolve({response: false, error: 'timeout'});
-        //   }
-        // }, timeoutMs);
-
         channel.subscribe(async (status) => {
-          // if (settled) return; // ignore late events
-
           if (this.supabaseChannels[tableName].subscribed) {
-            if (status === 'SUBSCRIBED') {
-              // clearTimeout(timer);
-              // settled = true;
-              console.log('✅ Subscribed to:', tableName);
-              resolve({response: true, error: ''});
-            } else if (['CHANNEL_ERROR', 'TIMED_OUT', 'CLOSED'].includes(status)) {
-              const now = new Date();
-              const hours = String(now.getHours()).padStart(2, '0');
-              const minutes = String(now.getMinutes()).padStart(2, '0');
-              const seconds = String(now.getSeconds()).padStart(2, '0');
-              console.log('Subscription error on ', tableName, 'status: ', status, 'at time: ', `${hours}:${minutes}:${seconds}`);
-              // clearTimeout(timer);
-              // settled = true;
-              await this.handleSubscriptionError(tableName, status, status);
-              resolve({response: false, error: status});
-            } else {
-              console.log('Subscription error for other reason');
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            if (status !== 'SUBSCRIBED') {
+              console.log('Subscription error on', tableName, 'status: ', status, 'at time:', `${hours}:${minutes}:${seconds}`);
+            }
+            switch (status) {
+              case 'SUBSCRIBED':
+                console.log('Subscribed to:', tableName);
+                resolve({success: true, error: ''});
+                break;
+              case 'CHANNEL_ERROR':
+                await this.handleSubscriptionError(tableName, status);
+                resolve({success: false, error: status});
+                break;
+              case 'TIMED_OUT':
+                await this.handleSubscriptionError(tableName, status);
+                resolve({success: false, error: status});
+                break;
+              case 'CLOSED':
+                await this.handleSubscriptionError(tableName, status);
+                resolve({success: false, error: status});
+                break;
+              default:
+                console.warn('Subscription error for other reason');
+                reject({error: status});
             }
           }
         });
       });
     }
 
-    async handleSubscriptionError(tableName, err, type) {
+    async handleSubscriptionError(tableName, type) {
       if (this.supabaseChannels[tableName] && !this.supabaseChannels[tableName].errorHandled) {
         this.supabaseChannels[tableName].errorType = type;
         this.supabaseChannels[tableName].errorHandled = true;
-        console.log('Channel ' + tableName + ' failed type: ' + type + ' error: ', err);
+        console.warn('Channel ' + tableName + ' failed type: ' + type);
         await this.unsubscribeFromSupabaseChannel(tableName);
-        // setTimeout(async () => {
-        //   console.log('Rejoining channel: ' + tableName);
-        //   await this.subscribeToSupabaseChannel(tableName);
-        // }, 5000);
       }
     }
 
-    getChannelState(tableName) {
+    getSupabaseChannelState(tableName) {
       if (this.supabaseChannels[tableName]) {
         return this.supabaseChannels[tableName];
       } else {
         console.log('no channel for: ' + tableName);
         return null;
       }
+    }
+
+    async unsubscribeFromAllSupabaseChannels() {
+      await this.unsubscribeFromSupabaseChannel('hdmiSala');
+      await this.unsubscribeFromSupabaseChannel('rokuApps');
+      await this.unsubscribeFromSupabaseChannel('devices');
+      await this.unsubscribeFromSupabaseChannel('screens');
+      await this.unsubscribeFromSupabaseChannel('youtubeVideosLiz');
+      await this.unsubscribeFromSupabaseChannel('screens');
     }
 
     async unsubscribeFromSupabaseChannel(tableName) {

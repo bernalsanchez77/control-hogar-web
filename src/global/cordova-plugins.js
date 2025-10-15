@@ -27,7 +27,7 @@ class CordovaPlugins {
                   }
                 });
                 await window.cordova.plugins.foregroundFunctionality.startService(function(msg) {}, function(err) {});
-                const wifiSsid = await this.getWifiSSID();
+                let wifiSsid = await this.getWifiSSID();
                 setWifiSsid(wifiSsid);
                 console.log('Current SSID on deviceready:', wifiSsid);
                 window.cordova.plugins.netinfo.startSSIDListener(
@@ -35,10 +35,13 @@ class CordovaPlugins {
                     info.ssid = info.ssid.replace(/"/g, '').trim();
                     if (info.ssid && info.ssid !== wifiSsid) {
                       console.log('SSID changed:', info.ssid);
+                      wifiSsid = info.ssid;
                       setWifiSsid(info.ssid);
                       setTimeout(() => {
                         resume(info.ssid);
                       }, 5000);
+                    } else {
+                      console.log('fallo de ssid changed', info);
                     }
                   },
                   (err) => console.error('SSID listener error:', err)

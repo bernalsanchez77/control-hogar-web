@@ -154,7 +154,6 @@ class Requests {
   async getRokuData(param) {
     if (window.cordova) {
       if (window.cordova?.plugin?.http) {
-        // console.log('Sending get request to Roku');
         const getRequestPromise = new Promise((resolve, reject) => {
           window.cordova.plugin.http.sendRequest(
             `${rokuIp}query/${param}`,
@@ -167,11 +166,8 @@ class Requests {
           setTimeout(() => reject(new Error('Roku not responding')), 2000)
         );
         return Promise.race([getRequestPromise, timeoutPromise]).then((response) => {
-          // console.log('Get request to Roku succeeded');
           return {status: response.status, data: xmlParser.parse(response.data)};
-        }).catch((error) => {
-          console.log('Get request to Roku failed', error);
-        });
+        }).catch((error) => {});
       } else {
         console.log('Cordova HTTP plugin not available');
         return null;
