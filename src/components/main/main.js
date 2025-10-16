@@ -31,6 +31,7 @@ function Main() {
   const [rokuPlayState, setRokuPlayState] = useState({});
   const [wifiSsid, setWifiSsid] = useState('');
   const [supabaseTimeOut, setSupabaseTimeOut] = useState(false);
+  const [noInternet, setNoInternet] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [show, setShow] = useState(true);
   const [theme, setTheme] = useState("black");
@@ -423,6 +424,7 @@ function Main() {
   }, [credential]);
 
   const onResume = useCallback(async (e) => {
+    if (await init.checkInternet) {
     if (credential) {
       let ssid = '';
       if (isApp) {
@@ -435,6 +437,9 @@ function Main() {
       setLoaded(true);
     } else {
       console.log('no credential when resume');
+    }
+    } else {
+      setNoInternet(true);
     }
   }, [resume, credential]);
 
@@ -489,6 +494,7 @@ function Main() {
   }, [screenSelected, resume, getTablesAndSetView]);
 
   const init = useCallback(async () => {
+    if (await utils.checkInternet) {
     const userCredential = localStorage.getItem('user');
     setCredential(userCredential);
     if (userCredential) {
@@ -502,6 +508,9 @@ function Main() {
       } else {
         await onLoad(userCredential);
       }
+    }
+    } else {
+      setNoInternet(true);
     }
   }, [onLoad, setCredential]);
 
