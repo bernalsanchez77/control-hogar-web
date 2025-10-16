@@ -8,7 +8,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     params: { // optional
       // usually channel params like 'schema', 'events'
     },
-    timeout: 10 // milliseconds — default is 10000 (10 seconds)
+    timeout: 10000 // milliseconds — default is 10000 (10 seconds)
   }
 });
 

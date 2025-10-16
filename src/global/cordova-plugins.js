@@ -32,6 +32,7 @@ class CordovaPlugins {
                 console.log('Current SSID on deviceready:', wifiSsid);
                 window.cordova.plugins.netinfo.startSSIDListener(
                   (info) => {
+                    console.log('info ssid changed:', info);
                     info.ssid = info.ssid.replace(/"/g, '').trim();
                     if (info.ssid && info.ssid !== wifiSsid) {
                       console.log('SSID changed:', info.ssid);
@@ -141,6 +142,7 @@ class CordovaPlugins {
     }).catch((err) => {
       console.error("Error getting Api:", err);
     });
+    console.log('SSID:', wifiSsid);
     return wifiSsid.replace(/"/g, '').trim();
   }
 }

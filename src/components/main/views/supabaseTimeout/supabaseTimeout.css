@@ -1,0 +1,38 @@
+.views-supabasetimeout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: sans-serif;
+  min-height: 100vh;
+  width: 100%;
+  position: fixed;
+  color: white;
+}
+.views-supabasetimeout-text {
+  position: absolute;
+  width: 70%;
+  margin-top: -15vh;
+}
+.views-supabasetimeout-text-title {
+  font-size: 18px;
+}
+.views-supabasetimeout-text-description {
+  font-size: 14px;
+}
+.views-supabasetimeout-button {
+  position: absolute;
+  margin-top: 15vh;
+  font-size: 18px;
+}
+.views-supabasetimeout-button button {
+  background-color: rgb(71, 3, 3, 0.8);
+  font-size: 15px;
+  padding: 10px;
+  width: 150px;
+  border: grey 1px solid;
+  height: 6vh;
+  border-radius: 5px;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+}

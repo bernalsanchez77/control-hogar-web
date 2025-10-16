@@ -101,5 +101,22 @@ class Utils {
     firstCharToUpperCase(text) {
       return text.charAt(0).toUpperCase() + text.slice(1)
     }
+    async checkInternet() {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000); // 5 s timeout
+
+        // Use a small, reliable file
+        await fetch('https://www.google.com/favicon.ico', {
+          mode: 'no-cors',
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeout);
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
 }
 export default Utils;

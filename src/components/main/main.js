@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo} from 'react';
 import eruda from 'eruda';
 import Screens from './screens/screens';
 import Devices from './devices/devices';
+import Views from './views/views';
 import Options from './options/options';
 import Notifications from './notifications/notifications';
 import Controls from './controls/controls';
@@ -29,6 +30,7 @@ function Main() {
 
   const [rokuPlayState, setRokuPlayState] = useState({});
   const [wifiSsid, setWifiSsid] = useState('');
+  const [supabaseTimeOut, setSupabaseTimeOut] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [show, setShow] = useState(true);
   const [theme, setTheme] = useState("black");
@@ -103,11 +105,28 @@ function Main() {
     }).then((res) => {
       if (res.success) {
         response = 'SUBSCRIBED';
+        setSupabaseTimeOut(false);
       } else {
-        response = res.error;
+        switch (res.msg) {
+          case 'TIMED_OUT':
+            response = res.msg;
+            console.log('not subscribed, subscription status:', res.msg);
+            setSupabaseTimeOut(true);
+            break;
+          case 'CHANNEL_ERROR':
+            response = res.msg;
+            setSupabaseTimeOut(false);
+            break;
+          case 'CLOSED':
+            response = res.msg;
+            setSupabaseTimeOut(false);
+            break;
+          default:
+            setSupabaseTimeOut(false);
+        }
       }
     }).catch((res) => {
-      response = res.error;
+      response = res.msg;
     });
     return response;
   },[setters]);
@@ -303,7 +322,7 @@ function Main() {
     });
     if (hdmiSalaTable.table) {
       if (hdmiSalaTable.subscriptionResponse === 'SUBSCRIBED') {
-        newView.selected = hdmiSalaTable.data.find(el => el.state === 'selected').id;
+        newView.selected = hdmiSalaTable.table.data.find(el => el.state === 'selected').id;
 
         if (newView.selected === 'roku' && !viewRef.current.roku.apps.selected) {
           rokuAppsTable = await setData('rokuApps', isInit, (change) => {
@@ -313,20 +332,20 @@ function Main() {
               setters.setRokuSearchMode('roku');
             // }
           });
-          if (rokuAppsTable) {
-            const supabaseAppSelected = rokuAppsTable.data.find(row => row.state === 'selected');
+          if (rokuAppsTable.table) {
+            const supabaseAppSelected = rokuAppsTable.table.data.find(row => row.state === 'selected');
             // if (supabaseAppSelected.id !== 'home') {
               setters.setRokuSearchMode('roku');
             // }
             if (rokuActiveApp) {
               if (supabaseAppSelected.rokuId !== rokuActiveApp) {
-                const newId = rokuAppsTable.data.find(app => app.rokuId === rokuActiveApp).id;
+                const newId = rokuAppsTable.table.data.find(app => app.rokuId === rokuActiveApp).id;
                 requests.updateTableInSupabase({
                   current: {currentId: supabaseAppSelected.id, currentTable: 'rokuApps', currentState: ''},
                   new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
                 });
               }
-              await getRokuPlayState(hdmiSalaTable.data);
+              await getRokuPlayState(hdmiSalaTable.table.data);
             }
           } else {
             return {};
@@ -334,16 +353,16 @@ function Main() {
         }
         if (newView.selected === 'cable') {
           cableChannelsTable = await setData('cableChannels', isInit);
-          if (!cableChannelsTable) {
+          if (!cableChannelsTable.table) {
             return {};
           }
         }
         devicesTable = await setData('devices', isInit);
-        if (!devicesTable) {
+        if (!devicesTable.table) {
           return {};
         }
         screensTable = await setData('screens', isInit);
-        if (!screensTable) {
+        if (!screensTable.table) {
           return {};
         }
         requests.sendLogs(isInit ? 'entro': 'regreso', user);
@@ -380,10 +399,11 @@ function Main() {
     const rokuActiveApp = await getRokuActiveApp(ssid);
     const tableData = await getTableData(isInit, rokuActiveApp);
     if (tableData.newView) {
-      changeView(tableData.newView);
+      await changeView(tableData.newView);
     } else {
       if (tableData.hdmiSalaTable) {
-        console.log('not subscribed, subscription status:', tableData.subscriptionResponse);
+        if (tableData.subscriptionResponse === 'TIMED_OUT') {
+        }
       } else {
         console.log('no hdmiSalaTable when resume');
       }
@@ -410,7 +430,7 @@ function Main() {
         setWifiSsid(ssid);
         console.log('Current SSID on resume:', ssid);
       }
-      resume(ssid);
+      await resume(ssid);
       setUserActive(true);
       setLoaded(true);
     } else {
@@ -430,6 +450,32 @@ function Main() {
     }
   }, []);
 
+  const onSupabaseTimeout = async () => {
+    setLoaded(false);
+    await resume(wifiSsid);
+    setLoaded(true);
+  };
+
+  const getTablesAndSetView = useCallback(async (credential, app, rokuActiveApp) => {
+    const tableData = await getTableData(true, rokuActiveApp);
+    if (tableData.newView) {
+      if (tableData.rokuAppsTable.data) {
+        await setView(await viewRouter.changeView(tableData.newView, viewRef.current, [], setters, tableData.rokuAppsTable.table.data));
+      } else {
+        await setView(await viewRouter.changeView(tableData.newView, viewRef.current, [], setters));
+      }
+      onLoadComplete();
+    } else {
+      if (tableData.hdmiSalaTable) {
+        if (tableData.subscriptionResponse === 'TIMED_OUT') {
+          onLoadComplete();
+        }
+      } else {
+        console.warn('no hdmiSalaTable when loading');
+      }
+    }
+  }, [getTableData, onLoadComplete, setters]);
+
   const onLoad = useCallback(async (credential, app) => {
     let ssid = null;
     let rokuActiveApp = null;
@@ -439,21 +485,8 @@ function Main() {
     }
     setTheme(localStorage.getItem('theme'));
     setScreenSelected(localStorage.getItem('screen') || screenSelected);
-    const tableData = await getTableData(true, rokuActiveApp);
-    if (tableData.newView && tableData.rokuAppsTable) {
-      setView(await viewRouter.changeView(tableData.newView, viewRef.current, [], setters, tableData.rokuAppsTable.data));
-      onLoadComplete();
-    } else {
-      if (tableData.hdmiSalaTable) {
-        console.log('not subscribed, subscription status:', tableData.subscriptionResponse);
-        setTimeout(() => {
-          onLoad(credential, app);
-        }, 5000);
-      } else {
-        console.log('no hdmiSalaTable when loading');
-      }
-    }
-  }, [getTableData, setters, screenSelected, resume, onLoadComplete]);
+    await getTablesAndSetView(credential, app, rokuActiveApp);
+  }, [screenSelected, resume, getTablesAndSetView]);
 
   const init = useCallback(async () => {
     const userCredential = localStorage.getItem('user');
@@ -652,64 +685,70 @@ function Main() {
         {(wifiSsid === 'Noky' || (credential === 'owner' || credential === 'dev')) ?
         <div>
           {show ?
-          <div className='main-components--loaded'>
-            <Notifications
-              wifiSsid={wifiSsid}
-              connectedToRoku={connectedToRoku}>
-            </Notifications>
-            {screens.length &&
-            <Screens
-              credential={credential}
-              screenSelected={screenSelected}
-              screens={screens}
-              userActive={userActive}
-              changeScreenParent={changeScreen}>
-            </Screens>
-            }
-            <Controls
-              rokuPlayState={rokuPlayState}
-              screenSelected={screenSelected}
-              view={view}
-              rokuSearchMode={rokuSearchMode}
-              rokuApps={rokuApps}
-              hdmiSala={hdmiSala}
-              devices={devices}
-              youtubeSearchVideos={youtubeSearchVideos}
-              youtubeChannelsLiz={youtubeChannelsLiz}
-              youtubeVideosLiz={youtubeVideosLiz}
-              cableChannels={cableChannels}
-              screens={screens}
-              cableChannelCategories={cableChannelCategories}
-              changeViewParent={changeView}
-              changeControlParent={changeControl}
-              triggerVibrateParent={utils.triggerVibrate}
-              searchYoutubeParent={searchYoutube}
-              searchRokuModeParent={seachRokuMode}
-              changeRokuSearchModeParent={changeRokuSearchMode}>
-            </Controls>
-            {devices.length && !view.roku.apps.selected && !view.devices.device &&
-            <Devices
-              credential={credential}
-              view={view}
-              devices={devices}
-              changeViewParent={changeView}
-              changeControlParent={changeControl}>
-            </Devices>
-            }
-            {!view.roku.apps.selected && !view.devices.device &&
-            <Options
-              theme={theme}
-              changeThemeParent={changeTheme}>
-            </Options>
-            }
-            {credential === 'dev' &&
-            <Dev
-              sendEnabled={sendEnabled}
-              enableSendParent={enableSend}
-              removeStorageParent={removeStorage}>
-            </Dev>
-            }
-          </div> : 
+            supabaseTimeOut ?
+            <Views
+              supabaseTimeout={supabaseTimeOut}
+              restartParent={onSupabaseTimeout}>
+            </Views> : 
+            <div className='main-components--loaded'>
+              <Notifications
+                wifiSsid={wifiSsid}
+                connectedToRoku={connectedToRoku}>
+              </Notifications>
+              {screens.length &&
+              <Screens
+                credential={credential}
+                screenSelected={screenSelected}
+                screens={screens}
+                userActive={userActive}
+                changeScreenParent={changeScreen}>
+              </Screens>
+              }
+              <Controls
+                rokuPlayState={rokuPlayState}
+                screenSelected={screenSelected}
+                view={view}
+                rokuSearchMode={rokuSearchMode}
+                rokuApps={rokuApps}
+                hdmiSala={hdmiSala}
+                devices={devices}
+                youtubeSearchVideos={youtubeSearchVideos}
+                youtubeChannelsLiz={youtubeChannelsLiz}
+                youtubeVideosLiz={youtubeVideosLiz}
+                cableChannels={cableChannels}
+                screens={screens}
+                cableChannelCategories={cableChannelCategories}
+                changeViewParent={changeView}
+                changeControlParent={changeControl}
+                triggerVibrateParent={utils.triggerVibrate}
+                searchYoutubeParent={searchYoutube}
+                searchRokuModeParent={seachRokuMode}
+                changeRokuSearchModeParent={changeRokuSearchMode}>
+              </Controls>
+              {devices.length && !view.roku.apps.selected && !view.devices.device &&
+              <Devices
+                credential={credential}
+                view={view}
+                devices={devices}
+                changeViewParent={changeView}
+                changeControlParent={changeControl}>
+              </Devices>
+              }
+              {!view.roku.apps.selected && !view.devices.device &&
+              <Options
+                theme={theme}
+                changeThemeParent={changeTheme}>
+              </Options>
+              }
+              {credential === 'dev' &&
+              <Dev
+                sendEnabled={sendEnabled}
+                enableSendParent={enableSend}
+                removeStorageParent={removeStorage}>
+              </Dev>
+              }
+            </div>
+          : 
           <div className='main-components--loading'>
             <div className="loading-container">
               <span className="loading-text">Cargando</span>

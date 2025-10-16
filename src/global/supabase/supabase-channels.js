@@ -32,23 +32,23 @@ class SupabaseChannels {
             switch (status) {
               case 'SUBSCRIBED':
                 console.log('Subscribed to:', tableName);
-                resolve({success: true, error: ''});
+                resolve({success: true, msg: status});
                 break;
               case 'CHANNEL_ERROR':
                 await this.handleSubscriptionError(tableName, status);
-                resolve({success: false, error: status});
+                resolve({success: false, msg: status});
                 break;
               case 'TIMED_OUT':
                 await this.handleSubscriptionError(tableName, status);
-                resolve({success: false, error: status});
+                resolve({success: false, msg: status});
                 break;
               case 'CLOSED':
                 await this.handleSubscriptionError(tableName, status);
-                resolve({success: false, error: status});
+                resolve({success: false, msg: status});
                 break;
               default:
                 console.warn('Subscription error for other reason');
-                reject({error: status});
+                reject({success: false, msg: status});
             }
           }
         });
@@ -68,7 +68,7 @@ class SupabaseChannels {
       if (this.supabaseChannels[tableName]) {
         return this.supabaseChannels[tableName];
       } else {
-        console.log('no channel for: ' + tableName);
+        console.warn('no channel for: ' + tableName);
         return null;
       }
     }
