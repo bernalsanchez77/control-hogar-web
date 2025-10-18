@@ -2,14 +2,8 @@ import Utils from './utils';
 const utils = new Utils();
 let wifiSsid = '';
 let networkType = '';
-let setWifiSsid = null;
-let setNetworkType = null;
-let setInternet = null;
 class CordovaPlugins {
-  async getPermissions(setWifiSsidParam, setNetworkTypeParam, setInternetParam) {
-    setWifiSsid = setWifiSsidParam;
-    setNetworkType = setNetworkTypeParam;
-    setInternet = setInternetParam;
+  async getPermissions() {
     var permissions = window.cordova.plugins.permissions;
     await permissions.requestPermission(
       permissions.ACCESS_FINE_LOCATION,
@@ -58,7 +52,7 @@ class CordovaPlugins {
     );
   }
 
-  async startSsidListener(ssidParam) {
+  async startSsidListener(ssidParam, setWifiSsid) {
     window.cordova.plugins.netinfo.startSSIDListener(
       async (info) => {
         info.ssid = info.ssid.replace(/"/g, '').trim();
@@ -74,7 +68,7 @@ class CordovaPlugins {
     );
   }
 
-  async startNetworkTypeListener(networkTypeParam) {
+  async startNetworkTypeListener(networkTypeParam, setNetworkType, setInternet) {
     window.cordova.plugins.networkinfo.startNetworkTypeListener(
       async (info) => {
         info.networkType = info.networkType.replace(/"/g, '').trim();
