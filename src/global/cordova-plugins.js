@@ -58,11 +58,11 @@ class CordovaPlugins {
     );
   }
 
-  async startSsidListener() {
+  async startSsidListener(ssidParam) {
     window.cordova.plugins.netinfo.startSSIDListener(
       async (info) => {
         info.ssid = info.ssid.replace(/"/g, '').trim();
-        if (info.ssid && info.ssid !== wifiSsid) {
+        if (info.ssid && info.ssid !== ssidParam) {
           console.log('ssid changed:', info.ssid);
           wifiSsid = info.ssid;
           setTimeout(async() => {
@@ -84,11 +84,11 @@ class CordovaPlugins {
     );
   }
 
-  async startNetworkTypeListener() {
+  async startNetworkTypeListener(networkTypeParam) {
     window.cordova.plugins.networkinfo.startNetworkTypeListener(
       async (info) => {
         info.networkType = info.networkType.replace(/"/g, '').trim();
-        if (info.networkType && info.networkType !== networkType) {
+        if (info.networkType && info.networkType !== networkTypeParam) {
           console.log('network type changed:', info.networkType);
           networkType = info.networkType;
           setTimeout(async() => {
