@@ -494,7 +494,7 @@ function Main() {
     let ssid = '';
     let netType = '';
     if (isApp) {
-      await CordovaPlugins.getPermissions(setWifiSsid, setNetworkType, setInternet);
+      await CordovaPlugins.getPermissions();
       ssid = await CordovaPlugins.getWifiSSID();
       netType = await CordovaPlugins.getNetworkType();
     }
@@ -523,8 +523,8 @@ function Main() {
           console.log('position: ', parseInt(playState.position) / 1000);
         }
       }, 5000);
-      CordovaPlugins.startSsidListener(ssid);
-      CordovaPlugins.startNetworkTypeListener(netType);
+      CordovaPlugins.startSsidListener(ssid, setWifiSsid);
+      CordovaPlugins.startNetworkTypeListener(netType, setNetworkType, setInternet);
     }
     applicationRunningRef.current = true;
   }, [onLoad]);
