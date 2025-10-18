@@ -67,17 +67,7 @@ class CordovaPlugins {
           wifiSsid = info.ssid;
           setTimeout(async() => {
             setWifiSsid(info.ssid);
-            const internetConnection = await utils.checkInternet();
-            if (internetConnection) {
-              console.log('Internet connected by plugin ssid change');
-              setInternet(true);
-            } else {
-              console.log('No internet by plugin ssid change');
-              setInternet(false);
-            }
           }, 5000);
-        } else {
-          // console.log('fallo de ssid changed', info);
         }
       },
       (err) => console.error('ssid listener error:', err)
@@ -102,8 +92,6 @@ class CordovaPlugins {
               setInternet(false);
             }
           }, 5000);
-        } else {
-          // console.log('fallo de network type changed', info);
         }
       },
       (err) => console.error('SSID listener error:', err)
