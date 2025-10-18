@@ -523,8 +523,8 @@ function Main() {
           console.log('position: ', parseInt(playState.position) / 1000);
         }
       }, 5000);
-      CordovaPlugins.startSsidListener();
-      CordovaPlugins.startNetworkTypeListener();
+      CordovaPlugins.startSsidListener(ssid);
+      CordovaPlugins.startNetworkTypeListener(netType);
     }
     applicationRunningRef.current = true;
   }, [onLoad]);
