@@ -3,10 +3,10 @@ import supabaseChannels from './supabase/supabase-channels';
 import Requests from './requests';
 const requests = new Requests();
 class ViewRouter {
-  async subscribeToSupabaseChannel(tableName, setters) {
+  async subscribeToSupabaseChannel(tableName, setters, setInternet) {
     await supabaseChannels.subscribeToSupabaseChannel(tableName, (itemName, newItem) => {
       setters[itemName](items => items.map(item => item.id === newItem.id ? newItem : item));
-    }).then((res) => {
+    }, setInternet, true).then((res) => {
       if (res.success) {
         return 'subscribed';
       } else {
@@ -16,7 +16,7 @@ class ViewRouter {
       return res.error;
     });
   };
-  async changeView(newView, currentView, youtubeChannelsLiz, setters, rokuApps) {
+  async changeView(newView, currentView, youtubeChannelsLiz, setters, rokuApps, setInternet) {
     if (newView.selected === 'cable') {
       // cable selected
       if (currentView.selected === 'cable') {
@@ -34,7 +34,7 @@ class ViewRouter {
         if (channelsTable) {
           setters.setCableChannels(channelsTable.data);
           setters.setRokuSearchMode('default');
-          const subscriptionResponse = await this.subscribeToSupabaseChannel('cableChannels', setters);
+          const subscriptionResponse = await this.subscribeToSupabaseChannel('cableChannels', setters, setInternet);
           if (currentView.roku.apps.selected) {
             // was in an app
             if (currentView.roku.apps.selected === 'youtube') {
@@ -75,7 +75,7 @@ class ViewRouter {
                   const videos = await requests.getTableFromSupabase('youtubeVideosLiz');
                   if (videos) {
                     setters.setYoutubeVideosLiz(videos.data);
-                    const subscriptionResponse = await this.subscribeToSupabaseChannel('youtubeVideosLiz', setters);
+                    const subscriptionResponse = await this.subscribeToSupabaseChannel('youtubeVideosLiz', setters, setInternet);
                     setters.setRokuSearchMode('default');
                   }
                 }
@@ -114,7 +114,7 @@ class ViewRouter {
             const apps = await requests.getTableFromSupabase('rokuApps');
             if (apps) {
               setters.setRokuApps(apps.data);
-              const subscriptionResponse = await this.subscribeToSupabaseChannel('rokuApps', setters);
+              const subscriptionResponse = await this.subscribeToSupabaseChannel('rokuApps', setters, setInternet);
               // if (rokuApps.find(app => app.state === 'selected')?.id !== 'home') {
                 setters.setRokuSearchMode('roku');
               // } else {
@@ -130,7 +130,7 @@ class ViewRouter {
         const apps = await requests.getTableFromSupabase('rokuApps');
         if (apps) {
           setters.setRokuApps(apps.data);
-          const subscriptionResponse = await this.subscribeToSupabaseChannel('rokuApps', setters);
+          const subscriptionResponse = await this.subscribeToSupabaseChannel('rokuApps', setters, setInternet);
           // if (apps.data.find(app => app.state === 'selected')?.id !== 'home') {
             setters.setRokuSearchMode('roku');
           // }

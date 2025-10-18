@@ -36,11 +36,6 @@
   background: radial-gradient(ellipse, #1a0000 0%, #330000 60%, #660000 100%);
 }
 
-
-
-
-
-
 .main-components {
   max-width: 450px;
   width: 100%;
@@ -48,21 +43,8 @@
   font-size: 0;
 }
 
-.main-components--loaded {
-
-}
-
-.main-components--loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  width: 100%;
-  position: fixed;
-}
-
 .fade-in {
-  opacity: 0;
+  /* opacity: 0; */
 }
 body.transition .fade-in {
   transition: opacity 0.5s ease;
@@ -71,47 +53,3 @@ body.loaded .fade-in {
   opacity: 1;
 }
 
-
-.loading-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: sans-serif;
-  font-size: 18px;
-  color: white;
-}
-
-.loading-dots {
-  display: flex;
-  margin-left: 5px;
-  overflow: hidden;
-}
-
-.dot {
-  font-size: 1.2em; /* Makes the dots a bit bigger than the text */
-  opacity: 0;
-  animation: pulse 1.4s infinite ease-in-out;
-}
-
-.dot:nth-child(1) {
-  animation-delay: 0.2s;
-}
-
-.dot:nth-child(2) {
-  animation-delay: 0.4s;
-}
-
-.dot:nth-child(3) {
-  animation-delay: 0.6s;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0;
-    transform: translateY(0);
-  }
-  50% {
-    opacity: 1;
-    transform: translateY(-5px);
-  }
-}

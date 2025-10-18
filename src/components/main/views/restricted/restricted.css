@@ -1,4 +1,4 @@
-.views-supabasetimeout {
+.views-restricted {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,23 +9,23 @@
   color: white;
   text-align: center;
 }
-.views-supabasetimeout-text {
+.views-restricted-text {
   position: absolute;
   width: 70%;
-  margin-top: -15vh;
+  /* margin-top: -15vh; */
 }
-.views-supabasetimeout-text-title {
+.views-restricted-text-title {
   font-size: 18px;
 }
-.views-supabasetimeout-text-description {
+.views-restricted-text-description {
   font-size: 14px;
 }
-.views-supabasetimeout-button {
+.views-restricted-button {
   position: absolute;
   margin-top: 15vh;
   font-size: 18px;
 }
-.views-supabasetimeout-button button {
+.views-restricted-button button {
   background-color: rgb(71, 3, 3, 0.8);
   font-size: 15px;
   padding: 10px;

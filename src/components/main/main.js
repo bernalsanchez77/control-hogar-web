@@ -6,7 +6,6 @@ import Views from './views/views';
 import Options from './options/options';
 import Notifications from './notifications/notifications';
 import Controls from './controls/controls';
-import Credentials from './credentials/credentials';
 import Dev from './dev/dev';
 import Utils from '../../global/utils';
 import supabaseChannels from '../../global/supabase/supabase-channels';
@@ -30,10 +29,11 @@ function Main() {
 
   const [rokuPlayState, setRokuPlayState] = useState({});
   const [wifiSsid, setWifiSsid] = useState('');
+  const [networkType, setNetworkType] = useState('');
   const [supabaseTimeOut, setSupabaseTimeOut] = useState(false);
-  const [noInternet, setNoInternet] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const [show, setShow] = useState(true);
+  const [internet, setInternet] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [restricted, setRestricted] = useState(false);
   const [theme, setTheme] = useState("black");
   const [rokuSearchMode, setRokuSearchMode] = useState('default');
   // const [inRange, setInRange] = useState(false);
@@ -67,6 +67,8 @@ function Main() {
   const screenSelectedRef = useRef(screenSelected);
   const youtubeChannelsLizRef = useRef(youtubeChannelsLiz);
   const testRokuPlayStateIntervalRef = useRef({});
+  const internetIntervalRef = useRef({});
+  const applicationRunningRef = useRef(false);
 
   // useMemo variables (computed)
 
@@ -103,7 +105,7 @@ function Main() {
       if (callback) {
         await callback(newItem);
       }
-    }).then((res) => {
+    }, setInternet, true).then((res) => {
       if (res.success) {
         response = 'SUBSCRIBED';
         setSupabaseTimeOut(false);
@@ -221,11 +223,8 @@ function Main() {
     if (userCredential === 'guest') {
       localStorage.setItem('user', userCredential);
       setCredential(userCredential);
-      if (isApp) {
-        onLoad(userCredential, true);
-      } else {
-        onLoad(userCredential);
-      }
+      setLoading(true);
+      onLoad();
     } else {
       const response = await requests.setCredentials(userCredential);
       if (response.status === 200 && response.data.validUser) {
@@ -237,11 +236,8 @@ function Main() {
           localStorage.setItem('user', 'owner');
           setCredential('owner');
         }
-        if (isApp) {
-          onLoad(userCredential, true);
-        } else {
-          onLoad(userCredential);
-        }
+        setLoading(true);
+        onLoad();
       }
     }
   };
@@ -289,17 +285,9 @@ function Main() {
     }
   }, [changeView]);
 
-  const getRokuActiveApp = async (ssid) => {
+  const getRokuActiveApp = useCallback(async (ssid) => {
     if (ssid === 'Noky') {
       const rokuActiveApp = await Roku.getRokuActiveApp(setConnectedToRoku);
-      if (!testRokuPlayStateIntervalRef.current) {
-        testRokuPlayStateIntervalRef.current = setInterval(async () => {
-          const playState = await Roku.getRokuPlayState(setRokuPlayState);
-          if (playState && playState.state === 'play') {
-            console.log('position: ', parseInt(playState.position) / 1000);
-          }
-        }, 5000);
-      }
       return rokuActiveApp;
     } else {
       if (testRokuPlayStateIntervalRef.current) {
@@ -308,7 +296,7 @@ function Main() {
       }
       return null;
     }
-  };
+  }, []);
 
   const getTableData = useCallback(async (isInit, rokuActiveApp) => {
     let rokuAppsTable = {};
@@ -410,58 +398,51 @@ function Main() {
       }
     }
     // setInRange(await utils.getInRange());
-  }, [getTableData, changeView]);
+  }, [getTableData, changeView, getRokuActiveApp]);
 
   const onPause = useCallback(async (e) => {
-    if (credential) {
-      document.body.classList.remove("transition");
-      setUserActive(false);
-      setLoaded(false);
+    document.body.classList.remove("transition");
+    setUserActive(false);
+    if (internet) {
       requests.sendLogs('salio', user);
-    } else {
-      console.log('no credential when pause');
     }
-  }, [credential]);
+  }, [internet]);
 
   const onResume = useCallback(async (e) => {
-    if (await init.checkInternet) {
-    if (credential) {
+    if (internet && !restricted && credential) {
       let ssid = '';
+      let netType = '';
       if (isApp) {
         ssid = await CordovaPlugins.getWifiSSID();
+        netType = await CordovaPlugins.getNetworkType();
         setWifiSsid(ssid);
+        setNetworkType(netType);
         console.log('Current SSID on resume:', ssid);
       }
       await resume(ssid);
-      setUserActive(true);
-      setLoaded(true);
-    } else {
-      console.log('no credential when resume');
     }
-    } else {
-      setNoInternet(true);
-    }
-  }, [resume, credential]);
+    setUserActive(true);
+  }, [resume, internet, credential, restricted]);
 
   const onLoadComplete = useCallback(() => {
     if (document.readyState === 'complete') {
       window.history.replaceState(null, "", window.location.pathname + window.location.search);
-      setLoaded(true);
     } else {
       window.addEventListener('load', async () => {
         window.history.replaceState(null, "", window.location.pathname + window.location.search);
-        setLoaded(true);
       });
     }
   }, []);
 
-  const onSupabaseTimeout = async () => {
-    setLoaded(false);
-    await resume(wifiSsid);
-    setLoaded(true);
-  };
-
-  const getTablesAndSetView = useCallback(async (credential, app, rokuActiveApp) => {
+  const onLoad = useCallback(async (ssid, netType) => {
+    ssid = ssid || wifiSsid;
+    netType = netType || networkType;
+    let rokuActiveApp = null;
+    if (isApp) {
+      rokuActiveApp = await getRokuActiveApp(ssid);
+    }
+    setTheme(localStorage.getItem('theme'));
+    setScreenSelected(localStorage.getItem('screen') || screenSelected);
     const tableData = await getTableData(true, rokuActiveApp);
     if (tableData.newView) {
       if (tableData.rokuAppsTable.data) {
@@ -479,40 +460,74 @@ function Main() {
         console.warn('no hdmiSalaTable when loading');
       }
     }
-  }, [getTableData, onLoadComplete, setters]);
+    setLoading(false);
+  }, [screenSelected, getTableData, onLoadComplete, setters, getRokuActiveApp, wifiSsid, networkType]);
 
-  const onLoad = useCallback(async (credential, app) => {
-    let ssid = null;
-    let rokuActiveApp = null;
-    if (app) {
-      ssid = await CordovaPlugins.getPermissions(setWifiSsid, resume);
-      rokuActiveApp = await getRokuActiveApp(ssid);
+  const checkInternetConnection = async () => {
+    const internetConnection = await utils.checkInternet();
+    if (internetConnection) {
+      setInternet(true);
+    } else {
+      setInternet(false);
     }
-    setTheme(localStorage.getItem('theme'));
-    setScreenSelected(localStorage.getItem('screen') || screenSelected);
-    await getTablesAndSetView(credential, app, rokuActiveApp);
-  }, [screenSelected, resume, getTablesAndSetView]);
+    return internetConnection;
+  };
 
-  const init = useCallback(async () => {
-    if (await utils.checkInternet) {
+  const checkSavedCredential = () => {
     const userCredential = localStorage.getItem('user');
     setCredential(userCredential);
-    if (userCredential) {
-      if (userCredential === 'dev') {
-        eruda.init();
-      }
-      if (isApp) {
-        document.addEventListener('deviceready', async () => {
-          await onLoad(userCredential, true);
-        });
+    return userCredential;
+  };
+
+  const checkRestricted = async (ssid, userCredential) => {
+    let userRestricted = false;
+    if (ssid !== 'Noky' && userCredential === 'guest') {
+      setRestricted(true);
+      userRestricted = true;
+    }
+    return userRestricted;
+  };
+
+  const init = useCallback(async () => {
+    const internetConnection = await checkInternetConnection();
+    const userCredential = await checkSavedCredential();
+    let ssid = '';
+    let netType = '';
+    if (isApp) {
+      await CordovaPlugins.getPermissions(setWifiSsid, setNetworkType, setInternet);
+      ssid = await CordovaPlugins.getWifiSSID();
+      netType = await CordovaPlugins.getNetworkType();
+    }
+    const userRestricted = await checkRestricted(ssid, userCredential);
+
+    if (internetConnection) {
+      if (userCredential && !userRestricted) {
+        if (userCredential === 'dev') {
+          // eruda.init();
+        }
+        await onLoad(ssid, netType);
       } else {
-        await onLoad(userCredential);
+        setLoading(false);
       }
-    }
     } else {
-      setNoInternet(true);
+      setLoading(false);
+      setInternet(false);
     }
-  }, [onLoad, setCredential]);
+    if (isApp) {
+      testRokuPlayStateIntervalRef.current = setInterval(async () => {
+        const playState = await Roku.getRokuPlayState(setRokuPlayState);
+        if (playState && playState.state === 'play') {
+          if (wifiSsid !== 'Noky') {
+            setWifiSsid('Noky');
+          }
+          console.log('position: ', parseInt(playState.position) / 1000);
+        }
+      }, 5000);
+      CordovaPlugins.startSsidListener();
+      CordovaPlugins.startNetworkTypeListener();
+    }
+    applicationRunningRef.current = true;
+  }, [onLoad]);
 
   useEffect(() => {
     viewRef.current = view;
@@ -539,21 +554,95 @@ function Main() {
   }, [youtubeChannelsLiz]);
 
   useEffect(() => {
-    document.body.classList.add("transition");
-    if (loaded) {
-      document.body.classList.remove("loaded");
-      setTimeout(() => {
-        setShow(true);
-        document.body.classList.add("loaded");
-      }, 250);
+    const cleanup = () => {
+      if (internetIntervalRef.current) {
+        clearInterval(internetIntervalRef.current);
+        internetIntervalRef.current = null;
+      }
+    };
+    if (internet) {
+      cleanup();
     } else {
-      document.body.classList.remove("loaded");
-      setTimeout(() => {
-        setShow(false);
-        document.body.classList.add("loaded");
-      }, 250);
+      if (!internetIntervalRef.current) {
+        internetIntervalRef.current = setInterval(async () => {
+          const internetConnection = await utils.checkInternet();
+          if (internetConnection) {
+            console.log('Internet connected by interval');
+            clearInterval(internetIntervalRef.current);
+            internetIntervalRef.current = null;
+            setInternet(true);
+            if (!restricted && credential) {
+              if (applicationRunningRef.current) {
+                await supabaseChannels.subscribeToAllSupabaseChannels();
+              } else {
+                await onLoad();
+              }
+            }
+          } else {
+            console.log('No internet by interval');
+          }
+        }, 5000);
+      }
     }
-  }, [loaded]);
+    return cleanup;
+  }, [internet, credential, onLoad, restricted]);
+
+  useEffect(() => {
+    const userCredential = localStorage.getItem('user');
+    if (wifiSsid === 'Noky' && userCredential === 'guest') {
+      console.log('ssid changed to Noky, removing restriction');
+      setRestricted(false);
+      if (!applicationRunningRef.current) {
+        console.log('loading app for guest after ssid changed to Noky');
+        setLoading(true);
+        onLoad();
+      }
+    } else if (wifiSsid !== '') {
+      if (userCredential === 'guest') {
+        console.log('ssid changed to other, adding restriction');
+        setRestricted(true);
+      } else {
+        if (!applicationRunningRef.current) {
+          console.log('loading app for owner after ssid changed to other');
+          setLoading(true);
+          onLoad();
+        }
+      }
+    }
+  }, [wifiSsid, onLoad]);
+
+  useEffect(() => {
+    const userCredential = localStorage.getItem('user');
+    if (networkType === 'wifi') {
+      console.log('network type changed to Wifi, doing nothing');
+    } else if (networkType === 'cellular') {
+      if (userCredential === 'guest') {
+        console.log('network type changed to cellular, adding restriction');
+        setRestricted(true);
+      } else {
+        if (!applicationRunningRef.current) {
+          console.log('loading app for owner after network type changed to other');
+          setLoading(true);
+          onLoad();
+        }
+      }
+    }
+  }, [networkType, credential, onLoad]);
+
+  useEffect(() => {
+    // document.body.classList.add("transition");
+    // if (loaded) {
+    //   document.body.classList.remove("loaded");
+    //   setTimeout(() => {
+    //     document.body.classList.add("loaded");
+    //   }, 2500);
+    // } else {
+    //   document.body.classList.remove("loaded");
+    //   setTimeout(() => {
+    //     document.body.classList.add("loaded");
+    //   }, 2500);
+    // }
+  }, []);
 
   const enableSend = () => {
     if (sendEnabled === true) {
@@ -571,6 +660,20 @@ function Main() {
     utils.triggerVibrate();
     setScreenSelected(screen);
     localStorage.setItem('screen', screen);
+  };
+
+  const onSupabaseTimeout = async () => {
+    await resume(wifiSsid);
+  };
+
+  const onInternet = async () => {
+    await resume(wifiSsid);
+  };
+
+  const viewsFunctionMap = {setCredentials, onSupabaseTimeout, onInternet};
+
+  const viewsFunction = (fn, params) => {
+    viewsFunctionMap[fn](params);
   };
 
   const onBack = useCallback((e) => {
@@ -678,103 +781,87 @@ function Main() {
   }, [onBack, onVolumeUp, onVolumeDown, onPause, onResume, onVisibilityChange]);
 
   if (!initializedRef.current) {
-    init();
+    eruda.init();
+    if (isApp) {
+      document.addEventListener('deviceready', async () => {
+        init();
+      });
+    } else {
+      init();
+    }
     initializedRef.current = true;
   }
 
   return (
     <div className={`main fade-in main-${theme}`}>
-      {!credential &&
-      <Credentials
-        setCredentialsParent={setCredentials}>
-      </Credentials>
-      }
-      {credential &&
+      {!loading && internet && !restricted && credential && !supabaseTimeOut ?
       <div className='main-components'>
-        {(wifiSsid === 'Noky' || (credential === 'owner' || credential === 'dev')) ?
-        <div>
-          {show ?
-            supabaseTimeOut ?
-            <Views
-              supabaseTimeout={supabaseTimeOut}
-              restartParent={onSupabaseTimeout}>
-            </Views> : 
-            <div className='main-components--loaded'>
-              <Notifications
-                wifiSsid={wifiSsid}
-                connectedToRoku={connectedToRoku}>
-              </Notifications>
-              {screens.length &&
-              <Screens
-                credential={credential}
-                screenSelected={screenSelected}
-                screens={screens}
-                userActive={userActive}
-                changeScreenParent={changeScreen}>
-              </Screens>
-              }
-              <Controls
-                rokuPlayState={rokuPlayState}
-                screenSelected={screenSelected}
-                view={view}
-                rokuSearchMode={rokuSearchMode}
-                rokuApps={rokuApps}
-                hdmiSala={hdmiSala}
-                devices={devices}
-                youtubeSearchVideos={youtubeSearchVideos}
-                youtubeChannelsLiz={youtubeChannelsLiz}
-                youtubeVideosLiz={youtubeVideosLiz}
-                cableChannels={cableChannels}
-                screens={screens}
-                cableChannelCategories={cableChannelCategories}
-                changeViewParent={changeView}
-                changeControlParent={changeControl}
-                triggerVibrateParent={utils.triggerVibrate}
-                searchYoutubeParent={searchYoutube}
-                searchRokuModeParent={seachRokuMode}
-                changeRokuSearchModeParent={changeRokuSearchMode}>
-              </Controls>
-              {devices.length && !view.roku.apps.selected && !view.devices.device &&
-              <Devices
-                credential={credential}
-                view={view}
-                devices={devices}
-                changeViewParent={changeView}
-                changeControlParent={changeControl}>
-              </Devices>
-              }
-              {!view.roku.apps.selected && !view.devices.device &&
-              <Options
-                theme={theme}
-                changeThemeParent={changeTheme}>
-              </Options>
-              }
-              {credential === 'dev' &&
-              <Dev
-                sendEnabled={sendEnabled}
-                enableSendParent={enableSend}
-                removeStorageParent={removeStorage}>
-              </Dev>
-              }
-            </div>
-          : 
-          <div className='main-components--loading'>
-            <div className="loading-container">
-              <span className="loading-text">Cargando</span>
-              <div className="loading-dots">
-                <span className="dot">.</span>
-                <span className="dot">.</span>
-                <span className="dot">.</span>
-              </div>
-            </div>
-          </div>
-          }
-        </div> :
-        <div>
-          <span style={{color: "white"}}>Fuera del Area Permitida</span>
-        </div>
-        }
-      </div>
+            <Notifications
+              wifiSsid={wifiSsid}
+              connectedToRoku={connectedToRoku}>
+            </Notifications>
+            {screens.length &&
+            <Screens
+              credential={credential}
+              screenSelected={screenSelected}
+              screens={screens}
+              userActive={userActive}
+              changeScreenParent={changeScreen}>
+            </Screens>
+            }
+            <Controls
+              rokuPlayState={rokuPlayState}
+              screenSelected={screenSelected}
+              view={view}
+              rokuSearchMode={rokuSearchMode}
+              rokuApps={rokuApps}
+              hdmiSala={hdmiSala}
+              devices={devices}
+              youtubeSearchVideos={youtubeSearchVideos}
+              youtubeChannelsLiz={youtubeChannelsLiz}
+              youtubeVideosLiz={youtubeVideosLiz}
+              cableChannels={cableChannels}
+              screens={screens}
+              cableChannelCategories={cableChannelCategories}
+              changeViewParent={changeView}
+              changeControlParent={changeControl}
+              triggerVibrateParent={utils.triggerVibrate}
+              searchYoutubeParent={searchYoutube}
+              searchRokuModeParent={seachRokuMode}
+              changeRokuSearchModeParent={changeRokuSearchMode}>
+            </Controls>
+            {devices.length && !view.roku.apps.selected && !view.devices.device &&
+            <Devices
+              credential={credential}
+              view={view}
+              devices={devices}
+              changeViewParent={changeView}
+              changeControlParent={changeControl}>
+            </Devices>
+            }
+            {!view.roku.apps.selected && !view.devices.device &&
+            <Options
+              theme={theme}
+              changeThemeParent={changeTheme}>
+            </Options>
+            }
+            {credential === 'dev' &&
+            <Dev
+              sendEnabled={sendEnabled}
+              enableSendParent={enableSend}
+              removeStorageParent={removeStorage}>
+            </Dev>
+            }
+
+      </div> :
+      <Views
+        loading={loading}
+        internet={internet}
+        restricted={restricted}
+        credential={credential}
+        supabaseTimeout={supabaseTimeOut}
+        restartParent={viewsFunction}>
+      </Views>
       }
     </div>
   );

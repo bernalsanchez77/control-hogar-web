@@ -1,5 +1,15 @@
+import Utils from './utils';
+const utils = new Utils();
+let wifiSsid = '';
+let networkType = '';
+let setWifiSsid = null;
+let setNetworkType = null;
+let setInternet = null;
 class CordovaPlugins {
-  async getPermissions(setWifiSsid, resume) {
+  async getPermissions(setWifiSsidParam, setNetworkTypeParam, setInternetParam) {
+    setWifiSsid = setWifiSsidParam;
+    setNetworkType = setNetworkTypeParam;
+    setInternet = setInternetParam;
     var permissions = window.cordova.plugins.permissions;
     await permissions.requestPermission(
       permissions.ACCESS_FINE_LOCATION,
@@ -27,27 +37,12 @@ class CordovaPlugins {
                   }
                 });
                 await window.cordova.plugins.foregroundFunctionality.startService(function(msg) {}, function(err) {});
-                let wifiSsid = await this.getWifiSSID();
-                setWifiSsid(wifiSsid);
-                console.log('Current SSID on deviceready:', wifiSsid);
-                window.cordova.plugins.netinfo.startSSIDListener(
-                  (info) => {
-                    console.log('info ssid changed:', info);
-                    info.ssid = info.ssid.replace(/"/g, '').trim();
-                    if (info.ssid && info.ssid !== wifiSsid) {
-                      console.log('SSID changed:', info.ssid);
-                      wifiSsid = info.ssid;
-                      setWifiSsid(info.ssid);
-                      setTimeout(() => {
-                        resume(info.ssid);
-                      }, 5000);
-                    } else {
-                      console.log('fallo de ssid changed', info);
-                    }
-                  },
-                  (err) => console.error('SSID listener error:', err)
-                );
-                return wifiSsid;
+                // wifiSsid = await this.getWifiSSID();
+                // setWifiSsid(wifiSsid);
+                // console.log('ssid on deviceready:', wifiSsid);
+                // networkType = await this.getNetworkType();
+                // setNetworkType(networkType);
+                // console.log('network type on deviceready:', networkType);
               } else {
                 console.log('no notification permission');
                 return false;
@@ -61,73 +56,58 @@ class CordovaPlugins {
       },
       async () => {console.error("Permission request failed");}
     );
-    // await permissions.requestPermission(
-    //   permissions.POST_NOTIFICATIONS,
-    //   async (status) => {
-    //     if (status.hasPermission) {
-    //       setPostNotificationsPermision(true);
+  }
 
-    //       if (window.cordova.plugins.backgroundMode) {
-    //         window.cordova.plugins.backgroundMode.setDefaults({
-    //           silent: true
-    //         });
+  async startSsidListener() {
+    window.cordova.plugins.netinfo.startSSIDListener(
+      async (info) => {
+        info.ssid = info.ssid.replace(/"/g, '').trim();
+        if (info.ssid && info.ssid !== wifiSsid) {
+          console.log('ssid changed:', info.ssid);
+          wifiSsid = info.ssid;
+          setTimeout(async() => {
+            setWifiSsid(info.ssid);
+            const internetConnection = await utils.checkInternet();
+            if (internetConnection) {
+              console.log('Internet connected by plugin ssid change');
+              setInternet(true);
+            } else {
+              console.log('No internet by plugin ssid change');
+              setInternet(false);
+            }
+          }, 5000);
+        } else {
+          // console.log('fallo de ssid changed', info);
+        }
+      },
+      (err) => console.error('ssid listener error:', err)
+    );
+  }
 
-    //         // window.cordova.plugins.backgroundMode.setDefaults({
-    //         //   title: 'My App',
-    //         //   text: 'Running in background',
-    //         //   icon: 'ic_notification', // from res/drawable
-    //         //   color: 'F14F4D',
-    //         //   hidden: true,
-    //         //   bigText: false,
-    //         // });
-
-    //         window.cordova.plugins.backgroundMode.enable();
-    //         let backgroundInterval = null;
-    //         window.cordova.plugins.backgroundMode.on('activate', function () {
-    //           window.cordova.plugins.backgroundMode.disableWebViewOptimizations();
-    //           if (!backgroundInterval) {
-    //             backgroundInterval = setInterval(function () {
-    //               console.log('Still running in background...');
-    //             }, 5000);
-    //           }
-    //         });
-    //         window.cordova.plugins.backgroundMode.on('deactivate', function () {
-    //           if (backgroundInterval) {
-    //             clearInterval(backgroundInterval);
-    //             backgroundInterval = null;
-    //           }
-    //         });
-    //       }
-
-
-
-    //       if (window.cordova.plugins.foregroundFunctionality) {
-    //         await window.cordova.plugins.foregroundFunctionality.startService(
-    //           function(msg) {},
-    //           function(err) { console.error(err); }
-    //         );
-    //       }
-    //       if (window.cordova.plugins.foregroundService) {
-    //         // window.cordova.plugins.foregroundService.start(
-    //         //   'Control Hogar 2',
-    //         //   'La aplicación se está ejecutando en segundo plano'
-    //         // );
-
-    //         // window.cordova.plugins.foregroundService.start('Control Hogar final', 'Aplicacion en uso', 'ic_notification', 5, 1, true);
-
-    //         // window.cordova.plugins.foregroundService.start(
-    //         //   'My App',
-    //         //   'Running in foreground',
-    //         //   'icon',
-    //         //   3,
-    //         //   'my_foreground_service'
-    //         // );
-
-    //       }
-    //     }
-    //   },
-    //   function () {console.error("Permission request failed");}
-    // );
+  async startNetworkTypeListener() {
+    window.cordova.plugins.networkinfo.startNetworkTypeListener(
+      async (info) => {
+        info.networkType = info.networkType.replace(/"/g, '').trim();
+        if (info.networkType && info.networkType !== networkType) {
+          console.log('network type changed:', info.networkType);
+          networkType = info.networkType;
+          setTimeout(async() => {
+            setNetworkType(info.networkType);
+            const internetConnection = await utils.checkInternet();
+            if (internetConnection) {
+              console.log('Internet connected by plugin network type change');
+              setInternet(true);
+            } else {
+              console.log('No internet by plugin network type change');
+              setInternet(false);
+            }
+          }, 5000);
+        } else {
+          // console.log('fallo de network type changed', info);
+        }
+      },
+      (err) => console.error('SSID listener error:', err)
+    );
   }
 
   async getWifiSSID() {
@@ -137,13 +117,21 @@ class CordovaPlugins {
     }).catch((err) => {
       console.error("Error getting SSID:", err);
     });
-    await window.cordova.plugins.netinfo.getIp().then((ip) => {
-      // console.log(ip);
-    }).catch((err) => {
-      console.error("Error getting Api:", err);
-    });
-    console.log('SSID:', wifiSsid);
+    // await window.cordova.plugins.netinfo.getIp().then((ip) => {
+    //   // console.log(ip);
+    // }).catch((err) => {
+    //   console.error("Error getting Api:", err);
+    // });
     return wifiSsid.replace(/"/g, '').trim();
+  }
+  async getNetworkType() {
+    let networkType = null;
+    await window.cordova.plugins.networkinfo.getNetworkType().then((type) => {
+      networkType = type;
+    }).catch((err) => {
+      console.error("Error getting network type:", err);
+    });
+    return networkType.replace(/"/g, '').trim();
   }
 }
 const cordovaPlugins = new CordovaPlugins();

@@ -109,6 +109,7 @@ class Utils {
         // Use a small, reliable file
         await fetch('https://www.google.com/favicon.ico', {
           mode: 'no-cors',
+          cache: "no-cache",
           signal: controller.signal,
         });
 

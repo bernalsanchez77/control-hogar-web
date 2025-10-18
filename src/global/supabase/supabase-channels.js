@@ -1,7 +1,23 @@
 import supabase from './supabase-client';
+import Utils from '../utils';
+const utils = new Utils();
+
 class SupabaseChannels {
     supabaseChannels = {};
-    async subscribeToSupabaseChannel(tableName, callback) {
+    hdmiSalaCallback = null;
+    rokuAppsCallback = null;
+    devicesCallback = null;
+    screensCallback = null;
+    youtubeVideosLizCallback = null;
+    setInternetFn = null;
+
+    async subscribeToSupabaseChannel(tableName, callback, setInternet, first) {
+      if (!this.rokuAppsCallback && tableName === 'rokuApps') this.rokuAppsCallback = callback;
+      if (!this.devicesCallback && tableName === 'devices') this.devicesCallback = callback;
+      if (!this.screensCallback && tableName === 'screens') this.screensCallback = callback;
+      if (!this.youtubeVideosLizCallback && tableName === 'youtubeVideosLiz') this.youtubeVideosLizCallback = callback;
+      if (!this.hdmiSalaCallback && tableName === 'hdmiSala') this.hdmiSalaCallback = callback;
+      if (!this.setInternetFn) this.setInternetFn = setInternet;
       if (!this.supabaseChannels[tableName]) {
         this.supabaseChannels[tableName] = {};
       }
@@ -31,7 +47,9 @@ class SupabaseChannels {
             }
             switch (status) {
               case 'SUBSCRIBED':
-                console.log('Subscribed to:', tableName);
+                if (first) {
+                  console.log('Subscribed to:', tableName);
+                }
                 resolve({success: true, msg: status});
                 break;
               case 'CHANNEL_ERROR':
@@ -61,6 +79,32 @@ class SupabaseChannels {
         this.supabaseChannels[tableName].errorHandled = true;
         console.warn('Channel ' + tableName + ' failed type: ' + type);
         await this.unsubscribeFromSupabaseChannel(tableName);
+        setTimeout(async () => {
+          const internetConnection = await utils.checkInternet();
+          if (internetConnection) {
+            await this.subscribeToSupabaseChannel(tableName, this[tableName + 'Callback'], this.setInternet).then((res) => {
+              if (res.success) {
+                console.log('Re-subscribed to:', tableName);
+              } else {
+                console.warn('not re-subscribed, subscription status:', res.msg);
+                switch (res.msg) {
+                  case 'TIMED_OUT':
+                    break;
+                  case 'CHANNEL_ERROR':
+                    break;
+                  case 'CLOSED':
+                    break;
+                  default:
+                }
+              }
+            }).catch((res) => {
+              console.error('Error re-subscribing to ' + tableName + ': ', res);
+            });
+          } else {
+            console.log('No internet, will not re-subscribe to ' + tableName);
+            this.setInternetFn(false);
+          }
+        }, 5000); // wait 5 seconds before re-subscribing
       }
     }
 
@@ -79,7 +123,30 @@ class SupabaseChannels {
       await this.unsubscribeFromSupabaseChannel('devices');
       await this.unsubscribeFromSupabaseChannel('screens');
       await this.unsubscribeFromSupabaseChannel('youtubeVideosLiz');
-      await this.unsubscribeFromSupabaseChannel('screens');
+    }
+
+    async subscribeToAllSupabaseChannels() {
+      const tableNames = ['hdmiSala', 'rokuApps', 'devices', 'screens', 'youtubeVideosLiz'];
+      for (const tableName of tableNames) {
+        await this.subscribeToSupabaseChannel(tableName, this[tableName + 'Callback'], this.setInternet, true).then((res) => {
+          if (res.success) {
+            console.log('Re-subscribed to:', tableName, ' after internet restored');
+          } else {
+            console.warn('not re-subscribed, subscription status:', res.msg);
+            switch (res.msg) {
+              case 'TIMED_OUT':
+                break;
+              case 'CHANNEL_ERROR':
+                break;
+              case 'CLOSED':
+                break;
+              default:
+            }
+          }
+        }).catch((res) => {
+          console.error('Error re-subscribing to ' + tableName + ' after internet restored: ', res);
+        });
+      }
     }
 
     async unsubscribeFromSupabaseChannel(tableName) {

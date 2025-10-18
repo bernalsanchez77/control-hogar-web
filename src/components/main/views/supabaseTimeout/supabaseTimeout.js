@@ -1,8 +1,8 @@
 import './supabaseTimeout.css';
 
-function SupabaseTimeout({element, restartParent}) {
+function SupabaseTimeout({restartParent}) {
   const restart = () => {
-    restartParent();
+    restartParent('onSupabaseTimeout');
   }
 
   return (

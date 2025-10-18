@@ -1,0 +1,46 @@
+.views-loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  position: fixed;
+  font-family: sans-serif;
+  font-size: 18px;
+  color: white;
+}
+
+.views-loading-dots {
+  display: flex;
+  margin-left: 5px;
+  overflow: hidden;
+}
+
+.views-loading-dot {
+  font-size: 1.2em; /* Makes the dots a bit bigger than the text */
+  opacity: 0;
+  animation: pulse 1.4s infinite ease-in-out;
+}
+
+.views-loading-dot:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.views-loading-dot:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.views-loading-dot:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-5px);
+  }
+}

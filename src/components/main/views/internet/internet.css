@@ -1,4 +1,4 @@
-.views-supabasetimeout {
+.views-internet {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,23 +9,23 @@
   color: white;
   text-align: center;
 }
-.views-supabasetimeout-text {
+.views-internet-text {
   position: absolute;
   width: 70%;
-  margin-top: -15vh;
+  /* margin-top: -15vh; */
 }
-.views-supabasetimeout-text-title {
+.views-internet-text-title {
   font-size: 18px;
 }
-.views-supabasetimeout-text-description {
+.views-internet-text-description {
   font-size: 14px;
 }
-.views-supabasetimeout-button {
+.views-internet-button {
   position: absolute;
   margin-top: 15vh;
   font-size: 18px;
 }
-.views-supabasetimeout-button button {
+.views-internet-button button {
   background-color: rgb(71, 3, 3, 0.8);
   font-size: 15px;
   padding: 10px;
