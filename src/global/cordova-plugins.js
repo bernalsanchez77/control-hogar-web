@@ -56,7 +56,7 @@ class CordovaPlugins {
     window.cordova.plugins.netinfo.startSSIDListener(
       async (info) => {
         info.ssid = info.ssid.replace(/"/g, '').trim();
-        if (info.ssid && info.ssid !== ssidParam) {
+        if (info.ssid && info.ssid !== 'unknown-wifi' && info.ssid !== ssidParam) {
           console.log('ssid changed:', info.ssid);
           wifiSsid = info.ssid;
           setTimeout(async() => {
