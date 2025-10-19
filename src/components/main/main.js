@@ -514,6 +514,7 @@ function Main() {
           // eruda.init();
         }
         await onLoad(ssid, netType);
+        applicationRunningRef.current = true;
       } else {
         setLoading(false);
       }
@@ -536,7 +537,6 @@ function Main() {
       // setWifiSsid(ssid);
       // setNetworkType(netType);
     }
-    applicationRunningRef.current = true;
   }, [onLoad, getSaveRestricted, getSaveCredential, getSaveInternetConnection]);
 
   useEffect(() => {
