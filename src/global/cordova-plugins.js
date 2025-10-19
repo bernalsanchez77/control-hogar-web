@@ -72,7 +72,8 @@ class CordovaPlugins {
     window.cordova.plugins.networkinfo.startNetworkTypeListener(
       async (info) => {
         info.networkType = info.networkType.replace(/"/g, '').trim();
-        if (info.networkType && info.networkType !== networkTypeParam) {
+        // change plugin to avoid sending 'none' type when disconnecting wifi
+        if (info.networkType && info.networkType !== 'none' && info.networkType !== networkTypeParam) {
           console.log('network type changed:', info.networkType);
           networkType = info.networkType;
           setTimeout(async() => {

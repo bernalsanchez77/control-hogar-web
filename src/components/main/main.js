@@ -400,6 +400,32 @@ function Main() {
     // setInRange(await utils.getInRange());
   }, [getTableData, changeView, getRokuActiveApp]);
 
+  const getSaveInternetConnection = useCallback (async () => {
+    const internetConnection = await utils.checkInternet();
+    if (internetConnection) {
+      setInternet(true);
+    } else {
+      setInternet(false);
+    }
+    return internetConnection;
+  }, []);
+
+  const getSaveCredential = useCallback(() => {
+    const userCredential = localStorage.getItem('user');
+    setCredential(userCredential);
+    return userCredential;
+  }, []);
+
+  const getSaveRestricted = useCallback (async (ssid, userCredential) => {
+    userCredential = userCredential || credential;
+    let userRestricted = false;
+    if (ssid !== 'Noky' && userCredential === 'guest') {
+      setRestricted(true);
+      userRestricted = true;
+    }
+    return userRestricted;
+  }, [credential]);
+
   const onPause = useCallback(async (e) => {
     document.body.classList.remove("transition");
     setUserActive(false);
@@ -409,20 +435,26 @@ function Main() {
   }, [internet]);
 
   const onResume = useCallback(async (e) => {
-    if (internet && !restricted && credential) {
-      let ssid = '';
-      let netType = '';
-      if (isApp) {
-        ssid = await CordovaPlugins.getWifiSSID();
-        netType = await CordovaPlugins.getNetworkType();
-        setWifiSsid(ssid);
-        setNetworkType(netType);
-        console.log('Current SSID on resume:', ssid);
+    if (isApp) {
+      const ssid = await CordovaPlugins.getWifiSSID();
+      const netType = await CordovaPlugins.getNetworkType();
+      const userRestricted = await getSaveRestricted(ssid);
+      console.log('Current ssid on resume:', ssid);
+      console.log('Current network type on resume:', networkType);
+      console.log('isRestricted on resume:', userRestricted);
+      if (internet && !userRestricted) {
+        if (applicationRunningRef.current) {
+          await resume(ssid);
+        } else {
+          await onLoad(ssid, netType);
+        }
+        // netType = await CordovaPlugins.getNetworkType();
+        // setNetworkType(netType);
+
       }
-      await resume(ssid);
     }
     setUserActive(true);
-  }, [resume, internet, credential, restricted]);
+  }, [resume, internet, getSaveRestricted, networkType]);
 
   const onLoadComplete = useCallback(() => {
     if (document.readyState === 'complete') {
@@ -463,42 +495,18 @@ function Main() {
     setLoading(false);
   }, [screenSelected, getTableData, onLoadComplete, setters, getRokuActiveApp, wifiSsid, networkType]);
 
-  const checkInternetConnection = async () => {
-    const internetConnection = await utils.checkInternet();
-    if (internetConnection) {
-      setInternet(true);
-    } else {
-      setInternet(false);
-    }
-    return internetConnection;
-  };
-
-  const checkSavedCredential = () => {
-    const userCredential = localStorage.getItem('user');
-    setCredential(userCredential);
-    return userCredential;
-  };
-
-  const checkRestricted = async (ssid, userCredential) => {
-    let userRestricted = false;
-    if (ssid !== 'Noky' && userCredential === 'guest') {
-      setRestricted(true);
-      userRestricted = true;
-    }
-    return userRestricted;
-  };
-
   const init = useCallback(async () => {
-    const internetConnection = await checkInternetConnection();
-    const userCredential = await checkSavedCredential();
+    const internetConnection = await getSaveInternetConnection();
+    const userCredential = await getSaveCredential();
     let ssid = '';
     let netType = '';
     if (isApp) {
       await CordovaPlugins.getPermissions();
       ssid = await CordovaPlugins.getWifiSSID();
       netType = await CordovaPlugins.getNetworkType();
+
     }
-    const userRestricted = await checkRestricted(ssid, userCredential);
+    const userRestricted = await getSaveRestricted(ssid, userCredential);
 
     if (internetConnection) {
       if (userCredential && !userRestricted) {
@@ -514,20 +522,22 @@ function Main() {
       setInternet(false);
     }
     if (isApp) {
-      testRokuPlayStateIntervalRef.current = setInterval(async () => {
-        const playState = await Roku.getRokuPlayState(setRokuPlayState);
-        if (playState && playState.state === 'play') {
-          if (wifiSsid !== 'Noky') {
-            setWifiSsid('Noky');
-          }
-          console.log('position: ', parseInt(playState.position) / 1000);
-        }
-      }, 5000);
+      //   testRokuPlayStateIntervalRef.current = setInterval(async () => {
+      //     const playState = await Roku.getRokuPlayState(setRokuPlayState);
+      //     if (playState && playState.state === 'play') {
+      //       if (wifiSsid !== 'Noky') {
+      //         setWifiSsid('Noky');
+      //       }
+      //       console.log('position: ', parseInt(playState.position) / 1000);
+      //     }
+      //   }, 5000);
       CordovaPlugins.startSsidListener(ssid, setWifiSsid);
       CordovaPlugins.startNetworkTypeListener(netType, setNetworkType, setInternet);
+      // setWifiSsid(ssid);
+      // setNetworkType(netType);
     }
     applicationRunningRef.current = true;
-  }, [onLoad]);
+  }, [onLoad, getSaveRestricted, getSaveCredential, getSaveInternetConnection]);
 
   useEffect(() => {
     viewRef.current = view;

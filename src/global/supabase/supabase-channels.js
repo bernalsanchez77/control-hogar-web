@@ -43,7 +43,7 @@ class SupabaseChannels {
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
             if (status !== 'SUBSCRIBED') {
-              console.log('Subscription error on', tableName, 'status: ', status, 'at time:', `${hours}:${minutes}:${seconds}`);
+              // console.log('Subscription error on', tableName, 'status: ', status, 'at time:', `${hours}:${minutes}:${seconds}`);
             }
             switch (status) {
               case 'SUBSCRIBED':
