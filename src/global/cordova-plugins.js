@@ -2,6 +2,7 @@
 // const utils = new Utils();
 let ssid = '';
 let networkTypeDebounceTimer;
+let ssidDebounceTimer;
 class CordovaPlugins {
   async getPermissions() {
     var permissions = window.cordova.plugins.permissions;
@@ -46,16 +47,23 @@ class CordovaPlugins {
     );
   }
 
-  async startSsidListener(setWifiSsid, ssidParam) {
-    // ssid = ssidParam;
+  async startSsidListener(setWifiSsid) {
     window.cordova.plugins.netinfo.startSSIDListener(
       async (info) => {
-        info.ssid = info.ssid.replace(/"/g, '').trim();
-        console.log('ssid listener', info.ssid);
-        if (info.ssid && info.ssid !== 'unknown-wifi' && info.ssid !== ssid) {
-          ssid = info.ssid;
-          setWifiSsid(info.ssid);
-        }
+        clearTimeout(ssidDebounceTimer);
+        ssidDebounceTimer = setTimeout(() => {
+          const cleanedSsid = info.ssid.replace(/"/g, '').trim();
+          console.log('ssid listener (debounced):', cleanedSsid);
+
+          if (
+            cleanedSsid &&
+            cleanedSsid !== 'unknown-wifi' &&
+            cleanedSsid !== ssid
+          ) {
+            ssid = cleanedSsid;
+            setWifiSsid(cleanedSsid);
+          }
+        }, 1000);
       },
       (err) => console.error('ssid listener error:', err)
     );
