@@ -29,6 +29,7 @@ function Main() {
 
   const [rokuPlayState, setRokuPlayState] = useState({});
   const [wifiSsid, setWifiSsid] = useState('');
+  const [networkType, setNetworkType] = useState('');
   const [supabaseTimeOut, setSupabaseTimeOut] = useState(false);
   const [internet, setInternet] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -219,25 +220,32 @@ function Main() {
   }, [cableChannels, devices, hdmiSala, rokuApps, sendEnabled, youtubeVideosLiz]);
 
   const setCredentials = async (userCredential) => {
-    if (userCredential === 'guest') {
-      localStorage.setItem('user', userCredential);
-      setCredential(userCredential);
-      setLoading(true);
-      onLoad();
-    } else {
-      const response = await requests.setCredentials(userCredential);
-      if (response.status === 200 && response.data.validUser) {
-        if (response.data.dev) {
-          localStorage.setItem('user', response.data.dev);
-          setCredential('dev');
-          setSendEnabled(false);
+    const internetConnection = await utils.checkInternet();
+    if (internetConnection) {
+      let user = '';
+      if (userCredential === 'guest') {
+        localStorage.setItem('user', userCredential);
+        if (getRestricted({userCredential})) {
+          setRestricted(true);
         } else {
-          localStorage.setItem('user', 'owner');
-          setCredential('owner');
+          await load();
         }
-        setLoading(true);
-        onLoad();
+        user = userCredential;
+      } else {
+        const response = await requests.setCredentials(userCredential);
+        if (response.status === 200 && response.data.validUser) {
+          if (response.data.dev) {
+            localStorage.setItem('user', response.data.dev);
+            user = 'dev';
+            setSendEnabled(false);
+          } else {
+            localStorage.setItem('user', 'owner');
+            user = 'owner';
+          }
+          await load();
+        }
       }
+      setCredential(user);
     }
   };
 
@@ -304,7 +312,6 @@ function Main() {
     let screensTable = {};
     // setInRange(await utils.getInRange());
     const newView = structuredClone(viewRef.current);
-
     const hdmiSalaTable = await setData('hdmiSala', isInit, async (change) => {
       await hdmiChangeInSupabaseChannel(change.id);
     });
@@ -364,6 +371,7 @@ function Main() {
   }, [getRokuPlayState, hdmiChangeInSupabaseChannel, setData, setters]);
 
   const resume = useCallback(async (ssid) => {
+    setLoading(true);
     let isInit = false;
     const hdmiSalaChannel = await supabaseChannels.getSupabaseChannelState('hdmiSala');
     if (hdmiSalaChannel.channel) {
@@ -396,32 +404,29 @@ function Main() {
         console.log('no hdmiSalaTable when resume');
       }
     }
+    setLoading(false);
     // setInRange(await utils.getInRange());
   }, [getTableData, changeView, getRokuActiveApp]);
 
-  const saveInternetConnection = useCallback (async () => {
-    const internetConnection = await utils.checkInternet();
-    if (internetConnection) {
-      setInternet(true);
-    } else {
-      setInternet(false);
-    }
-  }, []);
-
-  const saveCredential = useCallback(() => {
-    const userCredential = localStorage.getItem('user');
-    setCredential(userCredential);
-  }, []);
-
-  const getSaveRestricted = useCallback (async (ssid, userCredential) => {
-    userCredential = userCredential || credential;
+  const getRestricted = useCallback ((params) => {
+    params.ssid = params.ssid || wifiSsid;
+    params.userCredential = params.userCredential || credential;
     let userRestricted = false;
-    if (ssid !== 'Noky' && userCredential === 'guest') {
-      setRestricted(true);
+    if (params.ssid !== 'Noky' && params.userCredential === 'guest') {
       userRestricted = true;
     }
     return userRestricted;
-  }, [credential]);
+  }, [wifiSsid, credential]);
+
+  const onSSidChange = useCallback((ssid) => {
+    console.log('changed in ssid: ', ssid);
+    setWifiSsid(ssid);
+  }, []);
+
+  const onNetworkTypeChange = useCallback((netType) => {
+    console.log('changed in network type: ', netType);
+    setNetworkType(netType);
+  }, []);
 
   const onPause = useCallback(async (e) => {
     document.body.classList.remove("transition");
@@ -441,15 +446,14 @@ function Main() {
     }
   }, []);
 
-  const onLoad = useCallback(async (ssid, netType) => {
+  const load = useCallback(async (ssid, netType) => {
     setLoading(true);
     ssid = ssid || wifiSsid;
+    netType = netType || networkType;
     let rokuActiveApp = null;
     if (isApp) {
       rokuActiveApp = await getRokuActiveApp(ssid);
     }
-    setTheme(localStorage.getItem('theme'));
-    setScreenSelected(localStorage.getItem('screen') || screenSelected);
     const tableData = await getTableData(true, rokuActiveApp);
     if (tableData.newView) {
       if (tableData.rokuAppsTable.data) {
@@ -457,55 +461,104 @@ function Main() {
       } else {
         await setView(await viewRouter.changeView(tableData.newView, viewRef.current, [], setters));
       }
-      onLoadComplete();
     } else {
       if (tableData.hdmiSalaTable) {
         if (tableData.subscriptionResponse === 'TIMED_OUT') {
-          onLoadComplete();
         }
       } else {
         console.warn('no hdmiSalaTable when loading');
       }
     }
     setLoading(false);
-  }, [screenSelected, getTableData, onLoadComplete, setters, getRokuActiveApp, wifiSsid]);
+    applicationRunningRef.current = true;
+  }, [getTableData, setters, getRokuActiveApp, wifiSsid, networkType]);
 
   const onResume = useCallback(async (e) => {
+    const internetConnection = await utils.checkInternet();
+    let ssid = '';
+    let netType = '';
+    let userRestricted = '';
     if (isApp) {
-      const ssid = await CordovaPlugins.getWifiSSID();
-      const netType = await CordovaPlugins.getNetworkType();
-      const userRestricted = await getSaveRestricted(ssid);
-      console.log('Current ssid on resume:', ssid);
-      console.log('Current network type on resume:', netType);
-      console.log('isRestricted on resume:', userRestricted);
-      if (internet && !userRestricted) {
+      ssid = await CordovaPlugins.getWifiSSID();
+      netType = await CordovaPlugins.getNetworkType();
+      userRestricted = await getRestricted({ssid});
+    }
+    if (internetConnection) {
+      if (restricted) {
         if (applicationRunningRef.current) {
           await resume(ssid);
         } else {
-          await onLoad(ssid, netType);
+          await load(ssid, netType);
         }
       }
     }
     setUserActive(true);
-  }, [resume, internet, getSaveRestricted, onLoad]);
+    setRestricted(userRestricted);
+    setWifiSsid(ssid);
+    setNetworkType(netType);
+    setInternet(internetConnection);
+  }, [resume, load, getRestricted, restricted]);
 
   const init = useCallback(async () => {
-    saveInternetConnection();
-    saveCredential();
+    const internetConnection = await utils.checkInternet();
+    const userCredential = localStorage.getItem('user');
     let ssid = '';
     let netType = '';
+    let userRestricted = '';
     if (isApp) {
       await CordovaPlugins.getPermissions();
-      netType = await CordovaPlugins.getNetworkType();
       ssid = await CordovaPlugins.getWifiSSID();
-      if (netType === 'cellular') {
-        ssid = 'cellular';
-      }
-      CordovaPlugins.startSsidListener(setWifiSsid, ssid);
-      CordovaPlugins.startNetworkTypeListener(setWifiSsid);
-      // setWifiSsid(ssid);
+      netType = await CordovaPlugins.getNetworkType();
+      await CordovaPlugins.startSsidListener(onSSidChange);
+      await CordovaPlugins.startNetworkTypeListener(onNetworkTypeChange);
+      userRestricted = getRestricted({ssid, userCredential});
+    } else {
     }
-  }, [saveCredential, saveInternetConnection]);
+    if (internetConnection) {
+      if (userCredential) {
+        if (userRestricted) {
+          setLoading(false);
+        } else {
+          await load(ssid, netType);
+        }
+      } else {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
+    }
+    onLoadComplete();
+    setTheme(localStorage.getItem('theme'));
+    setScreenSelected(localStorage.getItem('screen') || screenSelected);
+    setRestricted(userRestricted);
+    setWifiSsid(ssid);
+    setNetworkType(netType);
+    setCredential(userCredential);
+    setInternet(internetConnection);
+  }, [onNetworkTypeChange, onSSidChange, getRestricted, load, onLoadComplete, screenSelected]);
+
+  useEffect(() => {
+    if (credential === 'guest') {
+      if (networkType === 'wifi' && wifiSsid === 'Noky') {
+        if (restricted) {
+          console.log('paso por restricted');
+          setRestricted(false);
+          if (!applicationRunningRef.current) {
+            setTimeout(async () => {
+              const internetConnection = await utils.checkInternet();
+              if (internetConnection) {
+                await load();
+              } else {
+                setInternet(false);
+              }
+            }, 2000);
+          }
+        }
+      } else {
+        setRestricted(true);
+      }
+    }
+  }, [wifiSsid, networkType, credential, load, restricted])
 
   useEffect(() => {
     viewRef.current = view;
@@ -532,6 +585,9 @@ function Main() {
   }, [youtubeChannelsLiz]);
 
   useEffect(() => {
+    let ssid = '';
+    let netType = '';
+    let userRestricted = '';
     const cleanupInternetInterval = () => {
       if (internetIntervalRef.current) {
         clearInterval(internetIntervalRef.current);
@@ -548,14 +604,18 @@ function Main() {
             console.log('Internet connected by interval');
             clearInterval(internetIntervalRef.current);
             internetIntervalRef.current = null;
-            setInternet(true);
-            if (!restricted && credential) {
-              if (applicationRunningRef.current) {
-                await supabaseChannels.subscribeToAllSupabaseChannels();
-              } else {
-                await onLoad();
-              }
+
+            ssid = await CordovaPlugins.getWifiSSID();
+            netType = await CordovaPlugins.getNetworkType();
+            userRestricted = getRestricted({ssid});
+
+            if (credential && !userRestricted) {
+              await load(ssid, netType);
             }
+            setRestricted(userRestricted);
+            setWifiSsid(ssid);
+            setNetworkType(netType);
+            setInternet(internetConnection);
           } else {
             console.log('No internet by interval');
           }
@@ -563,66 +623,7 @@ function Main() {
       }
     }
     return cleanupInternetInterval;
-  }, [internet, credential, onLoad, restricted]);
-
-  useEffect(() => {
-    let tries = 0;
-    let cancelled = false;
-
-    const attempt = async () => {
-      if (cancelled) return;
-      tries++;
-      console.log('Checking network to load app, try number:', tries);
-
-      try {
-        const internetConnection = await utils.checkInternet();
-        if (cancelled) return;
-
-        if (internetConnection) {
-          if (wifiSsid) {
-            console.log('se registro cambio de wifi:', wifiSsid);
-            const userCredential = localStorage.getItem('user');
-            if (userCredential === 'guest') {
-              if (wifiSsid === 'Noky') {
-                console.log('guest and ssid changed to Noky, removing restriction');
-                setRestricted(false);
-                if (!applicationRunningRef.current) {
-                  console.log('loading app for guest after ssid changed to Noky');
-                  onLoad();
-                  applicationRunningRef.current = true;
-                }
-              } else {
-                console.log('guest and ssid changed to other, adding restriction');
-                setRestricted(true);
-                if (!applicationRunningRef.current) {
-                  setLoading(false);
-                }
-              }
-            } else {
-              if (!applicationRunningRef.current) {
-                console.log('loading app for owner after ssid changed');
-                onLoad();
-                applicationRunningRef.current = true;
-              }
-            }
-          }
-          return;
-        }
-
-        if (tries >= 5) {
-          console.warn('Stopped after 5 tries');
-          return;
-        }
-        setTimeout(attempt, 1000);
-      } catch (err) {}
-    };
-
-    attempt();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [wifiSsid, onLoad]);
+  }, [internet, credential, load, restricted, getRestricted]);
 
   useEffect(() => {
     // document.body.classList.add("transition");
