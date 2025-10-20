@@ -1,7 +1,7 @@
-import Utils from './utils';
-const utils = new Utils();
-let wifiSsid = '';
-let networkType = '';
+// import Utils from './utils';
+// const utils = new Utils();
+let ssid = '';
+let networkTypeDebounceTimer;
 class CordovaPlugins {
   async getPermissions() {
     var permissions = window.cordova.plugins.permissions;
@@ -31,12 +31,6 @@ class CordovaPlugins {
                   }
                 });
                 await window.cordova.plugins.foregroundFunctionality.startService(function(msg) {}, function(err) {});
-                // wifiSsid = await this.getWifiSSID();
-                // setWifiSsid(wifiSsid);
-                // console.log('ssid on deviceready:', wifiSsid);
-                // networkType = await this.getNetworkType();
-                // setNetworkType(networkType);
-                // console.log('network type on deviceready:', networkType);
               } else {
                 console.log('no notification permission');
                 return false;
@@ -52,42 +46,37 @@ class CordovaPlugins {
     );
   }
 
-  async startSsidListener(ssidParam, setWifiSsid) {
+  async startSsidListener(setWifiSsid, ssidParam) {
+    // ssid = ssidParam;
     window.cordova.plugins.netinfo.startSSIDListener(
       async (info) => {
         info.ssid = info.ssid.replace(/"/g, '').trim();
-        if (info.ssid && info.ssid !== 'unknown-wifi' && info.ssid !== ssidParam) {
-          console.log('ssid changed:', info.ssid);
-          wifiSsid = info.ssid;
-          setTimeout(async() => {
-            setWifiSsid(info.ssid);
-          }, 5000);
+        console.log('ssid listener', info.ssid);
+        if (info.ssid && info.ssid !== 'unknown-wifi' && info.ssid !== ssid) {
+          ssid = info.ssid;
+          setWifiSsid(info.ssid);
         }
       },
       (err) => console.error('ssid listener error:', err)
     );
   }
 
-  async startNetworkTypeListener(networkTypeParam, setNetworkType, setInternet) {
+  async startNetworkTypeListener(setWifiSsid) {
     window.cordova.plugins.networkinfo.startNetworkTypeListener(
       async (info) => {
-        info.networkType = info.networkType.replace(/"/g, '').trim();
-        // change plugin to avoid sending 'none' type when disconnecting wifi
-        if (info.networkType && info.networkType !== 'none' && info.networkType !== networkTypeParam) {
-          console.log('network type changed:', info.networkType);
-          networkType = info.networkType;
-          setTimeout(async() => {
-            setNetworkType(info.networkType);
-            const internetConnection = await utils.checkInternet();
-            if (internetConnection) {
-              console.log('Internet connected by plugin network type change');
-              setInternet(true);
-            } else {
-              console.log('No internet by plugin network type change');
-              setInternet(false);
-            }
-          }, 5000);
-        }
+        clearTimeout(networkTypeDebounceTimer);
+        networkTypeDebounceTimer = setTimeout(() => {
+          const networkType = info.networkType.replace(/"/g, '').trim();
+          console.log('network listener (debounced):', networkType);
+
+          if (networkType === 'cellular') {
+            ssid = networkType;
+            setWifiSsid('cellular');
+          } else if (networkType === 'none') {
+            ssid = networkType;
+            setWifiSsid('none');
+          }
+        }, 1000);
       },
       (err) => console.error('SSID listener error:', err)
     );
