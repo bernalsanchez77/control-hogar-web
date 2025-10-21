@@ -54,6 +54,10 @@ function Main() {
 
   //normal variables
   const cableChannelCategories = new CableChannelCategories().getCableChannelCategories();
+
+  //function variables
+  let onNoInternet = null;
+
   // eslint-disable-next-line
   const youtubeDummyData = new YoutubeDummyData().getYoutubeDummyData();
   const setters = useMemo(() => {return {setRokuSearchMode, setYoutubeVideosLiz, setYoutubeChannelsLiz, setRokuApps, setCableChannels, setHdmiSala, setDevices, setScreens}}, []);
@@ -69,8 +73,13 @@ function Main() {
   const testRokuPlayStateIntervalRef = useRef({});
   const internetIntervalRef = useRef({});
   const applicationRunningRef = useRef(false);
+  const wifiSsidRef = useRef('');
+  const networkTypeRef = useRef('');
+  const credentialRef = useRef('');
+  const netChangeRunningRef = useRef(false);
 
   // useMemo variables (computed)
+
 
   const changeTheme = (theme) => {
     setTheme(theme);
@@ -105,7 +114,7 @@ function Main() {
       if (callback) {
         await callback(newItem);
       }
-    }, setInternet, true).then((res) => {
+    }, onNoInternet, true).then((res) => {
       if (res.success) {
         response = 'SUBSCRIBED';
         setSupabaseTimeOut(false);
@@ -132,15 +141,29 @@ function Main() {
       response = res.msg;
     });
     return response;
-  },[setters]);
-
-  // const unsubscribeFromSupabaseChannel = useCallback(async (tableName) => {
-  //   await supabaseChannels.unsubscribeFromSupabaseChannel(tableName);
-  // }, []);
+  },[setters, onNoInternet]);
 
   const changeView = useCallback(async (newView) => {
     setView(await viewRouter.changeView(newView, viewRef.current, youtubeChannelsLizRef.current, setters, rokuAppsRef.current));
   }, [viewRef, setters, rokuAppsRef, youtubeChannelsLizRef]);
+
+  const modifyTableInSupabase = (table, el) => {
+    const currentId = [table].find(v => v.state === 'selected').id;
+    const newId = [table].find(v => v.id === el.value).id;
+    if (currentId && newId) {
+      requests.updateTableInSupabase({
+        current: {currentId, currentTable: table, currentState: ''},
+        new: {newId, newTable: table, newState: 'selected', newDate: new Date().toISOString()}
+      });
+    }
+  }
+
+  const updateTableInSupabase = (newTable, el, id) => {
+    const newId = id || [newTable].find(v => v.id === el.device).id;
+    requests.updateTableInSupabase({
+      new: {newId, newTable, ['new' + el.key.charAt(0).toUpperCase() + el.key.slice(1)]: el.value, newDate: new Date().toISOString()}
+    });
+  }
 
   const changeControl = useCallback(async (params) => {
     if (!params.ignoreVibration) {
@@ -151,73 +174,34 @@ function Main() {
     if (media.length > 0) {
       media.forEach(async el => {
         if (Array.isArray(el.key)) {
-          //devices[el.device][el.key[0]] = {...devices[el.device][el.key[0]], [el.key[1]]: el.value};
         } else {
-          //devices[el.device] = {...devices[el.device], [el.key]: el.value};
           if (el.device === 'rokuSala') {
             if (el.key === 'video' && viewRef.current.roku.apps.youtube.mode === 'channel') {
-              const currentId = youtubeVideosLiz.find(vid => vid.state === 'selected').id;
-              const newId = youtubeVideosLiz.find(video => video.id === el.value).id;
-              if (currentId && newId) {
-                requests.updateTableInSupabase({
-                  current: {currentId, currentTable: 'youtubeVideosLiz', currentState: ''},
-                  new: {newId, newTable: 'youtubeVideosLiz', newState: 'selected', newDate: new Date().toISOString()}
-                });
-              }
+              modifyTableInSupabase('youtubeVideosLiz', el);
             }
             if (el.key === 'app') {
-              const currentId = rokuApps.find(app => app.state === 'selected').id;
-              const newId = rokuApps.find(app => app.id === el.value).id;
-              if (currentId && newId) {
-                requests.updateTableInSupabase({
-                  current: {currentId, currentTable: 'rokuApps', currentState: ''},
-                  new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
-                });
-              }
+              modifyTableInSupabase('rokuApps', el);
             }
             if (el.key === 'playState') {
-              const newId = 'roku';
-              requests.updateTableInSupabase({
-                new: {newId, newTable: 'hdmiSala', ['new' + el.key.charAt(0).toUpperCase() + el.key.slice(1)]: el.value, newDate: new Date().toISOString()}
-              });
+              updateTableInSupabase('hdmiSala', el, 'roku');
             }
           }
           if (el.device === 'channelsSala') {
-            const currentId = cableChannels.find(ch => ch.state === 'selected').id;
-            const newId = cableChannels.find(ch => ch.id === el.value).id;
-            if (currentId && newId) {
-              requests.updateTableInSupabase({
-                current: {currentId, currentTable: 'cableChannels', currentState: ''},
-                new: {newId, newTable: 'cableChannels', newState: 'selected', newDate: new Date().toISOString()}
-              });
-            }
+            modifyTableInSupabase('cableChannels', el);
           }
           if (el.device === 'hdmiSala') {
-            const currentId = hdmiSala.find(hdmi => hdmi.state === 'selected').id;
-            const newId = hdmiSala.find(hdmi => hdmi.id === el.value).id;
-            if (currentId && newId) {
-              requests.updateTableInSupabase({
-                current: {currentId, currentTable: 'hdmiSala', currentState: ''},
-                new: {newId, newTable: 'hdmiSala', newState: 'selected', newDate: new Date().toISOString()}
-              });
-            }
+            modifyTableInSupabase('hdmiSala', el);
           }
           if (el.device === 'luzEscalera' || el.device === 'luzCuarto' || el.device === 'lamparaComedor' || el.device === 'lamparaSala' || el.device === 'lamparaRotatoria' || el.device === 'chimeneaSala' || el.device === 'parlantesSala' || el.device === 'ventiladorSala' || el.device === 'calentadorNegro' || el.device === 'calentadorBlanco' || el.device === 'lamparaTurca'|| el.device === 'proyectorSalaSwitch') {
-            const newId = devices.find(device => device.id === el.device).id;
-            requests.updateTableInSupabase({
-              new: {newId, newTable: 'devices', ['new' + el.key.charAt(0).toUpperCase() + el.key.slice(1)]: el.value, newDate: new Date().toISOString()}
-            });
+            updateTableInSupabase('devices', el);
           }
           if (el.device === 'teleSala' || el.device === 'teleCuarto' || el.device === 'teleCocina' || el.device === 'proyectorSala') {
-            const newId = screensRef.current.find(screen => screen.id === el.device).id;
-            requests.updateTableInSupabase({
-              new: {newId, newTable: 'screens', ['new' + el.key.charAt(0).toUpperCase() + el.key.slice(1)]: el.value, newDate: new Date().toISOString()}
-            });
+            updateTableInSupabase('screens', el, screensRef.current.find(screen => screen.id === el.device).id);
           }
         }
       });
     }
-  }, [cableChannels, devices, hdmiSala, rokuApps, sendEnabled, youtubeVideosLiz]);
+  }, [sendEnabled]);
 
   const setCredentials = async (userCredential) => {
     const internetConnection = await utils.checkInternet();
@@ -225,7 +209,7 @@ function Main() {
       let user = '';
       if (userCredential === 'guest') {
         localStorage.setItem('user', userCredential);
-        if (getRestricted({userCredential})) {
+        if (utils.getUserRestricted({wifiSsid, userCredential})) {
           setRestricted(true);
         } else {
           await load();
@@ -263,19 +247,6 @@ function Main() {
     }
   }, [subscribeToSupabaseChannel, setters]);
 
-  const getRokuPlayState = useCallback(async (hdmiSalaParam = hdmiSalaRef.current) => {
-    let playState = await Roku.getRokuPlayState(setRokuPlayState);
-    if (playState) {
-      const currentPlayState = hdmiSalaParam.find(hdmi => hdmi.state === 'selected').playState;
-      const newPlayState = playState.state;
-      if (currentPlayState !== newPlayState) {
-        requests.updateTableInSupabase({
-          new: {newId: 'roku', newTable: 'hdmiSala', newPlayState, newDate: new Date().toISOString()}
-        });
-      }
-    }
-  }, []);
-
   const hdmiChangeInSupabaseChannel = useCallback(async (id) => {
     if (viewRef.current.selected !== id) {
       const newView = structuredClone(viewRef.current);
@@ -294,7 +265,7 @@ function Main() {
 
   const getRokuActiveApp = useCallback(async (ssid) => {
     if (ssid === 'Noky') {
-      const rokuActiveApp = await Roku.getRokuActiveApp(setConnectedToRoku);
+      const rokuActiveApp = await Roku.getActiveApp(setConnectedToRoku);
       return rokuActiveApp;
     } else {
       if (testRokuPlayStateIntervalRef.current) {
@@ -340,7 +311,7 @@ function Main() {
                   new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
                 });
               }
-              await getRokuPlayState(hdmiSalaTable.table.data);
+              await Roku.updatePlayState(setRokuPlayState, hdmiSalaTable.table.data.find(hdmi => hdmi.state === 'selected').playState);
             }
           } else {
             return {};
@@ -368,83 +339,7 @@ function Main() {
     } else {
       return {hdmiSalaTable: hdmiSalaTable.table};
     }
-  }, [getRokuPlayState, hdmiChangeInSupabaseChannel, setData, setters]);
-
-  const resume = useCallback(async (ssid) => {
-    setLoading(true);
-    let isInit = false;
-    const hdmiSalaChannel = await supabaseChannels.getSupabaseChannelState('hdmiSala');
-    if (hdmiSalaChannel.channel) {
-      const state = hdmiSalaChannel.channel.state;
-      switch (state) {
-        case 'joined':
-          console.log('hdmiSalaChannel joined on resume');
-          break;
-        case undefined:
-          console.warn('hdmiSalaChannel undefined on resume, subscribing again');
-          await supabaseChannels.unsubscribeFromAllSupabaseChannels();
-          isInit = true;
-          break;
-        default:
-          console.warn('hdmiSalaChannel ' + state + ' on resume , subscribing again');
-          isInit = true;
-      }
-    } else {
-      console.warn('REAL BAD, no hdmiSalaChannel.channel');
-    }
-    const rokuActiveApp = await getRokuActiveApp(ssid);
-    const tableData = await getTableData(isInit, rokuActiveApp);
-    if (tableData.newView) {
-      await changeView(tableData.newView);
-    } else {
-      if (tableData.hdmiSalaTable) {
-        if (tableData.subscriptionResponse === 'TIMED_OUT') {
-        }
-      } else {
-        console.log('no hdmiSalaTable when resume');
-      }
-    }
-    setLoading(false);
-    // setInRange(await utils.getInRange());
-  }, [getTableData, changeView, getRokuActiveApp]);
-
-  const getRestricted = useCallback ((params) => {
-    params.ssid = params.ssid || wifiSsid;
-    params.userCredential = params.userCredential || credential;
-    let userRestricted = false;
-    if (params.ssid !== 'Noky' && params.userCredential === 'guest') {
-      userRestricted = true;
-    }
-    return userRestricted;
-  }, [wifiSsid, credential]);
-
-  const onSSidChange = useCallback((ssid) => {
-    console.log('changed in ssid: ', ssid);
-    setWifiSsid(ssid);
-  }, []);
-
-  const onNetworkTypeChange = useCallback((netType) => {
-    console.log('changed in network type: ', netType);
-    setNetworkType(netType);
-  }, []);
-
-  const onPause = useCallback(async (e) => {
-    document.body.classList.remove("transition");
-    setUserActive(false);
-    if (internet) {
-      requests.sendLogs('salio', user);
-    }
-  }, [internet]);
-
-  const onLoadComplete = useCallback(() => {
-    if (document.readyState === 'complete') {
-      window.history.replaceState(null, "", window.location.pathname + window.location.search);
-    } else {
-      window.addEventListener('load', async () => {
-        window.history.replaceState(null, "", window.location.pathname + window.location.search);
-      });
-    }
-  }, []);
+  }, [hdmiChangeInSupabaseChannel, setData, setters]);
 
   const load = useCallback(async (ssid, netType) => {
     setLoading(true);
@@ -473,174 +368,126 @@ function Main() {
     applicationRunningRef.current = true;
   }, [getTableData, setters, getRokuActiveApp, wifiSsid, networkType]);
 
-  const onResume = useCallback(async (e) => {
-    const internetConnection = await utils.checkInternet();
-    let ssid = '';
-    let netType = '';
-    let userRestricted = '';
-    if (isApp) {
-      ssid = await CordovaPlugins.getWifiSSID();
-      netType = await CordovaPlugins.getNetworkType();
-      userRestricted = await getRestricted({ssid});
-    }
-    if (internetConnection) {
-      if (restricted) {
-        if (applicationRunningRef.current) {
-          await resume(ssid);
-        } else {
-          await load(ssid, netType);
-        }
-      }
-    }
-    setUserActive(true);
-    setRestricted(userRestricted);
-    setWifiSsid(ssid);
-    setNetworkType(netType);
-    setInternet(internetConnection);
-  }, [resume, load, getRestricted, restricted]);
+  // event functions
 
-  const init = useCallback(async () => {
-    const internetConnection = await utils.checkInternet();
-    const userCredential = localStorage.getItem('user');
+  onNoInternet = useCallback(() => {
+    console.log('internet interval started');
     let ssid = '';
     let netType = '';
     let userRestricted = '';
-    if (isApp) {
-      await CordovaPlugins.getPermissions();
-      ssid = await CordovaPlugins.getWifiSSID();
-      netType = await CordovaPlugins.getNetworkType();
-      await CordovaPlugins.startSsidListener(onSSidChange);
-      await CordovaPlugins.startNetworkTypeListener(onNetworkTypeChange);
-      userRestricted = getRestricted({ssid, userCredential});
-    } else {
-    }
-    if (internetConnection) {
-      if (userCredential) {
-        if (userRestricted) {
-          setLoading(false);
-        } else {
+    let userCredential = localStorage.getItem('user');
+    setInternet(false);
+    internetIntervalRef.current = setInterval(async () => {
+      const internetConnection = await utils.checkInternet();
+      if (internetConnection) {
+        console.log('Internet connected by interval');
+        clearInterval(internetIntervalRef.current);
+        internetIntervalRef.current = null;
+
+        if (isApp) {
+          ssid = await CordovaPlugins.getWifiSSID();
+          netType = await CordovaPlugins.getNetworkType();
+          userRestricted = utils.getUserRestricted({ssid, userCredential});
+        }
+
+        if (userCredential && !userRestricted) {
           await load(ssid, netType);
         }
+        setRestricted(userRestricted);
+        setWifiSsid(ssid);
+        setNetworkType(netType);
+        setInternet(true);
       } else {
-        setLoading(false);
+        console.log('No internet by interval');
       }
-    } else {
-      setLoading(false);
-    }
-    onLoadComplete();
-    setTheme(localStorage.getItem('theme'));
-    setScreenSelected(localStorage.getItem('screen') || screenSelected);
-    setRestricted(userRestricted);
-    setWifiSsid(ssid);
-    setNetworkType(netType);
-    setCredential(userCredential);
-    setInternet(internetConnection);
-  }, [onNetworkTypeChange, onSSidChange, getRestricted, load, onLoadComplete, screenSelected]);
+    }, 5000);
+  }, [load]);
 
-  useEffect(() => {
-    if (credential === 'guest') {
-      if (networkType === 'wifi' && wifiSsid === 'Noky') {
-        if (restricted) {
-          console.log('paso por restricted');
-          setRestricted(false);
-          if (!applicationRunningRef.current) {
-            setTimeout(async () => {
-              const internetConnection = await utils.checkInternet();
-              if (internetConnection) {
-                await load();
-              } else {
-                setInternet(false);
-              }
-            }, 2000);
-          }
+  const onSSidChange = useCallback((ssid) => {
+    console.log('changed in ssid: ', ssid);
+    if (credentialRef.current === 'guest') {
+      if (ssid === 'Noky' && networkTypeRef.current === 'wifi') {
+        setRestricted(false);
+        if (!applicationRunningRef.current && !netChangeRunningRef.current) {
+          netChangeRunningRef.current = true;
+          setTimeout(async () => {
+            const internetConnection = await utils.checkInternet();
+            if (internetConnection) {
+              await load();
+            } else {
+              console.log('no internet detected by ssid change, nointernet interval started');
+              onNoInternet();
+            }
+            netChangeRunningRef.current = false;
+          }, 5000);
         }
       } else {
         setRestricted(true);
       }
     }
-  }, [wifiSsid, networkType, credential, load, restricted])
+    setWifiSsid(ssid);
+  }, [credentialRef, networkTypeRef, load, onNoInternet]);
 
-  useEffect(() => {
-    viewRef.current = view;
-  }, [view]);
-
-  useEffect(() => {
-    rokuAppsRef.current = rokuApps;
-  }, [rokuApps]);
-
-  useEffect(() => {
-    screensRef.current = screens;
-  }, [screens]);
-
-  useEffect(() => {
-    hdmiSalaRef.current = hdmiSala;
-  }, [hdmiSala]);
-
-  useEffect(() => {
-    screenSelectedRef.current = screenSelected;
-  }, [screenSelected]);
-
-  useEffect(() => {
-    youtubeChannelsLizRef.current = youtubeChannelsLiz;
-  }, [youtubeChannelsLiz]);
-
-  useEffect(() => {
-    let ssid = '';
-    let netType = '';
-    let userRestricted = '';
-    const cleanupInternetInterval = () => {
-      if (internetIntervalRef.current) {
-        clearInterval(internetIntervalRef.current);
-        internetIntervalRef.current = null;
-      }
-    };
-    if (internet) {
-      cleanupInternetInterval();
-    } else {
-      if (!internetIntervalRef.current) {
-        internetIntervalRef.current = setInterval(async () => {
-          const internetConnection = await utils.checkInternet();
-          if (internetConnection) {
-            console.log('Internet connected by interval');
-            clearInterval(internetIntervalRef.current);
-            internetIntervalRef.current = null;
-
-            ssid = await CordovaPlugins.getWifiSSID();
-            netType = await CordovaPlugins.getNetworkType();
-            userRestricted = getRestricted({ssid});
-
-            if (credential && !userRestricted) {
-              await load(ssid, netType);
+  const onNetworkTypeChange = useCallback((netType) => {
+    console.log('changed in network type: ', netType);
+    if (credentialRef.current === 'guest') {
+      if (netType === 'wifi' && wifiSsidRef.current === 'Noky') {
+        setRestricted(false);
+        if (!applicationRunningRef.current && !netChangeRunningRef.current) {
+          netChangeRunningRef.current = true;
+          setTimeout(async () => {
+            const internetConnection = await utils.checkInternet();
+            if (internetConnection) {
+              await load();
+            } else {
+              console.log('no internet detected by network type change, nointernet interval started');
+              onNoInternet();
             }
-            setRestricted(userRestricted);
-            setWifiSsid(ssid);
-            setNetworkType(netType);
-            setInternet(internetConnection);
-          } else {
-            console.log('No internet by interval');
-          }
-        }, 5000);
+            netChangeRunningRef.current = false;
+          }, 5000);
+        }
+      } else {
+        setRestricted(true);
       }
     }
-    return cleanupInternetInterval;
-  }, [internet, credential, load, restricted, getRestricted]);
+    setNetworkType(netType);
+  }, [credentialRef, wifiSsidRef, load, onNoInternet]);
 
-  useEffect(() => {
-    // document.body.classList.add("transition");
-    // if (loaded) {
-    //   document.body.classList.remove("loaded");
-    //   setTimeout(() => {
-    //     document.body.classList.add("loaded");
-    //   }, 2500);
-    // } else {
-    //   document.body.classList.remove("loaded");
-    //   setTimeout(() => {
-    //     document.body.classList.add("loaded");
-    //   }, 2500);
-    // }
-  }, []);
+  const onResume = useCallback(async (e) => {
+    if (applicationRunningRef.current) {
+      const hdmiSalaChannel = await supabaseChannels.getSupabaseChannelState('hdmiSala');
+      if (hdmiSalaChannel.channel) {
+        const state = hdmiSalaChannel.channel.state;
+        switch (state) {
+          case 'joined':
+            console.log('hdmiSalaChannel joined on resume');
+            break;
+          case undefined:
+            console.warn('hdmiSalaChannel undefined on resume, subscribing again');
+            await supabaseChannels.unsubscribeFromAllSupabaseChannels();
+            await load();
+            break;
+          default:
+            console.warn('hdmiSalaChannel ' + state + ' on resume , subscribing again');
+            await supabaseChannels.unsubscribeFromAllSupabaseChannels();
+            await load();
+        }
+      } else {
+        console.warn('REAL BAD, no hdmiSalaChannel.channel');
+      }
+    }
+    setUserActive(true);
+  }, [load]);
 
-  const enableSend = () => {
+  const onPause = useCallback(async (e) => {
+    document.body.classList.remove("transition");
+    setUserActive(false);
+    if (internet) {
+      requests.sendLogs('salio', user);
+    }
+  }, [internet]);
+
+  const onEnableSend = () => {
     if (sendEnabled === true) {
       setSendEnabled(false);
     } else {
@@ -648,31 +495,21 @@ function Main() {
     }
   };
 
-  const removeStorage = () => {
+  const onRemoveStorage = () => {
     localStorage.setItem('user', '');
   };
 
-  const changeScreen = (screen) => {
+  const onScreenChanged = (screen) => {
     utils.triggerVibrate();
     setScreenSelected(screen);
     localStorage.setItem('screen', screen);
   };
 
   const onSupabaseTimeout = async () => {
-    await resume(wifiSsid);
+    await onResume();
   };
 
-  const onInternet = async () => {
-    await resume(wifiSsid);
-  };
-
-  const viewsFunctionMap = {setCredentials, onSupabaseTimeout, onInternet};
-
-  const viewsFunction = (fn, params) => {
-    viewsFunctionMap[fn](params);
-  };
-
-  const onBack = useCallback((e) => {
+  const onNavigationBack = useCallback((e) => {
     e.preventDefault();
     const newView = structuredClone(viewRef.current);
     if (viewRef.current.selected === 'roku') {
@@ -710,6 +547,113 @@ function Main() {
     window.navigator.app.exitApp();
   }, [changeView]);
 
+  // init
+
+  const init = useCallback(async () => {
+    const internetConnection = await utils.checkInternet();
+    const userCredential = localStorage.getItem('user');
+    let ssid = '';
+    let netType = '';
+    let userRestricted = '';
+    if (isApp) {
+      await CordovaPlugins.getPermissions();
+      ssid = await CordovaPlugins.getWifiSSID();
+      netType = await CordovaPlugins.getNetworkType();
+      await CordovaPlugins.startSsidListener(onSSidChange);
+      await CordovaPlugins.startNetworkTypeListener(onNetworkTypeChange);
+      userRestricted = utils.getUserRestricted({ssid, userCredential});
+    } else {
+    }
+    if (internetConnection) {
+      if (userCredential) {
+        if (userRestricted) {
+          setLoading(false);
+        } else {
+          await load(ssid, netType);
+        }
+      } else {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
+    }
+
+    if (document.readyState === 'complete') {
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    } else {
+      window.addEventListener('load', async () => {
+        window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      });
+    }
+
+    setTheme(localStorage.getItem('theme'));
+    setScreenSelected(localStorage.getItem('screen') || screenSelected);
+    setRestricted(userRestricted);
+    setWifiSsid(ssid);
+    setNetworkType(netType);
+    setCredential(userCredential);
+    setInternet(internetConnection);
+  }, [onNetworkTypeChange, onSSidChange, load, screenSelected]);
+
+  // useEffects
+
+  useEffect(() => {
+    viewRef.current = view;
+  }, [view]);
+
+  useEffect(() => {
+    rokuAppsRef.current = rokuApps;
+  }, [rokuApps]);
+
+  useEffect(() => {
+    screensRef.current = screens;
+  }, [screens]);
+
+  useEffect(() => {
+    hdmiSalaRef.current = hdmiSala;
+  }, [hdmiSala]);
+
+  useEffect(() => {
+    screenSelectedRef.current = screenSelected;
+  }, [screenSelected]);
+
+  useEffect(() => {
+    youtubeChannelsLizRef.current = youtubeChannelsLiz;
+  }, [youtubeChannelsLiz]);
+
+  useEffect(() => {
+    networkTypeRef.current = networkType;
+  }, [networkType]);
+
+  useEffect(() => {
+    wifiSsidRef.current = wifiSsid;
+  }, [wifiSsid]);
+
+  useEffect(() => {
+    credentialRef.current = credential;
+  }, [credential]);
+
+  useEffect(() => {
+    // document.body.classList.add("transition");
+    // if (loaded) {
+    //   document.body.classList.remove("loaded");
+    //   setTimeout(() => {
+    //     document.body.classList.add("loaded");
+    //   }, 2500);
+    // } else {
+    //   document.body.classList.remove("loaded");
+    //   setTimeout(() => {
+    //     document.body.classList.add("loaded");
+    //   }, 2500);
+    // }
+  }, []);
+
+  const viewsFunctionMap = {setCredentials, onSupabaseTimeout};
+
+  const viewsFunction = (fn, params) => {
+    viewsFunctionMap[fn](params);
+  };
+
   const onVolumeUp = useCallback((e) => {
     const screen = screensRef.current.find(screen => screen.id === screenSelectedRef.current);
     let newVol = 0;
@@ -740,7 +684,7 @@ function Main() {
     } else {
       changeControl({ifttt: [{device: screen.id, key: 'volume', value: 'down' + 1}], massMedia: []}); 
     }
-  }, [changeControl]);
+  }, [changeControl, screensRef]);
 
   const onVisibilityChange = useCallback(() => {
     if (document.visibilityState === 'visible') {
@@ -752,29 +696,29 @@ function Main() {
 
   useEffect(() => {
     if (isApp) {
-      document.addEventListener("backbutton", onBack);
+      document.addEventListener("backbutton", onNavigationBack);
       document.addEventListener("volumeupbutton", onVolumeUp);
       document.addEventListener("volumedownbutton", onVolumeDown);
       document.addEventListener("pause", onPause);
       document.addEventListener("resume", onResume);
     } else {
       document.addEventListener('visibilitychange', onVisibilityChange);
-      window.addEventListener("popstate", onBack);
+      window.addEventListener("popstate", onNavigationBack);
     }
 
     return () => {
       if (isApp) {
-        document.removeEventListener("backbutton", onBack);
+        document.removeEventListener("backbutton", onNavigationBack);
         document.removeEventListener("volumeupbutton", onVolumeUp);
         document.removeEventListener("volumedownbutton", onVolumeDown);
         document.removeEventListener("pause", onPause);
         document.removeEventListener("resume", onResume);
       } else {
         document.removeEventListener('visibilitychange', onVisibilityChange);
-        window.removeEventListener("popstate", onBack);
+        window.removeEventListener("popstate", onNavigationBack);
       }
     };
-  }, [onBack, onVolumeUp, onVolumeDown, onPause, onResume, onVisibilityChange]);
+  }, [onNavigationBack, onVolumeUp, onVolumeDown, onPause, onResume, onVisibilityChange]);
 
   if (!initializedRef.current) {
     eruda.init();
@@ -802,7 +746,7 @@ function Main() {
               screenSelected={screenSelected}
               screens={screens}
               userActive={userActive}
-              changeScreenParent={changeScreen}>
+              changeScreenParent={onScreenChanged}>
             </Screens>
             }
             <Controls
@@ -844,8 +788,8 @@ function Main() {
             {credential === 'dev' &&
             <Dev
               sendEnabled={sendEnabled}
-              enableSendParent={enableSend}
-              removeStorageParent={removeStorage}>
+              enableSendParent={onEnableSend}
+              removeStorageParent={onRemoveStorage}>
             </Dev>
             }
 

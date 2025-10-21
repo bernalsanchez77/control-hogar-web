@@ -1,6 +1,7 @@
 import supabase from './supabase-client';
 import Utils from '../utils';
 const utils = new Utils();
+let handlingNoInternet = false;
 
 class SupabaseChannels {
     supabaseChannels = {};
@@ -9,15 +10,18 @@ class SupabaseChannels {
     devicesCallback = null;
     screensCallback = null;
     youtubeVideosLizCallback = null;
-    setInternetFn = null;
+    onNoInternet = null;
 
-    async subscribeToSupabaseChannel(tableName, callback, setInternet, first) {
+    async subscribeToSupabaseChannel(tableName, callback, onNoInternet, first) {
+      if (handlingNoInternet) {
+        handlingNoInternet = false;
+      }
       if (!this.rokuAppsCallback && tableName === 'rokuApps') this.rokuAppsCallback = callback;
       if (!this.devicesCallback && tableName === 'devices') this.devicesCallback = callback;
       if (!this.screensCallback && tableName === 'screens') this.screensCallback = callback;
       if (!this.youtubeVideosLizCallback && tableName === 'youtubeVideosLiz') this.youtubeVideosLizCallback = callback;
       if (!this.hdmiSalaCallback && tableName === 'hdmiSala') this.hdmiSalaCallback = callback;
-      if (!this.setInternetFn) this.setInternetFn = setInternet;
+      if (!this.onNoInternet) this.onNoInternet = onNoInternet;
       if (!this.supabaseChannels[tableName]) {
         this.supabaseChannels[tableName] = {};
       }
@@ -38,10 +42,10 @@ class SupabaseChannels {
       return new Promise((resolve, reject) => {
         channel.subscribe(async (status) => {
           if (this.supabaseChannels[tableName].subscribed) {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
+            // const now = new Date();
+            // const hours = String(now.getHours()).padStart(2, '0');
+            // const minutes = String(now.getMinutes()).padStart(2, '0');
+            // const seconds = String(now.getSeconds()).padStart(2, '0');
             if (status !== 'SUBSCRIBED') {
               // console.log('Subscription error on', tableName, 'status: ', status, 'at time:', `${hours}:${minutes}:${seconds}`);
             }
@@ -82,7 +86,7 @@ class SupabaseChannels {
         setTimeout(async () => {
           const internetConnection = await utils.checkInternet();
           if (internetConnection) {
-            await this.subscribeToSupabaseChannel(tableName, this[tableName + 'Callback'], this.setInternet).then((res) => {
+            await this.subscribeToSupabaseChannel(tableName, this[tableName + 'Callback'], this.onNoInternet).then((res) => {
               if (res.success) {
                 console.log('Re-subscribed to:', tableName);
               } else {
@@ -101,8 +105,11 @@ class SupabaseChannels {
               console.error('Error re-subscribing to ' + tableName + ': ', res);
             });
           } else {
-            console.log('No internet, will not re-subscribe to ' + tableName);
-            this.setInternetFn(false);
+            if (!handlingNoInternet) {
+              handlingNoInternet = true;
+              this.onNoInternet();
+              console.log('No internet, will not re-subscribe to tables');
+            }
           }
         }, 5000); // wait 5 seconds before re-subscribing
       }
@@ -128,7 +135,7 @@ class SupabaseChannels {
     async subscribeToAllSupabaseChannels() {
       const tableNames = ['hdmiSala', 'rokuApps', 'devices', 'screens', 'youtubeVideosLiz'];
       for (const tableName of tableNames) {
-        await this.subscribeToSupabaseChannel(tableName, this[tableName + 'Callback'], this.setInternet, true).then((res) => {
+        await this.subscribeToSupabaseChannel(tableName, this[tableName + 'Callback'], this.onNoInternet, true).then((res) => {
           if (res.success) {
             console.log('Re-subscribed to:', tableName, ' after internet restored');
           } else {

@@ -7,12 +7,6 @@ function Restricted() {
         <p className='views-restricted-text-title'>Error en la aplicacion, acceso restringido.</p>
         <p className='views-restricted-text-description'>La aplicacion no tiene permisos de acceso.</p>
       </div>
-      {/* <div className='views-internet-button'>
-        <button
-          onTouchStart={() => restart()}>
-            Reintentar
-        </button>
-      </div> */}
     </div>
   );
 }

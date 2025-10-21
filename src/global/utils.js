@@ -119,5 +119,12 @@ class Utils {
         return false;
       }
     }
+    getUserRestricted(ssid, credential) {
+      let userRestricted = false;
+      if (ssid !== 'Noky' && credential === 'guest') {
+        userRestricted = true;
+      }
+      return userRestricted;
+    }
 }
 export default Utils;

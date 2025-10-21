@@ -1,8 +1,5 @@
-// import Utils from './utils';
-// const utils = new Utils();
-// let ssid = '';
-// let networkTypeDebounceTimer;
-// let ssidDebounceTimer;
+let firstWifiSsidChange = true;
+let firstNetworkTypeChange = true;
 class CordovaPlugins {
   async getPermissions() {
     var permissions = window.cordova.plugins.permissions;
@@ -50,7 +47,10 @@ class CordovaPlugins {
   async startSsidListener(onSSidChange) {
     window.cordova.plugins.netinfo.startSSIDListener(
       async (info) => {
-        onSSidChange(info.ssid.replace(/"/g, '').trim());
+        if (!firstWifiSsidChange) {
+          onSSidChange(info.ssid.replace(/"/g, '').trim());
+        }
+        firstWifiSsidChange = false;
       },
       (err) => console.error('ssid listener error:', err)
     );
@@ -59,54 +59,14 @@ class CordovaPlugins {
   async startNetworkTypeListener(onNetworkTypeChange) {
     window.cordova.plugins.networkinfo.startNetworkTypeListener(
       async (info) => {
-        onNetworkTypeChange(info.networkType.replace(/"/g, '').trim());
+        if (!firstNetworkTypeChange) {
+          onNetworkTypeChange(info.networkType.replace(/"/g, '').trim());
+        }
+        firstNetworkTypeChange = false;
       },
       (err) => console.error('SSID listener error:', err)
     );
   }
-
-  // async startSsidListener(setWifiSsid) {
-  //   window.cordova.plugins.netinfo.startSSIDListener(
-  //     async (info) => {
-  //       clearTimeout(ssidDebounceTimer);
-  //       ssidDebounceTimer = setTimeout(() => {
-  //         const cleanedSsid = info.ssid.replace(/"/g, '').trim();
-  //         console.log('ssid listener (debounced):', cleanedSsid);
-
-  //         if (
-  //           cleanedSsid &&
-  //           cleanedSsid !== 'unknown-wifi' &&
-  //           cleanedSsid !== ssid
-  //         ) {
-  //           ssid = cleanedSsid;
-  //           setWifiSsid(cleanedSsid);
-  //         }
-  //       }, 1000);
-  //     },
-  //     (err) => console.error('ssid listener error:', err)
-  //   );
-  // }
-
-  // async startNetworkTypeListener(setWifiSsid) {
-  //   window.cordova.plugins.networkinfo.startNetworkTypeListener(
-  //     async (info) => {
-  //       clearTimeout(networkTypeDebounceTimer);
-  //       networkTypeDebounceTimer = setTimeout(() => {
-  //         const networkType = info.networkType.replace(/"/g, '').trim();
-  //         console.log('network listener (debounced):', networkType);
-
-  //         if (networkType === 'cellular') {
-  //           ssid = networkType;
-  //           setWifiSsid('cellular');
-  //         } else if (networkType === 'none') {
-  //           ssid = networkType;
-  //           setWifiSsid('none');
-  //         }
-  //       }, 1000);
-  //     },
-  //     (err) => console.error('SSID listener error:', err)
-  //   );
-  // }
 
   async getWifiSSID() {
     let wifiSsid = null;

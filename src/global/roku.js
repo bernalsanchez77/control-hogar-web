@@ -2,7 +2,7 @@
 import Requests from './requests';
 const requests = new Requests();
 class Roku {
-  async getRokuPlayState(setRokuPlayState) {
+  async getPlayState(setRokuPlayState) {
     try {
       const playState = await requests.getRokuData('media-player');
       if (playState && playState.status === 200) {
@@ -31,6 +31,18 @@ class Roku {
     } catch (err) {
       setConnectedToRoku(false);
       return null;
+    }
+  }
+
+  async updatePlayState(setRokuPlayState, currentPlayState) {
+    let playState = await this.getPlayState(setRokuPlayState);
+    if (playState) {
+      const newPlayState = playState.state;
+      if (currentPlayState !== newPlayState) {
+        requests.updateTableInSupabase({
+          new: {newId: 'roku', newTable: 'hdmiSala', newPlayState, newDate: new Date().toISOString()}
+        });
+      }
     }
   }
 }
