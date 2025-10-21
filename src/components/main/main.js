@@ -203,36 +203,6 @@ function Main() {
     }
   }, [sendEnabled]);
 
-  const setCredentials = async (userCredential) => {
-    const internetConnection = await utils.checkInternet();
-    if (internetConnection) {
-      let user = '';
-      if (userCredential === 'guest') {
-        localStorage.setItem('user', userCredential);
-        if (utils.getUserRestricted({wifiSsid, userCredential})) {
-          setRestricted(true);
-        } else {
-          await load();
-        }
-        user = userCredential;
-      } else {
-        const response = await requests.setCredentials(userCredential);
-        if (response.status === 200 && response.data.validUser) {
-          if (response.data.dev) {
-            localStorage.setItem('user', response.data.dev);
-            user = 'dev';
-            setSendEnabled(false);
-          } else {
-            localStorage.setItem('user', 'owner');
-            user = 'owner';
-          }
-          await load();
-        }
-      }
-      setCredential(user);
-    }
-  };
-
   const setData = useCallback(async (tableName, isInit, callback) => {
     let subscriptionResponse = '';
     const table = await requests.getTableFromSupabase(tableName);
@@ -547,6 +517,82 @@ function Main() {
     window.navigator.app.exitApp();
   }, [changeView]);
 
+  const onVolumeUp = useCallback((e) => {
+    const screen = screensRef.current.find(screen => screen.id === screenSelectedRef.current);
+    let newVol = 0;
+    newVol = screen.volume + 1;
+    changeControl({
+      ifttt: [{device: screen.id, key: 'volume', value: 'up' + 1}],
+      massMedia: [{device: screen.id, key: 'volume', value: newVol}],
+    });
+  }, [changeControl, screenSelectedRef, screensRef]);
+
+  const onVolumeDown = useCallback((e) => {
+    const screen = screensRef.current.find(screen => screen.id === screenSelectedRef.current);
+    let newVol = 0;
+    if (screen.volume !== 0) {
+      if (screen.volume - 1 >= 0) {
+        newVol = screen.volume - 1;
+        changeControl({
+          ifttt: [{device: screen.id, key: 'volume', value: 'down' + 1}],
+          massMedia: [{device: screen.id, key: 'volume', value: newVol}],
+        });
+      } else {
+        newVol = screen.volume - 1;
+        changeControl({
+          ifttt: [{device: screen.id, key: 'volume', value: 'down' + 1}],
+          massMedia: [{device: screen.id, key: 'volume', value: '0'}],
+        });
+      }
+    } else {
+      changeControl({ifttt: [{device: screen.id, key: 'volume', value: 'down' + 1}], massMedia: []}); 
+    }
+  }, [changeControl, screensRef]);
+
+  const onVisibilityChange = useCallback(() => {
+    if (document.visibilityState === 'visible') {
+      onResume();
+    } else {
+      onPause();
+    }
+  }, [onPause, onResume]);
+
+  const onSetCredentials = async (userCredential) => {
+    const internetConnection = await utils.checkInternet();
+    if (internetConnection) {
+      let user = '';
+      if (userCredential === 'guest') {
+        localStorage.setItem('user', userCredential);
+        if (utils.getUserRestricted({wifiSsid, userCredential})) {
+          setRestricted(true);
+        } else {
+          await load();
+        }
+        user = userCredential;
+      } else {
+        const response = await requests.setCredentials(userCredential);
+        if (response.status === 200 && response.data.validUser) {
+          if (response.data.dev) {
+            localStorage.setItem('user', response.data.dev);
+            user = 'dev';
+            setSendEnabled(false);
+          } else {
+            localStorage.setItem('user', 'owner');
+            user = 'owner';
+          }
+          await load();
+        }
+      }
+      setCredential(user);
+    }
+  };
+
+  const viewsFunctionMap = {onSetCredentials, onSupabaseTimeout};
+
+  const onViewsEvents = (fn, params) => {
+    viewsFunctionMap[fn](params);
+  };
+
   // init
 
   const init = useCallback(async () => {
@@ -647,52 +693,6 @@ function Main() {
     //   }, 2500);
     // }
   }, []);
-
-  const viewsFunctionMap = {setCredentials, onSupabaseTimeout};
-
-  const viewsFunction = (fn, params) => {
-    viewsFunctionMap[fn](params);
-  };
-
-  const onVolumeUp = useCallback((e) => {
-    const screen = screensRef.current.find(screen => screen.id === screenSelectedRef.current);
-    let newVol = 0;
-    newVol = screen.volume + 1;
-    changeControl({
-      ifttt: [{device: screen.id, key: 'volume', value: 'up' + 1}],
-      massMedia: [{device: screen.id, key: 'volume', value: newVol}],
-    });
-  }, [changeControl, screenSelectedRef, screensRef]);
-
-  const onVolumeDown = useCallback((e) => {
-    const screen = screensRef.current.find(screen => screen.id === screenSelectedRef.current);
-    let newVol = 0;
-    if (screen.volume !== 0) {
-      if (screen.volume - 1 >= 0) {
-        newVol = screen.volume - 1;
-        changeControl({
-          ifttt: [{device: screen.id, key: 'volume', value: 'down' + 1}],
-          massMedia: [{device: screen.id, key: 'volume', value: newVol}],
-        });
-      } else {
-        newVol = screen.volume - 1;
-        changeControl({
-          ifttt: [{device: screen.id, key: 'volume', value: 'down' + 1}],
-          massMedia: [{device: screen.id, key: 'volume', value: '0'}],
-        });
-      }
-    } else {
-      changeControl({ifttt: [{device: screen.id, key: 'volume', value: 'down' + 1}], massMedia: []}); 
-    }
-  }, [changeControl, screensRef]);
-
-  const onVisibilityChange = useCallback(() => {
-    if (document.visibilityState === 'visible') {
-      onResume();
-    } else {
-      onPause();
-    }
-  }, [onPause, onResume]); 
 
   useEffect(() => {
     if (isApp) {
@@ -800,7 +800,7 @@ function Main() {
         restricted={restricted}
         credential={credential}
         supabaseTimeout={supabaseTimeOut}
-        restartParent={viewsFunction}>
+        restartParent={onViewsEvents}>
       </Views>
       }
     </div>
