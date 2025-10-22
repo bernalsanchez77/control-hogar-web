@@ -1,7 +1,7 @@
 import {useRef, useEffect} from 'react';
 import './youtube.css';
 
-function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeViewParent, addToQueueParent}) {
+function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeViewParent, handleQueueParent, cancelQueueListenerParent}) {
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   let youtubeSortedVideos = [];
@@ -22,10 +22,19 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
     newView.roku.apps.youtube.mode = 'channel';
     changeViewParent(newView);
   };
-  const addToQueue = (videoId) => {
-    const video = getLastQueue();
-    addToQueueParent(videoId, video.queue + 1);
+  const handleQueue = (video) => {
+    if (video.queue) {
+      handleQueueParent({action: 'remove', videoId: video.id, queueNumber: 0, date: video.date});
+    } else {
+      const lastQueue = getLastQueue().queue;
+      handleQueueParent({action: 'add', videoId: video.id, queueNumber: lastQueue + 1, date: video.date});
+    }
   };
+
+  const cancelQueueListener = () => {
+    cancelQueueListenerParent();
+  };
+
   const changeControl = (video) => {
     const currentVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
     currentVideoRef.current = currentVideo;
@@ -75,7 +84,7 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
     if (!touchMoved) {
       if (longClick.current) {
         console.log('long click');
-        addToQueue(video.id);
+        handleQueue(video);
       } else {
         if (type === 'channel') {
           changeView(video.id);
@@ -149,13 +158,6 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
   };
 
   useEffect(() => {
-    if (rokuPlayState && rokuPlayState.plugin?.id === '837' && rokuPlayState.state === 'play') {
-      // console.log('player: ', rokuPlayState.plugin.id);
-      // console.log('position effect: ', parseInt(rokuPlayState.position) / 1000);
-    }
-  }, [rokuPlayState]);
-
-  useEffect(() => {
     let currentVideoDuration = 0;
     if (currentVideoRef.current.duration) {
       currentVideoDuration = timeToMs(currentVideoRef.current.duration);
@@ -166,7 +168,11 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
       console.log('terminando');
       currentVideoEndingRef.current = true;
       const nextVideo = getNextQueue(currentVideoRef.current.queue);
-      changeControl(nextVideo.id);
+      if (nextVideo && nextVideo.id) {
+        changeControl(nextVideo.id);
+      } else {
+        cancelQueueListener();
+      }
     }
   }, [rokuPlayStatePosition]);
 

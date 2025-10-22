@@ -157,6 +157,9 @@ function Main() {
         new: {newId, newTable: tableName, newState: 'selected', newDate: new Date().toISOString()}
       });
     }
+    // test
+    Roku.refreshCounter();
+    // end test
   }
 
   const updateTableInSupabase = (newTable, tableName, el, id) => {
@@ -166,13 +169,14 @@ function Main() {
     });
   }
 
-  const addToYoutubeQueue = (newId, number) => {
+  const handleYoutubeQueue = (params) => {
     requests.updateTableInSupabase({
-      new: {newId, newTable: 'youtubeVideosLiz', newQueue: number, newDate: new Date().toISOString()}
+      new: {newId: params.videoId, newTable: 'youtubeVideosLiz', newQueue: params.queueNumber, newDate: params.date}
     });
-    // test
-    Roku.refreshCounter();
-    // end test
+  }
+
+  const cancelQueueListener = () => {
+    Roku.stopPlayStateListener();
   }
 
   const changeControl = useCallback(async (params, obj) => {
@@ -773,7 +777,8 @@ function Main() {
               triggerVibrateParent={utils.triggerVibrate}
               searchYoutubeParent={searchYoutube}
               searchRokuModeParent={seachRokuMode}
-              addToYoutubeQueueParent={addToYoutubeQueue}
+              handleYoutubeQueueParent={handleYoutubeQueue}
+              cancelQueueListenerParent={cancelQueueListener}
               changeRokuSearchModeParent={changeRokuSearchMode}>
             </Controls>
             {devices.length && !view.roku.apps.selected && !view.devices.device &&

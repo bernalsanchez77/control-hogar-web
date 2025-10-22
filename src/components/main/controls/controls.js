@@ -8,7 +8,7 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({rokuPlayStatePosition, rokuPlayState, screens, devices, rokuSearchMode, changeRokuSearchModeParent, screenSelected, view, hdmiSala, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, triggerVibrateParent, searchYoutubeParent, searchRokuModeParent, addToYoutubeQueueParent}) {
+function Controls({rokuPlayStatePosition, rokuPlayState, screens, devices, rokuSearchMode, changeRokuSearchModeParent, screenSelected, view, hdmiSala, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, triggerVibrateParent, searchYoutubeParent, searchRokuModeParent, handleYoutubeQueueParent, cancelQueueListenerParent}) {
   const changeControl = (params) => {
     changeControlParent(params);
   }
@@ -25,12 +25,16 @@ function Controls({rokuPlayStatePosition, rokuPlayState, screens, devices, rokuS
     searchYoutubeParent(text);
   }
 
-  const addToYoutubeQueue = (videoId, number) => {
-    addToYoutubeQueueParent(videoId, number);
+  const handleYoutubeQueue = (params) => {
+    handleYoutubeQueueParent(params);
   }
 
   const changeRokuSearchMode = (mode) => {
     changeRokuSearchModeParent(mode);
+  }
+
+  const cancelQueueListener = () => {
+    cancelQueueListenerParent();
   }
 
   return (
@@ -85,9 +89,10 @@ function Controls({rokuPlayStatePosition, rokuPlayState, screens, devices, rokuS
           youtubeChannelsLiz={youtubeChannelsLiz}
           rokuPlayStatePosition={rokuPlayStatePosition}
           youtubeVideosLiz={youtubeVideosLiz}
-          addToYoutubeQueueParent={addToYoutubeQueue}
+          handleYoutubeQueueParent={handleYoutubeQueue}
           changeControlParent={changeControl}
           changeRokuSearchModeParent={changeRokuSearchMode}
+          cancelQueueListenerParent={cancelQueueListener}
           changeViewParent={changeView}>
         </Apps>
         }

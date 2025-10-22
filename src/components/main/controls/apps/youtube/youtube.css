@@ -31,7 +31,7 @@
   width: 12vh;
 }
 .controls-apps-youtube-video-img--queue {
-  border: 2px solid #ffffff;
+  outline: 2px solid #ffffff;
 }
 .controls-apps-youtube-video-button {
   background-color: transparent;

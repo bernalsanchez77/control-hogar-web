@@ -2,7 +2,7 @@ import All from './all/all';
 import Youtube from './youtube/youtube';
 import './apps.css';
 
-function Apps({rokuPlayStatePosition, rokuPlayState, view, rokuApps, rokuSearchMode, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeRokuSearchModeParent, changeViewParent, addToYoutubeQueueParent}) {
+function Apps({rokuPlayStatePosition, rokuPlayState, view, rokuApps, rokuSearchMode, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeRokuSearchModeParent, changeViewParent, handleYoutubeQueueParent, cancelQueueListenerParent}) {
   const changeControl = (value) => {
     changeControlParent(value);
   }
@@ -11,12 +11,16 @@ function Apps({rokuPlayStatePosition, rokuPlayState, view, rokuApps, rokuSearchM
     changeViewParent(view);
   }
 
-  const addToYoutubeQueue = (videoId, number) => {
-    addToYoutubeQueueParent(videoId, number);
+  const handleYoutubeQueue = (params) => {
+    handleYoutubeQueueParent(params);
   }
 
   const changeRokuSearchMode = (mode) => {
     changeRokuSearchModeParent(mode);
+  }
+
+  const cancelQueueListener = () => {
+    cancelQueueListenerParent();
   }
 
   return (
@@ -41,7 +45,8 @@ function Apps({rokuPlayStatePosition, rokuPlayState, view, rokuApps, rokuSearchM
         youtubeVideosLiz={youtubeVideosLiz}
         youtubeSearchVideos={youtubeSearchVideos}
         changeControlParent={changeControl}
-        addToQueueParent={addToYoutubeQueue}
+        handleQueueParent={handleYoutubeQueue}
+        cancelQueueListenerParent={cancelQueueListener}
         changeViewParent={changeView}>
       </Youtube>
       }
