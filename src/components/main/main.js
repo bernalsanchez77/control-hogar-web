@@ -170,6 +170,9 @@ function Main() {
     requests.updateTableInSupabase({
       new: {newId, newTable: 'youtubeVideosLiz', newQueue: number, newDate: new Date().toISOString()}
     });
+    // test
+    Roku.refreshCounter();
+    // end test
   }
 
   const changeControl = useCallback(async (params, obj) => {
@@ -184,7 +187,7 @@ function Main() {
         } else {
           if (el.device === 'rokuSala') {
             if (el.key === 'video' && viewRef.current.roku.apps.youtube.mode === 'channel') {
-              // modifyTableInSupabase(youtubeVideosLiz, 'youtubeVideosLiz', el);
+              modifyTableInSupabase(youtubeVideosLiz, 'youtubeVideosLiz', el);
               // if (isApp && wifiSsidRef === 'Noky' && rokuPLayStateListeningRef.current) {
               if (!rokuPLayStateListeningRef.current) {
                 rokuPLayStateListeningRef.current = true;
