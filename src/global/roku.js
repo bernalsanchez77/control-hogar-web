@@ -18,7 +18,7 @@ class Roku {
     }
   }
 
-  async getRokuActiveApp(setConnectedToRoku) {
+  async getActiveApp(setConnectedToRoku) {
     try {
       const activeApp = await requests.getRokuData('active-app');
       if (activeApp && activeApp.status === 200) {
