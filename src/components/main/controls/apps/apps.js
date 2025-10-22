@@ -2,13 +2,17 @@ import All from './all/all';
 import Youtube from './youtube/youtube';
 import './apps.css';
 
-function Apps({rokuPlayState, view, rokuApps, rokuSearchMode, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeRokuSearchModeParent, changeViewParent}) {
+function Apps({rokuPlayStatePosition, rokuPlayState, view, rokuApps, rokuSearchMode, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeRokuSearchModeParent, changeViewParent, addToYoutubeQueueParent}) {
   const changeControl = (value) => {
     changeControlParent(value);
   }
 
   const changeView = (view) => {
     changeViewParent(view);
+  }
+
+  const addToYoutubeQueue = (videoId, number) => {
+    addToYoutubeQueueParent(videoId, number);
   }
 
   const changeRokuSearchMode = (mode) => {
@@ -30,12 +34,14 @@ function Apps({rokuPlayState, view, rokuApps, rokuSearchMode, youtubeSearchVideo
       {view.roku.apps.selected === 'youtube' &&
       <Youtube
         rokuPlayState={rokuPlayState}
+        rokuPlayStatePosition={rokuPlayStatePosition}
         view={view}
         rokuApps={rokuApps}
         youtubeChannelsLiz={youtubeChannelsLiz}
         youtubeVideosLiz={youtubeVideosLiz}
         youtubeSearchVideos={youtubeSearchVideos}
         changeControlParent={changeControl}
+        addToQueueParent={addToYoutubeQueue}
         changeViewParent={changeView}>
       </Youtube>
       }

@@ -1,6 +1,12 @@
 
 import Requests from './requests';
 const requests = new Requests();
+let playStateInterval = null;
+let position = 0;
+// test
+let testCount = 1540000;
+let playState = {};
+// end test
 class Roku {
   async getPlayState(setRokuPlayState) {
     try {
@@ -44,6 +50,29 @@ class Roku {
         });
       }
     }
+  }
+
+  async startPlayStateListener(setRokuPlayState, setRokuPlayStatePosition) {
+    position = 0;
+    playStateInterval = setInterval(async () => {
+      // playState = await this.getPlayState(setRokuPlayState);
+
+      // test
+      testCount = testCount + 5000;
+      playState.position = testCount
+      playState.state = 'play';
+      // end test
+
+      // position = parseInt(playState.position) / 1000;
+      position = parseInt(playState.position);
+      if (playState && playState.state === 'play') {
+        setRokuPlayStatePosition(position);
+      }
+    }, 5000);
+  }
+
+  async stopPlayStateListener() {
+    clearInterval(playStateInterval);
   }
 }
 const roku = new Roku();

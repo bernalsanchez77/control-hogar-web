@@ -8,7 +8,7 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({rokuPlayState, screens, devices, rokuSearchMode, changeRokuSearchModeParent, screenSelected, view, hdmiSala, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, triggerVibrateParent, searchYoutubeParent, searchRokuModeParent}) {
+function Controls({rokuPlayStatePosition, rokuPlayState, screens, devices, rokuSearchMode, changeRokuSearchModeParent, screenSelected, view, hdmiSala, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, triggerVibrateParent, searchYoutubeParent, searchRokuModeParent, addToYoutubeQueueParent}) {
   const changeControl = (params) => {
     changeControlParent(params);
   }
@@ -23,6 +23,10 @@ function Controls({rokuPlayState, screens, devices, rokuSearchMode, changeRokuSe
 
   const searchYoutube = (text) => {
     searchYoutubeParent(text);
+  }
+
+  const addToYoutubeQueue = (videoId, number) => {
+    addToYoutubeQueueParent(videoId, number);
   }
 
   const changeRokuSearchMode = (mode) => {
@@ -79,7 +83,9 @@ function Controls({rokuPlayState, screens, devices, rokuSearchMode, changeRokuSe
           rokuSearchMode={rokuSearchMode}
           youtubeSearchVideos={youtubeSearchVideos}
           youtubeChannelsLiz={youtubeChannelsLiz}
+          rokuPlayStatePosition={rokuPlayStatePosition}
           youtubeVideosLiz={youtubeVideosLiz}
+          addToYoutubeQueueParent={addToYoutubeQueue}
           changeControlParent={changeControl}
           changeRokuSearchModeParent={changeRokuSearchMode}
           changeViewParent={changeView}>

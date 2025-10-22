@@ -15,6 +15,7 @@ export default async function handler(req, res) {
   let newMute = null;
   let newColor = null;
   let newPlayState = null;
+  let newQueue = null;
 
   if (req.body.current) {
     currentId = req.body.current.currentId;
@@ -30,6 +31,7 @@ export default async function handler(req, res) {
     newMute = req.body.new.newMute;
     newColor = req.body.new.newColor;
     newPlayState = req.body.new.newPlayState;
+    newQueue = req.body.new.newQueue;
   }
 
   let data, error;
@@ -43,7 +45,8 @@ export default async function handler(req, res) {
       color: newColor,
       date: newDate,
       state: newState,
-      playState: newPlayState
+      playState: newPlayState,
+      queue: newQueue
     }).eq('id', newId));
   } else {
     ({data, error} = await supabase.from(newTable).update({
@@ -52,7 +55,8 @@ export default async function handler(req, res) {
       color: newColor,
       date: newDate,
       state: newState,
-      playState: newPlayState
+      playState: newPlayState,
+      queue: newQueue
     }).eq('id', newId));
   }
   if (error) {
