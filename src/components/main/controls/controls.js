@@ -8,7 +8,7 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({rokuPlayStatePosition, rokuPlayState, screens, devices, rokuSearchMode, changeRokuSearchModeParent, screenSelected, view, hdmiSala, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, triggerVibrateParent, searchYoutubeParent, searchRokuModeParent, handleYoutubeQueueParent, cancelQueueListenerParent}) {
+function Controls({rokuPlayStatePosition, rokuPlayState, screens, devices, rokuSearchMode, changeRokuSearchModeParent, screenSelected, view, hdmiSala, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, triggerVibrateParent, searchYoutubeParent, searchRokuModeParent, handleYoutubeQueueParent, stopPlayStateListenerParent}) {
   const changeControl = (params) => {
     changeControlParent(params);
   }
@@ -33,8 +33,8 @@ function Controls({rokuPlayStatePosition, rokuPlayState, screens, devices, rokuS
     changeRokuSearchModeParent(mode);
   }
 
-  const cancelQueueListener = () => {
-    cancelQueueListenerParent();
+  const stopPlayStateListener = () => {
+    stopPlayStateListenerParent();
   }
 
   return (
@@ -92,7 +92,7 @@ function Controls({rokuPlayStatePosition, rokuPlayState, screens, devices, rokuS
           handleYoutubeQueueParent={handleYoutubeQueue}
           changeControlParent={changeControl}
           changeRokuSearchModeParent={changeRokuSearchMode}
-          cancelQueueListenerParent={cancelQueueListener}
+          stopPlayStateListenerParent={stopPlayStateListener}
           changeViewParent={changeView}>
         </Apps>
         }

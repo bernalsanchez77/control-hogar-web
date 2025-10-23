@@ -4,7 +4,7 @@ const requests = new Requests();
 let playStateInterval = null;
 let position = 0;
 // test
-let testCount = 1530000;
+let testCount = 1540000;
 let playState = {};
 // end test
 class Roku {
@@ -55,12 +55,12 @@ class Roku {
   async startPlayStateListener(setRokuPlayState, setRokuPlayStatePosition) {
     position = 0;
     playStateInterval = setInterval(async () => {
-      playState = await this.getPlayState(setRokuPlayState);
+      // playState = await this.getPlayState(setRokuPlayState);
 
       // test
-      // testCount = testCount + 5000;
-      // playState.position = testCount
-      // playState.state = 'play';
+      testCount = testCount + 5000;
+      playState.position = testCount
+      playState.state = 'play';
       // end test
 
       // position = parseInt(playState.position) / 1000;

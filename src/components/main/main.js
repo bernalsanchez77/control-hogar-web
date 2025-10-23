@@ -175,7 +175,7 @@ function Main() {
     });
   }
 
-  const cancelQueueListener = () => {
+  const stopPlayStateListener = () => {
     Roku.stopPlayStateListener();
   }
 
@@ -778,7 +778,7 @@ function Main() {
               searchYoutubeParent={searchYoutube}
               searchRokuModeParent={seachRokuMode}
               handleYoutubeQueueParent={handleYoutubeQueue}
-              cancelQueueListenerParent={cancelQueueListener}
+              stopPlayStateListenerParent={stopPlayStateListener}
               changeRokuSearchModeParent={changeRokuSearchMode}>
             </Controls>
             {devices.length && !view.roku.apps.selected && !view.devices.device &&
