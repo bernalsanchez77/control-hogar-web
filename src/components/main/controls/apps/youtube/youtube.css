@@ -31,12 +31,20 @@
   width: 12vh;
 }
 .controls-apps-youtube-video-img--queue {
-  outline: 2px solid #ffffff;
+  outline: 1.5px solid #ffffff;
+}
+.controls-apps-youtube-video-queue-number {
+position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 20px;
+  text-shadow: -1px -1px 10px #000, 1px -1px 10px #000, -1px 1px 10px #000, 1px 1px 10px #000, 0 -2px 5px #000, 0 2px 5px #000, -2px 0 5px #000, 2px 0 5px #000;
 }
 .controls-apps-youtube-video-button {
   background-color: transparent;
   border: 1px solid transparent;
   padding: 0;
+  position: relative;
 }
 .controls-apps-youtube-channel-button {
   background-color: transparent;
@@ -52,7 +60,7 @@
   }
 }
 .controls-apps-youtube-video-button--selected {
-  animation: flashing 2s ease-in-out infinite;
+  /* animation: flashing 2s ease-in-out infinite; */
 }
 .controls-apps-youtube-channel-title {
   padding: 3px 0 10px;
@@ -83,4 +91,36 @@
 button.controls-apps-youtube-video-button:active {
   background-color: white;
   transition: background-color 0.1s;
+}
+
+/* ProgressBar.css */
+.progress-bar-container {
+    width: 100%;
+    position: absolute;
+    bottom: 53px;
+}
+
+.progress-bar-track {
+    width: 100%;
+    height: 5px; /* Set a height for visibility */
+    background-color: #e0e0e0; /* Light background for the track */
+    border-radius: 15px;
+    overflow: hidden; /* Important for clean corners */
+}
+
+.progress-bar-fill {
+    height: 100%;
+    /* Start at 0, React will override this via the 'style' prop */
+    width: 0; 
+    background-color: #4CAF50; /* Green fill color */
+    
+    /* Smooth animation as the width changes */
+    transition: width 0.4s ease-in-out; 
+}
+
+.progress-bar-label {
+    display: block;
+    margin-top: 10px;
+    font-family: sans-serif;
+    text-align: center;
 }

@@ -4,11 +4,11 @@ import './credentials.css';
 function Credentials({restartParent}) {
   const [credentialValue, setCredentialValue] = useState('');
   const setGuestCredential = () => {
-    restartParent('setCredentials', 'guest');
+    restartParent('onSetCredentials', 'guest');
   };
   const setOwnerCredential = (e) => {
     setCredentialValue(e.target.value);
-    restartParent('setCredentials', e.target.value);
+    restartParent('onSetCredentials', e.target.value);
   };
   return (
     <div className="credentials">

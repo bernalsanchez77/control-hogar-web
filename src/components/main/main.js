@@ -176,6 +176,7 @@ function Main() {
   }
 
   const stopPlayStateListener = () => {
+    rokuPLayStateListeningRef.current = false;
     Roku.stopPlayStateListener();
   }
 

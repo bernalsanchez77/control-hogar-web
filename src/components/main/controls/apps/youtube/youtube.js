@@ -1,4 +1,4 @@
-import {useRef, useEffect} from 'react';
+import {useRef, useEffect, useCallback} from 'react';
 import './youtube.css';
 
 function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeViewParent, handleQueueParent, stopPlayStateListenerParent}) {
@@ -10,9 +10,10 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
   let touchStartY = 0;
   const channelSelected = useRef('');
   const currentVideoRef = useRef({});
-  const currentVideoEndingRef = useRef(false);
-  const space = '--';
   const rokuId = rokuApps.find(app => app.id === 'youtube').rokuId;
+  const normalizedPercentage = useRef(Math.min(100, Math.max(0, 0)));
+  currentVideoRef.current = youtubeVideosLiz.find(vid => vid.state === 'selected');
+  console.log('current video:', currentVideoRef.current.title);
 
   const changeView = (channel) => {
     localStorage.setItem('channelSelected', channel);
@@ -22,30 +23,43 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
     newView.roku.apps.youtube.mode = 'channel';
     changeViewParent(newView);
   };
-  const handleQueue = (video) => {
+
+  const getLastQueue = useCallback(() => {
+    return youtubeVideosLiz.reduce((maxObject, currentObject) => {
+      const maxVal = maxObject['queue'];
+      const currentVal = currentObject['queue'];
+      if (currentVal > maxVal) {
+        return currentObject;
+      } else {
+        return maxObject;
+      }
+    });
+  }, [youtubeVideosLiz]);
+
+  const handleQueue = useCallback((video) => {
     if (video.queue) {
       handleQueueParent({action: 'remove', videoId: video.id, queueNumber: 0, date: video.date});
     } else {
       const lastQueue = getLastQueue().queue;
       handleQueueParent({action: 'add', videoId: video.id, queueNumber: lastQueue + 1, date: video.date});
     }
-  };
+  }, [handleQueueParent, getLastQueue]);
 
-  const stopPlayStateListener = () => {
+  const stopPlayStateListener = useCallback(() => {
     stopPlayStateListenerParent();
-  };
+  }, [stopPlayStateListenerParent]);
 
-  const changeControl = (video) => {
+  const changeControl = useCallback((video) => {
     const currentVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
     if (currentVideo?.id !== video.id) {
-      currentVideoRef.current = video;
+      // currentVideoRef.current = video;
       const device = 'rokuSala';
       changeControlParent({
         roku: [{device, key: 'launch', value: rokuId, params: {contentID: video.id}}],
         massMedia: [{device, key: 'video', value: video.id}],
       });
     }
-  };
+  }, [changeControlParent, rokuId, youtubeVideosLiz]);
   if (view.roku.apps.youtube.mode === '') {
     youtubeSortedChannels = Object.values(youtubeChannelsLiz).sort((a, b) => a.order - b.order);
   }
@@ -137,19 +151,7 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
     }
   };
 
-  const getLastQueue = () => {
-    return youtubeVideosLiz.reduce((maxObject, currentObject) => {
-      const maxVal = maxObject['queue'];
-      const currentVal = currentObject['queue'];
-      if (currentVal > maxVal) {
-        return currentObject;
-      } else {
-        return maxObject;
-      }
-    });
-  };
-
-  const getNextQueue = (currentQueue) => {
+  const getNextQueue = useCallback((currentQueue) => {
     const higherQueueVideos = youtubeVideosLiz.filter(obj => {
       const propValue = Number(obj['queue']);
       return propValue > currentQueue;
@@ -161,14 +163,13 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
       return Number(a.queue) - Number(b.queue);
     });
     return higherQueueVideos[0];
-  };
+  }, [youtubeVideosLiz]);
 
   const getQueueConsecutiveNumber = (video) => {
     let sortedQueue = [...youtubeVideosLiz].sort((a, b) => {
       return Number(a.queue) - Number(b.queue);
     });
     sortedQueue = sortedQueue.filter(obj => Number(obj.queue) !== 0);
-    console.log(sortedQueue);
     if (sortedQueue.includes(video)) {
       return sortedQueue.findIndex(obj => obj.id === video.id) + 1;
     } else {
@@ -177,25 +178,30 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
   };
 
   useEffect(() => {
-    let currentVideoDuration = 0;
-    if (currentVideoRef.current.duration) {
-      currentVideoDuration = timeToMs(currentVideoRef.current.duration);
-    }
-    console.log('position:', rokuPlayStatePosition, 'duration:', currentVideoDuration);
-    const timeLeft = currentVideoDuration - rokuPlayStatePosition;
-    if (timeLeft && timeLeft < 20000) {
-      console.log('terminando');
-      currentVideoEndingRef.current = true;
-      const nextVideo = getNextQueue(currentVideoRef.current.queue);
-      if (nextVideo) {
-        changeControl(nextVideo);
-        handleQueue(currentVideoRef.current);
-      } else {
-        console.log('listener stopped');
-        stopPlayStateListener();
+    if (currentVideoRef.current && currentVideoRef.current.id) { 
+      let currentVideoDuration = 0;
+      if (currentVideoRef.current.duration) {
+        currentVideoDuration = timeToMs(currentVideoRef.current.duration);
+      }
+      console.log('position:', rokuPlayStatePosition, 'duration:', currentVideoDuration);
+      const timeLeft = currentVideoDuration - rokuPlayStatePosition;
+      const percentage = (rokuPlayStatePosition * 100) / currentVideoDuration;
+      normalizedPercentage.current = Math.round(Math.min(100, Math.max(0, (percentage))));
+      // console.log(Math.min(100, Math.max(0, rokuPlayStatePosition)));
+      console.log(normalizedPercentage.current);
+      if (timeLeft && timeLeft < 10000) {
+        console.log('terminando');
+        const nextVideo = getNextQueue(currentVideoRef.current.queue);
+        if (nextVideo) {
+          changeControl(nextVideo);
+          handleQueue(currentVideoRef.current);
+        } else {
+          console.log('listener stopped');
+          stopPlayStateListener();
+        }
       }
     }
-  }, [rokuPlayStatePosition]);
+  }, [rokuPlayStatePosition, changeControl, getNextQueue, handleQueue, stopPlayStateListener]);
 
   return (
     <div>
@@ -242,15 +248,24 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
                     src={view.roku.apps.youtube.mode === 'channel' ? video.img || 'https://img.youtube.com/vi/' + video.id + '/sddefault.jpg' : video.img}
                     alt="icono">
                   </img>
+                  <div className='controls-apps-youtube-video-queue-number'>
+                    <span>{getQueueConsecutiveNumber(video) || ''}</span>
+                  </div>
+                </div>
+                <div className="progress-bar-container">
+                  {currentVideoRef.current && currentVideoRef.current.id === video.id &&
+                  <div className="progress-bar-track">
+                    <div 
+                      className="progress-bar-fill" style={{ width: `${normalizedPercentage.current}%` }}>
+                    </div>
+                  </div>
+                  }
                 </div>
                 <p className='controls-apps-youtube-video-title'>
                   {video.title}
                 </p>
                 <p className='controls-apps-youtube-video-duration'>
-                  {msToTime(rokuPlayStatePosition)} {space} {video.duration} {space} {getQueueConsecutiveNumber(video)}
-                </p>
-                <p className='controls-apps-youtube-video-duration'>
-                  {rokuPlayState && rokuPlayState.state === 'play' ? `${parseInt(rokuPlayState.position) / 1000}`: ''}
+                  {video.duration}
                 </p>
               </button>
             </li>
