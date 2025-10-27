@@ -235,13 +235,13 @@ function Main() {
     }
   }, [sendEnabled, youtubeVideosLiz, cableChannels, devices, hdmiSala, rokuApps, screens]);
 
-  const setData = useCallback(async (tableName, isInit, callback) => {
+  const setData = useCallback(async (tableName, callback) => {
     let subscriptionResponse = '';
     const table = await requests.getTableFromSupabase(tableName);
     if (table && table.status === 200 && table.data) {
       setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](table.data);
       const tableChannel = supabaseChannels.getSupabaseChannelState(tableName);
-      if (tableChannel.channel) {
+      if (tableChannel?.channel) {
         const state = hdmiSalaChannel.channel.state;
         switch (state) {
           case 'joined':
@@ -279,14 +279,14 @@ function Main() {
     }
   }, [changeView]);
 
-  const getTableData = useCallback(async (isInit, rokuActiveApp) => {
+  const getTableData = useCallback(async (rokuActiveApp) => {
     let rokuAppsTable = {};
     let cableChannelsTable = {};
     let devicesTable = {};
     let screensTable = {};
     // setInRange(await utils.getInRange());
     const newView = structuredClone(viewRef.current);
-    const hdmiSalaTable = await setData('hdmiSala', isInit, async (change) => {
+    const hdmiSalaTable = await setData('hdmiSala', async (change) => {
       await hdmiChangeInSupabaseChannel(change.id);
     });
     if (hdmiSalaTable.table) {
@@ -294,7 +294,7 @@ function Main() {
         newView.selected = hdmiSalaTable.table.data.find(el => el.state === 'selected').id;
 
         if (newView.selected === 'roku' && !viewRef.current.roku.apps.selected) {
-          rokuAppsTable = await setData('rokuApps', isInit, (change) => {
+          rokuAppsTable = await setData('rokuApps', (change) => {
             // if (change.id === 'home') {
               // setters.setRokuSearchMode('default');
             // } else {
@@ -326,15 +326,14 @@ function Main() {
             return {};
           }
         }
-        devicesTable = await setData('devices', isInit);
+        devicesTable = await setData('devices');
         if (!devicesTable.table) {
           return {};
         }
-        screensTable = await setData('screens', isInit);
+        screensTable = await setData('screens');
         if (!screensTable.table) {
           return {};
         }
-        requests.sendLogs(isInit ? 'entro': 'regreso', user);
         return {hdmiSalaTable: hdmiSalaTable.table, subscriptionResponse: hdmiSalaTable.subscriptionResponse, newView, rokuAppsTable};
       } else {
         return {hdmiSalaTable: hdmiSalaTable.table, subscriptionResponse: hdmiSalaTable.subscriptionResponse};
@@ -354,7 +353,7 @@ function Main() {
         rokuActiveApp = await Roku.getActiveApp(setConnectedToRoku);
       }
     }
-    const tableData = await getTableData(true, rokuActiveApp);
+    const tableData = await getTableData(rokuActiveApp);
     if (tableData.newView) {
       if (tableData.rokuAppsTable.data) {
         await setView(await viewRouter.changeView(tableData.newView, viewRef.current, [], setters, tableData.rokuAppsTable.table.data));
@@ -477,6 +476,7 @@ function Main() {
         console.warn('REAL BAD, no hdmiSalaChannel.channel');
       }
       await load();
+      requests.sendLogs('regreso', user);
     }
     setUserActive(true);
   }, [load]);
@@ -671,6 +671,7 @@ function Main() {
     setNetworkType(netType);
     setCredential(userCredential);
     setInternet(internetConnection);
+    requests.sendLogs('entro', user);
   }, [onNetworkTypeChange, onSSidChange, load, screenSelected]);
 
   // useEffects
