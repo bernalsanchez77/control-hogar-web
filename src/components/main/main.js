@@ -156,6 +156,14 @@ function Main() {
         current: {currentId, currentTable: tableName, currentState: ''},
         new: {newId, newTable: tableName, newState: 'selected', newDate: new Date().toISOString()}
       });
+    } else if (currentId) {
+      requests.updateTableInSupabase({
+        current: {currentId, currentTable: tableName, currentState: ''}
+      });
+    } else if (newId) {
+      requests.updateTableInSupabase({
+        new: {newId, newTable: tableName, newState: 'selected', newDate: new Date().toISOString()}
+      });
     }
     // test
     Roku.refreshCounter();

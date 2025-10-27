@@ -35,29 +35,13 @@ export default async function handler(req, res) {
   }
 
   let data, error;
-  if (req.body.current) {
-    await supabase.from(currentTable).update({
-      state: currentState
-    }).eq('id', currentId);
-    ({data, error} = await supabase.from(newTable).update({
-      volume: newVolume,
-      mute: newMute,
-      color: newColor,
-      date: newDate,
-      state: newState,
-      playState: newPlayState,
-      queue: newQueue
-    }).eq('id', newId));
-  } else {
-    ({data, error} = await supabase.from(newTable).update({
-      volume: newVolume,
-      mute: newMute,
-      color: newColor,
-      date: newDate,
-      state: newState,
-      playState: newPlayState,
-      queue: newQueue
-    }).eq('id', newId));
+  if (req.body.current && req.body.new) {
+    await supabase.from(currentTable).update({state: currentState}).eq('id', currentId);
+    ({data, error} = await supabase.from(newTable).update({volume: newVolume, mute: newMute, color: newColor, date: newDate, state: newState, playState: newPlayState, queue: newQueue}).eq('id', newId));
+  } else if (req.body.current) {
+    await supabase.from(currentTable).update({state: currentState}).eq('id', currentId);
+  } else if (req.body.new) {
+    ({data, error} = await supabase.from(newTable).update({volume: newVolume, mute: newMute, color: newColor, date: newDate, state: newState, playState: newPlayState, queue: newQueue}).eq('id', newId));
   }
   if (error) {
     return res.status(500).json({ error: error.message });
