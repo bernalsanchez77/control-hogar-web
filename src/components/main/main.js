@@ -188,6 +188,14 @@ function Main() {
     Roku.stopPlayStateListener();
   }
 
+  const startPlayStateListener = () => {
+    // if (isApp && wifiSsidRef === 'Noky' && !rokuPLayStateListeningRef.current) {
+    if (!rokuPLayStateListeningRef.current) {
+      rokuPLayStateListeningRef.current = true;
+      Roku.startPlayStateListener(setRokuPlayState, setRokuPlayStatePosition);
+    }
+  }
+
   const changeControl = useCallback(async (params, obj) => {
     if (!params.ignoreVibration) {
       utils.triggerVibrate();
@@ -201,11 +209,7 @@ function Main() {
           if (el.device === 'rokuSala') {
             if (el.key === 'video' && viewRef.current.roku.apps.youtube.mode === 'channel') {
               modifyTableInSupabase(youtubeVideosLiz, 'youtubeVideosLiz', el);
-              // if (isApp && wifiSsidRef === 'Noky' && rokuPLayStateListeningRef.current) {
-              if (!rokuPLayStateListeningRef.current) {
-                rokuPLayStateListeningRef.current = true;
-                Roku.startPlayStateListener(setRokuPlayState, setRokuPlayStatePosition);
-              }
+              startPlayStateListener();
             }
             if (el.key === 'app') {
               modifyTableInSupabase(rokuApps, 'rokuApps', el);
@@ -236,7 +240,21 @@ function Main() {
     const table = await requests.getTableFromSupabase(tableName);
     if (table && table.status === 200 && table.data) {
       setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](table.data);
-      if (isInit) {
+      const tableChannel = supabaseChannels.getSupabaseChannelState(tableName);
+      if (tableChannel.channel) {
+        const state = hdmiSalaChannel.channel.state;
+        switch (state) {
+          case 'joined':
+            break;
+          case undefined:
+            await supabaseChannels.unsubscribeFromAllSupabaseChannels();
+            subscriptionResponse = await subscribeToSupabaseChannel(tableName, callback);
+            break;
+          default:
+            await supabaseChannels.unsubscribeFromAllSupabaseChannels();
+            subscriptionResponse = await subscribeToSupabaseChannel(tableName, callback);
+        }
+      } else {
         subscriptionResponse = await subscribeToSupabaseChannel(tableName, callback);
       }
       return {table, subscriptionResponse};
@@ -451,17 +469,14 @@ function Main() {
             break;
           case undefined:
             console.warn('hdmiSalaChannel undefined on resume, subscribing again');
-            await supabaseChannels.unsubscribeFromAllSupabaseChannels();
-            await load();
             break;
           default:
             console.warn('hdmiSalaChannel ' + state + ' on resume , subscribing again');
-            await supabaseChannels.unsubscribeFromAllSupabaseChannels();
-            await load();
         }
       } else {
         console.warn('REAL BAD, no hdmiSalaChannel.channel');
       }
+      await load();
     }
     setUserActive(true);
   }, [load]);
