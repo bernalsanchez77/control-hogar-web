@@ -13,7 +13,6 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
   const rokuId = rokuApps.find(app => app.id === 'youtube').rokuId;
   const normalizedPercentage = useRef(Math.min(100, Math.max(0, 0)));
   currentVideoRef.current = youtubeVideosLiz.find(vid => vid.state === 'selected');
-  console.log('current video:', currentVideoRef.current.title);
 
   const changeView = (channel) => {
     localStorage.setItem('channelSelected', channel);
@@ -196,8 +195,8 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
           changeControl(nextVideo);
           handleQueue(currentVideoRef.current);
         } else {
-          console.log('listener stopped');
-          stopPlayStateListener();
+          // console.log('listener stopped');
+          // stopPlayStateListener();
         }
       }
     }

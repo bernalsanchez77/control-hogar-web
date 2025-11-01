@@ -3,23 +3,23 @@ import Requests from './requests';
 const requests = new Requests();
 let playStateInterval = null;
 let position = 0;
+let handlePlayState = null;
 // test
-let testCount = 1040000;
+let testCount = 1540000;
 let playState = {};
+
 // end test
 class Roku {
-  async getPlayState(setRokuPlayState) {
+
+  async getPlayState() {
     try {
       const playState = await requests.getRokuData('media-player');
       if (playState && playState.status === 200) {
-        setRokuPlayState(playState.data['player']);
-        return playState.data['player'];
+        return playState.data['player'].state;
       } else {
-        setRokuPlayState({});
         return null;
       }
     } catch (err) {
-      setRokuPlayState({});
       return null;
     }
   }
@@ -40,45 +40,56 @@ class Roku {
     }
   }
 
-  async updatePlayState(setRokuPlayState, currentPlayState) {
-    let playState = await this.getPlayState(setRokuPlayState);
-    if (playState) {
-      const newPlayState = playState.state;
-      if (currentPlayState !== newPlayState) {
-        requests.updateTableInSupabase({
-          new: {newId: 'roku', newTable: 'hdmiSala', newPlayState, newDate: new Date().toISOString()}
-        });
-      }
+  async startPlayStateListener(setRokuPlayStatePosition, handlePlayStateFromRoku) {
+    if (!handlePlayState) {
+      handlePlayState = handlePlayStateFromRoku;
     }
-  }
+    if (!playStateInterval) {
+      position = 0;
+      playStateInterval = setInterval(async () => {
 
-  async startPlayStateListener(setRokuPlayState, setRokuPlayStatePosition) {
-    position = 0;
-    playStateInterval = setInterval(async () => {
-      playState = await this.getPlayState(setRokuPlayState);
+        // no test
+        playState = await this.getPlayState();
+        // end no test
 
-      // test
-      // testCount = testCount + 5000;
-      // playState.position = testCount
-      // playState.state = 'play';
-      // end test
+        // test
+        // testCount = testCount + 5000;
+        // playState.position = testCount;
+        // if (playState.position >= 1568000) {
+        //   playState.state = 'stop';
+        // } else {
+        //   playState.state = 'play';
+        // }
+        // end test
 
-      // position = parseInt(playState.position) / 1000;
-      position = parseInt(playState.position);
-      if (playState && playState.state === 'play') {
-        setRokuPlayStatePosition(position);
-      }
-    }, 5000);
+        // position = parseInt(playState.position) / 1000;
+        position = parseInt(playState.position);
+        if (playState) {
+          switch (playState.state) {
+            case 'play':
+              setRokuPlayStatePosition(position);
+              break;
+            case 'pause':
+              break;
+            default:
+              handlePlayState('stop');
+              break;
+          }
+        }
+      }, 5000);
+    }
   }
 
   // test
   refreshCounter() {
-    testCount = 1040000;
+    testCount = 1540000;
   }
   // end test
 
   async stopPlayStateListener() {
+    position = 0;
     clearInterval(playStateInterval);
+    playStateInterval = null;
   }
 }
 const roku = new Roku();

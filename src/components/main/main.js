@@ -71,13 +71,13 @@ function Main() {
   const screensRef = useRef(screens);
   const screenSelectedRef = useRef(screenSelected);
   const youtubeChannelsLizRef = useRef(youtubeChannelsLiz);
+  const youtubeVideosLizRef = useRef(youtubeVideosLiz);
   const internetIntervalRef = useRef({});
   const applicationRunningRef = useRef(false);
   const wifiSsidRef = useRef('');
   const networkTypeRef = useRef('');
   const credentialRef = useRef('');
   const netChangeRunningRef = useRef(false);
-  const rokuPLayStateListeningRef = useRef(false);
 
   // useMemo variables (computed)
 
@@ -101,12 +101,12 @@ function Main() {
     requests.sendControl(sendEnabled, {
       roku: [{key: 'keypress', value: text, params: ''}]
     });
-  }
+  };
 
   const changeRokuSearchMode = (mode) => {
     utils.triggerVibrate();
     setRokuSearchMode(mode);
-  }
+  };
 
   const subscribeToSupabaseChannel = useCallback(async (tableName, callback) => {
     let response = '';
@@ -149,8 +149,14 @@ function Main() {
   }, [viewRef, setters, rokuAppsRef, youtubeChannelsLizRef]);
 
   const modifyTableInSupabase = (table, tableName, el) => {
-    const currentId = table.find(v => v.state === 'selected').id;
-    const newId = table.find(v => v.id === el.value).id;
+    let newId = null;
+    let currentId = null;
+    if (table.find(v => v.state === 'selected')) {
+      currentId = table.find(v => v.state === 'selected').id;
+    }
+    if (el) {
+      newId = table.find(v => v.id === el.value).id;
+    }
     if (currentId && newId) {
       requests.updateTableInSupabase({
         current: {currentId, currentTable: tableName, currentState: ''},
@@ -177,24 +183,27 @@ function Main() {
     });
   }
 
+  const handlePlayStateFromRoku = useCallback((playState) => {
+    if (playState === 'stop' && hdmiSalaRef.current.playState !== 'stop') {
+      updateTableInSupabase(hdmiSalaRef.current, 'hdmiSala', {key: 'playState', value: 'stop'}, 'roku');
+      modifyTableInSupabase(youtubeVideosLizRef.current, 'youtubeVideosLiz');
+    }
+  }, []);
+
   const handleYoutubeQueue = (params) => {
     requests.updateTableInSupabase({
       new: {newId: params.videoId, newTable: 'youtubeVideosLiz', newQueue: params.queueNumber, newDate: params.date}
     });
-  }
+  };
 
   const stopPlayStateListener = () => {
-    rokuPLayStateListeningRef.current = false;
     Roku.stopPlayStateListener();
-  }
+  };
 
-  const startPlayStateListener = () => {
-    // if (isApp && wifiSsidRef === 'Noky' && !rokuPLayStateListeningRef.current) {
-    if (!rokuPLayStateListeningRef.current) {
-      rokuPLayStateListeningRef.current = true;
-      Roku.startPlayStateListener(setRokuPlayState, setRokuPlayStatePosition);
-    }
-  }
+  const startPlayStateListener = useCallback(() => {
+    // if (isApp && wifiSsidRef === 'Noky') {
+    Roku.startPlayStateListener(setRokuPlayStatePosition, handlePlayStateFromRoku);
+  }, [handlePlayStateFromRoku]);
 
   const changeControl = useCallback(async (params, obj) => {
     if (!params.ignoreVibration) {
@@ -233,7 +242,7 @@ function Main() {
         }
       });
     }
-  }, [sendEnabled, youtubeVideosLiz, cableChannels, devices, hdmiSala, rokuApps, screens]);
+  }, [sendEnabled, youtubeVideosLiz, cableChannels, devices, hdmiSala, rokuApps, screens, startPlayStateListener]);
 
   const setData = useCallback(async (tableName, callback) => {
     let subscriptionResponse = '';
@@ -242,7 +251,7 @@ function Main() {
       setters['set' + tableName.charAt(0).toUpperCase() + tableName.slice(1)](table.data);
       const tableChannel = supabaseChannels.getSupabaseChannelState(tableName);
       if (tableChannel?.channel) {
-        const state = hdmiSalaChannel.channel.state;
+        const state = tableChannel.channel.state;
         switch (state) {
           case 'joined':
             break;
@@ -263,114 +272,91 @@ function Main() {
     }
   }, [subscribeToSupabaseChannel, setters]);
 
-  const hdmiChangeInSupabaseChannel = useCallback(async (id) => {
-    if (viewRef.current.selected !== id) {
-      const newView = structuredClone(viewRef.current);
-      newView.selected = id;
-      if (newView.selected === 'roku') {
-        newView.cable.channels.category = [];
-      }
-      if (newView.selected === 'cable') {
-        newView.roku.apps.selected = '';
-        newView.roku.apps.youtube.mode = '';
-        newView.roku.apps.youtube.channel = '';
-      }
-      changeView(newView);
+  const handleRokuPlayState = useCallback(async (currentTable, newPlayState) => {
+    if (currentTable.find(el => el.id === 'roku').playState !== newPlayState) {
+      setRokuPlayState(newPlayState);
     }
-  }, [changeView]);
-
-  const getTableData = useCallback(async (rokuActiveApp) => {
-    let rokuAppsTable = {};
-    let cableChannelsTable = {};
-    let devicesTable = {};
-    let screensTable = {};
-    // setInRange(await utils.getInRange());
-    const newView = structuredClone(viewRef.current);
-    const hdmiSalaTable = await setData('hdmiSala', async (change) => {
-      await hdmiChangeInSupabaseChannel(change.id);
-    });
-    if (hdmiSalaTable.table) {
-      if (hdmiSalaTable.subscriptionResponse === 'SUBSCRIBED') {
-        newView.selected = hdmiSalaTable.table.data.find(el => el.state === 'selected').id;
-
-        if (newView.selected === 'roku' && !viewRef.current.roku.apps.selected) {
-          rokuAppsTable = await setData('rokuApps', (change) => {
-            // if (change.id === 'home') {
-              // setters.setRokuSearchMode('default');
-            // } else {
-              setters.setRokuSearchMode('roku');
-            // }
-          });
-          if (rokuAppsTable.table) {
-            const supabaseAppSelected = rokuAppsTable.table.data.find(row => row.state === 'selected');
-            // if (supabaseAppSelected.id !== 'home') {
-              setters.setRokuSearchMode('roku');
-            // }
-            if (rokuActiveApp) {
-              if (supabaseAppSelected.rokuId !== rokuActiveApp) {
-                const newId = rokuAppsTable.table.data.find(app => app.rokuId === rokuActiveApp).id;
-                requests.updateTableInSupabase({
-                  current: {currentId: supabaseAppSelected.id, currentTable: 'rokuApps', currentState: ''},
-                  new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
-                });
-              }
-              await Roku.updatePlayState(setRokuPlayState, hdmiSalaTable.table.data.find(hdmi => hdmi.state === 'selected').playState);
-            }
-          } else {
-            return {};
-          }
-        }
-        if (newView.selected === 'cable') {
-          cableChannelsTable = await setData('cableChannels', isInit);
-          if (!cableChannelsTable.table) {
-            return {};
-          }
-        }
-        devicesTable = await setData('devices');
-        if (!devicesTable.table) {
-          return {};
-        }
-        screensTable = await setData('screens');
-        if (!screensTable.table) {
-          return {};
-        }
-        return {hdmiSalaTable: hdmiSalaTable.table, subscriptionResponse: hdmiSalaTable.subscriptionResponse, newView, rokuAppsTable};
-      } else {
-        return {hdmiSalaTable: hdmiSalaTable.table, subscriptionResponse: hdmiSalaTable.subscriptionResponse};
-      }
+    if (newPlayState === 'play' || newPlayState === 'pause') {
+      startPlayStateListener();
     } else {
-      return {hdmiSalaTable: hdmiSalaTable.table};
+      stopPlayStateListener();
     }
-  }, [hdmiChangeInSupabaseChannel, setData, setters]);
+  }, [startPlayStateListener]);
 
   const load = useCallback(async (ssid, netType) => {
     setLoading(true);
     ssid = ssid || wifiSsid;
     netType = netType || networkType;
+    let rokuAppsTable = {};
+    let cableChannelsTable = {};
+    let devicesTable = {};
+    let screensTable = {};
     let rokuActiveApp = null;
-    if (isApp) {
-      if (ssid === 'Noky') {
-        rokuActiveApp = await Roku.getActiveApp(setConnectedToRoku);
-      }
-    }
-    const tableData = await getTableData(rokuActiveApp);
-    if (tableData.newView) {
-      if (tableData.rokuAppsTable.data) {
-        await setView(await viewRouter.changeView(tableData.newView, viewRef.current, [], setters, tableData.rokuAppsTable.table.data));
-      } else {
-        await setView(await viewRouter.changeView(tableData.newView, viewRef.current, [], setters));
-      }
-    } else {
-      if (tableData.hdmiSalaTable) {
-        if (tableData.subscriptionResponse === 'TIMED_OUT') {
+    // setInRange(await utils.getInRange());
+    const newView = structuredClone(viewRef.current);
+    const hdmiSalaTable = await setData('hdmiSala', async (change) => {
+      handleRokuPlayState(hdmiSalaRef.current, change.playState);
+      if (viewRef.current.selected !== change.id) {
+        const newView = structuredClone(viewRef.current);
+        newView.selected = change.id;
+        if (newView.selected === 'roku') {
+          newView.cable.channels.category = [];
         }
-      } else {
-        console.warn('no hdmiSalaTable when loading');
+        if (newView.selected === 'cable') {
+          newView.roku.apps.selected = '';
+          newView.roku.apps.youtube.mode = '';
+          newView.roku.apps.youtube.channel = '';
+        }
+        changeView(newView);
+      }
+    });
+    if (hdmiSalaTable.table) {
+      if (hdmiSalaTable.subscriptionResponse === 'SUBSCRIBED') {
+        newView.selected = hdmiSalaTable.table.data.find(el => el.state === 'selected').id;
+        if (isApp) {
+          if (ssid === 'Noky') {
+            rokuActiveApp = await Roku.getActiveApp(setConnectedToRoku);
+          }
+        }
+        rokuAppsTable = await setData('rokuApps', (change) => {
+          setters.setRokuSearchMode('roku');
+          if (rokuAppsRef.current.find(app => app.state === 'selected').rokuId !== change.rokuId && change.state === 'selected') {
+            console.log('app changed');
+          }
+        });
+        if (rokuAppsTable.table) {
+          const supabaseAppSelected = rokuAppsTable.table.data.find(row => row.state === 'selected');
+          setters.setRokuSearchMode('roku');
+          if (rokuActiveApp) {
+            if (supabaseAppSelected.rokuId !== rokuActiveApp) {
+              const newId = rokuAppsTable.table.data.find(app => app.rokuId === rokuActiveApp).id;
+              requests.updateTableInSupabase({
+                current: {currentId: supabaseAppSelected.id, currentTable: 'rokuApps', currentState: ''},
+                new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
+              });
+            }
+            const playStateFromRoku = await Roku.getPlayState();
+            if (playStateFromRoku) {
+              handleRokuPlayState(hdmiSalaTable.table.data, playStateFromRoku);
+              if (hdmiSalaTable.table.data.roku.playState !== playStateFromRoku) {
+                requests.updateTableInSupabase({
+                  new: {newId: 'roku', newTable: 'hdmiSala', newPlayState: playStateFromRoku, newDate: new Date().toISOString()}
+                });
+              }
+            }
+          }
+        }
+        cableChannelsTable = await setData('cableChannels');
+        devicesTable = await setData('devices');
+        screensTable = await setData('screens');
+        if (rokuAppsTable.table && devicesTable.table && screensTable.table && cableChannelsTable.table) {
+          await setView(await viewRouter.changeView(newView, viewRef.current, [], setters, rokuAppsTable.table.data));
+        }
       }
     }
     setLoading(false);
     applicationRunningRef.current = true;
-  }, [getTableData, setters, wifiSsid, networkType]);
+  }, [setters, wifiSsid, networkType, setData, changeView, handleRokuPlayState]);
 
   // event functions
 
@@ -699,6 +685,10 @@ function Main() {
   useEffect(() => {
     youtubeChannelsLizRef.current = youtubeChannelsLiz;
   }, [youtubeChannelsLiz]);
+
+  useEffect(() => {
+    youtubeVideosLizRef.current = youtubeVideosLiz;
+  }, [youtubeVideosLiz]);
 
   useEffect(() => {
     networkTypeRef.current = networkType;
