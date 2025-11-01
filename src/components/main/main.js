@@ -308,11 +308,12 @@ function Main() {
             // }
             if (rokuActiveApp) {
               if (supabaseAppSelected.rokuId !== rokuActiveApp) {
-                const newId = rokuAppsTable.table.data.find(app => app.rokuId === rokuActiveApp).id;
-                requests.updateTableInSupabase({
-                  current: {currentId: supabaseAppSelected.id, currentTable: 'rokuApps', currentState: ''},
-                  new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
-                });
+                //const newId = rokuAppsTable.table.data.find(app => app.rokuId === rokuActiveApp).id;
+                modifyTableInSupabase(rokuApps, 'rokuApps', {key: 'app', value: rokuActiveApp});
+                //requests.updateTableInSupabase({
+                //  current: {currentId: supabaseAppSelected.id, currentTable: 'rokuApps', currentState: ''},
+                //  new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
+                //});
               }
               await Roku.updatePlayState(setRokuPlayState, hdmiSalaTable.table.data.find(hdmi => hdmi.state === 'selected').playState);
             }
