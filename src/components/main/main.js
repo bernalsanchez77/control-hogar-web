@@ -155,7 +155,9 @@ function Main() {
       currentId = table.find(v => v.state === 'selected').id;
     }
     if (el) {
-      newId = table.find(v => v.id === el.value).id;
+      if (table.find(v => v.id === el.value)) {
+        newId = table.find(v => v.id === el.value).id;
+      }
     }
     if (currentId && newId) {
       requests.updateTableInSupabase({
@@ -329,19 +331,19 @@ function Main() {
           setters.setRokuSearchMode('roku');
           if (rokuActiveApp) {
             if (supabaseAppSelected.rokuId !== rokuActiveApp) {
-              const newId = rokuAppsTable.table.data.find(app => app.rokuId === rokuActiveApp).id;
-              requests.updateTableInSupabase({
-                current: {currentId: supabaseAppSelected.id, currentTable: 'rokuApps', currentState: ''},
-                new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
-              });
+
+              modifyTableInSupabase(rokuAppsTable.table.data, 'rokuApps', {key: 'app', value: rokuActiveApp});
+              // const newId = rokuAppsTable.table.data.find(app => app.rokuId === rokuActiveApp).id;
+              // requests.updateTableInSupabase({
+              //   current: {currentId: supabaseAppSelected.id, currentTable: 'rokuApps', currentState: ''},
+              //   new: {newId, newTable: 'rokuApps', newState: 'selected', newDate: new Date().toISOString()}
+              // });
             }
             const playStateFromRoku = await Roku.getPlayState();
             if (playStateFromRoku) {
               handleRokuPlayState(hdmiSalaTable.table.data, playStateFromRoku);
-              if (hdmiSalaTable.table.data.roku.playState !== playStateFromRoku) {
-                requests.updateTableInSupabase({
-                  new: {newId: 'roku', newTable: 'hdmiSala', newPlayState: playStateFromRoku, newDate: new Date().toISOString()}
-                });
+              if (hdmiSalaTable.table.data.find(hdmi => hdmi.id === 'roku').playState !== playStateFromRoku) {
+                modifyTableInSupabase(hdmiSalaTable.table.data, 'hdmiSala', {key: 'playState', value: playStateFromRoku}, 'roku');
               }
             }
           }
@@ -356,7 +358,7 @@ function Main() {
     }
     setLoading(false);
     applicationRunningRef.current = true;
-  }, [setters, wifiSsid, networkType, setData, changeView, handleRokuPlayState]);
+  }, [setters, wifiSsid, networkType, setData, changeView, handleRokuPlayState, rokuApps]);
 
   // event functions
 
