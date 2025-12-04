@@ -1,50 +1,60 @@
 
+import {store} from "../store/store";
 import Requests from './requests';
 const requests = new Requests();
 let playStateInterval = null;
 let position = 0;
 let handlePlayState = null;
 // test
-let testCount = 1540000;
 let playState = {};
 
 // end test
 class Roku {
+  constructor() {
+    this.wifi = '';
+    this.testCount = 1540000;
+  }
 
-  async getPlayState() {
-    try {
-      const playState = await requests.getRokuData('media-player');
-      if (playState && playState.status === 200) {
-        return playState.data['player'].state;
-      } else {
+  async getPlayState(data) {
+    if (this.wifi) {
+      try {
+        const playState = await requests.getRokuData('media-player');
+        if (playState && playState.status === 200) {
+          if (data === 'state') {
+            return playState.data['player'].state;
+          } else {
+            return playState.data['player'];
+          }
+        } else {
+          return null;
+        }
+      } catch (err) {
         return null;
       }
-    } catch (err) {
+    } else {
       return null;
     }
   }
 
-  async getActiveApp(setConnectedToRoku) {
+  async getActiveApp() {
     try {
       const activeApp = await requests.getRokuData('active-app');
       if (activeApp && activeApp.status === 200) {
-        setConnectedToRoku(true);
         return activeApp.data['active-app'].app.id;
       } else {
-        setConnectedToRoku(false);
         return null;
       }
     } catch (err) {
-      setConnectedToRoku(false);
       return null;
     }
   }
 
-  async startPlayStateListener(setRokuPlayStatePosition, handlePlayStateFromRoku) {
+  async startPlayStateListener(handlePlayStateFromRoku) {
     if (!handlePlayState) {
       handlePlayState = handlePlayStateFromRoku;
     }
     if (!playStateInterval) {
+      console.log('playstatelistener started');
       position = 0;
       playStateInterval = setInterval(async () => {
 
@@ -53,8 +63,8 @@ class Roku {
         // end no test
 
         // test
-        // testCount = testCount + 5000;
-        // playState.position = testCount;
+        // this.testCount = this.testCount + 5000;
+        // playState.position = this.testCount;
         // if (playState.position >= 1568000) {
         //   playState.state = 'stop';
         // } else {
@@ -63,18 +73,23 @@ class Roku {
         // end test
 
         // position = parseInt(playState.position) / 1000;
-        position = parseInt(playState.position);
+        if (playState) {
+          console.log('escuchando');
+          position = parseInt(playState.position);
+        } else {
+          position = 0;
+        }
         if (playState) {
           switch (playState.state) {
             case 'play':
-              setRokuPlayStatePosition(position);
+              store.getState().setRokuPlayStatePositionSt(position);
               break;
             case 'pause':
               break;
             default:
-              handlePlayState('stop');
               break;
           }
+          handlePlayState(playState.state);
         }
       }, 5000);
     }
@@ -82,14 +97,25 @@ class Roku {
 
   // test
   refreshCounter() {
-    testCount = 1540000;
+    this.testCount = 1540000;
   }
   // end test
 
   async stopPlayStateListener() {
-    position = 0;
-    clearInterval(playStateInterval);
-    playStateInterval = null;
+    if (playStateInterval) {
+      console.log('playstatelistener stopped');
+      position = 0;
+      clearInterval(playStateInterval);
+      playStateInterval = null;
+      this.refreshCounter();
+    }
+  }
+
+  setWifi(wifi) {
+    this.wifi = wifi;
+    if (!wifi) {
+      this.stopPlayStateListener();
+    }
   }
 }
 const roku = new Roku();

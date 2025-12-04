@@ -1,14 +1,14 @@
+import { store } from "../../../store/store";
 import './notifications.css';
 
-function Notifications({connectedToRoku, wifiSsid}) {
+function Notifications() {
+  const wifiNameSt = store(v => v.wifiNameSt);
   return (
     <div className='notifications'>
       <div className='notifications-row'>
         <span>
-          {wifiSsid === 'Noky'
-            ? connectedToRoku
-              ? 'Conectado a Noky y a Roku'
-              : 'Conectado a Noky pero no a Roku'
+          {wifiNameSt === 'Noky'
+              ? 'Conectado a Noky y Roku'
             : 'Desconectado de Noky y Roku'}
         </span>
       </div>

@@ -1,27 +1,36 @@
-import {useRef} from 'react';
+import { useRef } from 'react';
+import { store } from "../../../../../store/store";
+import Utils from '../../../../../global/utils';
+import ViewRouter from '../../../../../global/view-router';
 import './all.css';
-
-function Apps({view, rokuApps, rokuSearchMode, changeControlParent, changeRokuSearchModeParent, changeViewParent}) {
+const utils = new Utils();
+const viewRouter = new ViewRouter();
+function Apps({ changeControlParent }) {
+  const setRokuSearchModeSt = store(v => v.setRokuSearchModeSt);
+  const rokuAppsSt = store(v => v.rokuAppsSt);
+  const viewSt = store(v => v.viewSt);
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   const changeControl = (value) => {
     const device = 'rokuSala';
-    let app = rokuApps.find(app => app.id === value);
+    let app = rokuAppsSt.find(app => app.id === value);
     // if (app.id === 'home') {
-      // changeRokuSearchModeParent('default');
+    // utils.triggerVibrate();
+    // setRokuSearchModeSt('default');
     // } else {
-      changeRokuSearchModeParent('roku');
+    utils.triggerVibrate();
+    setRokuSearchModeSt('roku');
     // }
     changeControlParent({
-      ifttt: [{device, key: 'app', value}],
-      roku: [{device, key: 'launch', value: app.rokuId}],
+      ifttt: [{ device, key: 'app', value }],
+      roku: [{ device, key: 'launch', value: app.rokuId }],
     });
   }
 
-  const changeView = (app) => {
-    const newView = structuredClone(view);
+  const changeView = async (app) => {
+    const newView = structuredClone(viewSt);
     newView.roku.apps.selected = app;
-    changeViewParent(newView);
+    await viewRouter.changeView(newView);
   }
 
   const onTouchStart = (e) => {
@@ -43,21 +52,21 @@ function Apps({view, rokuApps, rokuSearchMode, changeControlParent, changeRokuSe
   return (
     <div className='controls-apps'>
       <ul className='controls-apps-wrapper'>
-        {rokuApps.map((app, key) => (
-        <li key={key} className='controls-apps-li'>
-          <div className='controls-apps-element'>
-            <button
-              className={`controls-apps-button ${app.state === 'selected' ? "controls-apps-button--on" : "controls-apps-button--off"}`}
-              onTouchStart={(e) => onTouchStart(e, app.id)}
-              onTouchEnd={(e) => onTouchEnd(e, app.id)}>
+        {rokuAppsSt.map((app, key) => (
+          <li key={key} className='controls-apps-li'>
+            <div className='controls-apps-element'>
+              <button
+                className={`controls-apps-button ${app.state === 'selected' ? "controls-apps-button--on" : "controls-apps-button--off"}`}
+                onTouchStart={(e) => onTouchStart(e, app.id)}
+                onTouchEnd={(e) => onTouchEnd(e, app.id)}>
                 <img
                   className='controls-apps-img controls-apps-img--button'
                   src={'https://control-hogar-psi.vercel.app/imgs/apps/' + app.id + '.png'}
                   alt="icono">
                 </img>
-            </button>
-          </div>
-        </li>
+              </button>
+            </div>
+          </li>
         ))
         }
       </ul>

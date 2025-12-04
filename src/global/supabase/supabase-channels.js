@@ -35,7 +35,7 @@ class SupabaseChannels {
       channel.on('postgres_changes', { event: '*', schema: 'public', table: tableName }, async (change) => {
         console.log(change.table, 'changed');
         if (callback) {
-          callback('set' + change.table.charAt(0).toUpperCase() + change.table.slice(1), change.new);
+          callback('set' + change.table.charAt(0).toUpperCase() + change.table.slice(1) + 'St', change.new);
         }
       });
 
@@ -57,15 +57,15 @@ class SupabaseChannels {
                 resolve({success: true, msg: status});
                 break;
               case 'CHANNEL_ERROR':
-                await this.handleSubscriptionError(tableName, status);
+                await this.handleSubscriptionError(tableName, status, callback);
                 resolve({success: false, msg: status});
                 break;
               case 'TIMED_OUT':
-                await this.handleSubscriptionError(tableName, status);
+                await this.handleSubscriptionError(tableName, status, callback);
                 resolve({success: false, msg: status});
                 break;
               case 'CLOSED':
-                await this.handleSubscriptionError(tableName, status);
+                await this.handleSubscriptionError(tableName, status, callback);
                 resolve({success: false, msg: status});
                 break;
               default:
@@ -77,16 +77,16 @@ class SupabaseChannels {
       });
     }
 
-    async handleSubscriptionError(tableName, type) {
+    async handleSubscriptionError(tableName, type, callback) {
       if (this.supabaseChannels[tableName] && !this.supabaseChannels[tableName].errorHandled) {
         this.supabaseChannels[tableName].errorType = type;
         this.supabaseChannels[tableName].errorHandled = true;
         console.warn('Channel ' + tableName + ' failed type: ' + type);
         await this.unsubscribeFromSupabaseChannel(tableName);
         setTimeout(async () => {
-          const internetConnection = await utils.checkInternet();
-          if (internetConnection) {
-            await this.subscribeToSupabaseChannel(tableName, this[tableName + 'Callback'], this.onNoInternet).then((res) => {
+          const isConnectedToInternet = await utils.getIsConnectedToInternet();
+          if (isConnectedToInternet) {
+            await this.subscribeToSupabaseChannel(tableName, callback, this.onNoInternet).then((res) => {
               if (res.success) {
                 console.log('Re-subscribed to:', tableName);
               } else {
@@ -108,10 +108,11 @@ class SupabaseChannels {
             if (!handlingNoInternet) {
               handlingNoInternet = true;
               this.onNoInternet();
+              supabase.realtime.disconnect();
               console.log('No internet, will not re-subscribe to tables');
             }
           }
-        }, 5000); // wait 5 seconds before re-subscribing
+        }, 2000); // wait 2 seconds before re-subscribing
       }
     }
 
@@ -119,7 +120,7 @@ class SupabaseChannels {
       if (this.supabaseChannels[tableName]) {
         return this.supabaseChannels[tableName];
       } else {
-        console.warn('no channel for: ' + tableName);
+        // console.warn('no channel for: ' + tableName);
         return null;
       }
     }

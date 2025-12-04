@@ -1,10 +1,12 @@
+import { store } from "../../../../../store/store";
 import './category.css';
 
-function Category({cableChannels, category, changeControlParent}) {
-  const selectedChannel = cableChannels.find(ch => ch.state === 'selected');
+function Category({category, changeControlParent}) {
+  const cableChannelsSt = store(v => v.cableChannelsSt);
+  const selectedChannel = cableChannelsSt.find(ch => ch.state === 'selected');
   const changeControl = (channel) => {
     const device = 'channelsSala';
-    const ifttt = cableChannels.find(ch => ch.id === channel).ifttt;
+    const ifttt = cableChannelsSt.find(ch => ch.id === channel).ifttt;
     changeControlParent({
       ifttt: [{device: device + ifttt, key: 'selected', value: channel}],
       massMedia: [{device: device, key: 'selected', value: channel}],
@@ -16,7 +18,7 @@ function Category({cableChannels, category, changeControlParent}) {
       <div className='controls-channels-categories'>
         <ul className='controls-channels-categories-ul'>
           {
-            cableChannels.map((channel, key) => category.includes(channel.category) ? (
+            cableChannelsSt.map((channel, key) => category.includes(channel.category) ? (
             <li key={key} className='controls-channels-category'>
               <button
                 className={`controls-channels-category-button ${selectedChannel?.id === channel.id ? 'controls-channels-category-button--selected' : ''}`}

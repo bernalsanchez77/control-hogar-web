@@ -1,6 +1,9 @@
 import './dev.css';
+import { store } from "../../../store/store";
 
-function Dev({sendEnabled, changeDevParent, enableSendParent, removeStorageParent}) {
+function Dev({changeDevParent, enableSendParent, removeStorageParent}) {
+  const sendEnabledSt = store(v => v.sendEnabledSt);
+
   const removeStorage = () => {
     removeStorage();
   }
@@ -15,7 +18,7 @@ function Dev({sendEnabled, changeDevParent, enableSendParent, removeStorageParen
         <div className='dev-element dev-element--send'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className={`dev-button ${sendEnabled ? "dev-button--on" : "dev-button-off"}`}
+            className={`dev-button ${sendEnabledSt ? "dev-button--on" : "dev-button-off"}`}
             onClick={() => enableSend()}>
               Enable Changes
             </button>

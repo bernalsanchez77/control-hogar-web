@@ -1,11 +1,12 @@
 .controls-toolbar {
     height: 5vh;
-    display: flex;
     align-items: center;
     justify-content: center;
   }
   .controls-toolbar-row {
     width: 240px;
+    display: inline-block;
+    position: relative;
   }
   .controls-toolbar-row--mute {
     height: 20px;
@@ -62,4 +63,34 @@
     background-color: white;
     transition: background-color 0.1s;
   }
-  
+  /* ProgressBar.css */
+  .controls-toolbar-progress-bar-container {
+    width: 230px;
+    position: absolute;
+    padding: 7px 5px 0;
+  }
+
+  .controls-toolbar-progress-bar-track {
+    width: 100%;
+    height: 4px; /* Set a height for visibility */
+    background-color: #e0e0e0; /* Light background for the track */
+    border-radius: 15px;
+    overflow: hidden; /* Important for clean corners */
+  }
+
+  .controls-toolbar-progress-bar-fill {
+    height: 100%;
+    /* Start at 0, React will override this via the 'style' prop */
+    width: 0; 
+    background-color: #4CAF50; /* Green fill color */
+    
+    /* Smooth animation as the width changes */
+    transition: width 0.4s ease-in-out; 
+  }
+
+  .controls-toolbar-progress-bar-label {
+    display: block;
+    margin-top: 10px;
+    font-family: sans-serif;
+    text-align: center;
+  }

@@ -1,7 +1,11 @@
 import {useState, useRef} from 'react';
+import { store } from "../../../store/store";
 import './options.css';
 
-function Options({changeThemeParent, theme}) {
+function Options() {
+  const themeSt = store(v => v.themeSt);
+  const setThemeSt = store(v => v.setThemeSt);
+  
   const [optionView, setOptionView] = useState('default');
   const setTimeOutRef = useRef(null);
 
@@ -13,7 +17,8 @@ function Options({changeThemeParent, theme}) {
   }
 
   const changeTheme = (e) => {
-    changeThemeParent(e.target.value);
+    setThemeSt(e.target.value);
+    localStorage.setItem('theme', e.target.value);
     clearInterval(setTimeOutRef.current);
     setTimeOutRef.current = setTimeout(() => {
       setOptionView('default');
@@ -39,7 +44,7 @@ function Options({changeThemeParent, theme}) {
         }
         {optionView === 'theme' &&
         <div className='options-element options-element--select'>
-          <select value={theme} onChange={changeTheme}>
+          <select value={themeSt} onChange={changeTheme}>
             <option value="dark">Oscuro</option>
             <option value="darkcarbon">Carbon</option>
             <option value="light">Claro</option>

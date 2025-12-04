@@ -1,28 +1,37 @@
-import {useRef} from 'react';
+import { useRef } from 'react';
+import { store } from "../../../../store/store";
+import Utils from '../../../../global/utils';
 import './levels.css';
+const utils = new Utils();
 
-function Levels({screenSelected, view, screens, cableChannels, changeControlParent, changeViewParent, triggerVibrateParent}) {
-  const screen = screens.find(screen => screen.id === screenSelected);
+function Levels({ changeControlParent }) {
+  const screenSelectedSt = store(v => v.screenSelectedSt);
+  const screensSt = store(v => v.screensSt);
+  const cableChannelsSt = store(v => v.cableChannelsSt);
+  const viewSt = store(v => v.viewSt);
+  const screen = screensSt.find(screen => screen.id === screenSelectedSt);
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
   const volumeChange = useRef(1);
 
   const changeMute = () => {
-    const device = screenSelected;
-    if (screen.mute === 'on') {
-      changeControlParent({ifttt: [{device, key: 'mute', value: 'off'}]});
-    }
-    if (screen.mute === 'off') {
-      changeControlParent({ifttt: [{device, key: 'mute', value: 'on'}]});
+    if (screen.state === 'on') {
+      const device = screenSelectedSt;
+      if (screen.mute === 'on') {
+        changeControlParent({ ifttt: [{ device, key: 'mute', value: 'off' }] });
+      }
+      if (screen.mute === 'off') {
+        changeControlParent({ ifttt: [{ device, key: 'mute', value: 'on' }] });
+      }
     }
   }
   const changeControl = (value, saveChange = true) => {
-    const device = view.selected === 'roku' ? 'rokuSala' : 'cableSala';
+    const device = viewSt.selected === 'roku' ? 'rokuSala' : 'cableSala';
     const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
     if (saveChange) {
-      changeControlParent({ifttt: [{device, key: 'command', value}], roku: [{device, key: 'keypress', value: rokuValue}], massMedia: [{device, key: 'app', value}]});
+      changeControlParent({ ifttt: [{ device, key: 'command', value }], roku: [{ device, key: 'keypress', value: rokuValue }], massMedia: [{ device, key: 'app', value }] });
     } else {
-      changeControlParent({ifttt: [{device, key: 'command', value}], roku: [{device, key: 'keypress', value: rokuValue}], massMedia: []});
+      changeControlParent({ ifttt: [{ device, key: 'command', value }], roku: [{ device, key: 'keypress', value: rokuValue }], massMedia: [] });
     }
   }
 
@@ -30,108 +39,84 @@ function Levels({screenSelected, view, screens, cableChannels, changeControlPare
     let newChannel = {};
     const device = 'channelsSala';
     let newChannelOrder = 0;
-    const channelOrderSelected = cableChannels.find(ch => ch.state === 'selected').order;
+    const channelOrderSelected = cableChannelsSt.find(ch => ch.state === 'selected').order;
     if (value === 'up') {
-      newChannelOrder = channelOrderSelected + 1; 
+      newChannelOrder = channelOrderSelected + 1;
     }
     if (value === 'down') {
       newChannelOrder = channelOrderSelected - 1;
     }
-    newChannel = cableChannels.find(ch => ch.order === newChannelOrder);
+    newChannel = cableChannelsSt.find(ch => ch.order === newChannelOrder);
     if (!newChannel) {
       if (value === 'up') {
-        newChannel = cableChannels.find(ch => ch.order === 1);
+        newChannel = cableChannelsSt.find(ch => ch.order === 1);
       } else {
-        newChannel = cableChannels[cableChannels.length - 1];
-      }     
+        newChannel = cableChannelsSt[cableChannelsSt.length - 1];
+      }
     }
     changeControlParent({
-      ifttt: [{device: device + newChannel.ifttt, key: 'selected', value: newChannel.id}],
-      massMedia: [{device, key: 'selected', value: newChannel.id}]
+      ifttt: [{ device: device + newChannel.ifttt, key: 'selected', value: newChannel.id }],
+      massMedia: [{ device, key: 'selected', value: newChannel.id }]
     });
   }
 
   const changeVolume = (vol, button, vib = true) => {
-    const device = screenSelected;
+    const device = screenSelectedSt;
     let newVol = 0;
     if (button === 'up') {
       newVol = screen.volume + vol;
       changeControlParent({
-        ifttt: [{device, key: 'volume', value: button + vol}],
-        massMedia: [{device, key: 'volume', value: newVol}],
+        ifttt: [{ device, key: 'volume', value: button + vol }],
+        massMedia: [{ device, key: 'volume', value: newVol }],
         ignoreVibration: !vib
       });
     } else if (screen.volume !== 0) {
       if (screen.volume - vol >= 0) {
         newVol = screen.volume - vol;
         changeControlParent({
-          ifttt: [{device, key: 'volume', value: button + vol}],
-          massMedia: [{device, key: 'volume', value: newVol}],
+          ifttt: [{ device, key: 'volume', value: button + vol }],
+          massMedia: [{ device, key: 'volume', value: newVol }],
           ignoreVibration: !vib
         });
       } else {
         newVol = screen.volume - vol;
         changeControlParent({
-          ifttt: [{device, key: 'volume', value: button + vol}],
-          massMedia: [{device, key: 'volume', value: '0'}],
+          ifttt: [{ device, key: 'volume', value: button + vol }],
+          massMedia: [{ device, key: 'volume', value: '0' }],
           ignoreVibration: !vib
         });
       }
     } else {
-      changeControlParent({ifttt: [{device, key: 'volume', value: button + vol}], massMedia: [], ignoreVibration: !vib}); 
+      changeControlParent({ ifttt: [{ device, key: 'volume', value: button + vol }], massMedia: [], ignoreVibration: !vib });
     }
   }
 
   const changeVolumeStart = () => {
-    volumeChange.current = 1;
-    timeout3s.current = setTimeout(() => {
-      volumeChange.current = 5;
-      triggerVibrateParent(200);
-    }, 1000);
-    timeout6s.current = setTimeout(() => {
-      volumeChange.current = 10;
-      triggerVibrateParent(400);
-    }, 2000);
-  }
-
-  const changeVolumeEnd = (button) => {
-    clearTimeout(timeout3s.current);
-    clearTimeout(timeout6s.current);
-    if (volumeChange.current === 1) {
-      changeVolume(volumeChange.current, button);
-    } else {
-      changeVolume(volumeChange.current, button, false);
+    if (screen.state === 'on') {
+      volumeChange.current = 1;
+      timeout3s.current = setTimeout(() => {
+        volumeChange.current = 5;
+        utils.triggerVibrate(200);
+      }, 1000);
+      timeout6s.current = setTimeout(() => {
+        volumeChange.current = 10;
+        utils.triggerVibrate(400);
+      }, 2000);
     }
   }
 
-  // const backButtonTriggered = () => {
-  //   const newView = structuredClone(view);
-  //   if (view.selected === 'roku') {
-  //     if (view.roku.apps.selected) {
-  //       if (view.roku.apps.youtube.mode === 'channel' || view.roku.apps.youtube.mode === 'search') {
-  //         newView.roku.apps.youtube.mode = '';
-  //         if (view.roku.apps.youtube.channel !== '') {
-  //           newView.roku.apps.youtube.channel = '';
-  //         }
-  //         changeViewParent(newView);
-  //       } else {
-  //         newView.roku.apps.selected = '';
-  //         changeViewParent(newView);
-  //       }
-  //     }
-  //   }
-  //   if (view.selected === 'cable') {
-  //     if (view.cable.channels.category.length) {
-  //       newView.cable.channels.category = [];
-  //       changeViewParent(newView);
-  //     }
-  //   }
-  //   if (view.devices.device) {
-  //     newView.devices.device = '';
-  //     changeViewParent(newView);
-  //   }
-  // }
-      
+  const changeVolumeEnd = (button) => {
+    if (screen.state === 'on') {
+      clearTimeout(timeout3s.current);
+      clearTimeout(timeout6s.current);
+      if (volumeChange.current === 1) {
+        changeVolume(volumeChange.current, button);
+      } else {
+        changeVolume(volumeChange.current, button, false);
+      }
+    }
+  }
+
   return (
     <div className='controls-levels'>
       <div className='controls-levels-wrapper'>
@@ -165,7 +150,7 @@ function Levels({screenSelected, view, screens, cableChannels, changeControlPare
             </button>
           </div>
           {
-            view.selected === 'roku' &&
+            viewSt.selected === 'roku' &&
             <div className='controls-levels-element controls-levels-element--right'>
               <button
                 className={`controls-levels-button`}
@@ -179,7 +164,7 @@ function Levels({screenSelected, view, screens, cableChannels, changeControlPare
             </div>
           }
           {
-            view.selected === 'cable' &&
+            viewSt.selected === 'cable' &&
             <div className='controls-levels-element controls-levels-element--right'>
               <button
                 className={'controls-levels-button'}
@@ -197,10 +182,10 @@ function Levels({screenSelected, view, screens, cableChannels, changeControlPare
           </div>
           <div className='controls-levels-element controls-levels-element--right controls-levels-element--no-margin'>
             <span className='controls-levels-span'>
-              {view.selected === 'roku'  &&
+              {viewSt.selected === 'roku' &&
                 'op'
               }
-              {view.selected === 'cable'  &&
+              {viewSt.selected === 'cable' &&
                 'ch'
               }
             </span>
@@ -227,7 +212,7 @@ function Levels({screenSelected, view, screens, cableChannels, changeControlPare
             </button> */}
           </div>
           {
-          view.selected === 'roku' &&
+            viewSt.selected === 'roku' &&
             <div className='controls-levels-element controls-levels-element--right'>
               <button
                 className={`controls-levels-button`}
@@ -241,7 +226,7 @@ function Levels({screenSelected, view, screens, cableChannels, changeControlPare
             </div>
           }
           {
-          view.selected === 'cable' &&
+            viewSt.selected === 'cable' &&
             <div className='controls-levels-element controls-levels-element--right'>
               <button
                 className={`controls-levels-button`}

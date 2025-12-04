@@ -32,7 +32,9 @@ button.devices-button:active {
   width: 5px;
   height: 5px;
   margin: 0 auto;
-  border-radius: 10px;  
+  border-radius: 10px;
+  position: absolute;
+  transform: translate(14px, 0);
 }
 
 .devices-button-img {

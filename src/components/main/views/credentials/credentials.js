@@ -1,14 +1,14 @@
 import {useState} from 'react';
 import './credentials.css';
 
-function Credentials({restartParent}) {
+function Credentials({onSetUserCredentialParent}) {
   const [credentialValue, setCredentialValue] = useState('');
   const setGuestCredential = () => {
-    restartParent('onSetCredentials', 'guest');
+    onSetUserCredentialParent('guest');
   };
   const setOwnerCredential = (e) => {
     setCredentialValue(e.target.value);
-    restartParent('onSetCredentials', e.target.value);
+    onSetUserCredentialParent(e.target.value);
   };
   return (
     <div className="credentials">

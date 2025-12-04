@@ -1,3 +1,4 @@
+import { store } from "../../../store/store";
 import LamparaComedor from './lamparaComedor/lamparaComedor';
 import LamparaTurca from './lamparaTurca/lamparaTurca';
 import LamparaSala from './lamparaSala/lamparaSala';
@@ -10,28 +11,34 @@ import VentiladorSala from './ventiladorSala/ventiladorSala';
 import CalentadorNegro from './calentadorNegro/calentadorNegro';
 import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
+import ViewRouter from '../../../global/view-router';
 import './devices.css';
 
-function Devices({credential, view, devices, changeViewParent, changeControlParent}) {
+const viewRouter = new ViewRouter();
+
+function Devices({ changeControlParent }) {
+  const userCredentialSt = store(v => v.userCredentialSt);
+  const devicesSt = store(v => v.devicesSt);
+  const viewSt = store(v => v.viewSt);
   const changeControl = (params) => {
     changeControlParent(params);
   }
-  const changeView = (device) => {
-    const newView = structuredClone(view);
+  const changeView = async (device) => {
+    const newView = structuredClone(viewSt);
     newView.devices.device = device;
-    changeViewParent(newView);
+    await viewRouter.changeView(newView);
   }
-  const lamparaComedor = devices.find(device => device.id === 'lamparaComedor');
-  const lamparaTurca = devices.find(device => device.id === 'lamparaTurca');
-  const lamparaSala = devices.find(device => device.id === 'lamparaSala');
-  const lamparaRotatoria = devices.find(device => device.id === 'lamparaRotatoria');
-  const chimeneaSala = devices.find(device => device.id === 'chimeneaSala');
-  const parlantesSala = devices.find(device => device.id === 'parlantesSala');
-  const ventiladorSala = devices.find(device => device.id === 'ventiladorSala');
-  const calentadorNegro = devices.find(device => device.id === 'calentadorNegro');
-  const calentadorBlanco = devices.find(device => device.id === 'calentadorBlanco');
-  const luzCuarto = devices.find(device => device.id === 'luzCuarto');
-  const luzEscalera = devices.find(device => device.id === 'luzEscalera');
+  const lamparaComedor = devicesSt.find(device => device.id === 'lamparaComedor');
+  const lamparaTurca = devicesSt.find(device => device.id === 'lamparaTurca');
+  const lamparaSala = devicesSt.find(device => device.id === 'lamparaSala');
+  const lamparaRotatoria = devicesSt.find(device => device.id === 'lamparaRotatoria');
+  const chimeneaSala = devicesSt.find(device => device.id === 'chimeneaSala');
+  const parlantesSala = devicesSt.find(device => device.id === 'parlantesSala');
+  const ventiladorSala = devicesSt.find(device => device.id === 'ventiladorSala');
+  const calentadorNegro = devicesSt.find(device => device.id === 'calentadorNegro');
+  const calentadorBlanco = devicesSt.find(device => device.id === 'calentadorBlanco');
+  const luzCuarto = devicesSt.find(device => device.id === 'luzCuarto');
+  const luzEscalera = devicesSt.find(device => device.id === 'luzEscalera');
 
   return (
     <div className="devices">
@@ -71,7 +78,7 @@ function Devices({credential, view, devices, changeViewParent, changeControlPare
             element={parlantesSala}
             changeControlParent={changeControl}>
           </ParlantesSala>
-        </div> 
+        </div>
       </div>
       <div className='devices-row'>
         <div className='devices-element'>
@@ -80,21 +87,21 @@ function Devices({credential, view, devices, changeViewParent, changeControlPare
             changeControlParent={changeControl}>
           </VentiladorSala>
         </div>
-        {(credential === 'owner' || credential === 'dev') &&
-        <div className='devices-element'>
-          <CalentadorNegro
-            element={calentadorNegro}
-            changeControlParent={changeControl}>
-          </CalentadorNegro>
-        </div>
+        {(userCredentialSt === 'owner' || userCredentialSt === 'dev') &&
+          <div className='devices-element'>
+            <CalentadorNegro
+              element={calentadorNegro}
+              changeControlParent={changeControl}>
+            </CalentadorNegro>
+          </div>
         }
-        {(credential === 'owner' || credential === 'dev') &&
-        <div className='devices-element'>
-          <CalentadorBlanco
-            element={calentadorBlanco}
-            changeControlParent={changeControl}>
-          </CalentadorBlanco>
-        </div>
+        {(userCredentialSt === 'owner' || userCredentialSt === 'dev') &&
+          <div className='devices-element'>
+            <CalentadorBlanco
+              element={calentadorBlanco}
+              changeControlParent={changeControl}>
+            </CalentadorBlanco>
+          </div>
         }
         <div className='devices-element'>
           <LamparasAbajo
@@ -105,22 +112,22 @@ function Devices({credential, view, devices, changeViewParent, changeControlPare
             changeControlParent={changeControl}>
           </LamparasAbajo>
         </div>
-        {(credential === 'owner' || credential === 'dev') &&
-        <div className='devices-element'>
-          <LuzCuarto
-            element={luzCuarto}
-            changeViewParent={changeView}
-            changeControlParent={changeControl}>
-          </LuzCuarto>
-        </div>
+        {(userCredentialSt === 'owner' || userCredentialSt === 'dev') &&
+          <div className='devices-element'>
+            <LuzCuarto
+              element={luzCuarto}
+              changeViewParent={changeView}
+              changeControlParent={changeControl}>
+            </LuzCuarto>
+          </div>
         }
-        {(credential === 'owner' || credential === 'dev') &&
-        <div className='devices-element'>
-          <LuzEscalera
-            element={luzEscalera}
-            changeControlParent={changeControl}>
-          </LuzEscalera>
-        </div>
+        {(userCredentialSt === 'owner' || userCredentialSt === 'dev') &&
+          <div className='devices-element'>
+            <LuzEscalera
+              element={luzEscalera}
+              changeControlParent={changeControl}>
+            </LuzEscalera>
+          </div>
         }
       </div>
     </div>

@@ -1,7 +1,16 @@
-import {useRef, useEffect, useCallback} from 'react';
+import { useRef, useEffect, useCallback } from 'react';
+import { store } from "../../../../../store/store";
+import ViewRouter from '../../../../../global/view-router';
 import './youtube.css';
+const viewRouter = new ViewRouter();
 
-function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, changeControlParent, changeViewParent, handleQueueParent, stopPlayStateListenerParent}) {
+function Youtube({ changeControlParent, handleQueueParent, removeSelectedVideoParent }) {
+  const youtubeSearchVideosSt = store(v => v.youtubeSearchVideosSt);
+  const youtubeChannelsLizSt = store(v => v.youtubeChannelsLizSt);
+  const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
+  const rokuAppsSt = store(v => v.rokuAppsSt);
+  const rokuPlayStatePositionSt = store(v => v.rokuPlayStatePositionSt);
+  const viewSt = store(v => v.viewSt);
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   let youtubeSortedVideos = [];
@@ -9,22 +18,25 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
   let touchMoved = false;
   let touchStartY = 0;
   const channelSelected = useRef('');
-  const currentVideoRef = useRef({});
-  const rokuId = rokuApps.find(app => app.id === 'youtube').rokuId;
+  const currentVideoRef = useRef(youtubeVideosLizSt.find(vid => vid.state === 'selected'));
+  const rokuId = rokuAppsSt.find(app => app.id === 'youtube').rokuId;
   const normalizedPercentage = useRef(Math.min(100, Math.max(0, 0)));
-  currentVideoRef.current = youtubeVideosLiz.find(vid => vid.state === 'selected');
 
   const changeView = (channel) => {
     localStorage.setItem('channelSelected', channel);
     channelSelected.current = channel;
-    const newView = structuredClone(view);
+    const newView = structuredClone(viewSt);
     newView.roku.apps.youtube.channel = channel;
     newView.roku.apps.youtube.mode = 'channel';
-    changeViewParent(newView);
+    viewRouter.changeView(newView);
   };
 
+  const removeSelectedVideo = useCallback(() => {
+    removeSelectedVideoParent(youtubeVideosLizSt);
+  }, [youtubeVideosLizSt, removeSelectedVideoParent]);
+
   const getLastQueue = useCallback(() => {
-    return youtubeVideosLiz.reduce((maxObject, currentObject) => {
+    return youtubeVideosLizSt.reduce((maxObject, currentObject) => {
       const maxVal = maxObject['queue'];
       const currentVal = currentObject['queue'];
       if (currentVal > maxVal) {
@@ -33,42 +45,37 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
         return maxObject;
       }
     });
-  }, [youtubeVideosLiz]);
+  }, [youtubeVideosLizSt]);
 
   const handleQueue = useCallback((video) => {
     if (video.queue) {
-      handleQueueParent({action: 'remove', videoId: video.id, queueNumber: 0, date: video.date});
+      handleQueueParent({ action: 'remove', videoId: video.id, queueNumber: 0, date: video.date });
     } else {
       const lastQueue = getLastQueue().queue;
-      handleQueueParent({action: 'add', videoId: video.id, queueNumber: lastQueue + 1, date: video.date});
+      handleQueueParent({ action: 'add', videoId: video.id, queueNumber: lastQueue + 1, date: video.date });
     }
   }, [handleQueueParent, getLastQueue]);
 
-  const stopPlayStateListener = useCallback(() => {
-    stopPlayStateListenerParent();
-  }, [stopPlayStateListenerParent]);
-
   const changeControl = useCallback((video) => {
-    const currentVideo = youtubeVideosLiz.find(vid => vid.state === 'selected');
+    const currentVideo = youtubeVideosLizSt.find(vid => vid.state === 'selected');
     if (currentVideo?.id !== video.id) {
-      // currentVideoRef.current = video;
       const device = 'rokuSala';
       changeControlParent({
-        roku: [{device, key: 'launch', value: rokuId, params: {contentID: video.id}}],
-        massMedia: [{device, key: 'video', value: video.id}],
+        roku: [{ device, key: 'launch', value: rokuId, params: { contentID: video.id } }],
+        massMedia: [{ device, key: 'video', value: video.id }],
       });
     }
-  }, [changeControlParent, rokuId, youtubeVideosLiz]);
-  if (view.roku.apps.youtube.mode === '') {
-    youtubeSortedChannels = Object.values(youtubeChannelsLiz).sort((a, b) => a.order - b.order);
+  }, [changeControlParent, rokuId, youtubeVideosLizSt]);
+  if (viewSt.roku.apps.youtube.mode === '') {
+    youtubeSortedChannels = Object.values(youtubeChannelsLizSt).sort((a, b) => a.order - b.order);
   }
-  if (view.roku.apps.youtube.mode === 'channel') {
+  if (viewSt.roku.apps.youtube.mode === 'channel') {
     channelSelected.current = channelSelected.current || localStorage.getItem('channelSelected');
-    youtubeSortedVideos = youtubeVideosLiz.filter(video => video.channelId === channelSelected.current);
+    youtubeSortedVideos = youtubeVideosLizSt.filter(video => video.channelId === channelSelected.current);
     youtubeSortedVideos = Object.values(youtubeSortedVideos).sort((a, b) => new Date(a.date) - new Date(b.date));
   }
-  if (view.roku.apps.youtube.mode === 'search') {
-    youtubeSortedVideos = youtubeSearchVideos.map(item => ({
+  if (viewSt.roku.apps.youtube.mode === 'search') {
+    youtubeSortedVideos = youtubeSearchVideosSt.map(item => ({
       id: item.id.videoId,
       title: item.snippet.title,
       description: item.snippet.description,
@@ -130,28 +137,28 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
     return totalMilliseconds;
   };
 
-  const msToTime = (ms, includeHours = false) => {
-    const MS_IN_SECOND = 1000;
-    const MS_IN_MINUTE = 60 * MS_IN_SECOND;
-    const MS_IN_HOUR = 60 * MS_IN_MINUTE;
-    const hours = Math.floor(ms / MS_IN_HOUR);
-    const minutes = Math.floor((ms % MS_IN_HOUR) / MS_IN_MINUTE);
-    const seconds = Math.floor((ms % MS_IN_MINUTE) / MS_IN_SECOND);
-    const formattedMinutes = String(minutes).padStart(2, '0');
-    const formattedSeconds = String(seconds).padStart(2, '0');
+  // const msToTime = (ms, includeHours = false) => {
+  //   const MS_IN_SECOND = 1000;
+  //   const MS_IN_MINUTE = 60 * MS_IN_SECOND;
+  //   const MS_IN_HOUR = 60 * MS_IN_MINUTE;
+  //   const hours = Math.floor(ms / MS_IN_HOUR);
+  //   const minutes = Math.floor((ms % MS_IN_HOUR) / MS_IN_MINUTE);
+  //   const seconds = Math.floor((ms % MS_IN_MINUTE) / MS_IN_SECOND);
+  //   const formattedMinutes = String(minutes).padStart(2, '0');
+  //   const formattedSeconds = String(seconds).padStart(2, '0');
 
-    if (hours > 0 || includeHours) {
-      const formattedHours = String(hours).padStart(2, '0');
-      return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-    } else {
-      const totalMinutes = Math.floor(ms / MS_IN_MINUTE);
-      const finalMinutes = String(totalMinutes).padStart(2, '0');
-      return `${finalMinutes}:${formattedSeconds}`;
-    }
-  };
+  //   if (hours > 0 || includeHours) {
+  //     const formattedHours = String(hours).padStart(2, '0');
+  //     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  //   } else {
+  //     const totalMinutes = Math.floor(ms / MS_IN_MINUTE);
+  //     const finalMinutes = String(totalMinutes).padStart(2, '0');
+  //     return `${finalMinutes}:${formattedSeconds}`;
+  //   }
+  // };
 
   const getNextQueue = useCallback((currentQueue) => {
-    const higherQueueVideos = youtubeVideosLiz.filter(obj => {
+    const higherQueueVideos = youtubeVideosLizSt.filter(obj => {
       const propValue = Number(obj['queue']);
       return propValue > currentQueue;
     });
@@ -162,10 +169,10 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
       return Number(a.queue) - Number(b.queue);
     });
     return higherQueueVideos[0];
-  }, [youtubeVideosLiz]);
+  }, [youtubeVideosLizSt]);
 
   const getQueueConsecutiveNumber = (video) => {
-    let sortedQueue = [...youtubeVideosLiz].sort((a, b) => {
+    let sortedQueue = [...youtubeVideosLizSt].sort((a, b) => {
       return Number(a.queue) - Number(b.queue);
     });
     sortedQueue = sortedQueue.filter(obj => Number(obj.queue) !== 0);
@@ -177,127 +184,126 @@ function Youtube({rokuPlayStatePosition, rokuPlayState, view, rokuApps, youtubeS
   };
 
   useEffect(() => {
-    if (currentVideoRef.current && currentVideoRef.current.id) { 
+    if (currentVideoRef.current && currentVideoRef.current.id) {
       let currentVideoDuration = 0;
       if (currentVideoRef.current.duration) {
         currentVideoDuration = timeToMs(currentVideoRef.current.duration);
       }
-      console.log('position:', rokuPlayStatePosition, 'duration:', currentVideoDuration);
-      const timeLeft = currentVideoDuration - rokuPlayStatePosition;
-      const percentage = (rokuPlayStatePosition * 100) / currentVideoDuration;
+      console.log('position:', rokuPlayStatePositionSt, 'duration:', currentVideoDuration);
+      const timeLeft = currentVideoDuration - rokuPlayStatePositionSt;
+      const percentage = (rokuPlayStatePositionSt * 100) / currentVideoDuration;
       normalizedPercentage.current = Math.round(Math.min(100, Math.max(0, (percentage))));
-      // console.log(Math.min(100, Math.max(0, rokuPlayStatePosition)));
+      // console.log(Math.min(100, Math.max(0, rokuPlayStatePositionSt)));
       console.log(normalizedPercentage.current);
-      if (timeLeft && timeLeft < 10000) {
+      if (timeLeft && timeLeft < 6000) {
         console.log('terminando');
         const nextVideo = getNextQueue(currentVideoRef.current.queue);
         if (nextVideo) {
           changeControl(nextVideo);
           handleQueue(currentVideoRef.current);
         } else {
-          // console.log('listener stopped');
-          // stopPlayStateListener();
+          removeSelectedVideo();
         }
       }
     }
-  }, [rokuPlayStatePosition, changeControl, getNextQueue, handleQueue, stopPlayStateListener]);
+  }, [rokuPlayStatePositionSt, changeControl, getNextQueue, handleQueue, removeSelectedVideo]);
 
   return (
     <div>
-      {view.roku.apps.youtube.mode === '' &&
-      <div className='controls-apps-youtube'>
-        <ul className='controls-apps-youtube-ul'>
-          {
-            youtubeSortedChannels.map((channel, key) => (
-            <li key={key} className='controls-apps-youtube-li'>
-              <button
-                className={'controls-apps-youtube-channel-button'}
-                onTouchStart={(e) => onTouchStart(e)}
-                onTouchMove={(e) => onTouchMove(e)}
-                onTouchEnd={(e) => onTouchEnd(e, 'channel', channel)}>
-                <img
-                  className='controls-apps-youtube-channel-img'
-                  src={channel.img || 'https://control-hogar-psi.vercel.app/imgs/youtube-channels/' + channel.id + '.png'}
-                  alt="icono">
-                </img>
-                <p className='controls-apps-youtube-channel-title'>
-                  {channel.title}
-                </p>
-              </button>
-            </li>
-            ))
-          }
-        </ul>
-      </div>
+      {viewSt.roku.apps.youtube.mode === '' &&
+        <div className='controls-apps-youtube'>
+          <ul className='controls-apps-youtube-ul'>
+            {
+              youtubeSortedChannels.map((channel, key) => (
+                <li key={key} className='controls-apps-youtube-li'>
+                  <button
+                    className={'controls-apps-youtube-channel-button'}
+                    onTouchStart={(e) => onTouchStart(e)}
+                    onTouchMove={(e) => onTouchMove(e)}
+                    onTouchEnd={(e) => onTouchEnd(e, 'channel', channel)}>
+                    <img
+                      className='controls-apps-youtube-channel-img'
+                      src={channel.img || 'https://control-hogar-psi.vercel.app/imgs/youtube-channels/' + channel.id + '.png'}
+                      alt="icono">
+                    </img>
+                    <p className='controls-apps-youtube-channel-title'>
+                      {channel.title}
+                    </p>
+                  </button>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
       }
-      {(view.roku.apps.youtube.mode === 'channel') &&
-      <div className='controls-apps-youtube controls-apps-youtube--channel'>
-        <ul className='controls-apps-youtube-ul'>
-          {
-            youtubeSortedVideos.map((video, key) => (
-            <li key={key} className='controls-apps-youtube-li-channel'>
-              <button
-                className={`controls-apps-youtube-video-button ${video.state === 'selected' ? 'controls-apps-youtube-video-button--selected' : ''}`}
-                onTouchStart={(e) => onTouchStart(e)}
-                onTouchMove={(e) => onTouchMove(e)}
-                onTouchEnd={(e) => onTouchEnd(e, 'video', video)}>
-                <div>
-                  <img
-                    className={`controls-apps-youtube-video-img ${video.queue > 0 ? 'controls-apps-youtube-video-img--queue' : ''}`}
-                    src={view.roku.apps.youtube.mode === 'channel' ? video.img || 'https://img.youtube.com/vi/' + video.id + '/sddefault.jpg' : video.img}
-                    alt="icono">
-                  </img>
-                  <div className='controls-apps-youtube-video-queue-number'>
-                    <span>{getQueueConsecutiveNumber(video) || ''}</span>
-                  </div>
-                </div>
-                <div className="progress-bar-container">
-                  {currentVideoRef.current && currentVideoRef.current.id === video.id &&
-                  <div className="progress-bar-track">
-                    <div 
-                      className="progress-bar-fill" style={{ width: `${normalizedPercentage.current}%` }}>
+      {(viewSt.roku.apps.youtube.mode === 'channel') &&
+        <div className='controls-apps-youtube controls-apps-youtube--channel'>
+          <ul className='controls-apps-youtube-ul'>
+            {
+              youtubeSortedVideos.map((video, key) => (
+                <li key={key} className='controls-apps-youtube-li-channel'>
+                  <button
+                    className={`controls-apps-youtube-video-button ${video.state === 'selected' ? 'controls-apps-youtube-video-button--selected' : ''}`}
+                    onTouchStart={(e) => onTouchStart(e)}
+                    onTouchMove={(e) => onTouchMove(e)}
+                    onTouchEnd={(e) => onTouchEnd(e, 'video', video)}>
+                    <div>
+                      <img
+                        className={`controls-apps-youtube-video-img ${video.queue > 0 ? 'controls-apps-youtube-video-img--queue' : ''}`}
+                        src={viewSt.roku.apps.youtube.mode === 'channel' ? video.img || 'https://img.youtube.com/vi/' + video.id + '/sddefault.jpg' : video.img}
+                        alt="icono">
+                      </img>
+                      <div className='controls-apps-youtube-video-queue-number'>
+                        <span>{getQueueConsecutiveNumber(video) || ''}</span>
+                      </div>
                     </div>
-                  </div>
-                  }
-                </div>
-                <p className='controls-apps-youtube-video-title'>
-                  {video.title}
-                </p>
-                <p className='controls-apps-youtube-video-duration'>
-                  {video.duration}
-                </p>
-              </button>
-            </li>
-            ))
-          }
-        </ul>
-      </div>
+                    <div className="progress-bar-container">
+                      {currentVideoRef.current && currentVideoRef.current.id === video.id &&
+                        <div className="progress-bar-track">
+                          <div
+                            className="progress-bar-fill" style={{ width: `${normalizedPercentage.current}%` }}>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                    <p className='controls-apps-youtube-video-title'>
+                      {video.title}
+                    </p>
+                    <p className='controls-apps-youtube-video-duration'>
+                      {video.duration}
+                    </p>
+                  </button>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
       }
-      {(view.roku.apps.youtube.mode === 'search') &&
-      <div className='controls-apps-youtube controls-apps-youtube--search'>
-        <ul className='controls-apps-youtube-ul'>
-          {
-            youtubeSortedVideos.map((video, key) => (
-            <li key={key} className='controls-apps-youtube-li-search'>
-              <button
-                className={`controls-apps-youtube-video-button ${video.state === 'selected' ? 'controls-apps-youtube-video-button--selected' : ''}`}
-                onTouchStart={(e) => onTouchStart(e)}
-                onTouchMove={(e) => onTouchMove(e)}
-                onTouchEnd={(e) => onTouchEnd(e, 'video', video)}>
-                <img
-                  className='controls-apps-youtube-video-img'
-                  src={view.roku.apps.youtube.mode === 'channel' ? 'https://img.youtube.com/vi/' + video.id + '/sddefault.jpg' : video.img}
-                  alt="icono">
-                </img>
-                <p className='controls-apps-youtube-video-title'>
-                  {video.title}
-                </p>
-              </button>
-            </li>
-            ))
-          }
-        </ul>
-      </div>
+      {(viewSt.roku.apps.youtube.mode === 'search') &&
+        <div className='controls-apps-youtube controls-apps-youtube--search'>
+          <ul className='controls-apps-youtube-ul'>
+            {
+              youtubeSortedVideos.map((video, key) => (
+                <li key={key} className='controls-apps-youtube-li-search'>
+                  <button
+                    className={`controls-apps-youtube-video-button ${video.state === 'selected' ? 'controls-apps-youtube-video-button--selected' : ''}`}
+                    onTouchStart={(e) => onTouchStart(e)}
+                    onTouchMove={(e) => onTouchMove(e)}
+                    onTouchEnd={(e) => onTouchEnd(e, 'video', video)}>
+                    <img
+                      className='controls-apps-youtube-video-img'
+                      src={viewSt.roku.apps.youtube.mode === 'channel' ? 'https://img.youtube.com/vi/' + video.id + '/sddefault.jpg' : video.img}
+                      alt="icono">
+                    </img>
+                    <p className='controls-apps-youtube-video-title'>
+                      {video.title}
+                    </p>
+                  </button>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
       }
     </div>
   )

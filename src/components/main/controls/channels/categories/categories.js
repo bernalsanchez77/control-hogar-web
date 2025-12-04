@@ -1,7 +1,9 @@
+import {store} from "../../../../../store/store";
 import './categories.css';
 
-function Categories({cableChannels, cableChannelCategories, changeCategoryParent}) {
-  let selectedImg = '/imgs/channels/' + cableChannels.find(ch => ch.state === 'selected')?.id + '.png';
+function Categories({cableChannelCategories, changeCategoryParent}) {
+  const cableChannelsSt = store(v => v.cableChannelsSt);
+  let selectedImg = '/imgs/channels/' + cableChannelsSt.find(ch => ch.state === 'selected')?.id + '.png';
   const changeCategory = (category) => {
     changeCategoryParent(category);
   }

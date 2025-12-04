@@ -1,12 +1,15 @@
 
 import supabaseChannels from './supabase/supabase-channels';
 import Requests from './requests';
-const requests = new Requests();
+import { store } from '../store/store';
+
+const isPc = window.location.hostname === 'localhost' && !window.cordova;
+const requests = new Requests(isPc);
 class ViewRouter {
-  async subscribeToSupabaseChannel(tableName, setters, setInternet) {
+  async subscribeToSupabaseChannel(tableName, setters, onNoInternet) {
     await supabaseChannels.subscribeToSupabaseChannel(tableName, (itemName, newItem) => {
       setters[itemName](items => items.map(item => item.id === newItem.id ? newItem : item));
-    }, setInternet, true).then((res) => {
+    }, onNoInternet, true).then((res) => {
       if (res.success) {
         return 'subscribed';
       } else {
@@ -15,8 +18,9 @@ class ViewRouter {
     }).catch((res) => {
       return res.error;
     });
-  };
-  async changeView(newView, currentView, youtubeChannelsLiz, setters, rokuApps, setInternet) {
+  }
+  async changeView(newView) {
+    const currentView = store.getState().viewSt;
     if (newView.selected === 'cable') {
       // cable selected
       if (currentView.selected === 'cable') {
@@ -24,7 +28,7 @@ class ViewRouter {
         if (newView.cable.channels.category.length) {
           // category selected
           const cableCategory = newView.cable.channels.category[0];
-          window.history.pushState({page: cableCategory}, cableCategory, '#' + cableCategory);
+          window.history.pushState({ page: cableCategory }, cableCategory, '#' + cableCategory);
         } else {
         }
       }
@@ -32,22 +36,22 @@ class ViewRouter {
         // was in roku
         const channelsTable = await requests.getTableFromSupabase('cableChannels');
         if (channelsTable) {
-          setters.setCableChannels(channelsTable.data);
-          setters.setRokuSearchMode('default');
-          const subscriptionResponse = await this.subscribeToSupabaseChannel('cableChannels', setters, setInternet);
+          store.getState().setCableChannelsSt(channelsTable.data);
+          store.getState().setRokuSearchModeSt('default');
+          // const subscriptionResponse = await this.subscribeToSupabaseChannel('cableChannels', onNoInternet);
           if (currentView.roku.apps.selected) {
             // was in an app
             if (currentView.roku.apps.selected === 'youtube') {
               // app was Youtube
               if (currentView.roku.apps.youtube.channel) {
-              supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideosLiz');     
+                // supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideosLiz');     
               } else {
-                setters.setRokuSearchMode('roku');
+                store.getState().setRokuSearchModeSt('roku');
               }
-            } 
+            }
           } else {
             // was in home
-            supabaseChannels.unsubscribeFromSupabaseChannel('rokuApps');             
+            // supabaseChannels.unsubscribeFromSupabaseChannel('rokuApps');             
           }
         }
       }
@@ -71,40 +75,40 @@ class ViewRouter {
                 if (newView.roku.apps.youtube.mode === 'channel') {
                   // youtube is in channel mode
                   const youtubeChannel = newView.roku.apps.youtube.channel;
-                  window.history.pushState({page: youtubeChannel}, youtubeChannel, '#' + youtubeChannel);
+                  window.history.pushState({ page: youtubeChannel }, youtubeChannel, '#' + youtubeChannel);
                   const videos = await requests.getTableFromSupabase('youtubeVideosLiz');
                   if (videos) {
-                    setters.setYoutubeVideosLiz(videos.data);
-                    const subscriptionResponse = await this.subscribeToSupabaseChannel('youtubeVideosLiz', setters, setInternet);
-                    setters.setRokuSearchMode('default');
+                    store.getState().setYoutubeVideosLizSt(videos.data);
+                    // const subscriptionResponse = await this.subscribeToSupabaseChannel('youtubeVideosLiz', onNoInternet);
+                    store.getState().setRokuSearchModeSt('default');
                   }
                 }
                 if (newView.roku.apps.youtube.mode === 'search') {
                   // youtube is in search mode
-                  window.history.pushState({page: 'search'}, 'search', '#search');
+                  window.history.pushState({ page: 'search' }, 'search', '#search');
                 }
               } else {
                 // youtube is in home mode
-                setters.setRokuSearchMode('app');
+                store.getState().setRokuSearchModeSt('app');
                 if (currentView.roku.apps.youtube.mode === 'channel') {
-                  supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideosLiz');
+                  // supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideosLiz');
                 }
               }
             }
           } else {
             // was in home
             const app = newView.roku.apps.selected;
-            window.history.pushState({page: app}, app, '#' + app);
-            supabaseChannels.unsubscribeFromSupabaseChannel('rokuApps');
+            window.history.pushState({ page: app }, app, '#' + app);
+            // supabaseChannels.unsubscribeFromSupabaseChannel('rokuApps');
             if (app === 'youtube') {
               // app is Youtube
-              if (!youtubeChannelsLiz?.length) {
-                const channels = await requests.getTableFromSupabase('youtubeChannelsLiz');
-                if (channels) {
-                  setters.setYoutubeChannelsLiz(channels.data);
-                }
-              }
-              setters.setRokuSearchMode('app');
+              // if (!youtubeChannelsLiz?.length) {
+              //   const channels = await requests.getTableFromSupabase('youtubeChannelsLiz');
+              //   if (channels) {
+              //     setters.setYoutubeChannelsLiz(channels.data);
+              //   }
+              // }
+              store.getState().setRokuSearchModeSt('app');
             }
           }
         } else {
@@ -113,12 +117,12 @@ class ViewRouter {
             // was in an app
             const apps = await requests.getTableFromSupabase('rokuApps');
             if (apps) {
-              setters.setRokuApps(apps.data);
-              const subscriptionResponse = await this.subscribeToSupabaseChannel('rokuApps', setters, setInternet);
+              store.getState().setRokuAppsSt(apps.data);
+              // const subscriptionResponse = await this.subscribeToSupabaseChannel('rokuApps', onNoInternet);
               // if (rokuApps.find(app => app.state === 'selected')?.id !== 'home') {
-                setters.setRokuSearchMode('roku');
+              store.getState().setRokuSearchModeSt('roku');
               // } else {
-                // setters.setRokuSearchMode('default');
+              // store.getState().setRokuSearchModeSt('default');
               // }
             }
           }
@@ -126,29 +130,74 @@ class ViewRouter {
       }
       if (currentView.selected === 'cable') {
         //was in cable
-        supabaseChannels.unsubscribeFromSupabaseChannel('cableChannels');
+        // supabaseChannels.unsubscribeFromSupabaseChannel('cableChannels');
         const apps = await requests.getTableFromSupabase('rokuApps');
         if (apps) {
-          setters.setRokuApps(apps.data);
-          const subscriptionResponse = await this.subscribeToSupabaseChannel('rokuApps', setters, setInternet);
+          store.getState().setRokuAppsSt(apps.data);
+          // const subscriptionResponse = await this.subscribeToSupabaseChannel('rokuApps', onNoInternet);
           // if (apps.data.find(app => app.state === 'selected')?.id !== 'home') {
-            setters.setRokuSearchMode('roku');
+          store.getState().setRokuSearchModeSt('roku');
           // }
         }
       }
       if (currentView.selected === '') {
         // if (rokuApps.find(app => app.state === 'selected')?.id !== 'home') {
-          setters.setRokuSearchMode('roku');
+        store.getState().setRokuSearchModeSt('roku');
         // }
       }
     }
 
-    if (newView.selected === 'cable' || newView.selected === 'roku' ) {
+    if (newView.selected === 'cable' || newView.selected === 'roku') {
       if (newView.devices.device) {
-        window.history.pushState({page: 'devices'}, 'devices', '#devices');
+        window.history.pushState({ page: 'devices' }, 'devices', '#devices');
       }
     }
-    return newView;
-  };
+    store.getState().setViewSt(newView);
+  }
+  async onNavigationBack(currentView) {
+    const newView = structuredClone(currentView);
+    if (currentView.selected === 'roku') {
+      if (currentView.roku.apps.selected) {
+        if (currentView.roku.apps.youtube.mode === 'channel' || currentView.roku.apps.youtube.mode === 'search') {
+          newView.roku.apps.youtube.mode = '';
+          if (currentView.roku.apps.youtube.channel !== '') {
+            newView.roku.apps.youtube.channel = '';
+          }
+          await this.changeView(newView, currentView);
+          return
+        } else {
+          newView.roku.apps.selected = '';
+          await this.changeView(newView, currentView);
+          return;
+        }
+      }
+    }
+    if (currentView.selected === 'cable') {
+      if (currentView.cable.channels.category.length) {
+        newView.cable.channels.category = [];
+        await this.changeView(newView, currentView);
+        return;
+      }
+    }
+    if (currentView.devices.device) {
+      newView.devices.device = '';
+      await this.changeView(newView, currentView);
+      return;
+    }
+    window.navigator.app.exitApp();
+  }
+  async onHdmiSalaTableChange(currentView, id) {
+    const newView = structuredClone(currentView);
+    newView.selected = id;
+    if (newView.selected === 'roku') {
+      newView.cable.channels.category = [];
+    }
+    if (newView.selected === 'cable') {
+      newView.roku.apps.selected = '';
+      newView.roku.apps.youtube.mode = '';
+      newView.roku.apps.youtube.channel = '';
+    }
+    await this.changeView(newView, currentView);
+  }
 }
 export default ViewRouter;

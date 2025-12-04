@@ -1,16 +1,19 @@
+import {store} from "../../../../store/store";
 import LuzCuarto from './luzCuarto/luzCuarto';
 import './devices.css';
 
-function Devices({devices, view, changeControlParent}) {
+function Devices({changeControlParent}) {
+  const devicesSt = store(v => v.devicesSt);
+  const viewSt = store(v => v.viewSt);
   const changeControl = (value) => {
     changeControlParent(value);
   };
 
-  const luzCuarto = devices.find(device => device.id === 'luzCuarto');
+  const luzCuarto = devicesSt.find(device => device.id === 'luzCuarto');
 
   return (
     <div>
-      {view.devices.device === 'luzCuarto' && 
+      {viewSt.devices.device === 'luzCuarto' && 
       <LuzCuarto
         element={luzCuarto}
         changeControlParent={changeControl}>

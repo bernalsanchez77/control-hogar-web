@@ -1,3 +1,4 @@
+import { store } from '../../../store/store';
 import Top from './top/top';
 import Arrows from './arrows/arrows';
 import Levels from './levels/levels';
@@ -8,110 +9,72 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({rokuPlayStatePosition, rokuPlayState, screens, devices, rokuSearchMode, changeRokuSearchModeParent, screenSelected, view, hdmiSala, rokuApps, youtubeSearchVideos, youtubeChannelsLiz, youtubeVideosLiz, cableChannels, cableChannelCategories, changeControlParent, changeViewParent, triggerVibrateParent, searchYoutubeParent, searchRokuModeParent, handleYoutubeQueueParent, stopPlayStateListenerParent}) {
+function Controls({ cableChannelCategories, changeControlParent, searchYoutubeParent, searchRokuModeParent, handleYoutubeQueueParent, removeSelectedVideoParent }) {
+  const screensSt = store(v => v.screensSt);
+  const rokuAppsSt = store(v => v.rokuAppsSt);
+  const hdmiSalaSt = store(v => v.hdmiSalaSt);
+  const devicesSt = store(v => v.devicesSt);
+  const viewSt = store(v => v.viewSt);
   const changeControl = (params) => {
     changeControlParent(params);
-  }
-
-  const triggerVibrate = (length) => {
-    triggerVibrateParent(length);
-  }
-
-  const changeView = (view) => {
-    changeViewParent(view);
-  }
+  };
 
   const searchYoutube = (text) => {
     searchYoutubeParent(text);
-  }
+  };
 
   const handleYoutubeQueue = (params) => {
     handleYoutubeQueueParent(params);
-  }
+  };
 
-  const changeRokuSearchMode = (mode) => {
-    changeRokuSearchModeParent(mode);
-  }
-
-  const stopPlayStateListener = () => {
-    stopPlayStateListenerParent();
-  }
+  const removeSelectedVideo = () => {
+    removeSelectedVideoParent();
+  };
 
   return (
     <div>
       <div className='controls'>
-        {screens.length &&
-        <Top
-          screens={screens}
-          view={view}
-          screenSelected={screenSelected}
-          changeControlParent={changeControl}>
-        </Top>
+        {screensSt.length &&
+          <Top
+            changeControlParent={changeControl}>
+          </Top>
         }
         <Arrows
           changeControlParent={changeControl}>
         </Arrows>
-        {screens.length &&
-        <Levels
-          screenSelected={screenSelected}
-          view={view}
-          screens={screens}
-          cableChannels={cableChannels}
-          changeControlParent={changeControl}
-          changeViewParent={changeView}
-          triggerVibrateParent={triggerVibrate}>
-        </Levels>
+        {screensSt.length &&
+          <Levels
+            changeControlParent={changeControl}>
+          </Levels>
         }
-        {hdmiSala.length &&
-        <Toolbar
-          hdmiSala={hdmiSala}
-          changeControlParent={changeControl}>
-        </Toolbar>
+        {hdmiSalaSt.length &&
+          <Toolbar
+            changeControlParent={changeControl}>
+          </Toolbar>
         }
-        {view.selected === 'roku' && rokuApps.length && !view.roku.apps.youtube.channel &&
-        <Search
-          view={view}
-          rokuSearchMode={rokuSearchMode}
-          rokuApps={rokuApps}
-          changeViewParent={changeView}
-          searchYoutubeParent={searchYoutube}
-          searchRokuModeParent={searchRokuModeParent}
-          changeRokuSearchModeParent={changeRokuSearchMode}>
-        </Search>
+        {viewSt.selected === 'roku' && rokuAppsSt.length && !viewSt.roku.apps.youtube.channel &&
+          <Search
+            searchYoutubeParent={searchYoutube}
+            searchRokuModeParent={searchRokuModeParent}>
+          </Search>
         }
-        {view.selected === 'roku' &&
-        <Apps
-          rokuPlayState={rokuPlayState}
-          view={view}
-          rokuApps={rokuApps}
-          rokuSearchMode={rokuSearchMode}
-          youtubeSearchVideos={youtubeSearchVideos}
-          youtubeChannelsLiz={youtubeChannelsLiz}
-          rokuPlayStatePosition={rokuPlayStatePosition}
-          youtubeVideosLiz={youtubeVideosLiz}
-          handleYoutubeQueueParent={handleYoutubeQueue}
-          changeControlParent={changeControl}
-          changeRokuSearchModeParent={changeRokuSearchMode}
-          stopPlayStateListenerParent={stopPlayStateListener}
-          changeViewParent={changeView}>
-        </Apps>
+        {viewSt.selected === 'roku' &&
+          <Apps
+            handleYoutubeQueueParent={handleYoutubeQueue}
+            changeControlParent={changeControl}
+            removeSelectedVideoParent={removeSelectedVideo}>
+          </Apps>
         }
-        {view.selected === 'cable' &&
-        <Channels
-          view={view}
-          cableChannels={cableChannels}
-          cableChannelCategories={cableChannelCategories}
-          changeControlParent={changeControl}
-          changeViewParent={changeView}>
-        </Channels>
+        {viewSt.selected === 'cable' &&
+          <Channels
+            cableChannelCategories={cableChannelCategories}
+            changeControlParent={changeControl}>
+          </Channels>
         }
-        {view.devices.device !== '' && devices.length &&
-        <Devices
-          view={view}
-          devices={devices}
-          changeControlParent={changeControl}
-          changeViewParent={changeView}>
-        </Devices>
+        {viewSt.devices.device !== '' && devicesSt.length &&
+          <Devices
+            changeControlParent={changeControl}>
+          </Devices>
         }
       </div>
     </div>

@@ -44,11 +44,11 @@ class CordovaPlugins {
     );
   }
 
-  async startSsidListener(onSSidChange) {
+  async startWifiNameListener(onWifiNameChange) {
     window.cordova.plugins.netinfo.startSSIDListener(
       async (info) => {
         if (!firstWifiSsidChange) {
-          onSSidChange(info.ssid.replace(/"/g, '').trim());
+          onWifiNameChange(info.ssid.replace(/"/g, '').trim());
         }
         firstWifiSsidChange = false;
       },
@@ -68,7 +68,7 @@ class CordovaPlugins {
     );
   }
 
-  async getWifiSSID() {
+  async getWifiName() {
     let wifiSsid = null;
     await window.cordova.plugins.netinfo.getSSID().then((ssid) => {
       wifiSsid = ssid;

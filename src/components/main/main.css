@@ -2,6 +2,25 @@
   height: 100vh;
   width: 100vw;
 }
+
+.main-components {
+  max-width: 450px;
+  width: 100%;
+  text-align: center;
+  font-size: 0;
+}
+
+.fade-in {
+  /* opacity: 0; */
+}
+body.transition .fade-in {
+  transition: opacity 0.5s ease;
+}
+body.loaded .fade-in {
+  opacity: 1;
+}
+
+
 .main-dark {
   background-color: black;
 }
@@ -34,22 +53,5 @@
 }
 .main-burnedred {
   background: radial-gradient(ellipse, #1a0000 0%, #330000 60%, #660000 100%);
-}
-
-.main-components {
-  max-width: 450px;
-  width: 100%;
-  text-align: center;
-  font-size: 0;
-}
-
-.fade-in {
-  /* opacity: 0; */
-}
-body.transition .fade-in {
-  transition: opacity 0.5s ease;
-}
-body.loaded .fade-in {
-  opacity: 1;
 }
 
