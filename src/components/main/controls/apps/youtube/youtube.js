@@ -66,21 +66,31 @@ function Youtube() {
 
   const changeControl = useCallback((video) => {
     const currentVideo = youtubeVideosLizSt.find(vid => vid.state === 'selected');
-    if (currentVideo?.id !== video.id) {
-      const device = 'rokuSala';
-      requests.fetchRoku({ device, key: 'launch', value: rokuId, params: { contentID: video.id } });
-      if (currentVideo) {
-        requests.updateTable({
-          current: { currentId: currentVideo.id, currentTable: 'youtubeVideosLiz' },
-          new: { newId: video.id, newTable: 'youtubeVideosLiz' }
-        });
-      } else {
+    const isInYoutubeVideosLizSt = youtubeVideosLizSt.find(vid => vid.id === video.id);
+    if (currentVideo) {
+      if (currentVideo.id !== video.id) {
+        requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: video.id } });
+        if (isInYoutubeVideosLizSt) {
+          requests.updateTable({
+            current: { currentId: currentVideo.id, currentTable: 'youtubeVideosLiz' },
+            new: { newId: video.id, newTable: 'youtubeVideosLiz' }
+          });
+        } else {
+          requests.updateTable({
+            current: { currentId: currentVideo.id, currentTable: 'youtubeVideosLiz', currentState: '' }
+          });
+        }
+      }
+    } else {
+      requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: video.id } });
+      if (isInYoutubeVideosLizSt) {
         requests.updateTable({
           new: { newId: video.id, newTable: 'youtubeVideosLiz', newState: 'selected' }
         });
       }
     }
   }, [rokuId, youtubeVideosLizSt]);
+
   if (viewSt.roku.apps.youtube.mode === '') {
     youtubeSortedChannels = Object.values(youtubeChannelsLizSt).sort((a, b) => a.order - b.order);
   }

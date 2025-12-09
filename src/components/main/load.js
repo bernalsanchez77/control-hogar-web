@@ -40,6 +40,8 @@ function Load() {
 
   //useRef Variables
   const initializedRef = useRef(false);
+  const isLoadingRef = useRef(false);
+  const isReadyRef = useRef(false);
 
   const subscribeToSupabaseChannel = useCallback(async (tableName, callback) => {
     let response = '';
@@ -115,6 +117,7 @@ function Load() {
 
   const load = useCallback(async () => {
     setIsLoadingSt(true);
+    isLoadingRef.current = true;
     // setInRange(await utils.getInRange());
     const newView = structuredClone(viewSt);
 
@@ -123,22 +126,26 @@ function Load() {
     });
 
     if (hdmiSalaTable.table && hdmiSalaTable.subscriptionResponse === 'SUBSCRIBED') {
-      await setData('youtubeVideosLiz', true, (change) => {
-        Tables.onYoutubeVideosLizTableChange(change);
-      });
+      await setData('screens');
+
+      setIsLoadingSt(false);
+      newView.selected = hdmiSalaTable.table.data.find(el => el.state === 'selected').id;
+      await viewRouter.changeView(newView);
       await setData('rokuApps', true, (change) => {
         Tables.onRokuSalaTableChange(change);
       });
-      await setData('youtubeChannelsLiz');
-      await setData('cableChannels');
       await setData('devices');
-      await setData('screens');
-
-      newView.selected = hdmiSalaTable.table.data.find(el => el.state === 'selected').id;
-      await viewRouter.changeView(newView);
+      await setData('youtubeChannelsLiz');
+      await setData('youtubeVideosLiz', true, (change) => {
+        Tables.onYoutubeVideosLizTableChange(change);
+      });
+    }
+    if (isPcSt || wifiNameSt === 'Noky') {
+      Roku.setRoku();
     }
     setIsLoadingSt(false);
-  }, [setData, setIsLoadingSt, viewSt]);
+    isLoadingRef.current = false;
+  }, [setData, setIsLoadingSt, viewSt, isPcSt, wifiNameSt]);
 
   // event functions
 
@@ -151,23 +158,25 @@ function Load() {
   const init = useCallback(async () => {
     await load();
     if (isPcSt || wifiNameSt === 'Noky') {
-      Roku.setRoku();
+      Roku.setWifi(true);
+      Roku.startPlayStateListener();
     }
+    isReadyRef.current = true;
   }, [load, isPcSt, wifiNameSt]);
 
   // useEffects
 
   useEffect(() => {
     async function fetchData() {
-      if (isConnectedToInternetSt && !isLoadingSt && isInForegroundSt && initializedRef.current) {
+      if (isReadyRef.current && !isLoadingRef.current && isConnectedToInternetSt && isInForegroundSt && initializedRef.current) {
         await load();
       }
     }
     fetchData();
-  }, [isInForegroundSt, load, isConnectedToInternetSt, isLoadingSt]);
+  }, [isInForegroundSt, load, isConnectedToInternetSt, isLoadingRef]);
 
   useEffect(() => {
-    if (initializedRef.current) {
+    if (isReadyRef.current) {
       if (isPcSt || (wifiNameSt === 'Noky' && networkTypeSt === 'wifi')) {
         Roku.setWifi(true);
         setTimeout(async () => {
@@ -181,7 +190,7 @@ function Load() {
 
   useEffect(() => {
     return () => {
-      if (initializedRef.current) {
+      if (isReadyRef.current) {
         Roku.setWifi(false);
       }
     }
@@ -208,8 +217,8 @@ function Load() {
   }, [isAppSt]);
 
   if (!initializedRef.current) {
-    init();
     initializedRef.current = true;
+    init();
   }
 
   return (

@@ -95,7 +95,8 @@ function Search() {
   const onKeyDown = (e) => {
     if (rokuSearchModeSt === 'roku') {
       if (e.key === "Backspace") {
-        requests.sendControl({ roku: [{ key: 'keypress', value: 'Backspace', params: '' }] });
+        requests.fetchRoku({ key: 'keypress', value: 'Backspace' });
+
       } else if (e.key === "Enter") {
         // searchRokuModeParent("Enter"); disabled cause creates problems en youtube and is not needed in other apps
       }
@@ -111,16 +112,16 @@ function Search() {
         const addedText = newValue.slice(oldValue.length);
         for (const char of addedText) {
           if (char === ' ') {
-            requests.sendControl({ roku: [{ key: 'keypress', value: 'Lit_%20', params: '' }] });
+            requests.fetchRoku({ key: 'keypress', value: 'Lit_%20' });
           } else {
-            requests.sendControl({ roku: [{ key: 'keypress', value: `Lit_${encodeURIComponent(char)}`, params: '' }] });
+            requests.fetchRoku({ key: 'keypress', value: `Lit_${encodeURIComponent(char)}` });
           }
         }
       } else if (newValue.length < oldValue.length) {
         // Characters were deleted
         const numDeleted = oldValue.length - newValue.length;
         for (let i = 0; i < numDeleted; i++) {
-          // searchRokuModeParent('Backspace');
+          requests.fetchRoku({ key: 'keypress', value: 'Backspace' });
         }
       }
     }

@@ -119,7 +119,6 @@ class Roku {
   }
 
   async setRoku() {
-    this.setWifi(true);
     const rokuActiveApp = await this.getActiveApp();
     if (rokuActiveApp) {
       const rokuAppsSt = store.getState().rokuAppsSt;
@@ -131,7 +130,6 @@ class Roku {
       }
       const playStateFromRoku = await this.getPlayState('state');
       if (playStateFromRoku) {
-        this.startPlayStateListener();
         const youtubeVideosLizSt = store.getState().youtubeVideosLizSt;
         if (playStateFromRoku !== 'play' && playStateFromRoku !== 'pause' && youtubeVideosLizSt.find(video => video.state === 'selected')) {
           requests.updateTable({

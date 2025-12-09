@@ -25,7 +25,7 @@ function Apps() {
       current: { currentId: rokuAppsSt.find(app => app.state === 'selected').id, currentTable: 'rokuApps' },
       new: { newId: app.id, newTable: 'rokuApps' }
     });
-    requests.fetchRoku({ device, key: 'launch', value: app.rokuId });
+    requests.fetchRoku({ key: 'launch', value: app.rokuId });
   }
 
   const changeView = async (app) => {

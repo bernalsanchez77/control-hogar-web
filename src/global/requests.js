@@ -55,7 +55,7 @@ class Requests {
         return { status: response.status, data: '' };
       }
     } catch (error) {
-      await this.requestErrorHandler();
+      this.requestErrorHandler();
       return { status: 0, data: '' };
     }
   }
@@ -78,13 +78,13 @@ class Requests {
       window.cordova.plugin.http.sendRequest(
         longApiUrl + api,
         info,
-        function onSuccess(response) {
+        (response) => {
           // console.log(`${method} request to ${api} succeeded`);
           resolve({ status: response.status, data: JSON.parse(response.data) });
         },
-        async function onError(error) {
+        (error) => {
           // console.error(`${method} request to ${api} failed: `, error);
-          await this.requestErrorHandler();
+          this.requestErrorHandler();
           reject(error);
         }
       );
@@ -232,38 +232,6 @@ class Requests {
       } else {
         return await this.normalApiRequest('sendIfttt', params, 'get');
       }
-    }
-  }
-  async sendControl(params) {
-    if (params.ifttt) {
-      params.ifttt.forEach(el => {
-        if (el.device === 'rokuSala') {
-          if (!window.cordova) {
-            this.sendIfttt({
-              device: el.device,
-              key: el.key,
-              value: el.value
-            }, store.getState().sendEnabledSt);
-          }
-        } else {
-          this.sendIfttt({
-            device: el.device,
-            key: el.key,
-            value: el.value,
-          }, store.getState().sendEnabledSt);
-        }
-      });
-    }
-    if (params.roku) {
-      params.roku.forEach(el => {
-        if (window.cordova) {
-          this.fetchRoku({
-            key: el.key,
-            value: el.value,
-            params: el.params,
-          }, store.getState().sendEnabledSt);
-        }
-      });
     }
   }
   async fetchRoku(params) {
