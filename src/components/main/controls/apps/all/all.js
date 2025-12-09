@@ -1,11 +1,10 @@
 import { useRef } from 'react';
 import { store } from "../../../../../store/store";
-import Utils from '../../../../../global/utils';
-import ViewRouter from '../../../../../global/view-router';
+import utils from '../../../../../global/utils';
+import requests from '../../../../../global/requests';
+import viewRouter from '../../../../../global/view-router';
 import './all.css';
-const utils = new Utils();
-const viewRouter = new ViewRouter();
-function Apps({ changeControlParent }) {
+function Apps() {
   const setRokuSearchModeSt = store(v => v.setRokuSearchModeSt);
   const rokuAppsSt = store(v => v.rokuAppsSt);
   const viewSt = store(v => v.viewSt);
@@ -21,10 +20,12 @@ function Apps({ changeControlParent }) {
     utils.triggerVibrate();
     setRokuSearchModeSt('roku');
     // }
-    changeControlParent({
-      ifttt: [{ device, key: 'app', value }],
-      roku: [{ device, key: 'launch', value: app.rokuId }],
+    requests.sendIfttt({ device, key: 'app', value });
+    requests.updateTable({
+      current: { currentId: rokuAppsSt.find(app => app.state === 'selected').id, currentTable: 'rokuApps' },
+      new: { newId: app.id, newTable: 'rokuApps' }
     });
+    requests.fetchRoku({ device, key: 'launch', value: app.rokuId });
   }
 
   const changeView = async (app) => {

@@ -1,75 +1,65 @@
 import { store } from "../../../../store/store";
-import Requests from "../../../../global/requests";
+import requests from "../../../../global/requests";
+import utils from '../../../../global/utils';
 import './top.css';
 
-function Controls({ changeControlParent }) {
-  const requests = new Requests(store(v => v.isPcSt));
+function Controls() {
   const screenSelectedSt = store(v => v.screenSelectedSt);
   const screensSt = store(v => v.screensSt);
   const viewSt = store(v => v.viewSt);
   const screen = screensSt.find(screen => screen.id === screenSelectedSt);
   const changePower = () => {
-    if (screenSelectedSt === 'proyectorSala') {
+    utils.triggerVibrate();
+    const device = screenSelectedSt;
+    const newState = screen.state === 'on' ? 'off' : 'on';
+    const value = newState;
+    if (device === 'proyectorSala') {
+      const devices = ['parlantesSala', 'lamparaSala', 'lamparaComedor'];
+      devices.forEach(device => {
+        requests.sendIfttt({ device, value });
+        requests.updateTable({ new: { newId: device, newTable: 'devices', newState } });
+      });
       if (screen.state === 'on') {
-        requests.sendIfttt({ device: screenSelectedSt, key: 'state', value: 'off' });
-        requests.updateTableInSupabase({ new: { newId: screenSelectedSt, newTable: 'screens', newState: 'off' } });
-        requests.sendIfttt({ device: 'parlantesSala', key: 'state', value: 'off' });
-        requests.updateTableInSupabase({ new: { newId: 'parlantesSala', newTable: 'devices', newState: 'off' } });
-        requests.sendIfttt({ device: 'lamparaSala', key: 'state', value: 'off' });
-        requests.updateTableInSupabase({ new: { newId: 'lamparaSala', newTable: 'devices', newState: 'off' } });
-        requests.sendIfttt({ device: 'lamparaComedor', key: 'state', value: 'off' });
-        requests.updateTableInSupabase({ new: { newId: 'lamparaComedor', newTable: 'devices', newState: 'off' } });
-
+        requests.sendIfttt({ device, value });
+        requests.updateTable({ new: { newId: device, newTable: 'screens', newState } });
         setTimeout(() => {
-          requests.sendIfttt({ device: 'proyectorSalaSwitch', key: 'state', value: 'off' });
-          requests.updateTableInSupabase({ new: { newId: 'proyectorSalaSwitch', newTable: 'devices', newState: 'off' } });
+          requests.sendIfttt({ device: 'proyectorSalaSwitch', value });
+          requests.updateTable({ new: { newId: 'proyectorSalaSwitch', newTable: 'devices', newState } });
         }, 30000);
       } else {
-        changeControlParent({
-          ifttt: [
-            { device: 'proyectorSalaSwitch', key: 'state', value: 'on' },
-            { device: 'parlantesSala', key: 'state', value: 'on' },
-            { device: 'lamparaSala', key: 'state', value: 'on' },
-            { device: 'lamparaComedor', key: 'state', value: 'on' },
-          ]
-        });
-
+        requests.sendIfttt({ device: 'proyectorSalaSwitch', value });
+        requests.updateTable({ new: { newId: 'proyectorSalaSwitch', newTable: 'devices', newState } });
         setTimeout(() => {
-          changeControlParent({ ifttt: [{ device: screenSelectedSt, key: 'state', value: 'on' }] });
+          requests.sendIfttt({ device, value });
+          requests.updateTable({ new: { newId: device, newTable: 'screens', newState } });
         }, 5000);
       }
     } else {
-      if (screen.state === 'on') {
-        changeControlParent({ ifttt: [{ device: screenSelectedSt, key: 'state', value: 'off' }] });
-        setTimeout(() => {
-          // changeControlParent({ifttt: [{device: screenSelectedSt, key: 'mute', value: 'off'}]});
-        }, 2000);
-      } else {
-        changeControlParent({ ifttt: [{ device: screenSelectedSt, key: 'state', value: 'on' }] });
-      }
+      requests.sendIfttt({ device, value });
+      requests.updateTable({ new: { newId: device, newTable: 'screens', newState } });
     }
   }
   const changeHdmi = () => {
+    utils.triggerVibrate();
     const device = 'hdmiSala';
     if (viewSt.selected === 'roku') {
-      changeControlParent({ ifttt: [{ device, key: 'state', value: 'cable' }] });
+      const newId = 'cable';
+      requests.sendIfttt({ device, value: newId });
+      requests.updateTable({ current: { currentId: viewSt.selected, currentTable: device }, new: { newId, newTable: device } });
     }
     if (viewSt.selected === 'cable') {
-      changeControlParent({ ifttt: [{ device, key: 'state', value: 'roku' }] });
+      const newId = 'roku';
+      requests.sendIfttt({ device, value: newId });
+      requests.updateTable({ current: { currentId: viewSt.selected, currentTable: device }, new: { newId, newTable: device } });
     }
   }
   const changeInput = () => {
+    utils.triggerVibrate();
     const device = screenSelectedSt;
     if (screen.input === 'hdmi1') {
-      changeControlParent({
-        ifttt: [{ device: device, key: 'input', value: 'hdmi2' }],
-        massMedia: [{ device, key: ['input', 'state'], value: 'hdmi2' }]
-      })
+      requests.sendIfttt({ device, key: 'input', value: 'hdmi2' });
     } else {
-      changeControlParent({
-        ifttt: [{ device, key: 'input', value: 'hdmi1' }],
-        massMedia: [{ device: device, key: ['input', 'state'], value: 'hdmi1' }]
-      })
+      requests.sendIfttt({ device, key: 'input', value: 'hdmi1' });
     }
   }
   return (

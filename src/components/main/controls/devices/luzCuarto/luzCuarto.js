@@ -1,13 +1,14 @@
 import './luzCuarto.css';
+import requests from '../../../../../global/requests';
 
-function LuzCuarto({element, changeControlParent}) {
+function LuzCuarto({ element }) {
   const changeControl = (color) => {
     const device = element.id;
     if (element.state === 'off') {
-      changeControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
+      requests.sendIfttt({ device, key: 'state', value: 'on' });
     }
     setTimeout(() => {
-      changeControlParent({ifttt: [{device, key: 'color', value: color}]});
+      requests.sendIfttt({ device, key: 'color', value: color });
     }, 1000);
   };
 

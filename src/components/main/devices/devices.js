@@ -11,18 +11,14 @@ import VentiladorSala from './ventiladorSala/ventiladorSala';
 import CalentadorNegro from './calentadorNegro/calentadorNegro';
 import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
 import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
-import ViewRouter from '../../../global/view-router';
+import viewRouter from '../../../global/view-router';
 import './devices.css';
 
-const viewRouter = new ViewRouter();
 
-function Devices({ changeControlParent }) {
+function Devices() {
   const userCredentialSt = store(v => v.userCredentialSt);
   const devicesSt = store(v => v.devicesSt);
   const viewSt = store(v => v.viewSt);
-  const changeControl = (params) => {
-    changeControlParent(params);
-  }
   const changeView = async (device) => {
     const newView = structuredClone(viewSt);
     newView.devices.device = device;
@@ -45,61 +41,52 @@ function Devices({ changeControlParent }) {
       <div className='devices-row'>
         <div className='devices-element'>
           <LamparaComedor
-            element={lamparaComedor}
-            changeControlParent={changeControl}>
+            element={lamparaComedor}>
           </LamparaComedor>
         </div>
         <div className='devices-element'>
           <LamparaTurca
-            element={lamparaTurca}
-            changeControlParent={changeControl}>
+            element={lamparaTurca}>
           </LamparaTurca>
         </div>
         <div className='devices-element'>
           <LamparaSala
-            element={lamparaSala}
-            changeControlParent={changeControl}>
+            element={lamparaSala}>
           </LamparaSala>
         </div>
         <div className='devices-element'>
           <LamparaRotatoria
-            element={lamparaRotatoria}
-            changeControlParent={changeControl}>
+            element={lamparaRotatoria}>
           </LamparaRotatoria>
         </div>
         <div className='devices-element'>
           <ChimeneaSala
-            element={chimeneaSala}
-            changeControlParent={changeControl}>
+            element={chimeneaSala}>
           </ChimeneaSala>
         </div>
         <div className='devices-element'>
           <ParlantesSala
-            element={parlantesSala}
-            changeControlParent={changeControl}>
+            element={parlantesSala}>
           </ParlantesSala>
         </div>
       </div>
       <div className='devices-row'>
         <div className='devices-element'>
           <VentiladorSala
-            element={ventiladorSala}
-            changeControlParent={changeControl}>
+            element={ventiladorSala}>
           </VentiladorSala>
         </div>
         {(userCredentialSt === 'owner' || userCredentialSt === 'dev') &&
           <div className='devices-element'>
             <CalentadorNegro
-              element={calentadorNegro}
-              changeControlParent={changeControl}>
+              element={calentadorNegro}>
             </CalentadorNegro>
           </div>
         }
         {(userCredentialSt === 'owner' || userCredentialSt === 'dev') &&
           <div className='devices-element'>
             <CalentadorBlanco
-              element={calentadorBlanco}
-              changeControlParent={changeControl}>
+              element={calentadorBlanco}>
             </CalentadorBlanco>
           </div>
         }
@@ -108,24 +95,21 @@ function Devices({ changeControlParent }) {
             chimeneaSala={chimeneaSala}
             lamparaTurca={lamparaTurca}
             lamparaSala={lamparaSala}
-            lamparaComedor={lamparaComedor}
-            changeControlParent={changeControl}>
+            lamparaComedor={lamparaComedor}>
           </LamparasAbajo>
         </div>
         {(userCredentialSt === 'owner' || userCredentialSt === 'dev') &&
           <div className='devices-element'>
             <LuzCuarto
               element={luzCuarto}
-              changeViewParent={changeView}
-              changeControlParent={changeControl}>
+              changeViewParent={changeView}>
             </LuzCuarto>
           </div>
         }
         {(userCredentialSt === 'owner' || userCredentialSt === 'dev') &&
           <div className='devices-element'>
             <LuzEscalera
-              element={luzEscalera}
-              changeControlParent={changeControl}>
+              element={luzEscalera}>
             </LuzEscalera>
           </div>
         }

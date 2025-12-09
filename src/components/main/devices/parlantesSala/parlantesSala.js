@@ -1,12 +1,19 @@
 import './parlantesSala.css';
+import requests from '../../../../global/requests';
 
-function ParlantesSala({element, changeControlParent}) {
+function ParlantesSala({ element }) {
   const changeControl = (device) => {
     if (element.state === 'on') {
-      changeControlParent({ifttt: [{device, key: 'state', value: 'off'}]});
+      requests.sendIfttt({ device, key: 'state', value: 'off' });
+      requests.updateTable({
+        new: { newId: device, newTable: 'devices', newState: 'off' }
+      });
     }
     if (element.state === 'off') {
-      changeControlParent({ifttt: [{device, key: 'state', value: 'on'}]});
+      requests.sendIfttt({ device, key: 'state', value: 'on' });
+      requests.updateTable({
+        new: { newId: device, newTable: 'devices', newState: 'on' }
+      });
     }
   }
 

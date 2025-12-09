@@ -1,46 +1,46 @@
 class Utils {
   supabaseChannels = {};
   isHome(lat, lon) {
-      const latCentro = 9.9333;
-      const lonCentro = -84.0845;
-      const tolerancia = 0.005; // Aproximadamente 5-6 km de margen
-  
-      return (
+    const latCentro = 9.9333;
+    const lonCentro = -84.0845;
+    const tolerancia = 0.005; // Aproximadamente 5-6 km de margen
+
+    return (
       lat >= latCentro - tolerancia &&
       lat <= latCentro + tolerancia &&
       lon >= lonCentro - tolerancia &&
       lon <= lonCentro + tolerancia
-      );
+    );
   };
   getPosition() {
-      return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(
-          (position) => resolve(position),
-          (error) => reject(error),
-          {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => resolve(position),
+        (error) => reject(error),
+        {
           enableHighAccuracy: false,
           maximumAge: 10000
-          }
-        );
-      });
+        }
+      );
+    });
   }
   getPosition2() {
-      return new Promise((resolve, reject) => {
-        navigator.geolocation.watchPosition(
-          (position) => {
-            resolve(position);
-            console.log("Ubicación rápida con watchPosition:", position.coords);
-            // navigator.geolocation.clearWatch(watchId); // Detiene después de la primera
-          },
-          (error) => {
-            reject(error);
-            console.error("Error:", error);
-          },
-          {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.watchPosition(
+        (position) => {
+          resolve(position);
+          console.log("Ubicación rápida con watchPosition:", position.coords);
+          // navigator.geolocation.clearWatch(watchId); // Detiene después de la primera
+        },
+        (error) => {
+          reject(error);
+          console.error("Error:", error);
+        },
+        {
           enableHighAccuracy: false,
           maximumAge: 10000
-          }
-        );
+        }
+      );
     });
   }
   async getIpApiPosition() {
@@ -54,35 +54,35 @@ class Utils {
     }
   }
   async getGeolocationPosition() {
-      let inRange = false;
-      const position = await this.getPosition3();
-      if (position) {
-          const { latitude, longitude } = position.coords;
-          if (this.isHome(latitude, longitude)) {
-              inRange = true;
-          } else {
-              inRange = false;
-          }
-          return inRange;
-      };
-      inRange =false;
+    let inRange = false;
+    const position = await this.getPosition3();
+    if (position) {
+      const { latitude, longitude } = position.coords;
+      if (this.isHome(latitude, longitude)) {
+        inRange = true;
+      } else {
+        inRange = false;
+      }
       return inRange;
+    };
+    inRange = false;
+    return inRange;
   }
   async getInRange() {
-      let inRange = false;
-      const position = await this.getIpApiPosition();
-      if (position) {
-          const latitude = position.latitude;
-          const longitude = position.longitude;
-          if (this.isHome(latitude, longitude)) {
-              inRange = true;
-          } else {
-              inRange = false;
-          }
-          return inRange;
-      };
-      inRange =false;
+    let inRange = false;
+    const position = await this.getIpApiPosition();
+    if (position) {
+      const latitude = position.latitude;
+      const longitude = position.longitude;
+      if (this.isHome(latitude, longitude)) {
+        inRange = true;
+      } else {
+        inRange = false;
+      }
       return inRange;
+    };
+    inRange = false;
+    return inRange;
   }
   triggerVibrate(length = 100) {
     if (navigator.vibrate) {
@@ -120,4 +120,5 @@ class Utils {
     }
   }
 }
-export default Utils;
+const utils = new Utils();
+export default utils;

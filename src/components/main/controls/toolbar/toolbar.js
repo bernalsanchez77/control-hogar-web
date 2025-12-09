@@ -1,8 +1,9 @@
-import {useRef, useEffect} from 'react';
-import {store} from "../../../../store/store";
+import { useRef, useEffect } from 'react';
+import { store } from "../../../../store/store";
+import requests from '../../../../global/requests';
 import './toolbar.css';
 
-function Toolbar({changeControlParent}) {
+function Toolbar() {
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
   const hdmiSalaSt = store(v => v.hdmiSalaSt);
   const rokuPlayStatePositionSt = store(v => v.rokuPlayStatePositionSt);
@@ -13,22 +14,15 @@ function Toolbar({changeControlParent}) {
     const device = 'rokuSala';
     if (value === 'play') {
       if (roku.playState === 'play') {
-        changeControlParent({
-          ifttt: [{device, key: 'playState', value: 'pause'}],
-          roku: [{device, key: 'keypress', value: 'Play'}]
-        });
+        requests.sendIfttt({ device, key: 'playState', value: 'pause' });
+        requests.fetchRoku({ key: 'keypress', value: 'Play' });
       } else {
-        changeControlParent({
-          ifttt: [{device, key: 'playState', value: 'play'}],
-          roku: [{device, key: 'keypress', value: 'Play'}]
-        });
+        requests.sendIfttt({ device, key: 'playState', value: 'play' });
+        requests.fetchRoku({ key: 'keypress', value: 'Play' });
       }
     } else {
-      changeControlParent({
-        ifttt: [{device, key: 'command', value}],
-        roku: [{device, key: 'keypress', value: value.charAt(0).toUpperCase() + value.slice(1)}],
-        massMedia: []
-      });
+      requests.sendIfttt({ device, key: 'command', value });
+      requests.fetchRoku({ key: 'keypress', value: value.charAt(0).toUpperCase() + value.slice(1) });
     }
   }
 
@@ -53,7 +47,7 @@ function Toolbar({changeControlParent}) {
   };
 
   useEffect(() => {
-    if (currentVideoRef.current && currentVideoRef.current.id) { 
+    if (currentVideoRef.current && currentVideoRef.current.id) {
       let currentVideoDuration = 0;
       if (currentVideoRef.current.duration) {
         currentVideoDuration = timeToMs(currentVideoRef.current.duration);
@@ -84,27 +78,27 @@ function Toolbar({changeControlParent}) {
           </button>
         </div>
         <div className='controls-toolbar-element'>
-            <button
-                className={`controls-toolbar-button`}
-                onTouchStart={() => changeControl('play')}>
-                {(roku.playState === 'play' || roku.playState === 'none' || roku.playState === 'close') &&
-                <img
-                  className='controls-toolbar-img controls-toolbar-img--button'
-                  src="/imgs/pause-50.png"
-                  alt="icono">
-                </img>
-                }
-                {roku.playState === 'pause' &&
-                <img
-                  className='controls-toolbar-img controls-toolbar-img--button'
-                  src="/imgs/play-50.png"
-                  alt="icono">
-                </img>
-                }
-            </button>
+          <button
+            className={`controls-toolbar-button`}
+            onTouchStart={() => changeControl('play')}>
+            {(roku.playState === 'play' || roku.playState === 'none' || roku.playState === 'close') &&
+              <img
+                className='controls-toolbar-img controls-toolbar-img--button'
+                src="/imgs/pause-50.png"
+                alt="icono">
+              </img>
+            }
+            {roku.playState === 'pause' &&
+              <img
+                className='controls-toolbar-img controls-toolbar-img--button'
+                src="/imgs/play-50.png"
+                alt="icono">
+              </img>
+            }
+          </button>
         </div>
         <div className='controls-toolbar-element controls-toolbar-element--right'>
-        <button
+          <button
             className={'controls-toolbar-button'}
             onTouchStart={() => changeControl('fwd')}>
             <img
@@ -112,17 +106,17 @@ function Toolbar({changeControlParent}) {
               src="/imgs/forward-50.png"
               alt="icono">
             </img>
-        </button>
+          </button>
         </div>
       </div>
       <div className='controls-toolbar-row'>
         <div className="controls-toolbar-progress-bar-container">
           {currentVideoRef.current &&
-          <div className="controls-toolbar-progress-bar-track">
-            <div 
-              className="controls-toolbar-progress-bar-fill" style={{ width: `${normalizedPercentage.current}%` }}>
+            <div className="controls-toolbar-progress-bar-track">
+              <div
+                className="controls-toolbar-progress-bar-fill" style={{ width: `${normalizedPercentage.current}%` }}>
+              </div>
             </div>
-          </div>
           }
         </div>
       </div>

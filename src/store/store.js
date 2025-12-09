@@ -22,6 +22,7 @@ export const store = create((set) => ({
   devicesSt: [],
   rokuPlayStatePositionSt: 0,
   isPcSt: false,
+  isAppSt: false,
   viewSt: { selected: '', cable: { channels: { category: [] } }, roku: { apps: { selected: '', youtube: { mode: '', channel: '' } } }, devices: { device: '' } },
 
   // --- Actions ---
@@ -46,6 +47,7 @@ export const store = create((set) => ({
   setDevicesSt: (v) => set({ devicesSt: v }),
   setRokuPlayStatePositionSt: (v) => set({ rokuPlayStatePositionSt: v }),
   setIsPcSt: (v) => set({ isPcSt: v }),
+  setIsAppSt: (v) => set({ isAppSt: v }),
   setViewSt: (v) => set({ viewSt: v }),
   updateTablesSt: (tableName, newItem) => set((state) => ({ [tableName]: state[tableName].map((item) => item.id === newItem.id ? newItem : item) })),
   setTableSt: (tableName, newTable) => set({ [tableName]: newTable }),

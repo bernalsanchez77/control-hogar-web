@@ -1,7 +1,8 @@
-import {useEffect, useState, useCallback, useMemo} from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import './lamparasAbajo.css';
+import requests from '../../../../global/requests';
 
-function LamparasAbajo({lamparaSala, lamparaComedor, chimeneaSala, lamparaTurca, changeControlParent}) {
+function LamparasAbajo({ lamparaSala, lamparaComedor, chimeneaSala, lamparaTurca }) {
   const [state, setState] = useState('off');
   const lamparasOn = [
     lamparaComedor,
@@ -29,22 +30,25 @@ function LamparasAbajo({lamparaSala, lamparaComedor, chimeneaSala, lamparaTurca,
     }
   }, [lamparasOff]);
   const changeControl = () => {
-    let ifttt = [];
     if (state === 'on') {
       lamparasOff.forEach(lampara => {
         if (lampara.state === 'on') {
-          ifttt.push({device: lampara.id, key: 'state', value: 'off'});
+          requests.sendIfttt({ device: lampara.id, key: 'state', value: 'off' });
+          requests.updateTable({
+            new: { newId: lampara.id, newTable: 'devices', newState: 'off' }
+          });
         }
       });
-      changeControlParent({ifttt});
       setState('off');
     } else {
       lamparasOn.forEach(lampara => {
         if (lampara.state === 'off') {
-          ifttt.push({device: lampara.id, key: 'state', value: 'on'});
+          requests.sendIfttt({ device: lampara.id, key: 'state', value: 'on' });
+          requests.updateTable({
+            new: { newId: lampara.id, newTable: 'devices', newState: 'on' }
+          });
         }
       });
-      changeControlParent({ifttt});
       setState('on');
     }
   }

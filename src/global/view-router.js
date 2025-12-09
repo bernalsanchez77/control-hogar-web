@@ -1,10 +1,8 @@
 
 import supabaseChannels from './supabase/supabase-channels';
-import Requests from './requests';
+import requests from './requests';
 import { store } from '../store/store';
 
-const isPc = window.location.hostname === 'localhost' && !window.cordova;
-const requests = new Requests(isPc);
 class ViewRouter {
   async subscribeToSupabaseChannel(tableName, setters, onNoInternet) {
     await supabaseChannels.subscribeToSupabaseChannel(tableName, (itemName, newItem) => {
@@ -34,7 +32,7 @@ class ViewRouter {
       }
       if (currentView.selected === 'roku') {
         // was in roku
-        const channelsTable = await requests.getTableFromSupabase('cableChannels');
+        const channelsTable = await requests.getTable('cableChannels');
         if (channelsTable) {
           store.getState().setCableChannelsSt(channelsTable.data);
           store.getState().setRokuSearchModeSt('default');
@@ -76,7 +74,7 @@ class ViewRouter {
                   // youtube is in channel mode
                   const youtubeChannel = newView.roku.apps.youtube.channel;
                   window.history.pushState({ page: youtubeChannel }, youtubeChannel, '#' + youtubeChannel);
-                  const videos = await requests.getTableFromSupabase('youtubeVideosLiz');
+                  const videos = await requests.getTable('youtubeVideosLiz');
                   if (videos) {
                     store.getState().setYoutubeVideosLizSt(videos.data);
                     // const subscriptionResponse = await this.subscribeToSupabaseChannel('youtubeVideosLiz', onNoInternet);
@@ -103,7 +101,7 @@ class ViewRouter {
             if (app === 'youtube') {
               // app is Youtube
               // if (!youtubeChannelsLiz?.length) {
-              //   const channels = await requests.getTableFromSupabase('youtubeChannelsLiz');
+              //   const channels = await requests.getTable('youtubeChannelsLiz');
               //   if (channels) {
               //     setters.setYoutubeChannelsLiz(channels.data);
               //   }
@@ -115,7 +113,7 @@ class ViewRouter {
           // no app selected
           if (currentView.roku.apps.selected) {
             // was in an app
-            const apps = await requests.getTableFromSupabase('rokuApps');
+            const apps = await requests.getTable('rokuApps');
             if (apps) {
               store.getState().setRokuAppsSt(apps.data);
               // const subscriptionResponse = await this.subscribeToSupabaseChannel('rokuApps', onNoInternet);
@@ -131,7 +129,7 @@ class ViewRouter {
       if (currentView.selected === 'cable') {
         //was in cable
         // supabaseChannels.unsubscribeFromSupabaseChannel('cableChannels');
-        const apps = await requests.getTableFromSupabase('rokuApps');
+        const apps = await requests.getTable('rokuApps');
         if (apps) {
           store.getState().setRokuAppsSt(apps.data);
           // const subscriptionResponse = await this.subscribeToSupabaseChannel('rokuApps', onNoInternet);
@@ -200,4 +198,5 @@ class ViewRouter {
     await this.changeView(newView, currentView);
   }
 }
-export default ViewRouter;
+const viewRouter = new ViewRouter();
+export default viewRouter;

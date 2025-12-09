@@ -9,71 +9,44 @@ import Devices from './devices/devices';
 import Apps from './apps/apps';
 import './controls.css';
 
-function Controls({ cableChannelCategories, changeControlParent, searchYoutubeParent, searchRokuModeParent, handleYoutubeQueueParent, removeSelectedVideoParent }) {
+function Controls() {
   const screensSt = store(v => v.screensSt);
   const rokuAppsSt = store(v => v.rokuAppsSt);
   const hdmiSalaSt = store(v => v.hdmiSalaSt);
   const devicesSt = store(v => v.devicesSt);
   const viewSt = store(v => v.viewSt);
-  const changeControl = (params) => {
-    changeControlParent(params);
-  };
-
-  const searchYoutube = (text) => {
-    searchYoutubeParent(text);
-  };
-
-  const handleYoutubeQueue = (params) => {
-    handleYoutubeQueueParent(params);
-  };
-
-  const removeSelectedVideo = () => {
-    removeSelectedVideoParent();
-  };
 
   return (
     <div>
       <div className='controls'>
         {screensSt.length &&
-          <Top
-            changeControlParent={changeControl}>
+          <Top>
           </Top>
         }
-        <Arrows
-          changeControlParent={changeControl}>
+        <Arrows>
         </Arrows>
         {screensSt.length &&
-          <Levels
-            changeControlParent={changeControl}>
+          <Levels>
           </Levels>
         }
         {hdmiSalaSt.length &&
-          <Toolbar
-            changeControlParent={changeControl}>
+          <Toolbar>
           </Toolbar>
         }
         {viewSt.selected === 'roku' && rokuAppsSt.length && !viewSt.roku.apps.youtube.channel &&
-          <Search
-            searchYoutubeParent={searchYoutube}
-            searchRokuModeParent={searchRokuModeParent}>
+          <Search>
           </Search>
         }
         {viewSt.selected === 'roku' &&
-          <Apps
-            handleYoutubeQueueParent={handleYoutubeQueue}
-            changeControlParent={changeControl}
-            removeSelectedVideoParent={removeSelectedVideo}>
+          <Apps>
           </Apps>
         }
         {viewSt.selected === 'cable' &&
-          <Channels
-            cableChannelCategories={cableChannelCategories}
-            changeControlParent={changeControl}>
+          <Channels>
           </Channels>
         }
         {viewSt.devices.device !== '' && devicesSt.length &&
-          <Devices
-            changeControlParent={changeControl}>
+          <Devices>
           </Devices>
         }
       </div>

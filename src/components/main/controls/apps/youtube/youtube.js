@@ -1,10 +1,10 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { store } from "../../../../../store/store";
-import ViewRouter from '../../../../../global/view-router';
+import requests from '../../../../../global/requests';
+import viewRouter from '../../../../../global/view-router';
 import './youtube.css';
-const viewRouter = new ViewRouter();
 
-function Youtube({ changeControlParent, handleQueueParent, removeSelectedVideoParent }) {
+function Youtube() {
   const youtubeSearchVideosSt = store(v => v.youtubeSearchVideosSt);
   const youtubeChannelsLizSt = store(v => v.youtubeChannelsLizSt);
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
@@ -32,8 +32,12 @@ function Youtube({ changeControlParent, handleQueueParent, removeSelectedVideoPa
   };
 
   const removeSelectedVideo = useCallback(() => {
-    removeSelectedVideoParent(youtubeVideosLizSt);
-  }, [youtubeVideosLizSt, removeSelectedVideoParent]);
+    if (currentVideoRef.current) {
+      requests.updateTable({
+        current: { currentId: currentVideoRef.current.id, currentTable: 'youtubeVideosLiz', currentState: '' }
+      });
+    }
+  }, [currentVideoRef]);
 
   const getLastQueue = useCallback(() => {
     return youtubeVideosLizSt.reduce((maxObject, currentObject) => {
@@ -49,23 +53,34 @@ function Youtube({ changeControlParent, handleQueueParent, removeSelectedVideoPa
 
   const handleQueue = useCallback((video) => {
     if (video.queue) {
-      handleQueueParent({ action: 'remove', videoId: video.id, queueNumber: 0, date: video.date });
+      requests.updateTable({
+        new: { newId: video.id, newTable: 'youtubeVideosLiz', newQueue: 0, newDate: video.date }
+      });
     } else {
       const lastQueue = getLastQueue().queue;
-      handleQueueParent({ action: 'add', videoId: video.id, queueNumber: lastQueue + 1, date: video.date });
+      requests.updateTable({
+        new: { newId: video.id, newTable: 'youtubeVideosLiz', newQueue: lastQueue + 1, newDate: video.date }
+      });
     }
-  }, [handleQueueParent, getLastQueue]);
+  }, [getLastQueue]);
 
   const changeControl = useCallback((video) => {
     const currentVideo = youtubeVideosLizSt.find(vid => vid.state === 'selected');
     if (currentVideo?.id !== video.id) {
       const device = 'rokuSala';
-      changeControlParent({
-        roku: [{ device, key: 'launch', value: rokuId, params: { contentID: video.id } }],
-        massMedia: [{ device, key: 'video', value: video.id }],
-      });
+      requests.fetchRoku({ device, key: 'launch', value: rokuId, params: { contentID: video.id } });
+      if (currentVideo) {
+        requests.updateTable({
+          current: { currentId: currentVideo.id, currentTable: 'youtubeVideosLiz' },
+          new: { newId: video.id, newTable: 'youtubeVideosLiz' }
+        });
+      } else {
+        requests.updateTable({
+          new: { newId: video.id, newTable: 'youtubeVideosLiz', newState: 'selected' }
+        });
+      }
     }
-  }, [changeControlParent, rokuId, youtubeVideosLizSt]);
+  }, [rokuId, youtubeVideosLizSt]);
   if (viewSt.roku.apps.youtube.mode === '') {
     youtubeSortedChannels = Object.values(youtubeChannelsLizSt).sort((a, b) => a.order - b.order);
   }

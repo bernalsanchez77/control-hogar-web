@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { store } from "../store/store";
+import utils from './utils';
+import connection from './connection';
 import { XMLParser } from 'fast-xml-parser';
 
 const longApiUrl = 'https://control-hogar-psi.vercel.app/api/';
@@ -14,36 +16,47 @@ class Requests {
   constructor(isPc) {
     this.isPc = isPc;
   }
+  async requestErrorHandler() {
+    const isConnectedToInternet = await utils.getIsConnectedToInternet();
+    if (!isConnectedToInternet) {
+      connection.onNoInternet();
+    }
+  }
   async normalApiRequest(api, params, method = 'get') {
-    params.date = params.date || new Date().toISOString();
-    let url = shortApiUrl + api;
-    if (this.isPc) {
-      url = shortApiUrlPc + api;
-    }
-    let response = '';
-    if (method === 'get') {
-      if (params) {
-        params = new URLSearchParams(params);
-        response = await axios.get(`${url}?${params.toString()}`, { headers: contentTypeJson });
-      } else {
-        response = await axios.get(url, { headers: contentTypeJson });
+    try {
+      let url = shortApiUrl + api;
+      if (this.isPc) {
+        url = shortApiUrlPc + api;
       }
-    }
-    if (method === 'post') {
-      response = await axios.post(url, params, { headers: contentTypeJson });
-    }
-    if (method === 'put') {
-      response = await axios.put(url, params, { headers: contentTypeJson });
-    }
-    if (method === 'patch') {
-      response = await axios.patch(url, params);
-    }
-    if (response.status === 200) {
-      // console.log(`${method} request to ${api} succeeded`);
-      return { status: response.status, data: response.data };
-    } else {
-      // console.log(`${method} request to ${api} failed`);
-      return { status: response.status, data: '' };
+      let response = '';
+      if (method === 'get') {
+        if (params) {
+          params = new URLSearchParams(params);
+          response = await axios.get(`${url}?${params.toString()}`, { headers: contentTypeJson });
+        } else {
+          response = await axios.get(url, { headers: contentTypeJson });
+        }
+      }
+      if (method === 'post') {
+        response = await axios.post(url, params, { headers: contentTypeJson });
+      }
+      if (method === 'put') {
+        response = await axios.put(url, params, { headers: contentTypeJson });
+      }
+      if (method === 'patch') {
+        response = await axios.patch(url, params);
+      }
+
+      if (response.status === 200) {
+        // console.log(`${method} request to ${api} succeeded`);
+        return { status: response.status, data: response.data };
+      } else {
+        // console.log(`${method} request to ${api} failed`);
+        return { status: response.status, data: '' };
+      }
+    } catch (error) {
+      await this.requestErrorHandler();
+      return { status: 0, data: '' };
     }
   }
   async cordovaApiRequest(api, params, method, serializer) {
@@ -69,14 +82,22 @@ class Requests {
           // console.log(`${method} request to ${api} succeeded`);
           resolve({ status: response.status, data: JSON.parse(response.data) });
         },
-        function onError(error) {
+        async function onError(error) {
           // console.error(`${method} request to ${api} failed: `, error);
+          await this.requestErrorHandler();
           reject(error);
         }
       );
     });
   }
-  async updateTableInSupabase(params) {
+  async updateTable(params) {
+    if (params.new) {
+      params.new.newDate = params.new.newDate || new Date().toISOString();
+    }
+    if (params.current && params.new) {
+      params.current.currentState = params.current.currentState || '';
+      params.new.newState = params.new.newState || 'selected';
+    }
     if (window.cordova) {
       if (window.cordova?.plugin?.http) {
         await this.cordovaApiRequest('updateTableInSupabase', params, 'patch', 'json');
@@ -87,7 +108,7 @@ class Requests {
       await this.normalApiRequest('updateTableInSupabase', params, 'patch');
     }
   }
-  async getTableFromSupabase(table) {
+  async getTable(table) {
     if (window.cordova) {
       if (window.cordova?.plugin?.http) {
         return await this.cordovaApiRequest('getTableFromSupabase', { table }, 'get');
@@ -197,6 +218,7 @@ class Requests {
     }
   }
   async sendIfttt(params, sendEnabled) {
+    params.key = params.key || 'state';
     if (sendEnabled === undefined) {
       sendEnabled = store.getState().sendEnabledSt;
     }
@@ -245,38 +267,41 @@ class Requests {
     }
   }
   async fetchRoku(params) {
-    let url = '';
-    if (params.params) {
-      const par = new URLSearchParams(params.params);
-      url = `${rokuIp}${params.key}/${params.value}?${par.toString()}`;
-    } else {
-      url = `${rokuIp}${params.key}/${params.value}`;
-    }
-    if (store.getState().sendEnabledSt) {
-      if (window.cordova?.plugin?.http) {
-        const sendRequestPromise = new Promise((resolve, reject) => {
-          window.cordova.plugin.http.sendRequest(
-            url,
-            { method: 'post', headers: contentTypeX, data: {}, serializer: 'urlencoded' },
-            () => { resolve(true); },
-            (error) => { reject(error); }
-          );
-        });
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Roku not responding")), 500)
-        );
-        Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
-        }).catch(async () => {
-          if (window.cordova?.plugin?.http) {
-            return await this.cordovaApiRequest('sendIfttt', params, 'get');
-          } else {
-            console.log('fallo sendIfttt ult por http');
-          }
-        });
+    if (window.cordova) {
+      let url = '';
+      if (params.params) {
+        const par = new URLSearchParams(params.params);
+        url = `${rokuIp}${params.key}/${params.value}?${par.toString()}`;
       } else {
-        console.log('Cordova HTTP plugin not available');
+        url = `${rokuIp}${params.key}/${params.value}`;
+      }
+      if (store.getState().sendEnabledSt) {
+        if (window.cordova?.plugin?.http) {
+          const sendRequestPromise = new Promise((resolve, reject) => {
+            window.cordova.plugin.http.sendRequest(
+              url,
+              { method: 'post', headers: contentTypeX, data: {}, serializer: 'urlencoded' },
+              () => { resolve(true); },
+              (error) => { reject(error); }
+            );
+          });
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Roku not responding")), 500)
+          );
+          Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
+          }).catch(async () => {
+            if (window.cordova?.plugin?.http) {
+              return await this.cordovaApiRequest('sendIfttt', params, 'get');
+            } else {
+              console.log('fallo sendIfttt ult por http');
+            }
+          });
+        } else {
+          console.log('Cordova HTTP plugin not available');
+        }
       }
     }
   }
 }
-export default Requests;
+const requests = new Requests(window.location.hostname === 'localhost' && !window.cordova);
+export default requests;

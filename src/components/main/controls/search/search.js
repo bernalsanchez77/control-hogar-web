@@ -1,13 +1,14 @@
 import { useRef, useState, useEffect } from 'react';
 import { store } from "../../../../store/store";
-import ViewRouter from '../../../../global/view-router';
+import requests from '../../../../global/requests';
+import viewRouter from '../../../../global/view-router';
 import './search.css';
-const viewRouter = new ViewRouter();
 
-function Search({ searchYoutubeParent, searchRokuModeParent }) {
+function Search() {
   const rokuSearchModeSt = store(v => v.rokuSearchModeSt);
   const rokuAppsSt = store(v => v.rokuAppsSt);
   const viewSt = store(v => v.viewSt);
+  const setYoutubeSearchVideosSt = store(v => v.setYoutubeSearchVideosSt);
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   const [searchText, setSearchText] = useState('');
@@ -53,7 +54,10 @@ function Search({ searchYoutubeParent, searchRokuModeParent }) {
             newView.roku.apps.selected = 'youtube';
             newView.devices.device = '';
             await viewRouter.changeView(newView);
-            searchYoutubeParent(searchText);
+            const videos = await requests.searchYoutube(searchText);
+            if (videos) {
+              setYoutubeSearchVideosSt(videos);
+            }
           }
         }
       }
@@ -76,31 +80,6 @@ function Search({ searchYoutubeParent, searchRokuModeParent }) {
     e.preventDefault();
     clearTimeout(timeout3s.current);
     if (longClick.current) {
-      // const home = rokuAppsSt.find(app => app.id === 'home').state;
-      // if (!home) {
-      //   setSearchText('');
-      //   if (rokuSearchModeSt === 'roku') {
-      //     inputRef.current.focus();
-      //     setModeVisibility(true);
-      //     utils.triggerVibrate();
-      //     setRokuSearchModeSt('app');
-      //   }
-      //   if (rokuSearchModeSt === 'app') {
-      //     setModeVisibility(true);
-      //     const youtubeSelected = rokuAppsSt.find(app => app.id === 'youtube').state;
-      //     if (youtubeSelected) {
-      //       const device = 'rokuSala';
-      //       // changeControlParent({
-      //       //   roku: [{device, key: 'keypress', value: 'Up'}],
-      //       // });
-      //     }
-      //     utils.triggerVibrate();
-      //     setRokuSearchModeSt('app');
-      //   }
-      //   setTimeout(() => {
-      //     setModeVisibility(false);
-      //   }, 3000);
-      // }
     } else {
       searchQuery();
     }
@@ -116,7 +95,7 @@ function Search({ searchYoutubeParent, searchRokuModeParent }) {
   const onKeyDown = (e) => {
     if (rokuSearchModeSt === 'roku') {
       if (e.key === "Backspace") {
-        searchRokuModeParent("Backspace");
+        requests.sendControl({ roku: [{ key: 'keypress', value: 'Backspace', params: '' }] });
       } else if (e.key === "Enter") {
         // searchRokuModeParent("Enter"); disabled cause creates problems en youtube and is not needed in other apps
       }
@@ -132,9 +111,9 @@ function Search({ searchYoutubeParent, searchRokuModeParent }) {
         const addedText = newValue.slice(oldValue.length);
         for (const char of addedText) {
           if (char === ' ') {
-            searchRokuModeParent('Lit_%20');
+            requests.sendControl({ roku: [{ key: 'keypress', value: 'Lit_%20', params: '' }] });
           } else {
-            searchRokuModeParent(`Lit_${encodeURIComponent(char)}`);
+            requests.sendControl({ roku: [{ key: 'keypress', value: `Lit_${encodeURIComponent(char)}`, params: '' }] });
           }
         }
       } else if (newValue.length < oldValue.length) {

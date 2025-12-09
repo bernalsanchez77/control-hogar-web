@@ -1,10 +1,10 @@
 import { useRef } from 'react';
 import { store } from "../../../../store/store";
-import Utils from '../../../../global/utils';
+import utils from '../../../../global/utils';
+import requests from '../../../../global/requests';
 import './levels.css';
-const utils = new Utils();
 
-function Levels({ changeControlParent }) {
+function Levels() {
   const screenSelectedSt = store(v => v.screenSelectedSt);
   const screensSt = store(v => v.screensSt);
   const cableChannelsSt = store(v => v.cableChannelsSt);
@@ -16,30 +16,28 @@ function Levels({ changeControlParent }) {
 
   const changeMute = () => {
     if (screen.state === 'on') {
+      utils.triggerVibrate();
       const device = screenSelectedSt;
-      if (screen.mute === 'on') {
-        changeControlParent({ ifttt: [{ device, key: 'mute', value: 'off' }] });
-      }
-      if (screen.mute === 'off') {
-        changeControlParent({ ifttt: [{ device, key: 'mute', value: 'on' }] });
-      }
+      const value = screen.mute === 'on' ? 'off' : 'on';
+      requests.sendIfttt({ device, key: 'mute', value });
+      requests.updateTable({ new: { newId: device, newTable: 'screens', newMute: value } });
     }
   }
-  const changeControl = (value, saveChange = true) => {
+  const changeControl = (value) => {
+    utils.triggerVibrate();
     const device = viewSt.selected === 'roku' ? 'rokuSala' : 'cableSala';
     const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
-    if (saveChange) {
-      changeControlParent({ ifttt: [{ device, key: 'command', value }], roku: [{ device, key: 'keypress', value: rokuValue }], massMedia: [{ device, key: 'app', value }] });
-    } else {
-      changeControlParent({ ifttt: [{ device, key: 'command', value }], roku: [{ device, key: 'keypress', value: rokuValue }], massMedia: [] });
-    }
+    requests.sendIfttt({ device, key: 'command', value });
+    requests.fetchRoku({ key: 'keypress', value: rokuValue });
   }
 
   const changeChannel = (value) => {
+    utils.triggerVibrate();
     let newChannel = {};
     const device = 'channelsSala';
     let newChannelOrder = 0;
-    const channelOrderSelected = cableChannelsSt.find(ch => ch.state === 'selected').order;
+    const channelSelected = cableChannelsSt.find(ch => ch.state === 'selected');
+    const channelOrderSelected = channelSelected.order;
     if (value === 'up') {
       newChannelOrder = channelOrderSelected + 1;
     }
@@ -54,9 +52,10 @@ function Levels({ changeControlParent }) {
         newChannel = cableChannelsSt[cableChannelsSt.length - 1];
       }
     }
-    changeControlParent({
-      ifttt: [{ device: device + newChannel.ifttt, key: 'selected', value: newChannel.id }],
-      massMedia: [{ device, key: 'selected', value: newChannel.id }]
+    requests.sendIfttt({ device: device + newChannel.ifttt, key: 'selected', value: newChannel.id });
+    requests.updateTable({
+      current: { currentId: channelSelected.id, currentTable: 'cableChannels' },
+      new: { newId: newChannel.id, newTable: 'cableChannels' }
     });
   }
 
@@ -65,29 +64,19 @@ function Levels({ changeControlParent }) {
     let newVol = 0;
     if (button === 'up') {
       newVol = screen.volume + vol;
-      changeControlParent({
-        ifttt: [{ device, key: 'volume', value: button + vol }],
-        massMedia: [{ device, key: 'volume', value: newVol }],
-        ignoreVibration: !vib
-      });
+      requests.sendIfttt({ device, key: 'volume', value: button + vol });
+      requests.updateTable({ new: { newId: device, newTable: 'screens', newVolume: newVol } });
     } else if (screen.volume !== 0) {
       if (screen.volume - vol >= 0) {
         newVol = screen.volume - vol;
-        changeControlParent({
-          ifttt: [{ device, key: 'volume', value: button + vol }],
-          massMedia: [{ device, key: 'volume', value: newVol }],
-          ignoreVibration: !vib
-        });
+        requests.sendIfttt({ device, key: 'volume', value: button + vol });
+        requests.updateTable({ new: { newId: device, newTable: 'screens', newVolume: newVol } });
       } else {
-        newVol = screen.volume - vol;
-        changeControlParent({
-          ifttt: [{ device, key: 'volume', value: button + vol }],
-          massMedia: [{ device, key: 'volume', value: '0' }],
-          ignoreVibration: !vib
-        });
+        requests.sendIfttt({ device, key: 'volume', value: button + vol });
+        requests.updateTable({ new: { newId: device, newTable: 'screens', newVolume: '0' } });
       }
     } else {
-      changeControlParent({ ifttt: [{ device, key: 'volume', value: button + vol }], massMedia: [], ignoreVibration: !vib });
+      requests.sendIfttt({ device, key: 'volume', value: button + vol });
     }
   }
 
@@ -154,7 +143,7 @@ function Levels({ changeControlParent }) {
             <div className='controls-levels-element controls-levels-element--right'>
               <button
                 className={`controls-levels-button`}
-                onTouchStart={() => changeControl('back', false)}>
+                onTouchStart={() => changeControl('back')}>
                 <img
                   className='controls-levels-img controls-levels-img--button'
                   src="/imgs/back-50.png"
@@ -216,7 +205,7 @@ function Levels({ changeControlParent }) {
             <div className='controls-levels-element controls-levels-element--right'>
               <button
                 className={`controls-levels-button`}
-                onTouchStart={() => changeControl('info', false)}>
+                onTouchStart={() => changeControl('info')}>
                 <img
                   className='controls-levels-img controls-levels-img--button'
                   src="/imgs/asterisk-24.png"

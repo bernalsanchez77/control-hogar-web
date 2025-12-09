@@ -1,10 +1,8 @@
 
-import {store} from "../store/store";
-import Requests from './requests';
-const requests = new Requests();
+import { store } from "../store/store";
+import requests from './requests';
 let playStateInterval = null;
 let position = 0;
-let handlePlayState = null;
 // test
 let playState = {};
 
@@ -49,10 +47,7 @@ class Roku {
     }
   }
 
-  async startPlayStateListener(handlePlayStateFromRoku) {
-    if (!handlePlayState) {
-      handlePlayState = handlePlayStateFromRoku;
-    }
+  async startPlayStateListener() {
     if (!playStateInterval) {
       console.log('playstatelistener started');
       position = 0;
@@ -89,7 +84,12 @@ class Roku {
             default:
               break;
           }
-          handlePlayState(playState.state);
+          const playStateSt = store.getState().hdmiSalaSt.find(hdmi => hdmi.id === 'roku').playState;
+          if (playStateSt !== playState.state) {
+            requests.updateTable({
+              new: { newId: store.getState().hdmiSalaSt.find(hdmi => hdmi.id === 'roku').id, newTable: 'hdmiSala', newPlayState: playState.state }
+            });
+          }
         }
       }, 5000);
     }
@@ -115,6 +115,30 @@ class Roku {
     this.wifi = wifi;
     if (!wifi) {
       this.stopPlayStateListener();
+    }
+  }
+
+  async setRoku() {
+    this.setWifi(true);
+    const rokuActiveApp = await this.getActiveApp();
+    if (rokuActiveApp) {
+      const rokuAppsSt = store.getState().rokuAppsSt;
+      if (rokuActiveApp !== rokuAppsSt.find(v => v.state === 'selected').rokuId) {
+        requests.updateTable({
+          current: { currentId: rokuAppsSt.find(app => app.state === 'selected').id, currentTable: 'rokuApps' },
+          new: { newId: rokuAppsSt.find(app => app.rokuId === rokuActiveApp).id, newTable: 'rokuApps' }
+        });
+      }
+      const playStateFromRoku = await this.getPlayState('state');
+      if (playStateFromRoku) {
+        this.startPlayStateListener();
+        const youtubeVideosLizSt = store.getState().youtubeVideosLizSt;
+        if (playStateFromRoku !== 'play' && playStateFromRoku !== 'pause' && youtubeVideosLizSt.find(video => video.state === 'selected')) {
+          requests.updateTable({
+            current: { currentId: youtubeVideosLizSt.find(video => video.state === 'selected').id, currentTable: 'youtubeVideosLiz', currentState: '' }
+          });
+        }
+      }
     }
   }
 }
