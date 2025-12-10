@@ -140,7 +140,7 @@ function Main() {
   }, [isAppSt, onPause, onResume, onVisibilityChange]);
 
   if (!initializedRef.current) {
-    const isApp = window.cordova;
+    const isApp = window.cordova ? true : false;
     eruda.init();
     if (isApp) {
       document.addEventListener('deviceready', async () => {

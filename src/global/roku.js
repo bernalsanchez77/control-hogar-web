@@ -84,12 +84,12 @@ class Roku {
             default:
               break;
           }
-          const playStateSt = store.getState().hdmiSalaSt.find(hdmi => hdmi.id === 'roku').playState;
-          if (playStateSt !== playState.state) {
-            requests.updateTable({
-              new: { newId: store.getState().hdmiSalaSt.find(hdmi => hdmi.id === 'roku').id, newTable: 'hdmiSala', newPlayState: playState.state }
-            });
-          }
+          // const playStateSt = store.getState().hdmiSalaSt.find(hdmi => hdmi.id === 'roku').playState;
+          // if (playStateSt !== playState.state) {
+          //   requests.updateTable({
+          //     new: { newId: store.getState().hdmiSalaSt.find(hdmi => hdmi.id === 'roku').id, newTable: 'hdmiSala', newPlayState: playState.state }
+          //   });
+          // }
         }
       }, 5000);
     }
@@ -128,10 +128,16 @@ class Roku {
           new: { newId: rokuAppsSt.find(app => app.rokuId === rokuActiveApp).id, newTable: 'rokuApps' }
         });
       }
-      const playStateFromRoku = await this.getPlayState('state');
-      if (playStateFromRoku) {
+      const playStateFromRoku = await this.getPlayState();
+      if (playStateFromRoku.state) {
+        const hdmiSalaSt = store.getState().hdmiSalaSt;
         const youtubeVideosLizSt = store.getState().youtubeVideosLizSt;
-        if (playStateFromRoku !== 'play' && playStateFromRoku !== 'pause' && youtubeVideosLizSt.find(video => video.state === 'selected')) {
+        if (playStateFromRoku.state !== hdmiSalaSt.find(hdmi => hdmi.id === 'roku').playState) {
+          requests.updateTable({
+            new: { newId: hdmiSalaSt.find(hdmi => hdmi.id === 'roku').id, newTable: 'hdmiSala', newPlayState: playStateFromRoku }
+          });
+        }
+        if (playStateFromRoku.state !== 'play' && playStateFromRoku.state !== 'pause' && youtubeVideosLizSt.find(video => video.state === 'selected')) {
           requests.updateTable({
             current: { currentId: youtubeVideosLizSt.find(video => video.state === 'selected').id, currentTable: 'youtubeVideosLiz', currentState: '' }
           });

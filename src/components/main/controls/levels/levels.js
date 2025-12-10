@@ -24,11 +24,16 @@ function Levels() {
     }
   }
   const changeControl = (value) => {
+    const isAppSt = store(v => v.isAppSt);
+    const wifiNameSt = store(v => v.wifiNameSt);
     utils.triggerVibrate();
     const device = viewSt.selected === 'roku' ? 'rokuSala' : 'cableSala';
     const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
-    requests.sendIfttt({ device, key: 'command', value });
-    requests.fetchRoku({ key: 'keypress', value: rokuValue });
+    if (isAppSt && wifiNameSt === 'Noky') {
+      requests.fetchRoku({ key: 'keypress', value: rokuValue });
+    } else {
+      requests.sendIfttt({ device, key: 'command', value });
+    }
   }
 
   const changeChannel = (value) => {

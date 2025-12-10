@@ -6,6 +6,8 @@ import './toolbar.css';
 function Toolbar() {
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
   const hdmiSalaSt = store(v => v.hdmiSalaSt);
+  const isAppSt = store(v => v.isAppSt);
+  const wifiNameSt = store(v => v.wifiNameSt);
   const rokuPlayStatePositionSt = store(v => v.rokuPlayStatePositionSt);
   const roku = hdmiSalaSt.find(hdmi => hdmi.id === 'roku');
   const currentVideoRef = useRef(youtubeVideosLizSt.find(vid => vid.state === 'selected'));
@@ -14,15 +16,30 @@ function Toolbar() {
     const device = 'rokuSala';
     if (value === 'play') {
       if (roku.playState === 'play') {
-        requests.sendIfttt({ device, key: 'playState', value: 'pause' });
-        requests.fetchRoku({ key: 'keypress', value: 'Play' });
+        if (isAppSt && wifiNameSt === 'Noky') {
+          requests.fetchRoku({ key: 'keypress', value: 'Play' });
+        } else {
+          requests.sendIfttt({ device, key: 'playState', value: 'pause' });
+        }
+        requests.updateTable({
+          new: { newId: 'roku', newTable: 'hdmiSala', newPlayState: 'pause' }
+        });
       } else {
-        requests.sendIfttt({ device, key: 'playState', value: 'play' });
-        requests.fetchRoku({ key: 'keypress', value: 'Play' });
+        if (isAppSt && wifiNameSt === 'Noky') {
+          requests.fetchRoku({ key: 'keypress', value: 'Play' });
+        } else {
+          requests.sendIfttt({ device, key: 'playState', value: 'play' });
+        }
+        requests.updateTable({
+          new: { newId: 'roku', newTable: 'hdmiSala', newPlayState: 'play' }
+        });
       }
     } else {
-      requests.sendIfttt({ device, key: 'command', value });
-      requests.fetchRoku({ key: 'keypress', value: value.charAt(0).toUpperCase() + value.slice(1) });
+      if (isAppSt && wifiNameSt === 'Noky') {
+        requests.fetchRoku({ key: 'keypress', value: value.charAt(0).toUpperCase() + value.slice(1) });
+      } else {
+        requests.sendIfttt({ device, key: 'command', value });
+      }
     }
   }
 

@@ -159,7 +159,7 @@ function Load() {
     await load();
     if (isPcSt || wifiNameSt === 'Noky') {
       Roku.setWifi(true);
-      Roku.startPlayStateListener();
+      //Roku.startPlayStateListener();
     }
     isReadyRef.current = true;
   }, [load, isPcSt, wifiNameSt]);

@@ -1,13 +1,19 @@
 
 import requests from "../../../../global/requests";
 import utils from '../../../../global/utils';
+import { store } from '../../../../store/store';
 import './arrows.css';
 
 function Arrows() {
   const changeControl = (value) => {
+    const isAppSt = store(v => v.isAppSt);
+    const wifiNameSt = store(v => v.wifiNameSt);
     utils.triggerVibrate();
-    requests.sendIfttt({ device: 'rokuSala', value: value });
-    requests.fetchRoku({ key: 'keypress', value: value.charAt(0).toUpperCase() + value.slice(1) });
+    if (isAppSt && wifiNameSt === 'Noky') {
+      requests.fetchRoku({ key: 'keypress', value: value.charAt(0).toUpperCase() + value.slice(1) });
+    } else {
+      requests.sendIfttt({ device: 'rokuSala', value: value });
+    }
   }
 
   return (
