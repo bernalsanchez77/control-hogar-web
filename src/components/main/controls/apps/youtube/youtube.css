@@ -3,6 +3,11 @@
   position: relative;
   overflow-y: scroll;
 }
+
+.controls-apps-youtube--channel {
+  margin-top: 1vh;
+}
+
 .controls-apps-youtube-ul {
   position: absolute;
   top: 50%;
@@ -16,52 +21,70 @@
   padding: 0;
   height: 100%;
 }
+
 .controls-apps-youtube-li-channel {
   padding: 0 2px 2px;
   list-style-type: none;
 }
+
 .controls-apps-youtube-li-search {
   padding: 0 2px 15px;
   list-style-type: none;
 }
+
 .controls-apps-youtube-channel-img {
   width: 8vh;
 }
+
 .controls-apps-youtube-video-img {
   width: 12vh;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  pointer-events: none;
 }
+
 .controls-apps-youtube-video-img--queue {
   outline: 1.5px solid #ffffff;
 }
+
 .controls-apps-youtube-video-queue-number {
-position: absolute;
+  position: absolute;
   top: 5px;
   right: 5px;
   font-size: 20px;
   text-shadow: -1px -1px 10px #000, 1px -1px 10px #000, -1px 1px 10px #000, 1px 1px 10px #000, 0 -2px 5px #000, 0 2px 5px #000, -2px 0 5px #000, 2px 0 5px #000;
 }
+
 .controls-apps-youtube-video-button {
   background-color: transparent;
   border: 1px solid transparent;
   padding: 0;
   position: relative;
 }
+
 .controls-apps-youtube-channel-button {
   background-color: transparent;
   border: 1px solid transparent;
   padding: 0;
 }
+
 @keyframes flashing {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.3;
   }
 }
+
 .controls-apps-youtube-video-button--selected {
-  /* animation: flashing 2s ease-in-out infinite; */
+  animation: flashing 2s ease-in-out infinite;
 }
+
 .controls-apps-youtube-channel-title {
   padding: 3px 0 10px;
   margin: 0;
@@ -73,6 +96,7 @@ position: absolute;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
 .controls-apps-youtube-video-title,
 .controls-apps-youtube-video-duration {
   padding: 3px 0 0;
@@ -85,9 +109,11 @@ position: absolute;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
 .controls-apps-youtube-video-duration {
   font-size: 12px;
 }
+
 button.controls-apps-youtube-video-button:active {
   background-color: white;
   transition: background-color 0.1s;
@@ -95,32 +121,36 @@ button.controls-apps-youtube-video-button:active {
 
 /* ProgressBar.css */
 .progress-bar-container {
-    width: 100%;
-    position: absolute;
-    bottom: 53px;
+  width: 100%;
+  position: absolute;
+  bottom: 53px;
 }
 
 .progress-bar-track {
-    width: 100%;
-    height: 4px; /* Set a height for visibility */
-    background-color: #e0e0e0; /* Light background for the track */
-    border-radius: 15px;
-    overflow: hidden; /* Important for clean corners */
+  width: 100%;
+  height: 4px;
+  /* Set a height for visibility */
+  background-color: #e0e0e0;
+  /* Light background for the track */
+  border-radius: 15px;
+  overflow: hidden;
+  /* Important for clean corners */
 }
 
 .progress-bar-fill {
-    height: 100%;
-    /* Start at 0, React will override this via the 'style' prop */
-    width: 0; 
-    background-color: #4CAF50; /* Green fill color */
-    
-    /* Smooth animation as the width changes */
-    transition: width 0.4s ease-in-out; 
+  height: 100%;
+  /* Start at 0, React will override this via the 'style' prop */
+  width: 0;
+  background-color: #4CAF50;
+  /* Green fill color */
+
+  /* Smooth animation as the width changes */
+  transition: width 0.4s ease-in-out;
 }
 
 .progress-bar-label {
-    display: block;
-    margin-top: 10px;
-    font-family: sans-serif;
-    text-align: center;
+  display: block;
+  margin-top: 10px;
+  font-family: sans-serif;
+  text-align: center;
 }

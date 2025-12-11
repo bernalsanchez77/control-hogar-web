@@ -14,7 +14,8 @@ function Dev() {
   };
 
   const onRemoveStorage = () => {
-    localStorage.setItem('user', '');
+    localStorage.setItem('user-type', '');
+    localStorage.setItem('user-name', '');
   };
 
   return (

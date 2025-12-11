@@ -3,7 +3,7 @@ import utils from '../../../global/utils';
 import './screens.css';
 function Screens({ changeScreenParent }) {
   const isInForegroundSt = store(v => v.isInForegroundSt);
-  const userCredentialSt = store(v => v.userCredentialSt);
+  const userTypeSt = store(v => v.userTypeSt);
   const screenSelectedSt = store(v => v.screenSelectedSt);
   const setScreenSelectedSt = store(v => v.setScreenSelectedSt);
   const screensSt = store(v => v.screensSt);
@@ -23,7 +23,7 @@ function Screens({ changeScreenParent }) {
     <div>
       <div className='screens'>
         <div className='screens-row'>
-          {(userCredentialSt === 'owner' || userCredentialSt === 'dev' || userCredentialSt === '') &&
+          {(userTypeSt === 'owner' || userTypeSt === 'dev' || userTypeSt === '') &&
             <div className='screens-element'>
               <button
                 className={`screens-button ${isInForegroundSt && screenSelectedSt === teleCuartoScreen.id ? "flash-shadow" : "no-flash"}  ${screenSelectedSt === teleCuartoScreen.id ? "screens-button--on" : "screens-button--off"}`}

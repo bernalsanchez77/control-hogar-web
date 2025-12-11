@@ -31,6 +31,17 @@ function Youtube() {
     viewRouter.changeView(newView);
   };
 
+  const clearYoutubeQueue = useCallback((video) => {
+    const queueElements = youtubeVideosLizSt.filter(video => video.queue > 0);
+    if (queueElements.length > 0) {
+      queueElements.forEach(video => {
+        requests.updateTable({
+          new: { newId: video.id, newTable: 'youtubeVideosLiz', newQueue: 0 }
+        });
+      });
+    }
+  }, [youtubeVideosLizSt]);
+
   const removeSelectedVideo = useCallback(() => {
     if (currentVideoRef.current) {
       requests.updateTable({
@@ -52,6 +63,7 @@ function Youtube() {
   }, [youtubeVideosLizSt]);
 
   const handleQueue = useCallback((video) => {
+    console.log('llego');
     if (video.queue) {
       requests.updateTable({
         new: { newId: video.id, newTable: 'youtubeVideosLiz', newQueue: 0, newDate: video.date }
@@ -79,6 +91,7 @@ function Youtube() {
           requests.updateTable({
             current: { currentId: currentVideo.id, currentTable: 'youtubeVideosLiz', currentState: '' }
           });
+          clearYoutubeQueue();
         }
       }
     } else {
@@ -89,7 +102,7 @@ function Youtube() {
         });
       }
     }
-  }, [rokuId, youtubeVideosLizSt]);
+  }, [rokuId, youtubeVideosLizSt, clearYoutubeQueue]);
 
   if (viewSt.roku.apps.youtube.mode === '') {
     youtubeSortedChannels = Object.values(youtubeChannelsLizSt).sort((a, b) => a.order - b.order);
@@ -126,11 +139,13 @@ function Youtube() {
   const onTouchEnd = (e, type, video) => {
     e.preventDefault();
     clearTimeout(timeout3s.current);
+    console.log('touch moved', touchMoved);
     if (!touchMoved) {
       if (longClick.current) {
         console.log('long click');
         handleQueue(video);
       } else {
+        console.log('short click');
         if (type === 'channel') {
           changeView(video.id);
         }
@@ -219,7 +234,7 @@ function Youtube() {
       const percentage = (rokuPlayStatePositionSt * 100) / currentVideoDuration;
       normalizedPercentage.current = Math.round(Math.min(100, Math.max(0, (percentage))));
       // console.log(Math.min(100, Math.max(0, rokuPlayStatePositionSt)));
-      console.log(normalizedPercentage.current);
+      console.log(normalizedPercentage.current + '%');
       if (timeLeft && timeLeft < 6000) {
         console.log('terminando');
         const nextVideo = getNextQueue(currentVideoRef.current.queue);

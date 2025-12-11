@@ -16,7 +16,7 @@ import './devices.css';
 
 
 function Devices() {
-  const userCredentialSt = store(v => v.userCredentialSt);
+  const userTypeSt = store(v => v.userTypeSt);
   const devicesSt = store(v => v.devicesSt);
   const viewSt = store(v => v.viewSt);
   const changeView = async (device) => {
@@ -76,14 +76,14 @@ function Devices() {
             element={ventiladorSala}>
           </VentiladorSala>
         </div>
-        {(userCredentialSt === 'owner' || userCredentialSt === 'dev') &&
+        {(userTypeSt === 'owner' || userTypeSt === 'dev') &&
           <div className='devices-element'>
             <CalentadorNegro
               element={calentadorNegro}>
             </CalentadorNegro>
           </div>
         }
-        {(userCredentialSt === 'owner' || userCredentialSt === 'dev') &&
+        {(userTypeSt === 'owner' || userTypeSt === 'dev') &&
           <div className='devices-element'>
             <CalentadorBlanco
               element={calentadorBlanco}>
@@ -98,7 +98,7 @@ function Devices() {
             lamparaComedor={lamparaComedor}>
           </LamparasAbajo>
         </div>
-        {(userCredentialSt === 'owner' || userCredentialSt === 'dev') &&
+        {(userTypeSt === 'owner' || userTypeSt === 'dev') &&
           <div className='devices-element'>
             <LuzCuarto
               element={luzCuarto}
@@ -106,7 +106,7 @@ function Devices() {
             </LuzCuarto>
           </div>
         }
-        {(userCredentialSt === 'owner' || userCredentialSt === 'dev') &&
+        {(userTypeSt === 'owner' || userTypeSt === 'dev') &&
           <div className='devices-element'>
             <LuzEscalera
               element={luzEscalera}>

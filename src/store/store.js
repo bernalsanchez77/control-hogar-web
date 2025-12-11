@@ -5,7 +5,8 @@ export const store = create((set) => ({
   isLoadingSt: false,
   themeSt: 'black',
   isInForegroundSt: false,
-  userCredentialSt: '',
+  userTypeSt: '',
+  userNameSt: '',
   screenSelectedSt: '',
   isConnectedToInternetSt: true,
   wifiNameSt: '',
@@ -23,6 +24,8 @@ export const store = create((set) => ({
   rokuPlayStatePositionSt: 0,
   isPcSt: false,
   isAppSt: false,
+  peersSt: [],
+  leaderSt: '',
   viewSt: { selected: '', cable: { channels: { category: [] } }, roku: { apps: { selected: '', youtube: { mode: '', channel: '' } } }, devices: { device: '' } },
 
   // --- Actions ---
@@ -30,7 +33,8 @@ export const store = create((set) => ({
   setIsLoadingSt: (v) => set({ isLoadingSt: v }),
   setThemeSt: (v) => set({ themeSt: v }),
   setIsInForegroundSt: (v) => set({ isInForegroundSt: v }),
-  setUserCredentialSt: (v) => set({ userCredentialSt: v }),
+  setUserTypeSt: (v) => set({ userTypeSt: v }),
+  setUserNameSt: (v) => set({ userNameSt: v }),
   setScreenSelectedSt: (v) => set({ screenSelectedSt: v }),
   setIsConnectedToInternetSt: (v) => set({ isConnectedToInternetSt: v }),
   setWifiNameSt: (v) => set({ wifiNameSt: v }),
@@ -51,4 +55,6 @@ export const store = create((set) => ({
   setViewSt: (v) => set({ viewSt: v }),
   updateTablesSt: (tableName, newItem) => set((state) => ({ [tableName]: state[tableName].map((item) => item.id === newItem.id ? newItem : item) })),
   setTableSt: (tableName, newTable) => set({ [tableName]: newTable }),
+  setPeersSt: (v) => set({ peersSt: v }),
+  setLeaderSt: (v) => set({ leaderSt: v }),
 }));

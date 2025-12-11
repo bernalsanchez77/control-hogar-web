@@ -36,7 +36,7 @@ class Connection {
   }
   async onNetworkTypeChange(netType) {
     console.log('changed in network type: ', netType);
-    if (store.getState().userCredentialSt === 'guest') {
+    if (store.getState().userTypeSt === 'guest') {
       if (netType === 'wifi' && store.getState().wifiNameSt === 'Noky') {
         if (!this.netChangeRunning) {
           this.netChangeRunning = true;
@@ -56,7 +56,7 @@ class Connection {
   }
   async onWifiNameChange(wifiName) {
     console.log('changed in ssid: ', wifiName);
-    if (store.getState().userCredentialSt === 'guest') {
+    if (store.getState().userTypeSt === 'guest') {
       if (wifiName === 'Noky' && store.getState().networkTypeSt === 'wifi') {
         if (!this.netChangeRunning) {
           this.netChangeRunning = true;

@@ -10,7 +10,8 @@ function Toolbar() {
   const wifiNameSt = store(v => v.wifiNameSt);
   const rokuPlayStatePositionSt = store(v => v.rokuPlayStatePositionSt);
   const roku = hdmiSalaSt.find(hdmi => hdmi.id === 'roku');
-  const currentVideoRef = useRef(youtubeVideosLizSt.find(vid => vid.state === 'selected'));
+  const currentVideo = youtubeVideosLizSt.find(vid => vid.state === 'selected');
+  const currentVideoRef = useRef(currentVideo);
   const normalizedPercentage = useRef(Math.min(100, Math.max(0, 0)));
   const changeControl = (value) => {
     const device = 'rokuSala';
@@ -64,10 +65,10 @@ function Toolbar() {
   };
 
   useEffect(() => {
-    if (currentVideoRef.current && currentVideoRef.current.id) {
+    if (currentVideo && currentVideo.id) {
       let currentVideoDuration = 0;
-      if (currentVideoRef.current.duration) {
-        currentVideoDuration = timeToMs(currentVideoRef.current.duration);
+      if (currentVideo.duration) {
+        currentVideoDuration = timeToMs(currentVideo.duration);
       }
       console.log('position:', rokuPlayStatePositionSt, 'duration:', currentVideoDuration);
       const timeLeft = currentVideoDuration - rokuPlayStatePositionSt;
@@ -128,7 +129,7 @@ function Toolbar() {
       </div>
       <div className='controls-toolbar-row'>
         <div className="controls-toolbar-progress-bar-container">
-          {currentVideoRef.current &&
+          {currentVideo &&
             <div className="controls-toolbar-progress-bar-track">
               <div
                 className="controls-toolbar-progress-bar-fill" style={{ width: `${normalizedPercentage.current}%` }}>

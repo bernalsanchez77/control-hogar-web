@@ -194,25 +194,19 @@ class Requests {
       return null;
     });
   }
-  async validateUserCredential(userCredential) {
+  async validateUserType(userType) {
     let response = {};
     if (window.cordova) {
       if (window.cordova?.plugin?.http) {
-        response = await this.cordovaApiRequest('validateCredentials', { key: userCredential }, 'post');
+        response = await this.cordovaApiRequest('validateCredentials', { key: userType }, 'post');
       } else {
         console.log('fallo validateCredentials por http');
       }
     } else {
-      response = await this.normalApiRequest('validateCredentials', { key: userCredential }, 'post');
+      response = await this.normalApiRequest('validateCredentials', { key: userType }, 'post');
     }
     if (response.status === 200 && response.data.validUser) {
-      if (response.data.dev) {
-        localStorage.setItem('user', response.data.dev);
-        return 'dev';
-      } else {
-        localStorage.setItem('user', 'owner');
-        return 'owner';
-      }
+      return response.data;
     } else {
       return '';
     }

@@ -23,7 +23,8 @@ function Load() {
   const isLoadingSt = store(v => v.isLoadingSt);
   const setIsLoadingSt = store(v => v.setIsLoadingSt);
   const isInForegroundSt = store(v => v.isInForegroundSt);
-  const userCredentialSt = store(v => v.userCredentialSt);
+  const userTypeSt = store(v => v.userTypeSt);
+  const userNameSt = store(v => v.userNameSt);
   const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
   const wifiNameSt = store(v => v.wifiNameSt);
   const networkTypeSt = store(v => v.networkTypeSt);
@@ -115,8 +116,10 @@ function Load() {
     }
   }, [subscribeToSupabaseChannel, setTableSt]);
 
-  const load = useCallback(async () => {
-    setIsLoadingSt(true);
+  const load = useCallback(async (firstLoad = false) => {
+    if (firstLoad) {
+      setIsLoadingSt(true);
+    }
     isLoadingRef.current = true;
     // setInRange(await utils.getInRange());
     const newView = structuredClone(viewSt);
@@ -156,13 +159,14 @@ function Load() {
   // init
 
   const init = useCallback(async () => {
-    await load();
+    supabaseChannels.subscribeToUsersChannel(userNameSt, wifiNameSt);
+    await load(true);
     if (isPcSt || wifiNameSt === 'Noky') {
       Roku.setWifi(true);
-      //Roku.startPlayStateListener();
+      Roku.startPlayStateListener();
     }
     isReadyRef.current = true;
-  }, [load, isPcSt, wifiNameSt]);
+  }, [load, isPcSt, wifiNameSt, userNameSt]);
 
   // useEffects
 
@@ -185,8 +189,10 @@ function Load() {
       } else {
         Roku.setWifi(false);
       }
+      const status = isInForegroundSt ? 'foreground' : 'background';
+      supabaseChannels.usersChannel.track({ name: userNameSt, status: status, date: new Date().toISOString(), wifiName: wifiNameSt });
     }
-  }, [wifiNameSt, networkTypeSt, isPcSt]);
+  }, [wifiNameSt, networkTypeSt, isPcSt, isInForegroundSt, userNameSt]);
 
   useEffect(() => {
     return () => {
@@ -223,7 +229,7 @@ function Load() {
 
   return (
     <div className='load'>
-      {viewSt && !isLoadingSt && (userCredentialSt !== 'guest' || (userCredentialSt === 'guest' && wifiNameSt === 'Noky')) && !supabaseTimeoutSt ?
+      {viewSt && !isLoadingSt && (userTypeSt !== 'guest' || (userTypeSt === 'guest' && wifiNameSt === 'Noky')) && !supabaseTimeoutSt ?
         <div className='load-components'>
           <Notifications></Notifications>
           {screensSt.length &&
@@ -236,7 +242,7 @@ function Load() {
           {!viewSt.roku.apps.selected && !viewSt.devices.device &&
             <Options></Options>
           }
-          {userCredentialSt === 'dev' &&
+          {userTypeSt === 'dev' &&
             <Dev></Dev>
           }
         </div> :
@@ -244,7 +250,7 @@ function Load() {
           {isLoadingSt &&
             <div><Loading></Loading></div>
           }
-          {!isLoadingSt && isConnectedToInternetSt && !(wifiNameSt !== 'Noky' && userCredentialSt === 'guest') && userCredentialSt && supabaseTimeoutSt &&
+          {!isLoadingSt && isConnectedToInternetSt && !(wifiNameSt !== 'Noky' && userTypeSt === 'guest') && userTypeSt && supabaseTimeoutSt &&
             <div><SupabaseTimeout onSupabaseTimeoutParent={onSupabaseTimeout}></SupabaseTimeout></div>
           }
         </div>

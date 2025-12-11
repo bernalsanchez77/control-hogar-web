@@ -1,6 +1,7 @@
 import supabase from './supabase-client';
 import utils from '../utils';
 import connection from '../connection';
+import { store } from '../../store/store';
 let handlingNoInternet = false;
 
 class SupabaseChannels {
@@ -10,6 +11,62 @@ class SupabaseChannels {
   devicesCallback = null;
   screensCallback = null;
   youtubeVideosLizCallback = null;
+
+  usersChannel = supabase.channel('room_global', {
+    config: {
+      presence: {
+        key: this.userNameSt, // identifying the user
+      },
+    },
+  })
+
+  getLeader(peers) {
+    const leader = peers.find(peer => peer.wifiName === 'Noky');
+    return leader ? leader.name : '';
+  }
+
+  subscribeToUsersChannel(userNameSt, wifiNameSt) {
+    let previousPeers = [];
+    let currentPeers = [];
+    this.usersChannel
+      .on('presence', { event: 'join' }, ({ newPresences }) => {
+        //console.log(newPresences[0].name, 'joined');
+      })
+      .on('presence', { event: 'leave' }, ({ leftPresences }) => {
+        //console.log(leftPresences[0].name, 'left');
+      })
+      .on('presence', { event: 'sync' }, () => {
+        const newState = this.usersChannel.presenceState();
+        currentPeers = Object.values(newState).flat();
+        const joinedIds = currentPeers.filter(id => !previousPeers.includes(id));
+        const leftIds = previousPeers.filter(id => !currentPeers.includes(id));
+        if (joinedIds.length > 0) {
+          console.log('NEW DEVICES JOINED:', joinedIds);
+        }
+        if (leftIds.length > 0) {
+          console.log('DEVICES LEFT:', leftIds);
+        }
+
+        if (joinedIds.length === 0 && leftIds.length === 0) {
+          console.log('Sync fired, but no population change (likely a Status Update)');
+        }
+        console.log(currentPeers);
+        previousPeers = currentPeers;
+        store.getState().setPeersSt(currentPeers);
+        store.getState().setLeaderSt(this.getLeader(currentPeers));
+        console.log('leader: ', this.getLeader(currentPeers));
+      })
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await this.usersChannel.track({
+            name: userNameSt,
+            status: 'foreground',
+            date: new Date().toISOString(),
+            wifiName: wifiNameSt,
+          });
+        }
+      });
+  }
 
   async subscribeToSupabaseChannel(tableName, callback, first) {
     if (handlingNoInternet) {

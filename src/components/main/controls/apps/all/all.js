@@ -8,25 +8,35 @@ function Apps() {
   const setRokuSearchModeSt = store(v => v.setRokuSearchModeSt);
   const rokuAppsSt = store(v => v.rokuAppsSt);
   const viewSt = store(v => v.viewSt);
+  const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   const changeControl = (value) => {
     const device = 'rokuSala';
     let app = rokuAppsSt.find(app => app.id === value);
-    // if (app.id === 'home') {
-    // utils.triggerVibrate();
-    // setRokuSearchModeSt('default');
-    // } else {
     utils.triggerVibrate();
     setRokuSearchModeSt('roku');
-    // }
     requests.sendIfttt({ device, key: 'app', value });
     requests.updateTable({
       current: { currentId: rokuAppsSt.find(app => app.state === 'selected').id, currentTable: 'rokuApps' },
       new: { newId: app.id, newTable: 'rokuApps' }
     });
     requests.fetchRoku({ key: 'launch', value: app.rokuId });
+    if (app.id !== 'youtube') {
+      clearYoutubeQueue();
+    }
   }
+
+  const clearYoutubeQueue = () => {
+    const queueElements = youtubeVideosLizSt.filter(video => video.queue > 0);
+    if (queueElements.length > 0) {
+      queueElements.forEach(video => {
+        requests.updateTable({
+          new: { newId: video.id, newTable: 'youtubeVideosLiz', newQueue: 0 }
+        });
+      });
+    }
+  };
 
   const changeView = async (app) => {
     const newView = structuredClone(viewSt);

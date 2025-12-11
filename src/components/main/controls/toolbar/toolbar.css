@@ -1,96 +1,114 @@
 .controls-toolbar {
-    height: 5vh;
-    align-items: center;
-    justify-content: center;
-  }
-  .controls-toolbar-row {
-    width: 240px;
-    display: inline-block;
-    position: relative;
-  }
-  .controls-toolbar-row--mute {
-    height: 20px;
-  }
-  .controls-toolbar-element {
-    float: left;
-    width: 70px;
-    margin: 0 5px;
-  }
-  .controls-toolbar-element--mute {
-    margin-top: -2px;
-  }
-  .controls-toolbar-element--mute-icon {
-    margin-top: -8px;
-  }
-  .controls-toolbar-element--left {
-    float: left;
-  }
-  .controls-toolbar-element--right {
-    float: right;
-  }
-  .controls-toolbar-button {
-    background-color: rgb(0, 12, 96, 0.5);
-    font-size: 15px;
-    padding: 3px;
-    width: 100%;
-    border: grey 1px solid;
-    height: 4vh;
-    border-radius: 5px;
-    user-select: none;
-    -webkit-user-select: none;
-    position: relative;
-  }
-  .controls-toolbar-button--img {
-    background-color: transparent;
-    border: none;
-  }
-  .controls-toolbar-img--no-button {
-    width: 30px;
-  }
-  .controls-toolbar-img--button {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    width: 2vh;
-    margin: auto;
-  }
-  .controls-toolbar-span {
-      color: white
-  }
-  button.controls-toolbar-button:active {
-    background-color: white;
-    transition: background-color 0.1s;
-  }
-  /* ProgressBar.css */
-  .controls-toolbar-progress-bar-container {
-    width: 230px;
-    position: absolute;
-    padding: 7px 5px 0;
-  }
+  height: 5vh;
+  align-items: center;
+  justify-content: center;
+}
 
-  .controls-toolbar-progress-bar-track {
-    width: 100%;
-    height: 4px; /* Set a height for visibility */
-    background-color: #e0e0e0; /* Light background for the track */
-    border-radius: 15px;
-    overflow: hidden; /* Important for clean corners */
-  }
+.controls-toolbar-row {
+  width: 240px;
+  display: inline-block;
+  position: relative;
+}
 
-  .controls-toolbar-progress-bar-fill {
-    height: 100%;
-    /* Start at 0, React will override this via the 'style' prop */
-    width: 0; 
-    background-color: #4CAF50; /* Green fill color */
-    
-    /* Smooth animation as the width changes */
-    transition: width 0.4s ease-in-out; 
-  }
+.controls-toolbar-row--mute {
+  height: 20px;
+}
 
-  .controls-toolbar-progress-bar-label {
-    display: block;
-    margin-top: 10px;
-    font-family: sans-serif;
-    text-align: center;
-  }
+.controls-toolbar-element {
+  float: left;
+  width: 70px;
+  margin: 0 5px;
+}
+
+.controls-toolbar-element--mute {
+  margin-top: -2px;
+}
+
+.controls-toolbar-element--mute-icon {
+  margin-top: -8px;
+}
+
+.controls-toolbar-element--left {
+  float: left;
+}
+
+.controls-toolbar-element--right {
+  float: right;
+}
+
+.controls-toolbar-button {
+  background-color: rgb(0, 12, 96, 0.5);
+  font-size: 15px;
+  padding: 3px;
+  width: 100%;
+  border: grey 1px solid;
+  height: 4vh;
+  border-radius: 5px;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+}
+
+.controls-toolbar-button--img {
+  background-color: transparent;
+  border: none;
+}
+
+.controls-toolbar-img--no-button {
+  width: 30px;
+}
+
+.controls-toolbar-img--button {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 2vh;
+  margin: auto;
+}
+
+.controls-toolbar-span {
+  color: white
+}
+
+button.controls-toolbar-button:active {
+  background-color: white;
+  transition: background-color 0.1s;
+}
+
+/* ProgressBar.css */
+.controls-toolbar-progress-bar-container {
+  width: 230px;
+  position: absolute;
+  padding: 7px 5px 0;
+}
+
+.controls-toolbar-progress-bar-track {
+  width: 100%;
+  height: 4px;
+  /* Set a height for visibility */
+  background-color: #e0e0e0;
+  /* Light background for the track */
+  border-radius: 15px;
+  overflow: hidden;
+  /* Important for clean corners */
+}
+
+.controls-toolbar-progress-bar-fill {
+  height: 100%;
+  /* Start at 0, React will override this via the 'style' prop */
+  width: 0;
+  background-color: #4CAF50;
+  /* Green fill color */
+
+  /* Smooth animation as the width changes */
+  transition: width 0.4s ease-in-out;
+}
+
+.controls-toolbar-progress-bar-label {
+  display: block;
+  margin-top: 10px;
+  font-family: sans-serif;
+  text-align: center;
+}

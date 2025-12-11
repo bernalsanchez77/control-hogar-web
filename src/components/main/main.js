@@ -9,6 +9,7 @@ import utils from '../../global/utils';
 import requests from '../../global/requests';
 import connection from '../../global/connection';
 import CordovaPlugins from '../../global/cordova-plugins';
+import supabaseChannels from '../../global/supabase/supabase-channels';
 import './main.css';
 
 const user = utils.getUser(`${window.screen.width}x${window.screen.height}`);
@@ -19,8 +20,10 @@ function Main() {
   const themeSt = store(v => v.themeSt);
   const setThemeSt = store(v => v.setThemeSt);
   const setIsInForegroundSt = store(v => v.setIsInForegroundSt);
-  const userCredentialSt = store(v => v.userCredentialSt);
-  const setUserCredentialSt = store(v => v.setUserCredentialSt);
+  const userTypeSt = store(v => v.userTypeSt);
+  const userNameSt = store(v => v.userNameSt);
+  const setUserTypeSt = store(v => v.setUserTypeSt);
+  const setUserNameSt = store(v => v.setUserNameSt);
   const setScreenSelectedSt = store(v => v.setScreenSelectedSt);
   const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
   const setIsConnectedToInternetSt = store(v => v.setIsConnectedToInternetSt);
@@ -39,14 +42,23 @@ function Main() {
 
   const onResume = useCallback(async (e) => {
     setIsInForegroundSt(true);
-  }, [setIsInForegroundSt]);
+    requests.updateTable({
+      new: { newId: 'bernal-cel', newTable: 'users', newState: 'foreground' }
+    });
+    await supabaseChannels.usersChannel.track({ name: userNameSt, status: 'foreground', date: new Date().toISOString(), wifiName: wifiNameSt });
+  }, [setIsInForegroundSt, userNameSt, wifiNameSt]);
 
   const onPause = useCallback(async (e) => {
     setIsInForegroundSt(false);
     if (isConnectedToInternetSt) {
+      requests.updateTable({
+        new: { newId: 'bernal-cel', newTable: 'users', newState: 'background' }
+      });
       // requests.sendLogs('salio', user);
     }
-  }, [isConnectedToInternetSt, setIsInForegroundSt]);
+
+    await supabaseChannels.usersChannel.track({ name: userNameSt, status: 'background', date: new Date().toISOString(), wifiName: wifiNameSt });
+  }, [isConnectedToInternetSt, setIsInForegroundSt, userNameSt, wifiNameSt]);
 
   const onVisibilityChange = useCallback(() => {
     if (document.visibilityState === 'visible') {
@@ -62,7 +74,8 @@ function Main() {
 
     // set initial variables
     const isConnectedToInternet = await utils.getIsConnectedToInternet();
-    const userCredential = localStorage.getItem('user');
+    const userType = localStorage.getItem('user-type');
+    const userName = localStorage.getItem('user-name');
     let wifiName = '';
     let networkType = '';
 
@@ -91,18 +104,22 @@ function Main() {
     setScreenSelectedSt(localStorage.getItem('screen') || 'teleSala');
     setWifiNameSt(wifiName);
     setNetworkTypeSt(networkType);
-    setUserCredentialSt(userCredential);
+    setUserTypeSt(userType);
+    setUserNameSt(userName);
     setIsConnectedToInternetSt(isConnectedToInternet);
 
     if (!isConnectedToInternet) {
       connection.onNoInternet();
     } else {
       requests.sendLogs('entro', user);
+      requests.updateTable({
+        new: { newId: 'bernal-cel', newTable: 'users', newState: 'foreground' }
+      });
     }
     setTimeout(() => {
       setIsReadySt(true);
     }, 0);
-  }, [setIsAppSt, setThemeSt, setUserCredentialSt, setScreenSelectedSt, setIsConnectedToInternetSt, setWifiNameSt, setNetworkTypeSt, setIsPcSt]);
+  }, [setUserNameSt, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsConnectedToInternetSt, setWifiNameSt, setNetworkTypeSt, setIsPcSt]);
 
   // useEffects
 
@@ -156,12 +173,12 @@ function Main() {
     <div>
       {isReadySt &&
         <div className={`main fade-in main-${themeSt}`}>
-          {isConnectedToInternetSt && userCredentialSt && (userCredentialSt !== 'guest' || (userCredentialSt === 'guest' && wifiNameSt === 'Noky')) ?
+          {isConnectedToInternetSt && userTypeSt && (userTypeSt !== 'guest' || (userTypeSt === 'guest' && wifiNameSt === 'Noky')) ?
             <div className='main-components'><Load></Load></div> :
             <div>
               {!isConnectedToInternetSt && <div><Internet></Internet></div>}
-              {isConnectedToInternetSt && (wifiNameSt !== 'Noky' && userCredentialSt === 'guest') && <div><Restricted></Restricted></div>}
-              {isConnectedToInternetSt && !(wifiNameSt !== 'Noky' && userCredentialSt === 'guest') && !userCredentialSt && <div><Credentials></Credentials></div>}
+              {isConnectedToInternetSt && (wifiNameSt !== 'Noky' && userTypeSt === 'guest') && <div><Restricted></Restricted></div>}
+              {isConnectedToInternetSt && !(wifiNameSt !== 'Noky' && userTypeSt === 'guest') && !userTypeSt && <div><Credentials></Credentials></div>}
             </div>
           }
         </div>

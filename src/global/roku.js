@@ -84,12 +84,6 @@ class Roku {
             default:
               break;
           }
-          // const playStateSt = store.getState().hdmiSalaSt.find(hdmi => hdmi.id === 'roku').playState;
-          // if (playStateSt !== playState.state) {
-          //   requests.updateTable({
-          //     new: { newId: store.getState().hdmiSalaSt.find(hdmi => hdmi.id === 'roku').id, newTable: 'hdmiSala', newPlayState: playState.state }
-          //   });
-          // }
         }
       }, 5000);
     }
@@ -129,12 +123,12 @@ class Roku {
         });
       }
       const playStateFromRoku = await this.getPlayState();
-      if (playStateFromRoku.state) {
+      if (playStateFromRoku?.state) {
         const hdmiSalaSt = store.getState().hdmiSalaSt;
         const youtubeVideosLizSt = store.getState().youtubeVideosLizSt;
         if (playStateFromRoku.state !== hdmiSalaSt.find(hdmi => hdmi.id === 'roku').playState) {
           requests.updateTable({
-            new: { newId: hdmiSalaSt.find(hdmi => hdmi.id === 'roku').id, newTable: 'hdmiSala', newPlayState: playStateFromRoku }
+            new: { newId: hdmiSalaSt.find(hdmi => hdmi.id === 'roku').id, newTable: 'hdmiSala', newPlayState: playStateFromRoku.state }
           });
         }
         if (playStateFromRoku.state !== 'play' && playStateFromRoku.state !== 'pause' && youtubeVideosLizSt.find(video => video.state === 'selected')) {
