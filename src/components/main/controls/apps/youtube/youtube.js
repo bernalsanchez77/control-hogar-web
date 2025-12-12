@@ -2,6 +2,7 @@ import { useRef, useEffect, useCallback } from 'react';
 import { store } from "../../../../../store/store";
 import requests from '../../../../../global/requests';
 import viewRouter from '../../../../../global/view-router';
+import utils from '../../../../../global/utils';
 import './youtube.css';
 
 function Youtube() {
@@ -11,6 +12,8 @@ function Youtube() {
   const rokuAppsSt = store(v => v.rokuAppsSt);
   const rokuPlayStatePositionSt = store(v => v.rokuPlayStatePositionSt);
   const viewSt = store(v => v.viewSt);
+  const leaderSt = store(v => v.leaderSt);
+  const userNameSt = store(v => v.userNameSt);
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   let youtubeSortedVideos = [];
@@ -157,26 +160,6 @@ function Youtube() {
     longClick.current = false;
   };
 
-  const timeToMs = (timeString) => {
-    const parts = timeString.split(':');
-    const numParts = parts.length;
-    const MS_IN_SECOND = 1000;
-    const MS_IN_MINUTE = 60 * MS_IN_SECOND; // 60,000
-    const MS_IN_HOUR = 60 * MS_IN_MINUTE;   // 3,600,000
-    let totalMilliseconds = 0;
-    if (numParts === 3) {
-      const hours = parseInt(parts[0], 10);
-      const minutes = parseInt(parts[1], 10);
-      const seconds = parseInt(parts[2], 10);
-      totalMilliseconds = (hours * MS_IN_HOUR) + (minutes * MS_IN_MINUTE) + (seconds * MS_IN_SECOND);
-    } else if (numParts === 2) {
-      const minutes = parseInt(parts[0], 10);
-      const seconds = parseInt(parts[1], 10);
-      totalMilliseconds = (minutes * MS_IN_MINUTE) + (seconds * MS_IN_SECOND);
-    }
-    return totalMilliseconds;
-  };
-
   // const msToTime = (ms, includeHours = false) => {
   //   const MS_IN_SECOND = 1000;
   //   const MS_IN_MINUTE = 60 * MS_IN_SECOND;
@@ -224,29 +207,21 @@ function Youtube() {
   };
 
   useEffect(() => {
-    if (currentVideoRef.current && currentVideoRef.current.id) {
-      let currentVideoDuration = 0;
-      if (currentVideoRef.current.duration) {
-        currentVideoDuration = timeToMs(currentVideoRef.current.duration);
-      }
-      console.log('position:', rokuPlayStatePositionSt, 'duration:', currentVideoDuration);
-      const timeLeft = currentVideoDuration - rokuPlayStatePositionSt;
-      const percentage = (rokuPlayStatePositionSt * 100) / currentVideoDuration;
-      normalizedPercentage.current = Math.round(Math.min(100, Math.max(0, (percentage))));
-      // console.log(Math.min(100, Math.max(0, rokuPlayStatePositionSt)));
-      console.log(normalizedPercentage.current + '%');
-      if (timeLeft && timeLeft < 6000) {
-        console.log('terminando');
-        const nextVideo = getNextQueue(currentVideoRef.current.queue);
-        if (nextVideo) {
-          changeControl(nextVideo);
-          handleQueue(currentVideoRef.current);
-        } else {
-          removeSelectedVideo();
-        }
+    const position = rokuPlayStatePositionSt;
+    const video = currentVideoRef.current;
+    const { normalizedPercentage, end } = utils.checkVideoEnd(position, video);
+    normalizedPercentage.current = normalizedPercentage;
+    if (leaderSt === userNameSt && end) {
+      const nextVideo = getNextQueue(video.queue);
+      console.log('nextVideo', nextVideo);
+      if (nextVideo) {
+        // changeControl(nextVideo);
+        handleQueue(video);
+      } else {
+        removeSelectedVideo();
       }
     }
-  }, [rokuPlayStatePositionSt, changeControl, getNextQueue, handleQueue, removeSelectedVideo]);
+  }, [leaderSt, userNameSt, rokuPlayStatePositionSt, changeControl, getNextQueue, handleQueue, removeSelectedVideo]);
 
   return (
     <div>

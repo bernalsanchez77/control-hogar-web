@@ -3,10 +3,9 @@ import { store } from "../store/store";
 import requests from './requests';
 let playStateInterval = null;
 let position = 0;
-// test
 let playState = {};
+const simulatePlayState = true;
 
-// end test
 class Roku {
   constructor() {
     this.wifi = '';
@@ -53,21 +52,17 @@ class Roku {
       position = 0;
       playStateInterval = setInterval(async () => {
 
-        // no test
-        playState = await this.getPlayState();
-        // end no test
-
-        // test
-        // this.testCount = this.testCount + 5000;
-        // playState.position = this.testCount;
-        // if (playState.position >= 1568000) {
-        //   playState.state = 'stop';
-        // } else {
-        //   playState.state = 'play';
-        // }
-        // end test
-
-        // position = parseInt(playState.position) / 1000;
+        if (simulatePlayState) {
+          this.testCount = this.testCount + 5000;
+          playState.position = this.testCount;
+          if (playState.position >= 1568000) {
+            playState.state = 'stop';
+          } else {
+            playState.state = 'play';
+          }
+        } else {
+          playState = await this.getPlayState();
+        }
         if (playState) {
           console.log('escuchando');
           position = parseInt(playState.position);
@@ -89,11 +84,9 @@ class Roku {
     }
   }
 
-  // test
   refreshCounter() {
     this.testCount = 1540000;
   }
-  // end test
 
   async stopPlayStateListener() {
     if (playStateInterval) {

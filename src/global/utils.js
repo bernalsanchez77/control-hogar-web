@@ -119,6 +119,44 @@ class Utils {
       return false;
     }
   }
+  timeToMs(timeString) {
+    const parts = timeString.split(':');
+    const numParts = parts.length;
+    const MS_IN_SECOND = 1000;
+    const MS_IN_MINUTE = 60 * MS_IN_SECOND; // 60,000
+    const MS_IN_HOUR = 60 * MS_IN_MINUTE;   // 3,600,000
+    let totalMilliseconds = 0;
+    if (numParts === 3) {
+      const hours = parseInt(parts[0], 10);
+      const minutes = parseInt(parts[1], 10);
+      const seconds = parseInt(parts[2], 10);
+      totalMilliseconds = (hours * MS_IN_HOUR) + (minutes * MS_IN_MINUTE) + (seconds * MS_IN_SECOND);
+    } else if (numParts === 2) {
+      const minutes = parseInt(parts[0], 10);
+      const seconds = parseInt(parts[1], 10);
+      totalMilliseconds = (minutes * MS_IN_MINUTE) + (seconds * MS_IN_SECOND);
+    }
+    return totalMilliseconds;
+  }
+  checkVideoEnd(position, video) {
+    let normalizedPercentage = 0;
+    if (video && video.id) {
+      let currentVideoDuration = 0;
+      if (video.duration) {
+        currentVideoDuration = utils.timeToMs(video.duration);
+      }
+      console.log('position:', position, 'duration:', currentVideoDuration);
+      const timeLeft = currentVideoDuration - position;
+      const percentage = (position * 100) / currentVideoDuration;
+      normalizedPercentage = Math.round(Math.min(100, Math.max(0, (percentage))));
+      console.log(normalizedPercentage + '%');
+      if (timeLeft && timeLeft < 6000) {
+        console.log('terminando');
+        return { normalizedPercentage, end: true };
+      }
+    }
+    return { normalizedPercentage, end: false };
+  }
 }
 const utils = new Utils();
 export default utils;

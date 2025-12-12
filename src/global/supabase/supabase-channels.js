@@ -38,15 +38,16 @@ class SupabaseChannels {
       .on('presence', { event: 'sync' }, () => {
         const newState = this.usersChannel.presenceState();
         currentPeers = Object.values(newState).flat();
-        const joinedIds = currentPeers.filter(id => !previousPeers.includes(id));
-        const leftIds = previousPeers.filter(id => !currentPeers.includes(id));
+        const previousIds = new Set(previousPeers.map(p => p.name));
+        const currentIds = new Set(currentPeers.map(p => p.name));
+        const joinedIds = currentPeers.filter(peer => !previousIds.has(peer.name));
+        const leftIds = previousPeers.filter(peer => !currentIds.has(peer.name));
         if (joinedIds.length > 0) {
           console.log('NEW DEVICES JOINED:', joinedIds);
         }
         if (leftIds.length > 0) {
           console.log('DEVICES LEFT:', leftIds);
         }
-
         if (joinedIds.length === 0 && leftIds.length === 0) {
           console.log('Sync fired, but no population change (likely a Status Update)');
         }
