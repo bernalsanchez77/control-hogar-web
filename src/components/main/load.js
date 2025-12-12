@@ -31,6 +31,7 @@ function Load() {
   const supabaseTimeoutSt = store(v => v.supabaseTimeoutSt);
   const setSupabaseTimeoutSt = store(v => v.supabaseSetTimeoutSt);
   const updateTablesSt = store((v) => v.updateTablesSt);
+  const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
   const setTableSt = store((v) => v.setTableSt);
   const screensSt = store(v => v.screensSt);
   const devicesSt = store(v => v.devicesSt);
@@ -117,6 +118,7 @@ function Load() {
   }, [subscribeToSupabaseChannel, setTableSt]);
 
   const load = useCallback(async (firstLoad = false) => {
+    let youtubeVideosLizTable = null;
     if (firstLoad) {
       setIsLoadingSt(true);
     }
@@ -139,7 +141,7 @@ function Load() {
       });
       await setData('devices');
       await setData('youtubeChannelsLiz');
-      await setData('youtubeVideosLiz', true, (change) => {
+      youtubeVideosLizTable = await setData('youtubeVideosLiz', true, (change) => {
         Tables.onYoutubeVideosLizTableChange(change);
       });
     }
@@ -148,6 +150,7 @@ function Load() {
     }
     setIsLoadingSt(false);
     isLoadingRef.current = false;
+    return youtubeVideosLizTable;
   }, [setData, setIsLoadingSt, viewSt, isPcSt, wifiNameSt]);
 
   // event functions
@@ -160,10 +163,13 @@ function Load() {
 
   const init = useCallback(async () => {
     supabaseChannels.subscribeToUsersChannel(userNameSt, wifiNameSt);
-    await load(true);
+    const youtubeVideosLizTable = await load(true);
     if (isPcSt || wifiNameSt === 'Noky') {
       Roku.setWifi(true);
-      Roku.startPlayStateListener();
+      const currentVideo = youtubeVideosLizTable.find(vid => vid.state === 'selected');
+      if (currentVideo) {
+        Roku.startPlayStateListener();
+      }
     }
     isReadyRef.current = true;
   }, [load, isPcSt, wifiNameSt, userNameSt]);
@@ -184,7 +190,10 @@ function Load() {
       if (isPcSt || (wifiNameSt === 'Noky' && networkTypeSt === 'wifi')) {
         Roku.setWifi(true);
         setTimeout(async () => {
-          Roku.startPlayStateListener();
+          // const currentVideo = youtubeVideosLizSt.find(vid => vid.state === 'selected');
+          // if (currentVideo) {
+          //   Roku.startPlayStateListener();
+          // }
         }, 2000);
       } else {
         Roku.setWifi(false);
@@ -192,7 +201,7 @@ function Load() {
       const status = isInForegroundSt ? 'foreground' : 'background';
       supabaseChannels.usersChannel.track({ name: userNameSt, status: status, date: new Date().toISOString(), wifiName: wifiNameSt });
     }
-  }, [wifiNameSt, networkTypeSt, isPcSt, isInForegroundSt, userNameSt]);
+  }, [wifiNameSt, networkTypeSt, isPcSt, isInForegroundSt, userNameSt, youtubeVideosLizSt]);
 
   useEffect(() => {
     return () => {

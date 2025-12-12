@@ -3,12 +3,12 @@ import { store } from "../../../../../store/store";
 import utils from '../../../../../global/utils';
 import requests from '../../../../../global/requests';
 import viewRouter from '../../../../../global/view-router';
+import youtube from '../../../../../global/youtube';
 import './all.css';
 function Apps() {
   const setRokuSearchModeSt = store(v => v.setRokuSearchModeSt);
   const rokuAppsSt = store(v => v.rokuAppsSt);
   const viewSt = store(v => v.viewSt);
-  const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   const changeControl = (value) => {
@@ -23,20 +23,9 @@ function Apps() {
     });
     requests.fetchRoku({ key: 'launch', value: app.rokuId });
     if (app.id !== 'youtube') {
-      clearYoutubeQueue();
+      youtube.clearQueue();
     }
   }
-
-  const clearYoutubeQueue = () => {
-    const queueElements = youtubeVideosLizSt.filter(video => video.queue > 0);
-    if (queueElements.length > 0) {
-      queueElements.forEach(video => {
-        requests.updateTable({
-          new: { newId: video.id, newTable: 'youtubeVideosLiz', newQueue: 0 }
-        });
-      });
-    }
-  };
 
   const changeView = async (app) => {
     const newView = structuredClone(viewSt);

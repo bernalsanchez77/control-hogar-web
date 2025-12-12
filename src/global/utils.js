@@ -138,6 +138,25 @@ class Utils {
     }
     return totalMilliseconds;
   }
+  msToTime(ms, includeHours = false) {
+    const MS_IN_SECOND = 1000;
+    const MS_IN_MINUTE = 60 * MS_IN_SECOND;
+    const MS_IN_HOUR = 60 * MS_IN_MINUTE;
+    const hours = Math.floor(ms / MS_IN_HOUR);
+    const minutes = Math.floor((ms % MS_IN_HOUR) / MS_IN_MINUTE);
+    const seconds = Math.floor((ms % MS_IN_MINUTE) / MS_IN_SECOND);
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(seconds).padStart(2, '0');
+
+    if (hours > 0 || includeHours) {
+      const formattedHours = String(hours).padStart(2, '0');
+      return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+    } else {
+      const totalMinutes = Math.floor(ms / MS_IN_MINUTE);
+      const finalMinutes = String(totalMinutes).padStart(2, '0');
+      return `${finalMinutes}:${formattedSeconds}`;
+    }
+  }
   checkVideoEnd(position, video) {
     let normalizedPercentage = 0;
     if (video && video.id) {

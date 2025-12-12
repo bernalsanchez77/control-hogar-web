@@ -46,40 +46,45 @@ class Roku {
     }
   }
 
+  async runPlayStateListener() {
+    if (simulatePlayState) {
+      this.testCount = this.testCount + 5000;
+      playState.position = this.testCount;
+      if (playState.position >= 1568000) {
+        playState.state = 'stop';
+      } else {
+        playState.state = 'play';
+      }
+    } else {
+      playState = await this.getPlayState();
+    }
+    if (playState) {
+      console.log('escuchando');
+      position = parseInt(playState.position);
+    } else {
+      position = 0;
+    }
+    if (playState) {
+      switch (playState.state) {
+        case 'play':
+          store.getState().setRokuPlayStatePositionSt(position);
+          break;
+        case 'pause':
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
   async startPlayStateListener() {
+    console.log('startPlayStateListener');
     if (!playStateInterval) {
       console.log('playstatelistener started');
       position = 0;
+      this.runPlayStateListener();
       playStateInterval = setInterval(async () => {
-
-        if (simulatePlayState) {
-          this.testCount = this.testCount + 5000;
-          playState.position = this.testCount;
-          if (playState.position >= 1568000) {
-            playState.state = 'stop';
-          } else {
-            playState.state = 'play';
-          }
-        } else {
-          playState = await this.getPlayState();
-        }
-        if (playState) {
-          console.log('escuchando');
-          position = parseInt(playState.position);
-        } else {
-          position = 0;
-        }
-        if (playState) {
-          switch (playState.state) {
-            case 'play':
-              store.getState().setRokuPlayStatePositionSt(position);
-              break;
-            case 'pause':
-              break;
-            default:
-              break;
-          }
-        }
+        this.runPlayStateListener();
       }, 5000);
     }
   }
@@ -90,6 +95,7 @@ class Roku {
 
   async stopPlayStateListener() {
     if (playStateInterval) {
+      store.getState().setRokuPlayStatePositionSt(0);
       console.log('playstatelistener stopped');
       position = 0;
       clearInterval(playStateInterval);

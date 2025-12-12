@@ -78,6 +78,7 @@ function Main() {
     const userName = localStorage.getItem('user-name');
     let wifiName = '';
     let networkType = '';
+    let isPc = window.location.hostname === 'localhost' && !isApp;
 
     // if isApp, get variables and start listeners
     if (isApp) {
@@ -99,10 +100,10 @@ function Main() {
 
     // set state variables
     setIsAppSt(isApp);
-    setIsPcSt(window.location.hostname === 'localhost' && !isApp);
+    setIsPcSt(isPc);
     setThemeSt(localStorage.getItem('theme'));
     setScreenSelectedSt(localStorage.getItem('screen') || 'teleSala');
-    setWifiNameSt(wifiName);
+    setWifiNameSt(isPc ? 'Noky' : wifiName);
     setNetworkTypeSt(networkType);
     setUserTypeSt(userType);
     setUserNameSt(userName);

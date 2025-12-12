@@ -1,19 +1,16 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect } from 'react';
 import { store } from "../../../../../store/store";
-import requests from '../../../../../global/requests';
 import viewRouter from '../../../../../global/view-router';
 import utils from '../../../../../global/utils';
+import youtube from '../../../../../global/youtube';
 import './youtube.css';
 
 function Youtube() {
   const youtubeSearchVideosSt = store(v => v.youtubeSearchVideosSt);
   const youtubeChannelsLizSt = store(v => v.youtubeChannelsLizSt);
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
-  const rokuAppsSt = store(v => v.rokuAppsSt);
   const rokuPlayStatePositionSt = store(v => v.rokuPlayStatePositionSt);
   const viewSt = store(v => v.viewSt);
-  const leaderSt = store(v => v.leaderSt);
-  const userNameSt = store(v => v.userNameSt);
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   let youtubeSortedVideos = [];
@@ -22,8 +19,7 @@ function Youtube() {
   let touchStartY = 0;
   const channelSelected = useRef('');
   const currentVideoRef = useRef(youtubeVideosLizSt.find(vid => vid.state === 'selected'));
-  const rokuId = rokuAppsSt.find(app => app.id === 'youtube').rokuId;
-  const normalizedPercentage = useRef(Math.min(100, Math.max(0, 0)));
+  const normalizedPercentageRef = useRef(Math.min(100, Math.max(0, 0)));
 
   const changeView = (channel) => {
     localStorage.setItem('channelSelected', channel);
@@ -33,79 +29,6 @@ function Youtube() {
     newView.roku.apps.youtube.mode = 'channel';
     viewRouter.changeView(newView);
   };
-
-  const clearYoutubeQueue = useCallback((video) => {
-    const queueElements = youtubeVideosLizSt.filter(video => video.queue > 0);
-    if (queueElements.length > 0) {
-      queueElements.forEach(video => {
-        requests.updateTable({
-          new: { newId: video.id, newTable: 'youtubeVideosLiz', newQueue: 0 }
-        });
-      });
-    }
-  }, [youtubeVideosLizSt]);
-
-  const removeSelectedVideo = useCallback(() => {
-    if (currentVideoRef.current) {
-      requests.updateTable({
-        current: { currentId: currentVideoRef.current.id, currentTable: 'youtubeVideosLiz', currentState: '' }
-      });
-    }
-  }, [currentVideoRef]);
-
-  const getLastQueue = useCallback(() => {
-    return youtubeVideosLizSt.reduce((maxObject, currentObject) => {
-      const maxVal = maxObject['queue'];
-      const currentVal = currentObject['queue'];
-      if (currentVal > maxVal) {
-        return currentObject;
-      } else {
-        return maxObject;
-      }
-    });
-  }, [youtubeVideosLizSt]);
-
-  const handleQueue = useCallback((video) => {
-    console.log('llego');
-    if (video.queue) {
-      requests.updateTable({
-        new: { newId: video.id, newTable: 'youtubeVideosLiz', newQueue: 0, newDate: video.date }
-      });
-    } else {
-      const lastQueue = getLastQueue().queue;
-      requests.updateTable({
-        new: { newId: video.id, newTable: 'youtubeVideosLiz', newQueue: lastQueue + 1, newDate: video.date }
-      });
-    }
-  }, [getLastQueue]);
-
-  const changeControl = useCallback((video) => {
-    const currentVideo = youtubeVideosLizSt.find(vid => vid.state === 'selected');
-    const isInYoutubeVideosLizSt = youtubeVideosLizSt.find(vid => vid.id === video.id);
-    if (currentVideo) {
-      if (currentVideo.id !== video.id) {
-        requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: video.id } });
-        if (isInYoutubeVideosLizSt) {
-          requests.updateTable({
-            current: { currentId: currentVideo.id, currentTable: 'youtubeVideosLiz' },
-            new: { newId: video.id, newTable: 'youtubeVideosLiz' }
-          });
-        } else {
-          requests.updateTable({
-            current: { currentId: currentVideo.id, currentTable: 'youtubeVideosLiz', currentState: '' }
-          });
-          clearYoutubeQueue();
-        }
-      }
-    } else {
-      requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: video.id } });
-      if (isInYoutubeVideosLizSt) {
-        requests.updateTable({
-          new: { newId: video.id, newTable: 'youtubeVideosLiz', newState: 'selected' }
-        });
-      }
-    }
-  }, [rokuId, youtubeVideosLizSt, clearYoutubeQueue]);
 
   if (viewSt.roku.apps.youtube.mode === '') {
     youtubeSortedChannels = Object.values(youtubeChannelsLizSt).sort((a, b) => a.order - b.order);
@@ -146,53 +69,19 @@ function Youtube() {
     if (!touchMoved) {
       if (longClick.current) {
         console.log('long click');
-        handleQueue(video);
+        youtube.handleQueue(video);
       } else {
         console.log('short click');
         if (type === 'channel') {
           changeView(video.id);
         }
         if (type === 'video') {
-          changeControl(video);
+          youtube.changeControl(video);
         }
       }
     }
     longClick.current = false;
   };
-
-  // const msToTime = (ms, includeHours = false) => {
-  //   const MS_IN_SECOND = 1000;
-  //   const MS_IN_MINUTE = 60 * MS_IN_SECOND;
-  //   const MS_IN_HOUR = 60 * MS_IN_MINUTE;
-  //   const hours = Math.floor(ms / MS_IN_HOUR);
-  //   const minutes = Math.floor((ms % MS_IN_HOUR) / MS_IN_MINUTE);
-  //   const seconds = Math.floor((ms % MS_IN_MINUTE) / MS_IN_SECOND);
-  //   const formattedMinutes = String(minutes).padStart(2, '0');
-  //   const formattedSeconds = String(seconds).padStart(2, '0');
-
-  //   if (hours > 0 || includeHours) {
-  //     const formattedHours = String(hours).padStart(2, '0');
-  //     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-  //   } else {
-  //     const totalMinutes = Math.floor(ms / MS_IN_MINUTE);
-  //     const finalMinutes = String(totalMinutes).padStart(2, '0');
-  //     return `${finalMinutes}:${formattedSeconds}`;
-  //   }
-  // };
-
-  const getNextQueue = useCallback((currentQueue) => {
-    const higherQueueVideos = youtubeVideosLizSt.filter(obj => {
-      const propValue = Number(obj['queue']);
-      return propValue > currentQueue;
-    });
-    if (higherQueueVideos.length === 0) {
-      return null;
-    }
-    higherQueueVideos.sort((a, b) => {
-      return Number(a.queue) - Number(b.queue);
-    });
-    return higherQueueVideos[0];
-  }, [youtubeVideosLizSt]);
 
   const getQueueConsecutiveNumber = (video) => {
     let sortedQueue = [...youtubeVideosLizSt].sort((a, b) => {
@@ -209,19 +98,9 @@ function Youtube() {
   useEffect(() => {
     const position = rokuPlayStatePositionSt;
     const video = currentVideoRef.current;
-    const { normalizedPercentage, end } = utils.checkVideoEnd(position, video);
-    normalizedPercentage.current = normalizedPercentage;
-    if (leaderSt === userNameSt && end) {
-      const nextVideo = getNextQueue(video.queue);
-      console.log('nextVideo', nextVideo);
-      if (nextVideo) {
-        // changeControl(nextVideo);
-        handleQueue(video);
-      } else {
-        removeSelectedVideo();
-      }
-    }
-  }, [leaderSt, userNameSt, rokuPlayStatePositionSt, changeControl, getNextQueue, handleQueue, removeSelectedVideo]);
+    const { normalizedPercentage } = utils.checkVideoEnd(position, video);
+    normalizedPercentageRef.current = normalizedPercentage;
+  }, [rokuPlayStatePositionSt]);
 
   return (
     <div>
@@ -276,7 +155,7 @@ function Youtube() {
                       {currentVideoRef.current && currentVideoRef.current.id === video.id &&
                         <div className="progress-bar-track">
                           <div
-                            className="progress-bar-fill" style={{ width: `${normalizedPercentage.current}%` }}>
+                            className="progress-bar-fill" style={{ width: `${normalizedPercentageRef.current}%` }}>
                           </div>
                         </div>
                       }
