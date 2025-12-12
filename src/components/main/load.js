@@ -166,10 +166,10 @@ function Load() {
     const youtubeVideosLizTable = await load(true);
     if (isPcSt || wifiNameSt === 'Noky') {
       Roku.setWifi(true);
-      const currentVideo = youtubeVideosLizTable.find(vid => vid.state === 'selected');
-      if (currentVideo) {
-        Roku.startPlayStateListener();
-      }
+    }
+    const currentVideo = youtubeVideosLizTable.find(vid => vid.state === 'selected');
+    if (currentVideo) {
+      Roku.startPlayStateListener();
     }
     isReadyRef.current = true;
   }, [load, isPcSt, wifiNameSt, userNameSt]);

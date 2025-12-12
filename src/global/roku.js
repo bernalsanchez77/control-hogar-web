@@ -4,7 +4,7 @@ import requests from './requests';
 let playStateInterval = null;
 let position = 0;
 let playState = {};
-const simulatePlayState = true;
+const simulatePlayState = false;
 
 class Roku {
   constructor() {
@@ -107,7 +107,7 @@ class Roku {
   setWifi(wifi) {
     this.wifi = wifi;
     if (!wifi) {
-      this.stopPlayStateListener();
+      // this.stopPlayStateListener();
     }
   }
 
