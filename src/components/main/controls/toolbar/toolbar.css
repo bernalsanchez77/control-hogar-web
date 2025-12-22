@@ -1,7 +1,7 @@
 .controls-toolbar {
   height: 5vh;
-  align-items: center;
-  justify-content: center;
+  width: 240px;
+  margin: 0 auto;
 }
 
 .controls-toolbar-row {
@@ -46,6 +46,7 @@
   border-radius: 5px;
   user-select: none;
   -webkit-user-select: none;
+  -webkit-touch-callout: none;
   position: relative;
 }
 

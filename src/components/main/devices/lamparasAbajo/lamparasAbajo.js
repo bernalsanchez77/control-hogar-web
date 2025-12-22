@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import './lamparasAbajo.css';
 import requests from '../../../../global/requests';
+import utils from '../../../../global/utils';
 
 function LamparasAbajo({ lamparaSala, lamparaComedor, chimeneaSala, lamparaTurca }) {
   const [state, setState] = useState('off');
@@ -30,6 +31,7 @@ function LamparasAbajo({ lamparaSala, lamparaComedor, chimeneaSala, lamparaTurca
     }
   }, [lamparasOff]);
   const changeControl = () => {
+    utils.triggerVibrate();
     if (state === 'on') {
       lamparasOff.forEach(lampara => {
         if (lampara.state === 'on') {

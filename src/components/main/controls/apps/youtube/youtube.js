@@ -1,15 +1,14 @@
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { store } from "../../../../../store/store";
 import viewRouter from '../../../../../global/view-router';
-import utils from '../../../../../global/utils';
 import youtube from '../../../../../global/youtube';
+import utils from '../../../../../global/utils';
 import './youtube.css';
 
 function Youtube() {
   const youtubeSearchVideosSt = store(v => v.youtubeSearchVideosSt);
   const youtubeChannelsLizSt = store(v => v.youtubeChannelsLizSt);
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
-  const rokuPlayStatePositionSt = store(v => v.rokuPlayStatePositionSt);
   const viewSt = store(v => v.viewSt);
   const timeout3s = useRef(null);
   const longClick = useRef(false);
@@ -18,10 +17,9 @@ function Youtube() {
   let touchMoved = false;
   let touchStartY = 0;
   const channelSelected = useRef('');
-  const currentVideoRef = useRef(youtubeVideosLizSt.find(vid => vid.state === 'selected'));
-  const normalizedPercentageRef = useRef(Math.min(100, Math.max(0, 0)));
 
-  const changeView = (channel) => {
+  const onChannelShortClick = (channel) => {
+    utils.triggerVibrate();
     localStorage.setItem('channelSelected', channel);
     channelSelected.current = channel;
     const newView = structuredClone(viewSt);
@@ -69,14 +67,17 @@ function Youtube() {
     if (!touchMoved) {
       if (longClick.current) {
         console.log('long click');
+        utils.triggerVibrate();
         youtube.handleQueue(video);
       } else {
         console.log('short click');
         if (type === 'channel') {
-          changeView(video.id);
+          utils.triggerVibrate();
+          onChannelShortClick(video.id);
         }
         if (type === 'video') {
-          youtube.changeControl(video);
+          utils.triggerVibrate();
+          youtube.onVideoShortClick(video);
         }
       }
     }
@@ -94,13 +95,6 @@ function Youtube() {
       return 0;
     }
   };
-
-  useEffect(() => {
-    const position = rokuPlayStatePositionSt;
-    const video = currentVideoRef.current;
-    const { normalizedPercentage } = utils.checkVideoEnd(position, video);
-    normalizedPercentageRef.current = normalizedPercentage;
-  }, [rokuPlayStatePositionSt]);
 
   return (
     <div>
@@ -150,15 +144,6 @@ function Youtube() {
                       <div className='controls-apps-youtube-video-queue-number'>
                         <span>{getQueueConsecutiveNumber(video) || ''}</span>
                       </div>
-                    </div>
-                    <div className="progress-bar-container">
-                      {currentVideoRef.current && currentVideoRef.current.id === video.id &&
-                        <div className="progress-bar-track">
-                          <div
-                            className="progress-bar-fill" style={{ width: `${normalizedPercentageRef.current}%` }}>
-                          </div>
-                        </div>
-                      }
                     </div>
                     <p className='controls-apps-youtube-video-title'>
                       {video.title}

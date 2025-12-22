@@ -12,6 +12,14 @@ class Youtube {
       });
     }
   }
+  clearCurrentVideo() {
+    const selectedVideo = store.getState().youtubeVideosLizSt.find(vid => vid.state === 'selected');
+    if (selectedVideo) {
+      requests.updateTable({
+        current: { currentId: selectedVideo.id, currentTable: 'youtubeVideosLiz', currentState: '' }
+      });
+    }
+  }
   getLastQueue() {
     return store.getState().youtubeVideosLizSt.reduce((maxObject, currentObject) => {
       const maxVal = maxObject['queue'];
@@ -35,7 +43,7 @@ class Youtube {
       });
     }
   }
-  changeControl(video) {
+  onVideoShortClick(video) {
     const rokuId = store.getState().rokuAppsSt.find(app => app.id === 'youtube').rokuId;
     const currentVideo = store.getState().youtubeVideosLizSt.find(vid => vid.state === 'selected');
     const isInYoutubeVideosLizSt = store.getState().youtubeVideosLizSt.find(vid => vid.id === video.id);
@@ -60,6 +68,14 @@ class Youtube {
           new: { newId: video.id, newTable: 'youtubeVideosLiz', newState: 'selected' }
         });
       }
+    }
+    const rokuAppsSt = store.getState().rokuAppsSt;
+    const rokuActiveApp = rokuAppsSt.find(app => app.state === 'selected').id;
+    if (rokuActiveApp !== 'youtube') {
+      requests.updateTable({
+        current: { currentId: rokuActiveApp, currentTable: 'rokuApps' },
+        new: { newId: 'youtube', newTable: 'rokuApps' }
+      });
     }
     this.clearQueue();
   }

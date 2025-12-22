@@ -1,8 +1,10 @@
 import './luzCuarto.css';
 import requests from '../../../../../global/requests';
+import utils from '../../../../../global/utils';
 
 function LuzCuarto({ element }) {
-  const changeControl = (color) => {
+  const onDeviceColorClick = (color) => {
+    utils.triggerVibrate();
     const device = element.id;
     if (element.state === 'off') {
       requests.sendIfttt({ device, key: 'state', value: 'on' });
@@ -19,13 +21,13 @@ function LuzCuarto({ element }) {
           <li className='controls-device-luzcuarto'>
             <button
               className={`controls-device-luzcuarto-button controls-device-luzcuarto-button--white ${element.color === 'white' ? 'controls-device-luzcuarto-button--selected' : ''}`}
-              onTouchStart={() => changeControl('white')}>
+              onTouchStart={() => onDeviceColorClick('white')}>
             </button>
           </li>
           <li className='controls-device-luzcuarto'>
             <button
               className={`controls-device-luzcuarto-button controls-device-luzcuarto-button--red ${element.color === 'red' ? 'controls-device-luzcuarto-button--selected' : ''}`}
-              onTouchStart={() => changeControl('red')}>
+              onTouchStart={() => onDeviceColorClick('red')}>
             </button>
           </li>
         </ul>

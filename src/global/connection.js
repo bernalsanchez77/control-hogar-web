@@ -1,12 +1,30 @@
 
 import { store } from '../store/store';
-import utils from './utils';
 import CordovaPlugins from './cordova-plugins';
+import peersChannel from './supabase/peers-channel';
 
 class Connection {
   constructor() {
     this.isConnectedToInternetInterval = null;
     this.netChangeRunning = false;
+  }
+  async getIsConnectedToInternet() {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+
+      // Use a small, reliable file
+      await fetch('https://www.google.com/favicon.ico', {
+        mode: 'no-cors',
+        cache: "no-cache",
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeout);
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
   async onNoInternet() {
     if (!this.isConnectedToInternetInterval) {
@@ -15,7 +33,7 @@ class Connection {
       let networkType = '';
       store.getState().setIsConnectedToInternetSt(false);
       this.isConnectedToInternetInterval = setInterval(async () => {
-        const isConnectedToInternet = await utils.getIsConnectedToInternet();
+        const isConnectedToInternet = await this.getIsConnectedToInternet();
         if (isConnectedToInternet) {
           console.log('Internet connected by interval');
           clearInterval(this.isConnectedToInternetInterval);
@@ -28,6 +46,9 @@ class Connection {
           store.getState().setWifiNameSt(wifiName);
           store.getState().setNetworkTypeSt(networkType);
           store.getState().setIsConnectedToInternetSt(true);
+          if (peersChannel.status === 'unsubscribed') {
+            peersChannel.subscribeToUsersChannel();
+          }
         } else {
           console.log('No internet by interval');
         }
@@ -36,12 +57,16 @@ class Connection {
   }
   async onNetworkTypeChange(netType) {
     console.log('changed in network type: ', netType);
+    console.log('peersChannel status: ', peersChannel.status);
+    if (peersChannel.status === 'unsubscribed') {
+      await peersChannel.subscribeToUsersChannel();
+    }
     if (store.getState().userTypeSt === 'guest') {
       if (netType === 'wifi' && store.getState().wifiNameSt === 'Noky') {
         if (!this.netChangeRunning) {
           this.netChangeRunning = true;
           setTimeout(async () => {
-            const internetConnection = await utils.getIsConnectedToInternet();
+            const internetConnection = await this.getIsConnectedToInternet();
             if (internetConnection) {
             } else {
               console.log('no internet detected by network type change, nointernet interval started');
@@ -56,12 +81,16 @@ class Connection {
   }
   async onWifiNameChange(wifiName) {
     console.log('changed in ssid: ', wifiName);
+    console.log('peersChannel status: ', peersChannel.status);
+    if (peersChannel.status === 'unsubscribed') {
+      await peersChannel.subscribeToUsersChannel();
+    }
     if (store.getState().userTypeSt === 'guest') {
       if (wifiName === 'Noky' && store.getState().networkTypeSt === 'wifi') {
         if (!this.netChangeRunning) {
           this.netChangeRunning = true;
           setTimeout(async () => {
-            const internetConnection = await utils.getIsConnectedToInternet();
+            const internetConnection = await this.getIsConnectedToInternet();
             if (internetConnection) {
             } else {
               console.log('no internet detected by ssid change, nointernet interval started');
@@ -73,6 +102,16 @@ class Connection {
       }
     }
     store.getState().setWifiNameSt(wifiName);
+  }
+  async updateConnection() {
+    const isAppSt = store.getState().isAppSt;
+    const isPcSt = store.getState().isPcSt;
+    const isConnectedToInternet = await this.getIsConnectedToInternet();
+    const wifiName = isAppSt ? await CordovaPlugins.getWifiName() : '';
+    const networkType = isAppSt ? await CordovaPlugins.getNetworkType() : '';
+    store.getState().setWifiNameSt(isPcSt ? 'Noky' : wifiName);
+    store.getState().setNetworkTypeSt(networkType);
+    store.getState().setIsConnectedToInternetSt(isConnectedToInternet);
   }
 }
 const connection = new Connection();

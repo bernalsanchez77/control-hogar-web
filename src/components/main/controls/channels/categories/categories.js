@@ -1,13 +1,19 @@
 import { store } from "../../../../../store/store";
 import CableChannelCategories from '../../../../../global/cable-channel-categories';
+import utils from '../../../../../global/utils';
+import viewRouter from '../../../../../global/view-router';
 import './categories.css';
 
-function Categories({ changeCategoryParent }) {
+function Categories() {
   const cableChannelCategories = new CableChannelCategories().getCableChannelCategories();
   const cableChannelsSt = store(v => v.cableChannelsSt);
   let selectedImg = '/imgs/channels/' + cableChannelsSt.find(ch => ch.state === 'selected')?.id + '.png';
-  const changeCategory = (category) => {
-    changeCategoryParent(category);
+  const viewSt = store(v => v.viewSt);
+  const onCategoryShortClick = async (category) => {
+    utils.triggerVibrate();
+    const newView = structuredClone(viewSt);
+    newView.cable.channels.category = category;
+    await viewRouter.changeView(newView);
   }
 
   return (
@@ -32,7 +38,7 @@ function Categories({ changeCategoryParent }) {
                   return (
                     <div key={colIndex} className={`controls-channels-element controls-channels-element--${position}`}>
                       <button className='controls-channels-elements-button'
-                        onTouchStart={() => changeCategory(item.categories)}>
+                        onTouchStart={() => onCategoryShortClick(item.categories)}>
                         {item.label}
                       </button>
                     </div>

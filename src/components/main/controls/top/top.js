@@ -23,12 +23,12 @@ function Controls() {
         requests.sendIfttt({ device, value });
         requests.updateTable({ new: { newId: device, newTable: 'screens', newState } });
         setTimeout(() => {
-          requests.sendIfttt({ device: 'proyectorSalaSwitch', value });
-          requests.updateTable({ new: { newId: 'proyectorSalaSwitch', newTable: 'devices', newState } });
+          requests.sendIfttt({ device: 'proyectorSwitchSala', value });
+          requests.updateTable({ new: { newId: 'proyectorSwitchSala', newTable: 'devices', newState } });
         }, 30000);
       } else {
-        requests.sendIfttt({ device: 'proyectorSalaSwitch', value });
-        requests.updateTable({ new: { newId: 'proyectorSalaSwitch', newTable: 'devices', newState } });
+        requests.sendIfttt({ device: 'proyectorSwitchSala', value });
+        requests.updateTable({ new: { newId: 'proyectorSwitchSala', newTable: 'devices', newState } });
         setTimeout(() => {
           requests.sendIfttt({ device, value });
           requests.updateTable({ new: { newId: device, newTable: 'screens', newState } });

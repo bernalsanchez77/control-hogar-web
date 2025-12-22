@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import './credentials.css';
 import { store } from '../../../../store/store';
-import utils from '../../../../global/utils';
+import connection from '../../../../global/connection';
 import requests from '../../../../global/requests';
 function Credentials() {
 
@@ -16,7 +16,7 @@ function Credentials() {
     if (userValueRef.current.length === 0 || credentialValueRef.current.length === 0) {
       return;
     }
-    const isConnectedToInternet = await utils.getIsConnectedToInternet();
+    const isConnectedToInternet = await connection.getIsConnectedToInternet();
     if (isConnectedToInternet) {
       if (userType === 'guest') {
         const users = await requests.getTable('users');

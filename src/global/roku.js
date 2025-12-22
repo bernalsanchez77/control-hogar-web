@@ -5,11 +5,12 @@ let playStateInterval = null;
 let position = 0;
 let playState = {};
 const simulatePlayState = false;
+let testCount = 40000;
 
 class Roku {
   constructor() {
     this.wifi = '';
-    this.testCount = 1540000;
+    this.testCount = testCount;
   }
 
   async getPlayState(data) {
@@ -68,8 +69,10 @@ class Roku {
       switch (playState.state) {
         case 'play':
           store.getState().setRokuPlayStatePositionSt(position);
+          this.updatePlayState();
           break;
         case 'pause':
+          this.updatePlayState();
           break;
         default:
           break;
@@ -90,7 +93,7 @@ class Roku {
   }
 
   refreshCounter() {
-    this.testCount = 1540000;
+    this.testCount = testCount;
   }
 
   async stopPlayStateListener() {
@@ -111,6 +114,34 @@ class Roku {
     }
   }
 
+  async updateState() {
+    const playState = await this.getPlayState();
+    const youtubeVideosLizSt = store.getState().youtubeVideosLizSt;
+    const hdmiSalaSt = store.getState().hdmiSalaSt;
+    if (playState) {
+      if (hdmiSalaSt.find(hdmi => hdmi.id === 'roku').playState !== playState.state) {
+        requests.updateTable({
+          new: { newId: hdmiSalaSt.find(hdmi => hdmi.id === 'roku').id, newTable: 'hdmiSala', newPlayState: playState.state }
+        });
+      }
+      if (playState.state !== 'play' && playState.state !== 'pause' && youtubeVideosLizSt.find(video => video.state === 'selected')) {
+        requests.updateTable({
+          current: { currentId: youtubeVideosLizSt.find(video => video.state === 'selected').id, currentTable: 'youtubeVideosLiz', currentState: '' }
+        });
+      }
+    }
+  }
+
+  async updatePlayState(timeout) {
+    if (timeout) {
+      setTimeout(async () => {
+        this.updateState();
+      }, timeout);
+    } else {
+      this.updateState();
+    }
+  }
+
   async setRoku() {
     const rokuActiveApp = await this.getActiveApp();
     if (rokuActiveApp) {
@@ -121,21 +152,7 @@ class Roku {
           new: { newId: rokuAppsSt.find(app => app.rokuId === rokuActiveApp).id, newTable: 'rokuApps' }
         });
       }
-      const playStateFromRoku = await this.getPlayState();
-      if (playStateFromRoku?.state) {
-        const hdmiSalaSt = store.getState().hdmiSalaSt;
-        const youtubeVideosLizSt = store.getState().youtubeVideosLizSt;
-        if (playStateFromRoku.state !== hdmiSalaSt.find(hdmi => hdmi.id === 'roku').playState) {
-          requests.updateTable({
-            new: { newId: hdmiSalaSt.find(hdmi => hdmi.id === 'roku').id, newTable: 'hdmiSala', newPlayState: playStateFromRoku.state }
-          });
-        }
-        if (playStateFromRoku.state !== 'play' && playStateFromRoku.state !== 'pause' && youtubeVideosLizSt.find(video => video.state === 'selected')) {
-          requests.updateTable({
-            current: { currentId: youtubeVideosLizSt.find(video => video.state === 'selected').id, currentTable: 'youtubeVideosLiz', currentState: '' }
-          });
-        }
-      }
+      this.updatePlayState();
     }
   }
 }

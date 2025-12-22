@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { store } from "../../../../store/store";
 import requests from '../../../../global/requests';
 import viewRouter from '../../../../global/view-router';
+import utils from '../../../../global/utils';
 import './search.css';
 
 function Search() {
@@ -87,6 +88,7 @@ function Search() {
   };
 
   const onSubmit = (e) => {
+    utils.triggerVibrate();
     e.preventDefault();
     searchQuery();
     inputRef.current.blur();

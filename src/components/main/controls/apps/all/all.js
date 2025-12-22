@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { store } from "../../../../../store/store";
 import utils from '../../../../../global/utils';
 import requests from '../../../../../global/requests';
@@ -9,44 +8,42 @@ function Apps() {
   const setRokuSearchModeSt = store(v => v.setRokuSearchModeSt);
   const rokuAppsSt = store(v => v.rokuAppsSt);
   const viewSt = store(v => v.viewSt);
-  const timeout3s = useRef(null);
-  const longClick = useRef(false);
-  const changeControl = (value) => {
-    const device = 'rokuSala';
-    let app = rokuAppsSt.find(app => app.id === value);
-    utils.triggerVibrate();
-    setRokuSearchModeSt('roku');
-    requests.sendIfttt({ device, key: 'app', value });
-    requests.updateTable({
-      current: { currentId: rokuAppsSt.find(app => app.state === 'selected').id, currentTable: 'rokuApps' },
-      new: { newId: app.id, newTable: 'rokuApps' }
-    });
-    requests.fetchRoku({ key: 'launch', value: app.rokuId });
-    if (app.id !== 'youtube') {
-      youtube.clearQueue();
+  const wifiNameSt = store(v => v.wifiNameSt);
+
+  const onShortClick = (keyup, value) => {
+    if (keyup) {
+      utils.triggerVibrate();
+      const device = 'rokuSala';
+      let app = rokuAppsSt.find(app => app.id === value);
+      setRokuSearchModeSt('roku');
+      if (wifiNameSt === 'Noky') {
+        requests.fetchRoku({ key: 'launch', value: app.rokuId });
+      } else {
+        requests.sendIfttt({ device, key: 'app', value });
+      }
+      requests.updateTable({
+        current: { currentId: rokuAppsSt.find(app => app.state === 'selected').id, currentTable: 'rokuApps' },
+        new: { newId: app.id, newTable: 'rokuApps' }
+      });
+      if (app.id !== 'youtube') {
+        youtube.clearCurrentVideo();
+        youtube.clearQueue();
+      }
     }
   }
 
-  const changeView = async (app) => {
+  const onLongClick = async (app) => {
+    utils.triggerVibrate();
     const newView = structuredClone(viewSt);
     newView.roku.apps.selected = app;
     await viewRouter.changeView(newView);
   }
 
-  const onTouchStart = (e) => {
-    timeout3s.current = setTimeout(() => {
-      longClick.current = true;
-    }, 500);
+  const onTouchStart = (value, e) => {
+    utils.onTouchStart(value, e, onShortClick);
   }
-  const onTouchEnd = (e, app) => {
-    e.preventDefault();
-    clearTimeout(timeout3s.current);
-    if (longClick.current) {
-      changeView(app);
-    } else {
-      changeControl(app);
-    }
-    longClick.current = false;
+  const onTouchEnd = (value, e) => {
+    utils.onTouchEnd(value, e, onShortClick, onLongClick);
   }
 
   return (
@@ -57,8 +54,8 @@ function Apps() {
             <div className='controls-apps-element'>
               <button
                 className={`controls-apps-button ${app.state === 'selected' ? "controls-apps-button--on" : "controls-apps-button--off"}`}
-                onTouchStart={(e) => onTouchStart(e, app.id)}
-                onTouchEnd={(e) => onTouchEnd(e, app.id)}>
+                onTouchStart={(e) => onTouchStart(app.id, e)}
+                onTouchEnd={(e) => onTouchEnd(app.id, e)}>
                 <img
                   className='controls-apps-img controls-apps-img--button'
                   src={'https://control-hogar-psi.vercel.app/imgs/apps/' + app.id + '.png'}

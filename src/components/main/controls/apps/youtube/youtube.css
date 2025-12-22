@@ -99,8 +99,8 @@
 
 .controls-apps-youtube-video-title,
 .controls-apps-youtube-video-duration {
-  padding: 3px 0 0;
-  margin: 0;
+  padding: 0px 0 0;
+  margin: 0 auto;
   width: 100px;
   font-size: 11px;
   display: -webkit-box;
@@ -117,40 +117,4 @@
 button.controls-apps-youtube-video-button:active {
   background-color: white;
   transition: background-color 0.1s;
-}
-
-/* ProgressBar.css */
-.progress-bar-container {
-  width: 100%;
-  position: absolute;
-  bottom: 53px;
-}
-
-.progress-bar-track {
-  width: 100%;
-  height: 4px;
-  /* Set a height for visibility */
-  background-color: #e0e0e0;
-  /* Light background for the track */
-  border-radius: 15px;
-  overflow: hidden;
-  /* Important for clean corners */
-}
-
-.progress-bar-fill {
-  height: 100%;
-  /* Start at 0, React will override this via the 'style' prop */
-  width: 0;
-  background-color: #4CAF50;
-  /* Green fill color */
-
-  /* Smooth animation as the width changes */
-  transition: width 0.4s ease-in-out;
-}
-
-.progress-bar-label {
-  display: block;
-  margin-top: 10px;
-  font-family: sans-serif;
-  text-align: center;
 }

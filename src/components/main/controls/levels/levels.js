@@ -9,12 +9,14 @@ function Levels() {
   const screensSt = store(v => v.screensSt);
   const cableChannelsSt = store(v => v.cableChannelsSt);
   const viewSt = store(v => v.viewSt);
+  const isAppSt = store(v => v.isAppSt);
+  const wifiNameSt = store(v => v.wifiNameSt);
   const screen = screensSt.find(screen => screen.id === screenSelectedSt);
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
   const volumeChange = useRef(1);
 
-  const changeMute = () => {
+  const onMuteShortClick = () => {
     if (screen.state === 'on') {
       utils.triggerVibrate();
       const device = screenSelectedSt;
@@ -23,9 +25,7 @@ function Levels() {
       requests.updateTable({ new: { newId: device, newTable: 'screens', newMute: value } });
     }
   }
-  const changeControl = (value) => {
-    const isAppSt = store(v => v.isAppSt);
-    const wifiNameSt = store(v => v.wifiNameSt);
+  const onOptionsShortClick = (value) => {
     utils.triggerVibrate();
     const device = viewSt.selected === 'roku' ? 'rokuSala' : 'cableSala';
     const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
@@ -36,7 +36,7 @@ function Levels() {
     }
   }
 
-  const changeChannel = (value) => {
+  const onChannelShortClick = (value) => {
     utils.triggerVibrate();
     let newChannel = {};
     const device = 'channelsSala';
@@ -64,7 +64,7 @@ function Levels() {
     });
   }
 
-  const changeVolume = (vol, button, vib = true) => {
+  const onVolumeClick = (vol, button, vib = true) => {
     const device = screenSelectedSt;
     let newVol = 0;
     if (button === 'up') {
@@ -85,7 +85,8 @@ function Levels() {
     }
   }
 
-  const changeVolumeStart = () => {
+  const changeVolumeStart = (e, button) => {
+    e.preventDefault();
     if (screen.state === 'on') {
       volumeChange.current = 1;
       timeout3s.current = setTimeout(() => {
@@ -99,14 +100,17 @@ function Levels() {
     }
   }
 
-  const changeVolumeEnd = (button) => {
+  const changeVolumeEnd = (e, button) => {
+    e.preventDefault();
     if (screen.state === 'on') {
       clearTimeout(timeout3s.current);
       clearTimeout(timeout6s.current);
       if (volumeChange.current === 1) {
-        changeVolume(volumeChange.current, button);
+        utils.triggerVibrate(200);
+        onVolumeClick(volumeChange.current, button);
       } else {
-        changeVolume(volumeChange.current, button, false);
+        utils.triggerVibrate(200);
+        onVolumeClick(volumeChange.current, button, false);
       }
     }
   }
@@ -118,15 +122,15 @@ function Levels() {
           <div className='controls-levels-element controls-levels-element--left'>
             <button
               className='controls-levels-button'
-              onTouchStart={() => changeVolumeStart('up')}
-              onTouchEnd={() => changeVolumeEnd('up')}>
+              onTouchStart={(e) => changeVolumeStart(e, 'up')}
+              onTouchEnd={(e) => changeVolumeEnd(e, 'up')}>
               &#9650;
             </button>
           </div>
           <div className='controls-levels-element controls-levels-element--mute-icon'>
             <button
               className="controls-levels-button controls-levels-button--img"
-              onTouchStart={() => changeMute()}>
+              onTouchStart={() => onMuteShortClick()}>
               {screen.mute === 'off' &&
                 <img
                   className='controls-levels-img controls-levels-img--no-button'
@@ -148,7 +152,7 @@ function Levels() {
             <div className='controls-levels-element controls-levels-element--right'>
               <button
                 className={`controls-levels-button`}
-                onTouchStart={() => changeControl('back')}>
+                onTouchStart={() => onOptionsShortClick('back')}>
                 <img
                   className='controls-levels-img controls-levels-img--button'
                   src="/imgs/back-50.png"
@@ -162,7 +166,7 @@ function Levels() {
             <div className='controls-levels-element controls-levels-element--right'>
               <button
                 className={'controls-levels-button'}
-                onTouchStart={() => changeChannel('up')}>
+                onTouchStart={() => onChannelShortClick('up')}>
                 &#9650;
               </button>
             </div>
@@ -189,8 +193,8 @@ function Levels() {
           <div className='controls-levels-element controls-levels-element--left'>
             <button
               className='controls-levels-button'
-              onTouchStart={() => changeVolumeStart('down')}
-              onTouchEnd={() => changeVolumeEnd('down')}>
+              onTouchStart={(e) => changeVolumeStart(e, 'down')}
+              onTouchEnd={(e) => changeVolumeEnd(e, 'down')}>
               &#9660;
             </button>
           </div>
@@ -210,7 +214,7 @@ function Levels() {
             <div className='controls-levels-element controls-levels-element--right'>
               <button
                 className={`controls-levels-button`}
-                onTouchStart={() => changeControl('info')}>
+                onTouchStart={() => onOptionsShortClick('info')}>
                 <img
                   className='controls-levels-img controls-levels-img--button'
                   src="/imgs/asterisk-24.png"
@@ -224,7 +228,7 @@ function Levels() {
             <div className='controls-levels-element controls-levels-element--right'>
               <button
                 className={`controls-levels-button`}
-                onTouchStart={() => changeChannel('down')}>
+                onTouchStart={() => onChannelShortClick('down')}>
                 &#9660;
               </button>
             </div>

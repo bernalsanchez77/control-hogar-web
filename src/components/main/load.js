@@ -9,6 +9,7 @@ import Loading from './views/loading/loading';
 import SupabaseTimeout from './views/supabaseTimeout/supabaseTimeout';
 import Dev from './dev/dev';
 import supabaseChannels from '../../global/supabase/supabase-channels';
+import peersChannel from '../../global/supabase/peers-channel';
 import viewRouter from '../../global/view-router';
 import requests from '../../global/requests';
 import Roku from '../../global/roku';
@@ -38,10 +39,11 @@ function Load() {
   const viewSt = store(v => v.viewSt);
   const isPcSt = store(v => v.isPcSt);
   const isAppSt = store(v => v.isAppSt);
+  const isLoadInitializedSt = store(v => v.isLoadInitializedSt);
+  const setIsLoadInitializedSt = store(v => v.setIsLoadInitializedSt);
   // const [inRange, setInRange] = useState(false);
 
   //useRef Variables
-  const initializedRef = useRef(false);
   const isLoadingRef = useRef(false);
   const isReadyRef = useRef(false);
 
@@ -162,7 +164,7 @@ function Load() {
   // init
 
   const init = useCallback(async () => {
-    supabaseChannels.subscribeToUsersChannel(userNameSt, wifiNameSt);
+    await peersChannel.subscribeToPeersChannel();
     const youtubeVideosLizTable = await load(true);
     if (isPcSt || wifiNameSt === 'Noky') {
       Roku.setWifi(true);
@@ -172,18 +174,18 @@ function Load() {
       Roku.startPlayStateListener();
     }
     isReadyRef.current = true;
-  }, [load, isPcSt, wifiNameSt, userNameSt]);
+  }, [load, isPcSt, wifiNameSt]);
 
   // useEffects
 
   useEffect(() => {
     async function fetchData() {
-      if (isReadyRef.current && !isLoadingRef.current && isConnectedToInternetSt && isInForegroundSt && initializedRef.current) {
+      if (isReadyRef.current && !isLoadingRef.current && isConnectedToInternetSt && isInForegroundSt && isLoadInitializedSt) {
         await load();
       }
     }
     fetchData();
-  }, [isInForegroundSt, load, isConnectedToInternetSt, isLoadingRef]);
+  }, [isInForegroundSt, load, isConnectedToInternetSt, isLoadingRef, isLoadInitializedSt]);
 
   useEffect(() => {
     if (isReadyRef.current) {
@@ -199,7 +201,7 @@ function Load() {
         Roku.setWifi(false);
       }
       const status = isInForegroundSt ? 'foreground' : 'background';
-      supabaseChannels.usersChannel.track({ name: userNameSt, status: status, date: new Date().toISOString(), wifiName: wifiNameSt });
+      peersChannel.peersChannel.track({ name: userNameSt, status: status, date: new Date().toISOString(), wifiName: wifiNameSt });
     }
   }, [wifiNameSt, networkTypeSt, isPcSt, isInForegroundSt, userNameSt, youtubeVideosLizSt]);
 
@@ -231,8 +233,8 @@ function Load() {
     };
   }, [isAppSt]);
 
-  if (!initializedRef.current) {
-    initializedRef.current = true;
+  if (!isLoadInitializedSt) {
+    setIsLoadInitializedSt(true);
     init();
   }
 

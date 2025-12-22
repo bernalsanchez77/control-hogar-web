@@ -1,9 +1,11 @@
 import './dev.css';
 import { store } from "../../../store/store";
+import connection from '../../../global/connection';
 
 function Dev() {
   const sendEnabledSt = store(v => v.sendEnabledSt);
   const setSendEnabledSt = store(v => v.setSendEnabledSt);
+  const wifiNameSt = store(v => v.wifiNameSt);
 
   const onEnableSend = () => {
     if (sendEnabledSt === true) {
@@ -13,9 +15,12 @@ function Dev() {
     }
   };
 
-  const onRemoveStorage = () => {
-    localStorage.setItem('user-type', '');
-    localStorage.setItem('user-name', '');
+  const onWifiChange = () => {
+    if (wifiNameSt === 'Noky') {
+      connection.onWifiNameChange('Cometa');
+    } else {
+      connection.onWifiNameChange('Noky');
+    }
   };
 
   return (
@@ -29,12 +34,12 @@ function Dev() {
             Enable Changes
           </button>
         </div>
-        <div className='dev-element dev-element--remove'>
+        <div className='dev-element dev-element--wifi'>
           <button
             onContextMenu={(e) => e.preventDefault()}
             className={`dev-button`}
-            onClick={() => onRemoveStorage()}>
-            Remove Storage
+            onClick={() => onWifiChange()}>
+            Wifi: {store.getState().wifiNameSt}
           </button>
         </div>
       </div>

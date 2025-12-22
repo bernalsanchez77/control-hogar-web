@@ -1,8 +1,10 @@
 import './parlantesSala.css';
 import requests from '../../../../global/requests';
+import utils from '../../../../global/utils';
 
 function ParlantesSala({ element }) {
   const changeControl = (device) => {
+    utils.triggerVibrate();
     if (element.state === 'on') {
       requests.sendIfttt({ device, key: 'state', value: 'off' });
       requests.updateTable({

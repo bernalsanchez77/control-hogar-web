@@ -3,84 +3,101 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  }
+}
+
 .controls-levels-wrapper {
   width: 240px;
 }
-  .controls-levels-row {
-    display: inline-block;
-  }
-  .controls-levels-row--top {
-    margin-bottom: 5px;
-  }
-  .controls-levels-row--middle {
-    font-size: 16px;
-    width: 240px;
-  }
-  .controls-levels-row--bottom {
-    margin-top: 5px;
-  }
-  .controls-levels-row--mute {
-    height: 20px;
-  }
-  .controls-levels-element {
-    float: left;
-    width: 70px;
-    margin: 0 5px;
-  }
-  .controls-levels-element--no-margin {
-    margin: 0 5px 0;
-  }
-  .controls-levels-element--mute {
-    margin-top: -2px;
-  }
-  .controls-levels-element--mute-icon {
-    transform: translate(0px, 32px);
-  }
-  .controls-levels-element--right {
-    float: right;
-  }
-  .controls-levels-button {
-    background-color: rgb(0, 44, 16, 0.8);
-    font-size: 15px;
-    padding: 3px;
-    width: 100%;
-    border: grey 1px solid;
-    height: 4vh;
-    border-radius: 5px;
-    user-select: none;
-    -webkit-user-select: none;
-    position: relative;
-  }
-  .controls-levels-button--img {
-    background-color: transparent;
-    border: none;
-  }
-  .controls-levels-img--no-button {
-    margin-top: 5px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    width: 3vh;
-    margin: auto;
-  }
-  .controls-levels-img--button {
-    margin-top: 5px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    width: 2.2vh;
-    margin: auto;
-  }
-  .controls-levels-span {
-      color: white
-  }
-  button.controls-levels-button:active {
-    background-color: white;
-    transition: background-color 0.1s;
-  }
-  
+
+.controls-levels-row {
+  display: inline-block;
+}
+
+.controls-levels-row--top {
+  margin-bottom: 5px;
+}
+
+.controls-levels-row--middle {
+  font-size: 16px;
+  width: 240px;
+}
+
+.controls-levels-row--bottom {
+  margin-top: 5px;
+}
+
+.controls-levels-row--mute {
+  height: 20px;
+}
+
+.controls-levels-element {
+  float: left;
+  width: 70px;
+  margin: 0 5px;
+}
+
+.controls-levels-element--no-margin {
+  margin: 0 5px 0;
+}
+
+.controls-levels-element--mute {
+  margin-top: -2px;
+}
+
+.controls-levels-element--mute-icon {
+  transform: translate(0px, 32px);
+}
+
+.controls-levels-element--right {
+  float: right;
+}
+
+.controls-levels-button {
+  background-color: rgb(0, 44, 16, 0.8);
+  font-size: 15px;
+  padding: 3px;
+  width: 100%;
+  border: grey 1px solid;
+  height: 4vh;
+  border-radius: 5px;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  position: relative;
+}
+
+.controls-levels-button--img {
+  background-color: transparent;
+  border: none;
+}
+
+.controls-levels-img--no-button {
+  margin-top: 5px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 3vh;
+  margin: auto;
+}
+
+.controls-levels-img--button {
+  margin-top: 5px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 2.2vh;
+  margin: auto;
+}
+
+.controls-levels-span {
+  color: white
+}
+
+button.controls-levels-button:active {
+  background-color: white;
+  transition: background-color 0.1s;
+}

@@ -26,6 +26,7 @@ export const store = create((set) => ({
   isAppSt: false,
   peersSt: [],
   leaderSt: '',
+  isLoadInitializedSt: false,
   viewSt: { selected: '', cable: { channels: { category: [] } }, roku: { apps: { selected: '', youtube: { mode: '', channel: '' } } }, devices: { device: '' } },
 
   // --- Actions ---
@@ -57,4 +58,5 @@ export const store = create((set) => ({
   setTableSt: (tableName, newTable) => set({ [tableName]: newTable }),
   setPeersSt: (v) => set({ peersSt: v }),
   setLeaderSt: (v) => set({ leaderSt: v }),
+  setIsLoadInitializedSt: (v) => set({ isLoadInitializedSt: v })
 }));

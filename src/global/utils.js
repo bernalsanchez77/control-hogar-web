@@ -1,5 +1,7 @@
 class Utils {
   supabaseChannels = {};
+  longClickTimeout = null;
+  longClick = false;
   isHome(lat, lon) {
     const latCentro = 9.9333;
     const lonCentro = -84.0845;
@@ -85,8 +87,10 @@ class Utils {
     return inRange;
   }
   triggerVibrate(length = 100) {
-    if (navigator.vibrate) {
+    if (window.cordova && navigator.vibrate) {
       navigator.vibrate([length]);
+    } else {
+      console.log('No se puede vibrar');
     }
   }
   getUser(screenSize) {
@@ -100,24 +104,6 @@ class Utils {
   }
   firstCharToUpperCase(text) {
     return text.charAt(0).toUpperCase() + text.slice(1)
-  }
-  async getIsConnectedToInternet() {
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 5000);
-
-      // Use a small, reliable file
-      await fetch('https://www.google.com/favicon.ico', {
-        mode: 'no-cors',
-        cache: "no-cache",
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeout);
-      return true;
-    } catch (err) {
-      return false;
-    }
   }
   timeToMs(timeString) {
     const parts = timeString.split(':');
@@ -169,12 +155,31 @@ class Utils {
       const percentage = (position * 100) / currentVideoDuration;
       normalizedPercentage = Math.round(Math.min(100, Math.max(0, (percentage))));
       console.log(normalizedPercentage + '%');
-      if (timeLeft && timeLeft < 6000) {
+      if (timeLeft && timeLeft < 10000) {
         console.log('terminando');
         return { normalizedPercentage, end: true };
       }
     }
     return { normalizedPercentage, end: false };
+  }
+  onTouchStart(value, e, onShortClick) {
+    e.preventDefault();
+    this.longClickTimeout = setTimeout(() => {
+      this.longClick = true;
+    }, 500);
+    onShortClick(false, value);
+  }
+  onTouchEnd(value, e, onShortClick, onLongClick) {
+    e.preventDefault();
+    clearTimeout(this.longClickTimeout);
+    if (this.longClick) {
+      if (onLongClick) {
+        onLongClick(value);
+      }
+    } else {
+      onShortClick(true, value);
+    }
+    this.longClick = false;
   }
 }
 const utils = new Utils();

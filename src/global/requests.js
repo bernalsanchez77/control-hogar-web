@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { store } from "../store/store";
-import utils from './utils';
 import connection from './connection';
 import { XMLParser } from 'fast-xml-parser';
 
@@ -17,7 +16,7 @@ class Requests {
     this.isPc = isPc;
   }
   async requestErrorHandler() {
-    const isConnectedToInternet = await utils.getIsConnectedToInternet();
+    const isConnectedToInternet = await connection.getIsConnectedToInternet();
     if (!isConnectedToInternet) {
       connection.onNoInternet();
     }
@@ -261,6 +260,26 @@ class Requests {
         } else {
           console.log('Cordova HTTP plugin not available');
         }
+      }
+    } else {
+      let url = '';
+      if (params.params) {
+        const par = new URLSearchParams(params.params);
+        url = `${rokuIpPc}/${params.key}/${params.value}?${par.toString()}`;
+      } else {
+        url = `${rokuIpPc}/${params.key}/${params.value}`;
+      }
+      if (store.getState().sendEnabledSt) {
+        const sendRequestPromise = new Promise((resolve, reject) => {
+          axios.post(url, {}, { headers: contentTypeX }).then(response => { resolve(true); }).catch(error => { reject(error); });
+        });
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Roku not responding")), 500)
+        );
+        Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
+        }).catch(async () => {
+          console.log('fallo sendIfttt ult por http');
+        });
       }
     }
   }

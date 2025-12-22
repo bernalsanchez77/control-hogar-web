@@ -1,11 +1,13 @@
 import { useRef } from 'react';
 import './luzCuarto.css';
 import requests from '../../../../global/requests';
+import utils from '../../../../global/utils';
 
 function LuzCuarto({ element, changeViewParent }) {
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   const changeControl = (device) => {
+    utils.triggerVibrate();
     if (element.state === 'on') {
       requests.sendIfttt({ device, key: 'state', value: 'off' });
       requests.updateTable({
