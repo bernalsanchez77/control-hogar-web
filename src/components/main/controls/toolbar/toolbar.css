@@ -50,6 +50,11 @@
   position: relative;
 }
 
+.controls-toolbar-button--connected {
+  border: #ffffffbd 1px solid;
+  box-shadow: 0px 0px 5px #00FF00;
+}
+
 .controls-toolbar-button--img {
   background-color: transparent;
   border: none;

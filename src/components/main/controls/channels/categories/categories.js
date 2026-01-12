@@ -9,11 +9,17 @@ function Categories() {
   const cableChannelsSt = store(v => v.cableChannelsSt);
   let selectedImg = '/imgs/channels/' + cableChannelsSt.find(ch => ch.state === 'selected')?.id + '.png';
   const viewSt = store(v => v.viewSt);
-  const onCategoryShortClick = async (category) => {
-    utils.triggerVibrate();
-    const newView = structuredClone(viewSt);
-    newView.cable.channels.category = category;
-    await viewRouter.changeView(newView);
+
+  const onShortClick = async (keyup, value) => {
+    if (keyup) {
+      utils.triggerVibrate();
+      const newView = structuredClone(viewSt);
+      newView.cable.channels.category = value;
+      await viewRouter.changeView(newView);
+    }
+  }
+
+  const onLongClick = (value) => {
   }
 
   return (
@@ -38,7 +44,8 @@ function Categories() {
                   return (
                     <div key={colIndex} className={`controls-channels-element controls-channels-element--${position}`}>
                       <button className='controls-channels-elements-button'
-                        onTouchStart={() => onCategoryShortClick(item.categories)}>
+                        onTouchStart={(e) => utils.onTouchStart(item.categories, e, onShortClick)}
+                        onTouchEnd={(e) => utils.onTouchEnd(item.categories, e, onShortClick, onLongClick)}>
                         {item.label}
                       </button>
                     </div>

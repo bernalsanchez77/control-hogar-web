@@ -9,6 +9,7 @@ import utils from '../../global/utils';
 import requests from '../../global/requests';
 import connection from '../../global/connection';
 import CordovaPlugins from '../../global/cordova-plugins';
+import events from '../../global/events';
 import './main.css';
 
 const user = utils.getUser(`${window.screen.width}x${window.screen.height}`);
@@ -73,6 +74,7 @@ function Main() {
       await CordovaPlugins.getPermissions();
       await CordovaPlugins.startWifiNameListener(connection.onWifiNameChange);
       await CordovaPlugins.startNetworkTypeListener(connection.onNetworkTypeChange);
+      await CordovaPlugins.startPlayStateListener(events.onPlayStateChange);
     }
 
     // set url path to home

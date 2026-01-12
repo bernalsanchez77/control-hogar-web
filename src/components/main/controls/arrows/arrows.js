@@ -10,10 +10,11 @@ function Arrows() {
   const device = 'rokuSala';
 
   const onShortClick = (keyup, value) => {
+    const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
     if (keyup) {
       if (wifiNameSt === 'Noky') {
         utils.triggerVibrate();
-        requests.fetchRoku({ key: 'keypress', value: value.charAt(0).toUpperCase() + value.slice(1) });
+        requests.fetchRoku({ key: 'keypress', value: rokuValue });
         roku.updatePlayState(1000);
       } else {
         utils.triggerVibrate();
@@ -25,15 +26,6 @@ function Arrows() {
   const onLongClick = (value) => {
   }
 
-  const onTouchStart = (value, e) => {
-    utils.onTouchStart(value, e, onShortClick);
-  }
-
-  const onTouchEnd = (value, e) => {
-    utils.onTouchEnd(value, e, onShortClick, onLongClick);
-  }
-
-
   return (
     <div className='controls-arrows'>
       <div className='controls-arrows-wrapper'>
@@ -41,8 +33,8 @@ function Arrows() {
           <div className='controls-arrows-element'>
             <button
               className="controls-arrows-button"
-              onTouchStart={(e) => onTouchStart('up', e)}
-              onTouchEnd={(e) => onTouchEnd('up', e)}>
+              onTouchStart={(e) => utils.onTouchStart('up', e, onShortClick)}
+              onTouchEnd={(e) => utils.onTouchEnd('up', e, onShortClick, onLongClick)}>
               &#9650;
             </button>
           </div>
@@ -51,24 +43,24 @@ function Arrows() {
           <div className='controls-arrows-element controls-arrows-element--left'>
             <button
               className="controls-arrows-button control-arrows-button--left"
-              onTouchStart={(e) => onTouchStart('left', e)}
-              onTouchEnd={(e) => onTouchEnd('left', e)}>
+              onTouchStart={(e) => utils.onTouchStart('left', e, onShortClick)}
+              onTouchEnd={(e) => utils.onTouchEnd('left', e, onShortClick, onLongClick)}>
               &#9664;
             </button>
           </div>
           <div className='controls-arrows-element'>
             <button
               className="controls-arrows-button controls-arrows-button--circle"
-              onTouchStart={(e) => onTouchStart('select', e)}
-              onTouchEnd={(e) => onTouchEnd('select', e)}>
+              onTouchStart={(e) => utils.onTouchStart('select', e, onShortClick)}
+              onTouchEnd={(e) => utils.onTouchEnd('select', e, onShortClick, onLongClick)}>
               ok
             </button>
           </div>
           <div className='controls-arrows-element controls-arrows-element--right'>
             <button
               className="controls-arrows-button"
-              onTouchStart={(e) => onTouchStart('right', e)}
-              onTouchEnd={(e) => onTouchEnd('right', e)}>
+              onTouchStart={(e) => utils.onTouchStart('right', e, onShortClick)}
+              onTouchEnd={(e) => utils.onTouchEnd('right', e, onShortClick, onLongClick)}>
               &#9654;
             </button>
           </div>
@@ -77,8 +69,8 @@ function Arrows() {
           <div className='controls-arrows-element'>
             <button
               className="controls-arrows-button"
-              onTouchStart={(e) => onTouchStart('down', e)}
-              onTouchEnd={(e) => onTouchEnd('down', e)}>
+              onTouchStart={(e) => utils.onTouchStart('down', e, onShortClick)}
+              onTouchEnd={(e) => utils.onTouchEnd('down', e, onShortClick, onLongClick)}>
               &#9660;
             </button>
           </div>

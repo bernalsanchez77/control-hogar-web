@@ -16,15 +16,21 @@ function Levels() {
   const timeout6s = useRef(null);
   const volumeChange = useRef(1);
 
-  const onMuteShortClick = () => {
+  const onMuteShortClick = (keyup, key) => {
     if (screen.state === 'on') {
-      utils.triggerVibrate();
-      const device = screenSelectedSt;
-      const value = screen.mute === 'on' ? 'off' : 'on';
-      requests.sendIfttt({ device, key: 'mute', value });
-      requests.updateTable({ new: { newId: device, newTable: 'screens', newMute: value } });
+      if (keyup) {
+        utils.triggerVibrate();
+        const device = screenSelectedSt;
+        const value = screen.mute === 'on' ? 'off' : 'on';
+        requests.sendIfttt({ device, key, value });
+        requests.updateTable({ new: { newId: device, newTable: 'screens', newMute: value } });
+      }
     }
   }
+
+  const onMuteLongClick = (value) => {
+  }
+
   const onOptionsShortClick = (value) => {
     utils.triggerVibrate();
     const device = viewSt.selected === 'roku' ? 'rokuSala' : 'cableSala';
@@ -130,7 +136,8 @@ function Levels() {
           <div className='controls-levels-element controls-levels-element--mute-icon'>
             <button
               className="controls-levels-button controls-levels-button--img"
-              onTouchStart={() => onMuteShortClick()}>
+              onTouchStart={(e) => utils.onTouchStart('mute', e, onMuteShortClick)}
+              onTouchEnd={(e) => utils.onTouchEnd('mute', e, onMuteShortClick, onMuteLongClick)}>
               {screen.mute === 'off' &&
                 <img
                   className='controls-levels-img controls-levels-img--no-button'

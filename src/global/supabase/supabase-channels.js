@@ -48,8 +48,8 @@ class SupabaseChannels {
           }
           switch (status) {
             case 'SUBSCRIBED':
-              if (first) {
-                // console.log('Subscribed to:', tableName);
+              if (first && tableName === 'hdmiSala') {
+                console.log('Subscribed to:', tableName);
               }
               resolve({ success: true, msg: status });
               break;
@@ -78,7 +78,9 @@ class SupabaseChannels {
     if (this.supabaseChannels[tableName] && !this.supabaseChannels[tableName].errorHandled) {
       this.supabaseChannels[tableName].errorType = type;
       this.supabaseChannels[tableName].errorHandled = true;
-      console.warn('Channel ' + tableName + ' failed type: ' + type);
+      if (tableName === 'hdmiSala') {
+        console.warn('Channel ' + tableName + ' failed, type: ' + type);
+      }
       await this.unsubscribeFromSupabaseChannel(tableName);
       setTimeout(async () => {
         const isConnectedToInternet = await connection.getIsConnectedToInternet();

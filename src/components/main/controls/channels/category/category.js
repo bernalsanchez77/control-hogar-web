@@ -7,15 +7,20 @@ function Category() {
   const category = store(v => v.viewSt.cable.channels.category);
   const cableChannelsSt = store(v => v.cableChannelsSt);
   const selectedChannel = cableChannelsSt.find(ch => ch.state === 'selected');
-  const onChannelShortClick = (channel) => {
-    utils.triggerVibrate();
-    const device = 'channelsSala';
-    const ifttt = cableChannelsSt.find(ch => ch.id === channel).ifttt;
-    requests.sendIfttt({ device: device + ifttt, key: 'selected', value: channel });
-    requests.updateTable({
-      current: { currentId: selectedChannel.id, currentTable: 'cableChannels' },
-      new: { newId: channel, newTable: 'cableChannels' }
-    });
+  const onShortClick = (keyup, value) => {
+    if (keyup) {
+      utils.triggerVibrate();
+      const device = 'channelsSala';
+      const ifttt = cableChannelsSt.find(ch => ch.id === value).ifttt;
+      requests.sendIfttt({ device: device + ifttt, key: 'selected', value: value });
+      requests.updateTable({
+        current: { currentId: selectedChannel.id, currentTable: 'cableChannels' },
+        new: { newId: value, newTable: 'cableChannels' }
+      });
+    }
+  }
+
+  const onLongClick = (value) => {
   }
 
   return (
@@ -27,7 +32,8 @@ function Category() {
               <li key={key} className='controls-channels-category'>
                 <button
                   className={`controls-channels-category-button ${selectedChannel?.id === channel.id ? 'controls-channels-category-button--selected' : ''}`}
-                  onTouchStart={() => onChannelShortClick(channel.id)}>
+                  onTouchStart={(e) => utils.onTouchStart(channel.id, e, onShortClick)}
+                  onTouchEnd={(e) => utils.onTouchEnd(channel.id, e, onShortClick, onLongClick)}>
                   <img
                     className='controls-channels-category-img'
                     src={channel.img}

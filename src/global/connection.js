@@ -31,6 +31,8 @@ class Connection {
       console.log('internet interval started');
       let wifiName = '';
       let networkType = '';
+      store.getState().setWifiNameSt(wifiName);
+      store.getState().setNetworkTypeSt(networkType);
       store.getState().setIsConnectedToInternetSt(false);
       this.isConnectedToInternetInterval = setInterval(async () => {
         const isConnectedToInternet = await this.getIsConnectedToInternet();

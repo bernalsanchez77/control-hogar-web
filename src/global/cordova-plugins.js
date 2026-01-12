@@ -12,7 +12,7 @@ class CordovaPlugins {
             async (status) => {
               if (status.hasPermission) {
                 let backgroundInterval = null;
-                window.cordova.plugins.backgroundMode.setDefaults({silent: true});
+                window.cordova.plugins.backgroundMode.setDefaults({ silent: true });
                 window.cordova.plugins.backgroundMode.enable();
                 window.cordova.plugins.backgroundMode.on('activate', function () {
                   window.cordova.plugins.backgroundMode.disableWebViewOptimizations();
@@ -28,7 +28,7 @@ class CordovaPlugins {
                     backgroundInterval = null;
                   }
                 });
-                await window.cordova.plugins.foregroundFunctionality.startService(function(msg) {}, function(err) {});
+                await window.cordova.plugins.foregroundFunctionality.startService(function (msg) { }, function (err) { });
               } else {
                 console.log('no notification permission');
                 return false;
@@ -40,7 +40,7 @@ class CordovaPlugins {
           return false;
         }
       },
-      async () => {console.error("Permission request failed");}
+      async () => { console.error("Permission request failed"); }
     );
   }
 
@@ -66,6 +66,42 @@ class CordovaPlugins {
       },
       (err) => console.error('SSID listener error:', err)
     );
+  }
+
+  startPlayStateListener(onPlayCommand) {
+    // 1. Remove any existing listener to prevent duplicates (double-clicks)
+    if (this.playHandler) {
+      window.removeEventListener('roku-toggle-play', this.playHandler);
+    }
+
+    // 2. Create the handler function
+    this.playHandler = () => {
+      console.log("🔔 Play/Pause command received from Notification!");
+      onPlayCommand(); // Call the function you passed from React
+    };
+
+    // 3. Attach it to the window
+    window.addEventListener('roku-toggle-play', this.playHandler);
+  }
+
+  async updateNotificationStatus(isPlaying) {
+    return new Promise((resolve, reject) => {
+      window.cordova.plugins.foregroundFunctionality.updatePlayState(
+        isPlaying,
+        resolve,
+        reject
+      );
+    });
+  }
+
+  async updateScreenSelected(screen) {
+    return new Promise((resolve, reject) => {
+      window.cordova.plugins.foregroundFunctionality.updateScreenSelected(
+        screen,
+        resolve,
+        reject
+      );
+    });
   }
 
   async getWifiName() {

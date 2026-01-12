@@ -4,7 +4,7 @@ export const store = create((set) => ({
   sendEnabledSt: true,
   isLoadingSt: false,
   themeSt: 'black',
-  isInForegroundSt: false,
+  isInForegroundSt: true,
   userTypeSt: '',
   userNameSt: '',
   screenSelectedSt: '',
@@ -26,7 +26,6 @@ export const store = create((set) => ({
   isAppSt: false,
   peersSt: [],
   leaderSt: '',
-  isLoadInitializedSt: false,
   viewSt: { selected: '', cable: { channels: { category: [] } }, roku: { apps: { selected: '', youtube: { mode: '', channel: '' } } }, devices: { device: '' } },
 
   // --- Actions ---
@@ -57,6 +56,5 @@ export const store = create((set) => ({
   updateTablesSt: (tableName, newItem) => set((state) => ({ [tableName]: state[tableName].map((item) => item.id === newItem.id ? newItem : item) })),
   setTableSt: (tableName, newTable) => set({ [tableName]: newTable }),
   setPeersSt: (v) => set({ peersSt: v }),
-  setLeaderSt: (v) => set({ leaderSt: v }),
-  setIsLoadInitializedSt: (v) => set({ isLoadInitializedSt: v })
+  setLeaderSt: (v) => set({ leaderSt: v })
 }));

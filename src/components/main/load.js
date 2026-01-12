@@ -3,7 +3,7 @@ import { store } from "../../store/store";
 import Screens from './screens/screens';
 import Devices from './devices/devices';
 import Options from './options/options';
-import Notifications from './notifications/notifications';
+// import Notifications from './notifications/notifications';
 import Controls from './controls/controls';
 import Loading from './views/loading/loading';
 import SupabaseTimeout from './views/supabaseTimeout/supabaseTimeout';
@@ -13,6 +13,7 @@ import peersChannel from '../../global/supabase/peers-channel';
 import viewRouter from '../../global/view-router';
 import requests from '../../global/requests';
 import Roku from '../../global/roku';
+import CordovaPlugins from '../../global/cordova-plugins';
 import Tables from '../../global/tables';
 import events from '../../global/events';
 import './load.css';
@@ -32,20 +33,19 @@ function Load() {
   const supabaseTimeoutSt = store(v => v.supabaseTimeoutSt);
   const setSupabaseTimeoutSt = store(v => v.supabaseSetTimeoutSt);
   const updateTablesSt = store((v) => v.updateTablesSt);
-  const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
   const setTableSt = store((v) => v.setTableSt);
   const screensSt = store(v => v.screensSt);
   const devicesSt = store(v => v.devicesSt);
   const viewSt = store(v => v.viewSt);
   const isPcSt = store(v => v.isPcSt);
   const isAppSt = store(v => v.isAppSt);
-  const isLoadInitializedSt = store(v => v.isLoadInitializedSt);
-  const setIsLoadInitializedSt = store(v => v.setIsLoadInitializedSt);
   // const [inRange, setInRange] = useState(false);
 
   //useRef Variables
   const isLoadingRef = useRef(false);
+  const isLoadInitializedRef = useRef(false);
   const isReadyRef = useRef(false);
+  const loadFnRef = useRef(null);
 
   const subscribeToSupabaseChannel = useCallback(async (tableName, callback) => {
     let response = '';
@@ -147,13 +147,17 @@ function Load() {
         Tables.onYoutubeVideosLizTableChange(change);
       });
     }
-    if (isPcSt || wifiNameSt === 'Noky') {
+    if (isAppSt) {
+      const isPlaying = hdmiSalaTable.table.data.find(el => el.id === 'roku').playState === 'play';
+      CordovaPlugins.updateNotificationStatus(isPlaying);
+    }
+    if (wifiNameSt === 'Noky') {
       Roku.setRoku();
     }
     setIsLoadingSt(false);
     isLoadingRef.current = false;
     return youtubeVideosLizTable;
-  }, [setData, setIsLoadingSt, viewSt, isPcSt, wifiNameSt]);
+  }, [setData, setIsLoadingSt, viewSt, wifiNameSt, isAppSt]);
 
   // event functions
 
@@ -166,52 +170,35 @@ function Load() {
   const init = useCallback(async () => {
     await peersChannel.subscribeToPeersChannel();
     const youtubeVideosLizTable = await load(true);
-    if (isPcSt || wifiNameSt === 'Noky') {
-      Roku.setWifi(true);
+    if (wifiNameSt === 'Noky') {
+      Roku.setIsConnectedToNokyWifi(true);
     }
     const currentVideo = youtubeVideosLizTable.find(vid => vid.state === 'selected');
     if (currentVideo) {
       Roku.startPlayStateListener();
     }
     isReadyRef.current = true;
-  }, [load, isPcSt, wifiNameSt]);
+  }, [load, wifiNameSt]);
 
   // useEffects
 
   useEffect(() => {
-    async function fetchData() {
-      if (isReadyRef.current && !isLoadingRef.current && isConnectedToInternetSt && isInForegroundSt && isLoadInitializedSt) {
-        await load();
-      }
+    if (isReadyRef.current && isLoadInitializedRef.current && isInForegroundSt && isConnectedToInternetSt) {
+      loadFnRef.current();
     }
-    fetchData();
-  }, [isInForegroundSt, load, isConnectedToInternetSt, isLoadingRef, isLoadInitializedSt]);
+  }, [isInForegroundSt, isConnectedToInternetSt]);
 
   useEffect(() => {
     if (isReadyRef.current) {
-      if (isPcSt || (wifiNameSt === 'Noky' && networkTypeSt === 'wifi')) {
-        Roku.setWifi(true);
-        setTimeout(async () => {
-          // const currentVideo = youtubeVideosLizSt.find(vid => vid.state === 'selected');
-          // if (currentVideo) {
-          //   Roku.startPlayStateListener();
-          // }
-        }, 2000);
+      if (isConnectedToInternetSt && ((isPcSt && wifiNameSt === 'Noky') || (wifiNameSt === 'Noky' && networkTypeSt === 'wifi'))) {
+        Roku.setIsConnectedToNokyWifi(true);
       } else {
-        Roku.setWifi(false);
+        Roku.setIsConnectedToNokyWifi(false);
       }
       const status = isInForegroundSt ? 'foreground' : 'background';
       peersChannel.peersChannel.track({ name: userNameSt, status: status, date: new Date().toISOString(), wifiName: wifiNameSt });
     }
-  }, [wifiNameSt, networkTypeSt, isPcSt, isInForegroundSt, userNameSt, youtubeVideosLizSt]);
-
-  useEffect(() => {
-    return () => {
-      if (isReadyRef.current) {
-        Roku.setWifi(false);
-      }
-    }
-  }, [isConnectedToInternetSt]);
+  }, [wifiNameSt, networkTypeSt, isPcSt, isInForegroundSt, userNameSt, isConnectedToInternetSt]);
 
   useEffect(() => {
     if (isAppSt) {
@@ -233,8 +220,9 @@ function Load() {
     };
   }, [isAppSt]);
 
-  if (!isLoadInitializedSt) {
-    setIsLoadInitializedSt(true);
+  loadFnRef.current = load;
+  if (!isLoadInitializedRef.current) {
+    isLoadInitializedRef.current = true;
     init();
   }
 
@@ -242,7 +230,7 @@ function Load() {
     <div className='load'>
       {viewSt && !isLoadingSt && (userTypeSt !== 'guest' || (userTypeSt === 'guest' && wifiNameSt === 'Noky')) && !supabaseTimeoutSt ?
         <div className='load-components'>
-          <Notifications></Notifications>
+          {/* <Notifications></Notifications> */}
           {screensSt.length &&
             <Screens></Screens>
           }

@@ -2,11 +2,19 @@
 import viewRouter from './view-router';
 import { store } from '../store/store';
 import requests from './requests';
+import CordovaPlugins from './cordova-plugins';
 import roku from './roku';
 class Tables {
   async onHdmiSalaTableChange(change) {
     if (store.getState().viewSt.selected !== change.id) {
       await viewRouter.onHdmiSalaTableChange(store.getState().viewSt, change.id);
+    }
+    if (store.getState().isAppSt) {
+      // const currentPlayState = store.getState().hdmiSalaSt.data.find(el => el.id === 'roku').playState;
+      // if (change.playState !== currentPlayState) {
+      const isPlaying = change.playState === 'play';
+      CordovaPlugins.updateNotificationStatus(isPlaying);
+      // }
     }
   }
 

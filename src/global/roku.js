@@ -9,12 +9,12 @@ let testCount = 40000;
 
 class Roku {
   constructor() {
-    this.wifi = '';
+    this.isConnectedToNokyWifi = '';
     this.testCount = testCount;
   }
 
   async getPlayState(data) {
-    if (this.wifi) {
+    if (this.isConnectedToNokyWifi) {
       try {
         const playState = await requests.getRokuData('media-player');
         if (playState && playState.status === 200) {
@@ -107,9 +107,9 @@ class Roku {
     }
   }
 
-  setWifi(wifi) {
-    this.wifi = wifi;
-    if (!wifi) {
+  setIsConnectedToNokyWifi(isConnectedToNokyWifi) {
+    this.isConnectedToNokyWifi = isConnectedToNokyWifi;
+    if (!isConnectedToNokyWifi) {
       // this.stopPlayStateListener();
     }
   }

@@ -1,5 +1,6 @@
 import { store } from "../../../store/store";
 import utils from '../../../global/utils';
+import CordovaPlugins from '../../../global/cordova-plugins';
 import './screens.css';
 function Screens({ changeScreenParent }) {
   const isInForegroundSt = store(v => v.isInForegroundSt);
@@ -17,6 +18,7 @@ function Screens({ changeScreenParent }) {
       utils.triggerVibrate();
       setScreenSelectedSt(screen);
       localStorage.setItem('screen', screen);
+      CordovaPlugins.updateScreenSelected(screen);
     }
   };
   return (

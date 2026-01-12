@@ -14,7 +14,8 @@ function Apps() {
     if (keyup) {
       utils.triggerVibrate();
       const device = 'rokuSala';
-      let app = rokuAppsSt.find(app => app.id === value);
+      const app = rokuAppsSt.find(app => app.id === value);
+      const currentId = rokuAppsSt.find(app => app.state === 'selected').id;
       setRokuSearchModeSt('roku');
       if (wifiNameSt === 'Noky') {
         requests.fetchRoku({ key: 'launch', value: app.rokuId });
@@ -22,7 +23,7 @@ function Apps() {
         requests.sendIfttt({ device, key: 'app', value });
       }
       requests.updateTable({
-        current: { currentId: rokuAppsSt.find(app => app.state === 'selected').id, currentTable: 'rokuApps' },
+        current: { currentId, currentTable: 'rokuApps' },
         new: { newId: app.id, newTable: 'rokuApps' }
       });
       if (app.id !== 'youtube') {
@@ -32,18 +33,11 @@ function Apps() {
     }
   }
 
-  const onLongClick = async (app) => {
+  const onLongClick = async (value) => {
     utils.triggerVibrate();
     const newView = structuredClone(viewSt);
-    newView.roku.apps.selected = app;
+    newView.roku.apps.selected = value;
     await viewRouter.changeView(newView);
-  }
-
-  const onTouchStart = (value, e) => {
-    utils.onTouchStart(value, e, onShortClick);
-  }
-  const onTouchEnd = (value, e) => {
-    utils.onTouchEnd(value, e, onShortClick, onLongClick);
   }
 
   return (
@@ -54,8 +48,8 @@ function Apps() {
             <div className='controls-apps-element'>
               <button
                 className={`controls-apps-button ${app.state === 'selected' ? "controls-apps-button--on" : "controls-apps-button--off"}`}
-                onTouchStart={(e) => onTouchStart(app.id, e)}
-                onTouchEnd={(e) => onTouchEnd(app.id, e)}>
+                onTouchStart={(e) => utils.onTouchStart(app.id, e, onShortClick)}
+                onTouchEnd={(e) => utils.onTouchEnd(app.id, e, onShortClick, onLongClick)}>
                 <img
                   className='controls-apps-img controls-apps-img--button'
                   src={'https://control-hogar-psi.vercel.app/imgs/apps/' + app.id + '.png'}

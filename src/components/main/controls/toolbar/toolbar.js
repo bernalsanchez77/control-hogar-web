@@ -19,20 +19,24 @@ function Toolbar() {
 
   const onShortClick = (keyup, value) => {
     const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
-    if (wifiNameSt === 'Noky') {
-      if (value === 'play') {
-        if (keyup) {
-          utils.triggerVibrate();
+    if (keyup) {
+      utils.triggerVibrate();
+      if (wifiNameSt === 'Noky') {
+        if (value === 'play') {
           requests.fetchRoku({ key: 'keypress', value: 'Play' });
           roku.updatePlayState(1000);
+        } else {
+          requests.fetchRoku({ key: 'keydown', value: rokuValue });
         }
       } else {
-        utils.triggerVibrate();
-        requests.fetchRoku({ key: 'keydown', value: rokuValue });
+        requests.sendIfttt({ device, key: 'command', value });
+        if (value === 'play') {
+          const newPlayState = rokuRow.playState === "play" ? "pause" : "play";
+          requests.updateTable({
+            new: { newId: rokuRow.id, newTable: 'hdmiSala', newPlayState }
+          });
+        }
       }
-    } else {
-      utils.triggerVibrate();
-      requests.sendIfttt({ device, key: 'command', value });
     }
   }
 
@@ -49,14 +53,6 @@ function Toolbar() {
         roku.updatePlayState(1000);
       }
     }
-  }
-
-  const onTouchStart = (value, e) => {
-    utils.onTouchStart(value, e, onShortClick);
-  }
-
-  const onTouchEnd = (value, e) => {
-    utils.onTouchEnd(value, e, onShortClick, onLongClick);
   }
 
   const getNextQueue = useCallback((currentQueue) => {
@@ -104,9 +100,9 @@ function Toolbar() {
       <div className='controls-toolbar-row'>
         <div className='controls-toolbar-element controls-toolbar-element--left'>
           <button
-            className='controls-toolbar-button'
-            onTouchStart={(e) => onTouchStart('rev', e)}
-            onTouchEnd={(e) => onTouchEnd('rev', e)}>
+            className={`controls-toolbar-button ${wifiNameSt === 'Noky' ? 'controls-toolbar-button--connected' : ''}`}
+            onTouchStart={(e) => utils.onTouchStart('rev', e, onShortClick)}
+            onTouchEnd={(e) => utils.onTouchEnd('rev', e, onShortClick, onLongClick)}>
             <img
               className='controls-toolbar-img controls-toolbar-img--button'
               src="/imgs/rewind-50.png"
@@ -116,9 +112,9 @@ function Toolbar() {
         </div>
         <div className='controls-toolbar-element'>
           <button
-            className={`controls-toolbar-button`}
-            onTouchStart={(e) => onTouchStart('play', e)}
-            onTouchEnd={(e) => onTouchEnd('play', e)}>
+            className={`controls-toolbar-button ${wifiNameSt === 'Noky' ? 'controls-toolbar-button--connected' : ''}`}
+            onTouchStart={(e) => utils.onTouchStart('play', e, onShortClick)}
+            onTouchEnd={(e) => utils.onTouchEnd('play', e, onShortClick, onLongClick)}>
             {rokuRow.playState === 'play' &&
               <img
                 className='controls-toolbar-img controls-toolbar-img--button'
@@ -137,9 +133,9 @@ function Toolbar() {
         </div>
         <div className='controls-toolbar-element controls-toolbar-element--right'>
           <button
-            className={'controls-toolbar-button'}
-            onTouchStart={(e) => onTouchStart('fwd', e)}
-            onTouchEnd={(e) => onTouchEnd('fwd', e)}>
+            className={`controls-toolbar-button ${wifiNameSt === 'Noky' ? 'controls-toolbar-button--connected' : ''}`}
+            onTouchStart={(e) => utils.onTouchStart('fwd', e, onShortClick)}
+            onTouchEnd={(e) => utils.onTouchEnd('fwd', e, onShortClick, onLongClick)}>
             <img
               className='controls-toolbar-img controls-toolbar-img--button'
               src="/imgs/forward-50.png"
