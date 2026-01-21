@@ -48,10 +48,8 @@ class PeersChannel {
                 //console.log(leftPresences[0].name, 'left');
             })
             .on('presence', { event: 'sync' }, () => {
-                console.log('sync');
                 const newState = this.peersChannel.presenceState();
                 const realPeers = this.getRealPeers(newState);
-                console.log('realPeers: ', realPeers);
                 currentPeers = Object.values(newState).flat();
                 const previousIds = new Set(previousPeers.map(p => p.name));
                 const currentIds = new Set(currentPeers.map(p => p.name));
@@ -83,22 +81,22 @@ class PeersChannel {
                         });
                         break;
                     case 'CHANNEL_ERROR':
+                        console.log('peers error');
                         if (this.peersChannel.status !== 'unsubscribed') {
-                            console.log('CHANNEL_ERROR');
                             this.peersChannel.status = 'unsubscribed';
                             supabase.removeChannel(this.peersChannel);
                         }
                         break;
                     case 'TIMED_OUT':
+                        console.log('peers time out');
                         if (this.peersChannel.status !== 'unsubscribed') {
-                            console.log('TIMED_OUT');
                             this.peersChannel.status = 'unsubscribed';
                             supabase.removeChannel(this.peersChannel);
                         }
                         break;
                     case 'CLOSED':
+                        console.log('peers closed');
                         if (this.peersChannel.status !== 'unsubscribed') {
-                            console.log('CLOSED');
                             this.peersChannel.status = 'unsubscribed';
                             supabase.removeChannel(this.peersChannel);
                         }

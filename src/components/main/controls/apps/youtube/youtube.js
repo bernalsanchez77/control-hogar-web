@@ -63,14 +63,11 @@ function Youtube() {
   const onTouchEnd = (e, type, video) => {
     e.preventDefault();
     clearTimeout(timeout3s.current);
-    console.log('touch moved', touchMoved);
     if (!touchMoved) {
       if (longClick.current) {
-        console.log('long click');
         utils.triggerVibrate();
         youtube.handleQueue(video);
       } else {
-        console.log('short click');
         if (type === 'channel') {
           utils.triggerVibrate();
           onChannelShortClick(video.id);

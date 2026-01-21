@@ -9,7 +9,6 @@ import utils from '../../global/utils';
 import requests from '../../global/requests';
 import connection from '../../global/connection';
 import CordovaPlugins from '../../global/cordova-plugins';
-import events from '../../global/events';
 import './main.css';
 
 const user = utils.getUser(`${window.screen.width}x${window.screen.height}`);
@@ -74,7 +73,6 @@ function Main() {
       await CordovaPlugins.getPermissions();
       await CordovaPlugins.startWifiNameListener(connection.onWifiNameChange);
       await CordovaPlugins.startNetworkTypeListener(connection.onNetworkTypeChange);
-      await CordovaPlugins.startPlayStateListener(events.onPlayStateChange);
     }
 
     // set url path to home
@@ -85,12 +83,13 @@ function Main() {
         window.history.replaceState(null, "", window.location.pathname + window.location.search);
       });
     }
+    const screenId = localStorage.getItem('screen-id') || 'teleSala';
 
     setIsAppSt(isApp);
     setIsPcSt(window.location.hostname === 'localhost' && !isApp);
     await connection.updateConnection();
     setThemeSt(localStorage.getItem('theme'));
-    setScreenSelectedSt(localStorage.getItem('screen') || 'teleSala');
+    setScreenSelectedSt(screenId);
     setUserTypeSt(localStorage.getItem('user-type'));
     setUserNameSt(userName);
 
@@ -105,6 +104,9 @@ function Main() {
     setTimeout(() => {
       setIsReadySt(true);
     }, 0);
+    if (localStorage.getItem('user-type') !== 'guest' && localStorage.getItem('user-type') !== 'owner') {
+      eruda.init();
+    }
   }, [setUserNameSt, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt]);
 
   useEffect(() => {
@@ -127,7 +129,6 @@ function Main() {
 
   if (!initializedRef.current) {
     const isApp = window.cordova ? true : false;
-    eruda.init();
     if (isApp) {
       document.addEventListener('deviceready', async () => {
         init(isApp);

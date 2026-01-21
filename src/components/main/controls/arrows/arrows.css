@@ -3,50 +3,65 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  }
-  .controls-arrows-wrapper {
-  }
-  .controls-arrows-row {
-    display: inline-block;
-    margin: 5px 0;
-  }
-  .controls-arrows-row--top {
-    margin: 0 20% 5px;
-  }
-  .controls-arrows-row--bottom {
-    margin: 5px 20% 0;
-  }
-  .controls-arrows-element {
-    float: left;
-    width: 70px;
-    margin: 0 5px;
-  }
-  .controls-arrows-element--left {
-    margin-top: 5px;
-  }
-  .controls-arrows-element--right {
-    margin-top: 5px;
-  }
-  .controls-arrows-button {
-    background-color: rgb(0, 44, 16, 0.8);
-    font-size: 15px;
-    padding: 3px;
-    width: 100%;
-    border: grey 1px solid;
-    height: 4vh;
-    border-radius: 5px;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-  .controls-arrows-button--circle {
-    border-radius: 25px;
-    height: 5vh;
-    width: 5vh;
-  }
-  button.controls-arrows-button:active {
-    background-color: white;
-    transition: background-color 0.1s;
-  }
-  .controls-arrows-button--on {
-    border: white 1px solid;
-  }
+}
+
+.controls-arrows-wrapper {}
+
+.controls-arrows-row {
+  display: inline-block;
+  margin: 5px 0;
+}
+
+.controls-arrows-row--top {
+  margin: 0 20% 5px;
+}
+
+.controls-arrows-row--bottom {
+  margin: 5px 20% 0;
+}
+
+.controls-arrows-element {
+  float: left;
+  width: 70px;
+  margin: 0 5px;
+}
+
+.controls-arrows-element--left {
+  margin-top: 5px;
+}
+
+.controls-arrows-element--right {
+  margin-top: 5px;
+}
+
+.controls-arrows-button {
+  background-color: rgb(0, 44, 16, 0.8);
+  font-size: 15px;
+  padding: 3px;
+  width: 100%;
+  border: grey 1px solid;
+  height: 4vh;
+  border-radius: 5px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.controls-arrows-button--leader {
+  border: #ffffffbd 1px solid;
+  box-shadow: 0px 0px 5px #00FF00;
+}
+
+.controls-arrows-button--circle {
+  border-radius: 25px;
+  height: 5vh;
+  width: 5vh;
+}
+
+button.controls-arrows-button:active {
+  background-color: white;
+  transition: background-color 0.1s;
+}
+
+.controls-arrows-button--on {
+  border: white 1px solid;
+}

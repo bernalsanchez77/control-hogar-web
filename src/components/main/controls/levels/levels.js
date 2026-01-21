@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { store } from "../../../../store/store";
 import utils from '../../../../global/utils';
 import requests from '../../../../global/requests';
@@ -16,7 +16,7 @@ function Levels() {
   const timeout6s = useRef(null);
   const volumeChange = useRef(1);
 
-  const onMuteShortClick = (keyup, key) => {
+  const onMuteShortClick = useCallback(async (keyup, key) => {
     if (screen.state === 'on') {
       if (keyup) {
         utils.triggerVibrate();
@@ -26,7 +26,7 @@ function Levels() {
         requests.updateTable({ new: { newId: device, newTable: 'screens', newMute: value } });
       }
     }
-  }
+  }, [screenSelectedSt, screen])
 
   const onMuteLongClick = (value) => {
   }
@@ -120,6 +120,14 @@ function Levels() {
       }
     }
   }
+
+  useEffect(() => {
+    const performMute = () => {
+      onMuteShortClick(true, 'mute');
+    };
+    window.addEventListener('mute-state-change', performMute);
+    return () => window.removeEventListener('mute-state-change', performMute);
+  }, [onMuteShortClick]);
 
   return (
     <div className='controls-levels'>

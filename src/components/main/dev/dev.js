@@ -39,7 +39,7 @@ function Dev() {
             onContextMenu={(e) => e.preventDefault()}
             className={`dev-button`}
             onClick={() => onWifiChange()}>
-            Wifi: {store.getState().wifiNameSt}
+            Wifi: {wifiNameSt}
           </button>
         </div>
       </div>

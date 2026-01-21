@@ -17,7 +17,7 @@ function Toolbar() {
   const [normalizedPercentageSt, setNormalizedPercentageSt] = useState(Math.min(100, Math.max(0, 0)));
   const device = 'rokuSala';
 
-  const onShortClick = (keyup, value) => {
+  const onShortClick = useCallback((keyup, value) => {
     const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
     if (keyup) {
       utils.triggerVibrate();
@@ -38,7 +38,7 @@ function Toolbar() {
         }
       }
     }
-  }
+  }, [rokuRow, wifiNameSt]);
 
   const onLongClick = (value) => {
     const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
@@ -95,6 +95,14 @@ function Toolbar() {
     }
   }, [leaderSt, userNameSt, getNextQueue, rokuPlayStatePositionSt, youtubeVideosLizSt]);
 
+  useEffect(() => {
+    const performChangePlay = () => {
+      onShortClick(true, 'play');
+    };
+    window.addEventListener('play-state-change', performChangePlay);
+    return () => window.removeEventListener('play-state-change', performChangePlay);
+  }, [onShortClick]);
+
   return (
     <div className='controls-toolbar'>
       <div className='controls-toolbar-row'>
@@ -146,7 +154,7 @@ function Toolbar() {
       </div>
       <div className='controls-toolbar-row'>
         <div className="controls-toolbar-progress-bar-container">
-          {youtubeVideosLizSt.find(vid => vid.state === 'selected') &&
+          {youtubeVideosLizSt.find(vid => vid.state === 'selected') && wifiNameSt === 'Noky' &&
             <div className="controls-toolbar-progress-bar-track">
               <div
                 className="controls-toolbar-progress-bar-fill" style={{ width: `${normalizedPercentageSt}%` }}>

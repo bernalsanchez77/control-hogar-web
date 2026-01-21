@@ -10,11 +10,15 @@ class Tables {
       await viewRouter.onHdmiSalaTableChange(store.getState().viewSt, change.id);
     }
     if (store.getState().isAppSt) {
-      // const currentPlayState = store.getState().hdmiSalaSt.data.find(el => el.id === 'roku').playState;
-      // if (change.playState !== currentPlayState) {
-      const isPlaying = change.playState === 'play';
-      CordovaPlugins.updateNotificationStatus(isPlaying);
-      // }
+      CordovaPlugins.updatePlayState(change.playState === 'play');
+    }
+  }
+
+  async onScreensTableChange(change) {
+    if (store.getState().isAppSt) {
+      CordovaPlugins.updateScreenSelected(change.label + ' ' + change.state.toUpperCase());
+      CordovaPlugins.updateScreenState(change.state);
+      CordovaPlugins.updateMuteState(change.mute);
     }
   }
 
@@ -27,9 +31,11 @@ class Tables {
   }
 
   onRokuSalaTableChange(change) {
-    store.getState().setRokuSearchModeSt('roku');
-    if (store.getState().rokuAppsSt.find(app => app.state === 'selected')?.rokuId !== change.rokuId && change.state === 'selected') {
-      console.log('selected app changed');
+    if (change.state === 'selected') {
+      store.getState().setRokuSearchModeSt('roku');
+      if (store.getState().isAppSt) {
+        CordovaPlugins.updateAppSelected(change.label);
+      }
       if (store.getState().youtubeVideosLizSt.find(video => video.state === 'selected')) {
         requests.updateTable({
           current: { currentId: store.getState().youtubeVideosLizSt.find(video => video.state === 'selected').id, currentTable: 'youtubeVideosLiz', currentState: '' }

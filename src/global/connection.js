@@ -1,7 +1,7 @@
 
 import { store } from '../store/store';
 import CordovaPlugins from './cordova-plugins';
-import peersChannel from './supabase/peers-channel';
+import supabasePeers from './supabase/supabase-peers';
 
 class Connection {
   constructor() {
@@ -48,8 +48,8 @@ class Connection {
           store.getState().setWifiNameSt(wifiName);
           store.getState().setNetworkTypeSt(networkType);
           store.getState().setIsConnectedToInternetSt(true);
-          if (peersChannel.status === 'unsubscribed') {
-            peersChannel.subscribeToUsersChannel();
+          if (supabasePeers.peersChannel.status === 'unsubscribed') {
+            supabasePeers.subscribeToPeersChannel();
           }
         } else {
           console.log('No internet by interval');
@@ -59,9 +59,9 @@ class Connection {
   }
   async onNetworkTypeChange(netType) {
     console.log('changed in network type: ', netType);
-    console.log('peersChannel status: ', peersChannel.status);
-    if (peersChannel.status === 'unsubscribed') {
-      await peersChannel.subscribeToUsersChannel();
+    console.log('peersChannel status: ', supabasePeers.peersChannel.status);
+    if (supabasePeers.peersChannel.status === 'unsubscribed') {
+      await supabasePeers.subscribeToPeersChannel();
     }
     if (store.getState().userTypeSt === 'guest') {
       if (netType === 'wifi' && store.getState().wifiNameSt === 'Noky') {
@@ -83,9 +83,9 @@ class Connection {
   }
   async onWifiNameChange(wifiName) {
     console.log('changed in ssid: ', wifiName);
-    console.log('peersChannel status: ', peersChannel.status);
-    if (peersChannel.status === 'unsubscribed') {
-      await peersChannel.subscribeToUsersChannel();
+    console.log('peersChannel status: ', supabasePeers.peersChannel.status);
+    if (supabasePeers.peersChannel.status === 'unsubscribed') {
+      await supabasePeers.subscribeToPeersChannel();
     }
     if (store.getState().userTypeSt === 'guest') {
       if (wifiName === 'Noky' && store.getState().networkTypeSt === 'wifi') {

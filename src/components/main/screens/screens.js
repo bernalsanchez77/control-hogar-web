@@ -8,17 +8,20 @@ function Screens({ changeScreenParent }) {
   const screenSelectedSt = store(v => v.screenSelectedSt);
   const setScreenSelectedSt = store(v => v.setScreenSelectedSt);
   const screensSt = store(v => v.screensSt);
+  const isAppSt = store(v => v.isAppSt);
   const teleSalaScreen = screensSt.find(screen => screen.id === 'teleSala');
   const teleCuartoScreen = screensSt.find(screen => screen.id === 'teleCuarto');
   const teleCocinaScreen = screensSt.find(screen => screen.id === 'teleCocina');
   const proyectorSalaScreen = screensSt.find(screen => screen.id === 'proyectorSala');
 
   const onScreenChanged = (screen) => {
-    if (screenSelectedSt !== screen) {
+    if (screenSelectedSt !== screen.id) {
       utils.triggerVibrate();
-      setScreenSelectedSt(screen);
-      localStorage.setItem('screen', screen);
-      CordovaPlugins.updateScreenSelected(screen);
+      setScreenSelectedSt(screen.id);
+      localStorage.setItem('screen-id', screen.id);
+      if (isAppSt) {
+        CordovaPlugins.updateScreenSelected(screen.label + ' ' + screen.state.toUpperCase());
+      }
     }
   };
   return (
@@ -29,7 +32,7 @@ function Screens({ changeScreenParent }) {
             <div className='screens-element'>
               <button
                 className={`screens-button ${isInForegroundSt && screenSelectedSt === teleCuartoScreen.id ? "flash-shadow" : "no-flash"}  ${screenSelectedSt === teleCuartoScreen.id ? "screens-button--on" : "screens-button--off"}`}
-                onTouchStart={() => onScreenChanged(teleCuartoScreen.id)}>
+                onTouchStart={() => onScreenChanged(teleCuartoScreen)}>
                 {teleCuartoScreen.label}
               </button>
             </div>
@@ -37,21 +40,21 @@ function Screens({ changeScreenParent }) {
           <div className='screens-element'>
             <button
               className={`screens-button ${isInForegroundSt && screenSelectedSt === teleSalaScreen.id ? "flash-shadow" : "no-flash"} ${screenSelectedSt === teleSalaScreen.id ? "screens-button--on" : "screens-button--off"}`}
-              onTouchStart={() => onScreenChanged(teleSalaScreen.id)}>
+              onTouchStart={() => onScreenChanged(teleSalaScreen)}>
               {teleSalaScreen.label}
             </button>
           </div>
           <div className='screens-element'>
             <button
               className={`screens-button ${isInForegroundSt && screenSelectedSt === teleCocinaScreen.id ? "flash-shadow" : "no-flash"} ${screenSelectedSt === teleCocinaScreen.id ? "screens-button--on" : "screens-button--off"}`}
-              onTouchStart={() => onScreenChanged(teleCocinaScreen.id)}>
+              onTouchStart={() => onScreenChanged(teleCocinaScreen)}>
               {teleCocinaScreen.label}
             </button>
           </div>
           <div className='screens-element'>
             <button
               className={`screens-button ${isInForegroundSt && screenSelectedSt === proyectorSalaScreen.id ? "flash-shadow" : "no-flash"} ${screenSelectedSt === proyectorSalaScreen.id ? "screens-button--on" : "screens-button--off"}`}
-              onTouchStart={() => onScreenChanged(proyectorSalaScreen.id)}>
+              onTouchStart={() => onScreenChanged(proyectorSalaScreen)}>
               {proyectorSalaScreen.label}
             </button>
           </div>

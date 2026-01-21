@@ -9,7 +9,7 @@ import Loading from './views/loading/loading';
 import SupabaseTimeout from './views/supabaseTimeout/supabaseTimeout';
 import Dev from './dev/dev';
 import supabaseChannels from '../../global/supabase/supabase-channels';
-import peersChannel from '../../global/supabase/peers-channel';
+import supabasePeers from '../../global/supabase/supabase-peers';
 import viewRouter from '../../global/view-router';
 import requests from '../../global/requests';
 import Roku from '../../global/roku';
@@ -39,6 +39,7 @@ function Load() {
   const viewSt = store(v => v.viewSt);
   const isPcSt = store(v => v.isPcSt);
   const isAppSt = store(v => v.isAppSt);
+  const screenSelectedSt = store(v => v.screenSelectedSt);
   // const [inRange, setInRange] = useState(false);
 
   //useRef Variables
@@ -62,7 +63,6 @@ function Load() {
         switch (res.msg) {
           case 'TIMED_OUT':
             response = res.msg;
-            console.log('not subscribed, subscription status:', res.msg);
             setSupabaseTimeoutSt(true);
             break;
           case 'CHANNEL_ERROR':
@@ -119,6 +119,17 @@ function Load() {
     }
   }, [subscribeToSupabaseChannel, setTableSt]);
 
+  const updateNotificationBar = useCallback(async () => {
+    const isPlaying = store.getState().hdmiSalaSt.find(el => el.id === 'roku').playState === 'play';
+    CordovaPlugins.updatePlayState(isPlaying);
+    const screenSelected = store.getState().screensSt.find(el => el.id === screenSelectedSt);
+    CordovaPlugins.updateScreenSelected(screenSelected.label + ' ' + screenSelected.state.toUpperCase());
+    CordovaPlugins.updateScreenState(screenSelected.state);
+    const appSelected = store.getState().rokuAppsSt.find(el => el.state === 'selected');
+    CordovaPlugins.updateAppSelected(appSelected.label);
+    CordovaPlugins.updateMuteState(screenSelected.mute);
+  }, [screenSelectedSt]);
+
   const load = useCallback(async (firstLoad = false) => {
     let youtubeVideosLizTable = null;
     if (firstLoad) {
@@ -133,7 +144,9 @@ function Load() {
     });
 
     if (hdmiSalaTable.table && hdmiSalaTable.subscriptionResponse === 'SUBSCRIBED') {
-      await setData('screens');
+      await setData('screens', false, async (change) => {
+        Tables.onScreensTableChange(change);
+      });
 
       setIsLoadingSt(false);
       newView.selected = hdmiSalaTable.table.data.find(el => el.state === 'selected').id;
@@ -143,13 +156,13 @@ function Load() {
       });
       await setData('devices');
       await setData('youtubeChannelsLiz');
+      await setData('cableChannels');
       youtubeVideosLizTable = await setData('youtubeVideosLiz', true, (change) => {
         Tables.onYoutubeVideosLizTableChange(change);
       });
     }
     if (isAppSt) {
-      const isPlaying = hdmiSalaTable.table.data.find(el => el.id === 'roku').playState === 'play';
-      CordovaPlugins.updateNotificationStatus(isPlaying);
+      updateNotificationBar();
     }
     if (wifiNameSt === 'Noky') {
       Roku.setRoku();
@@ -157,7 +170,7 @@ function Load() {
     setIsLoadingSt(false);
     isLoadingRef.current = false;
     return youtubeVideosLizTable;
-  }, [setData, setIsLoadingSt, viewSt, wifiNameSt, isAppSt]);
+  }, [setData, setIsLoadingSt, viewSt, wifiNameSt, isAppSt, updateNotificationBar]);
 
   // event functions
 
@@ -168,7 +181,7 @@ function Load() {
   // init
 
   const init = useCallback(async () => {
-    await peersChannel.subscribeToPeersChannel();
+    await supabasePeers.subscribeToPeersChannel();
     const youtubeVideosLizTable = await load(true);
     if (wifiNameSt === 'Noky') {
       Roku.setIsConnectedToNokyWifi(true);
@@ -196,7 +209,7 @@ function Load() {
         Roku.setIsConnectedToNokyWifi(false);
       }
       const status = isInForegroundSt ? 'foreground' : 'background';
-      peersChannel.peersChannel.track({ name: userNameSt, status: status, date: new Date().toISOString(), wifiName: wifiNameSt });
+      supabasePeers.peersChannel.track({ name: userNameSt, status: status, date: new Date().toISOString(), wifiName: wifiNameSt });
     }
   }, [wifiNameSt, networkTypeSt, isPcSt, isInForegroundSt, userNameSt, isConnectedToInternetSt]);
 

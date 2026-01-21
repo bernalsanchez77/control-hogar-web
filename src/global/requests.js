@@ -119,23 +119,6 @@ class Requests {
       return await this.normalApiRequest('getTableFromSupabase', { table }, 'get');
     }
   }
-  // async searchYoutube(text) {
-  //   console.log(text);
-  //   try {
-  //     const res = await axios.get('https://www.googleapis.com/youtube/v3/search', {
-  //       params: {
-  //         part: 'snippet',
-  //         maxResults: 10,
-  //         q: text,
-  //         type: 'video',
-  //         key: 'AIzaSyAm7Z-IXj2M9we65X0V2YmRM3URgn6tqWk'
-  //       }
-  //     });
-  //     return res.data.items;
-  //   } catch (error) {
-  //     console.error('Search error:', error);
-  //   }
-  // }
 
   async searchYoutube(text) {
     let res = {};
@@ -211,6 +194,7 @@ class Requests {
     }
   }
   async sendIfttt(params, sendEnabled) {
+    console.log('sentifttt', params);
     params.key = params.key || 'state';
     if (sendEnabled === undefined) {
       sendEnabled = store.getState().sendEnabledSt;
@@ -228,6 +212,7 @@ class Requests {
     }
   }
   async fetchRoku(params) {
+    console.log('sentRoku', params);
     if (window.cordova) {
       let url = '';
       if (params.params) {

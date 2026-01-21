@@ -34,7 +34,6 @@ class ViewRouter {
         // was in roku
         const channelsTable = await requests.getTable('cableChannels');
         if (channelsTable) {
-          store.getState().setCableChannelsSt(channelsTable.data);
           store.getState().setRokuSearchModeSt('default');
           // const subscriptionResponse = await this.subscribeToSupabaseChannel('cableChannels', onNoInternet);
           if (currentView.roku.apps.selected) {

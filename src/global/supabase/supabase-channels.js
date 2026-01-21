@@ -108,7 +108,6 @@ class SupabaseChannels {
             handlingNoInternet = true;
             connection.onNoInternet();
             supabase.realtime.disconnect();
-            console.log('No internet, will not re-subscribe to tables');
           }
         }
       }, 2000); // wait 2 seconds before re-subscribing
@@ -160,7 +159,6 @@ class SupabaseChannels {
     if (this.supabaseChannels[tableName] && this.supabaseChannels[tableName].channel) {
       this.supabaseChannels[tableName].subscribed = false;
       await this.supabaseChannels[tableName].channel.unsubscribe();
-      // console.log('Unsubscribed from: ', tableName);
     }
   }
 }

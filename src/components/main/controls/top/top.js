@@ -1,3 +1,4 @@
+import { useEffect, useCallback } from 'react';
 import { store } from "../../../../store/store";
 import requests from "../../../../global/requests";
 import utils from '../../../../global/utils';
@@ -8,7 +9,7 @@ function Controls() {
   const screensSt = store(v => v.screensSt);
   const viewSt = store(v => v.viewSt);
   const screen = screensSt.find(screen => screen.id === screenSelectedSt);
-  const changePower = () => {
+  const changePower = useCallback(() => {
     utils.triggerVibrate();
     const device = screenSelectedSt;
     const newState = screen.state === 'on' ? 'off' : 'on';
@@ -38,7 +39,7 @@ function Controls() {
       requests.sendIfttt({ device, value });
       requests.updateTable({ new: { newId: device, newTable: 'screens', newState } });
     }
-  }
+  }, [screen, screenSelectedSt]);
   const changeHdmi = () => {
     utils.triggerVibrate();
     const device = 'hdmiSala';
@@ -52,7 +53,7 @@ function Controls() {
       requests.sendIfttt({ device, value: newId });
       requests.updateTable({ current: { currentId: viewSt.selected, currentTable: device }, new: { newId, newTable: device } });
     }
-  }
+  };
   const changeInput = () => {
     utils.triggerVibrate();
     const device = screenSelectedSt;
@@ -61,7 +62,16 @@ function Controls() {
     } else {
       requests.sendIfttt({ device, key: 'input', value: 'hdmi1' });
     }
-  }
+  };
+
+  useEffect(() => {
+    const performChangePower = () => {
+      changePower();
+    };
+    window.addEventListener('screen-state-change', performChangePower);
+    return () => window.removeEventListener('screen-state-change', performChangePower);
+  }, [changePower]);
+
   return (
     <div className='controls-top'>
       <div className='controls-top-row'>
