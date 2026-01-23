@@ -13,11 +13,8 @@ class Youtube {
     }
   }
   clearCurrentVideo() {
-    const selectedVideo = store.getState().youtubeVideosLizSt.find(vid => vid.state === 'selected');
-    if (selectedVideo) {
-      requests.updateTable({
-        current: { currentId: selectedVideo.id, currentTable: 'youtubeVideosLiz', currentState: '' }
-      });
+    if (store.getState().selectionsSt.find(selection => selection.table === 'youtubeVideosLiz').id) {
+      requests.updateTable2({ table: 'youtubeVideosLiz', id: '' });
     }
   }
   getLastQueue() {
@@ -45,29 +42,21 @@ class Youtube {
   }
   onVideoShortClick(video) {
     const rokuId = store.getState().rokuAppsSt.find(app => app.id === 'youtube').rokuId;
-    const currentVideo = store.getState().youtubeVideosLizSt.find(vid => vid.state === 'selected');
+    const currentVideo = store.getState().youtubeVideosLizSt.find(vid => vid.id === store.getState().selectionsSt.find(selection => selection.table === 'youtubeVideosLiz').id);
     const isInYoutubeVideosLizSt = store.getState().youtubeVideosLizSt.find(vid => vid.id === video.id);
     if (currentVideo) {
       if (currentVideo.id !== video.id) {
         requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: video.id } });
         if (isInYoutubeVideosLizSt) {
-          requests.updateTable({
-            current: { currentId: currentVideo.id, currentTable: 'youtubeVideosLiz' },
-            new: { newId: video.id, newTable: 'youtubeVideosLiz' }
-          });
-          requests.updateTable2({ table: 'youtubeVideosLiz', id: currentVideo.id });
+          requests.updateTable2({ table: 'youtubeVideosLiz', id: video.id });
         } else {
-          requests.updateTable({
-            current: { currentId: currentVideo.id, currentTable: 'youtubeVideosLiz', currentState: '' }
-          });
+          requests.updateTable2({ table: 'youtubeVideosLiz', id: '' });
         }
       }
     } else {
       requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: video.id } });
       if (isInYoutubeVideosLizSt) {
-        requests.updateTable({
-          new: { newId: video.id, newTable: 'youtubeVideosLiz', newState: 'selected' }
-        });
+        requests.updateTable2({ table: 'youtubeVideosLiz', id: video.id });
       }
     }
     const rokuAppsSt = store.getState().rokuAppsSt;

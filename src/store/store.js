@@ -21,6 +21,7 @@ export const store = create((set) => ({
   rokuAppsSt: [],
   hdmiSalaSt: [],
   devicesSt: [],
+  selectionsSt: [],
   rokuPlayStatePositionSt: 0,
   isPcSt: false,
   isAppSt: false,
@@ -53,8 +54,15 @@ export const store = create((set) => ({
   setIsPcSt: (v) => set({ isPcSt: v }),
   setIsAppSt: (v) => set({ isAppSt: v }),
   setViewSt: (v) => set({ viewSt: v }),
-  updateTablesSt: (tableName, newItem) => set((state) => ({ [tableName]: state[tableName].map((item) => item.id === newItem.id ? newItem : item) })),
+  updateTablesSt: (tableName, newItem) => {
+    if (tableName === 'selectionsSt') {
+      set((state) => ({ [tableName]: state[tableName].map((item) => item.table === newItem.table ? newItem : item) }))
+    } else {
+      set((state) => ({ [tableName]: state[tableName].map((item) => item.id === newItem.id ? newItem : item) }))
+    }
+  },
   setTableSt: (tableName, newTable) => set({ [tableName]: newTable }),
   setPeersSt: (v) => set({ peersSt: v }),
-  setLeaderSt: (v) => set({ leaderSt: v })
+  setLeaderSt: (v) => set({ leaderSt: v }),
+  setSelectionsSt: (v) => set({ selectionsSt: v })
 }));

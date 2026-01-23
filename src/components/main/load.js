@@ -131,7 +131,7 @@ function Load() {
   }, [screenSelectedSt]);
 
   const load = useCallback(async (firstLoad = false) => {
-    let youtubeVideosLizTable = null;
+    let selectionsTable = null;
     if (firstLoad) {
       setIsLoadingSt(true);
     }
@@ -157,8 +157,9 @@ function Load() {
       await setData('devices');
       await setData('youtubeChannelsLiz');
       await setData('cableChannels');
-      youtubeVideosLizTable = await setData('youtubeVideosLiz', true, (change) => {
-        Tables.onYoutubeVideosLizTableChange(change);
+      await setData('youtubeVideosLiz');
+      selectionsTable = await setData('selections', true, (change) => {
+        Tables.onSelectionsTableChange(change);
       });
     }
     if (isAppSt) {
@@ -169,7 +170,7 @@ function Load() {
     }
     setIsLoadingSt(false);
     isLoadingRef.current = false;
-    return youtubeVideosLizTable;
+    return selectionsTable;
   }, [setData, setIsLoadingSt, viewSt, wifiNameSt, isAppSt, updateNotificationBar]);
 
   // event functions
@@ -182,11 +183,11 @@ function Load() {
 
   const init = useCallback(async () => {
     await supabasePeers.subscribeToPeersChannel();
-    const youtubeVideosLizTable = await load(true);
+    const selectionsTable = await load(true);
     if (wifiNameSt === 'Noky') {
       Roku.setIsConnectedToNokyWifi(true);
     }
-    const currentVideo = youtubeVideosLizTable.find(vid => vid.state === 'selected');
+    const currentVideo = store.getState().youtubeVideosLizSt.find(video => video.id === selectionsTable.find(table => table.table === 'youtubeVideosLiz').id);
     if (currentVideo) {
       if (!Roku.playStateInterval) {
         Roku.startPlayStateListener(currentVideo);

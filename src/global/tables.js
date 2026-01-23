@@ -21,17 +21,23 @@ class Tables {
     }
   }
 
-  onYoutubeVideosLizTableChange(change) {
-    if (store.getState().youtubeVideosLizSt.find(video => video.state === 'selected')) {
-      if (change.state === 'selected') {
-        if (!roku.playStateInterval) {
-          roku.startPlayStateListener(change);
+  onSelectionsTableChange(change) {
+    if (change.table === 'youtubeVideosLiz') {
+      if (change.id) {
+        if (roku.playStateInterval) {
+          roku.stopPlayStateListener();
         }
+        const currentVideo = store.getState().youtubeVideosLizSt.find(video => video.id === change.id);
+        roku.startPlayStateListener(currentVideo);
       } else {
-        roku.stopPlayStateListener();
+        if (roku.playStateInterval) {
+          roku.stopPlayStateListener();
+        }
       }
     }
   }
+
+
 
   onRokuAppsTableChange(change) {
     if (change.state === 'selected') {

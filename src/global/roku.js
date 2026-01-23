@@ -40,10 +40,8 @@ class Roku {
     try {
       const activeApp = await requests.getRokuData('active-app');
       if (activeApp && activeApp.status === 200) {
-        if (activeApp.data['active-app'].app.id !== 'youtube' && store.getState().youtubeVideosLizSt.find(video => video.state === 'selected')) {
-          requests.updateTable({
-            current: { currentId: store.getState().youtubeVideosLizSt.find(video => video.state === 'selected').id, currentTable: 'youtubeVideosLiz', currentState: '' }
-          });
+        if (activeApp.data['active-app'].app.id !== 'youtube' && store.getState().selectionsSt.find(table => table.table === 'youtubeVideosLiz').id) {
+          requests.updateTable2({ table: 'youtubeVideosLiz', id: '' });
         }
         return activeApp.data['active-app'].app.id;
       } else {
@@ -80,10 +78,8 @@ class Roku {
         case 'pause':
           break;
         case 'stop':
-          if (store.getState().youtubeVideosLizSt.find(video => video.state === 'selected')) {
-            requests.updateTable({
-              current: { currentId: store.getState().youtubeVideosLizSt.find(video => video.state === 'selected').id, currentTable: 'youtubeVideosLiz', currentState: '' }
-            });
+          if (store.getState().selectionsSt.find(table => table.table === 'youtubeVideosLiz').id) {
+            requests.updateTable2({ table: 'youtubeVideosLiz', id: '' });
           }
           break;
         default:
@@ -126,7 +122,6 @@ class Roku {
 
   async updateState() {
     const playState = await this.getPlayState();
-    const youtubeVideosLizSt = store.getState().youtubeVideosLizSt;
     const hdmiSalaSt = store.getState().hdmiSalaSt;
     if (playState) {
       if (hdmiSalaSt.find(hdmi => hdmi.id === 'roku').playState !== playState.state) {
@@ -134,10 +129,8 @@ class Roku {
           new: { newId: hdmiSalaSt.find(hdmi => hdmi.id === 'roku').id, newTable: 'hdmiSala', newPlayState: playState.state }
         });
       }
-      if (playState.state !== 'play' && playState.state !== 'pause' && youtubeVideosLizSt.find(video => video.state === 'selected')) {
-        requests.updateTable({
-          current: { currentId: youtubeVideosLizSt.find(video => video.state === 'selected').id, currentTable: 'youtubeVideosLiz', currentState: '' }
-        });
+      if (playState.state !== 'play' && playState.state !== 'pause' && store.getState().selectionsSt.find(table => table.table === 'youtubeVideosLiz').id) {
+        requests.updateTable2({ table: 'youtubeVideosLiz', id: '' });
       }
     }
   }
