@@ -9,6 +9,7 @@ function Apps() {
   const rokuAppsSt = store(v => v.rokuAppsSt);
   const viewSt = store(v => v.viewSt);
   const wifiNameSt = store(v => v.wifiNameSt);
+  const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
 
   const onShortClick = (keyup, value) => {
     if (keyup) {
@@ -26,6 +27,11 @@ function Apps() {
         current: { currentId, currentTable: 'rokuApps' },
         new: { newId: app.id, newTable: 'rokuApps' }
       });
+      if (app.id !== 'youtube' && youtubeVideosLizSt.find(video => video.state === 'selected')) {
+        requests.updateTable({
+          current: { currentId: youtubeVideosLizSt.find(video => video.state === 'selected').id, currentTable: 'youtubeVideosLiz', currentState: '' }
+        });
+      }
       if (app.id !== 'youtube') {
         youtube.clearCurrentVideo();
         youtube.clearQueue();

@@ -55,6 +55,7 @@ class Youtube {
             current: { currentId: currentVideo.id, currentTable: 'youtubeVideosLiz' },
             new: { newId: video.id, newTable: 'youtubeVideosLiz' }
           });
+          requests.updateTable2({ table: 'youtubeVideosLiz', id: currentVideo.id });
         } else {
           requests.updateTable({
             current: { currentId: currentVideo.id, currentTable: 'youtubeVideosLiz', currentState: '' }

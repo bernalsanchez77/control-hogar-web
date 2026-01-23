@@ -152,7 +152,7 @@ function Load() {
       newView.selected = hdmiSalaTable.table.data.find(el => el.state === 'selected').id;
       await viewRouter.changeView(newView);
       await setData('rokuApps', true, (change) => {
-        Tables.onRokuSalaTableChange(change);
+        Tables.onRokuAppsTableChange(change);
       });
       await setData('devices');
       await setData('youtubeChannelsLiz');
@@ -188,7 +188,9 @@ function Load() {
     }
     const currentVideo = youtubeVideosLizTable.find(vid => vid.state === 'selected');
     if (currentVideo) {
-      Roku.startPlayStateListener();
+      if (!Roku.playStateInterval) {
+        Roku.startPlayStateListener(currentVideo);
+      }
     }
     isReadyRef.current = true;
   }, [load, wifiNameSt]);

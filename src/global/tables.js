@@ -1,7 +1,6 @@
 
 import viewRouter from './view-router';
 import { store } from '../store/store';
-import requests from './requests';
 import CordovaPlugins from './cordova-plugins';
 import roku from './roku';
 class Tables {
@@ -24,22 +23,21 @@ class Tables {
 
   onYoutubeVideosLizTableChange(change) {
     if (store.getState().youtubeVideosLizSt.find(video => video.state === 'selected')) {
-      roku.startPlayStateListener();
-    } else {
-      roku.stopPlayStateListener();
+      if (change.state === 'selected') {
+        if (!roku.playStateInterval) {
+          roku.startPlayStateListener(change);
+        }
+      } else {
+        roku.stopPlayStateListener();
+      }
     }
   }
 
-  onRokuSalaTableChange(change) {
+  onRokuAppsTableChange(change) {
     if (change.state === 'selected') {
       store.getState().setRokuSearchModeSt('roku');
       if (store.getState().isAppSt) {
         CordovaPlugins.updateAppSelected(change.label);
-      }
-      if (store.getState().youtubeVideosLizSt.find(video => video.state === 'selected')) {
-        requests.updateTable({
-          current: { currentId: store.getState().youtubeVideosLizSt.find(video => video.state === 'selected').id, currentTable: 'youtubeVideosLiz', currentState: '' }
-        });
       }
     }
   }

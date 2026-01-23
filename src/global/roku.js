@@ -1,16 +1,18 @@
 
 import { store } from "../store/store";
 import requests from './requests';
-let playStateInterval = null;
+import utils from './utils';
 let position = 0;
 let playState = {};
-const simulatePlayState = false;
-let testCount = 40000;
+const simulatePlayState = true;
+let testCount = 0;
 
 class Roku {
   constructor() {
     this.isConnectedToNokyWifi = '';
     this.testCount = testCount;
+    this.playStateInterval = null;
+    this.currentVideoDuration = 0;
   }
 
   async getPlayState(data) {
@@ -38,6 +40,11 @@ class Roku {
     try {
       const activeApp = await requests.getRokuData('active-app');
       if (activeApp && activeApp.status === 200) {
+        if (activeApp.data['active-app'].app.id !== 'youtube' && store.getState().youtubeVideosLizSt.find(video => video.state === 'selected')) {
+          requests.updateTable({
+            current: { currentId: store.getState().youtubeVideosLizSt.find(video => video.state === 'selected').id, currentTable: 'youtubeVideosLiz', currentState: '' }
+          });
+        }
         return activeApp.data['active-app'].app.id;
       } else {
         return null;
@@ -51,7 +58,7 @@ class Roku {
     if (simulatePlayState) {
       this.testCount = this.testCount + 5000;
       playState.position = this.testCount;
-      if (playState.position >= 1568000) {
+      if (playState.position >= this.currentVideoDuration) {
         playState.state = 'stop';
       } else {
         playState.state = 'play';
@@ -69,10 +76,15 @@ class Roku {
       switch (playState.state) {
         case 'play':
           store.getState().setRokuPlayStatePositionSt(position);
-          this.updatePlayState();
           break;
         case 'pause':
-          this.updatePlayState();
+          break;
+        case 'stop':
+          if (store.getState().youtubeVideosLizSt.find(video => video.state === 'selected')) {
+            requests.updateTable({
+              current: { currentId: store.getState().youtubeVideosLizSt.find(video => video.state === 'selected').id, currentTable: 'youtubeVideosLiz', currentState: '' }
+            });
+          }
           break;
         default:
           break;
@@ -80,16 +92,14 @@ class Roku {
     }
   }
 
-  async startPlayStateListener() {
-    console.log('startPlayStateListener');
-    if (!playStateInterval) {
-      console.log('playstatelistener started');
-      position = 0;
+  async startPlayStateListener(currentVideo) {
+    this.currentVideoDuration = utils.timeToMs(currentVideo.duration);
+    console.log('playstatelistener started');
+    position = 0;
+    this.runPlayStateListener();
+    this.playStateInterval = setInterval(async () => {
       this.runPlayStateListener();
-      playStateInterval = setInterval(async () => {
-        this.runPlayStateListener();
-      }, 5000);
-    }
+    }, 5000);
   }
 
   refreshCounter() {
@@ -97,12 +107,12 @@ class Roku {
   }
 
   async stopPlayStateListener() {
-    if (playStateInterval) {
+    if (this.playStateInterval) {
       store.getState().setRokuPlayStatePositionSt(0);
       console.log('playstatelistener stopped');
       position = 0;
-      clearInterval(playStateInterval);
-      playStateInterval = null;
+      clearInterval(this.playStateInterval);
+      this.playStateInterval = null;
       this.refreshCounter();
     }
   }
