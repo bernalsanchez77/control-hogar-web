@@ -1,11 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 export default async function handler(req, res) {
-  console.log('params: ',req.body);
-
-  let currentId = null;
-  let currentTable = null;
-  let currentState = null;
+  // console.log('params: ', req.body);
 
   let newId = null;
   let newDate = null;
@@ -17,32 +13,20 @@ export default async function handler(req, res) {
   let newPlayState = null;
   let newQueue = null;
 
-  if (req.body.current) {
-    currentId = req.body.current.currentId;
-    currentTable = req.body.current.currentTable;
-    currentState = req.body.current.currentState;
-  };
-  if (req.body.new) {
-    newId = req.body.new.newId;
-    newDate = req.body.new.newDate;
-    newTable = req.body.new.newTable;
-    newState = req.body.new.newState;
-    newVolume = req.body.new.newVolume;
-    newMute = req.body.new.newMute;
-    newColor = req.body.new.newColor;
-    newPlayState = req.body.new.newPlayState;
-    newQueue = req.body.new.newQueue;
+  if (req.body) {
+    newId = req.body.newId;
+    newDate = req.body.newDate;
+    newTable = req.body.newTable;
+    newState = req.body.newState;
+    newVolume = req.body.newVolume;
+    newMute = req.body.newMute;
+    newColor = req.body.newColor;
+    newPlayState = req.body.newPlayState;
+    newQueue = req.body.newQueue;
   }
 
   let data, error;
-  if (req.body.current && req.body.new) {
-    await supabase.from(currentTable).update({state: currentState}).eq('id', currentId);
-    ({data, error} = await supabase.from(newTable).update({volume: newVolume, mute: newMute, color: newColor, date: newDate, state: newState, playState: newPlayState, queue: newQueue}).eq('id', newId));
-  } else if (req.body.current) {
-    ({data, error} = await supabase.from(currentTable).update({state: currentState}).eq('id', currentId));
-  } else if (req.body.new) {
-    ({data, error} = await supabase.from(newTable).update({volume: newVolume, mute: newMute, color: newColor, date: newDate, state: newState, playState: newPlayState, queue: newQueue}).eq('id', newId));
-  }
+  ({ data, error } = await supabase.from(newTable).update({ volume: newVolume, mute: newMute, color: newColor, date: newDate, state: newState, playState: newPlayState, queue: newQueue }).eq('id', newId));
   if (error) {
     return res.status(500).json({ error: error.message });
   }

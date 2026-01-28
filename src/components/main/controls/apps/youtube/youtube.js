@@ -9,7 +9,6 @@ function Youtube() {
   const youtubeSearchVideosSt = store(v => v.youtubeSearchVideosSt);
   const youtubeChannelsLizSt = store(v => v.youtubeChannelsLizSt);
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
-  const selectionsSt = store(v => v.selectionsSt);
   const viewSt = store(v => v.viewSt);
   const timeout3s = useRef(null);
   const longClick = useRef(false);
@@ -18,6 +17,8 @@ function Youtube() {
   let touchMoved = false;
   let touchStartY = 0;
   const channelSelected = useRef('');
+  const selectionsSt = store(v => v.selectionsSt);
+  const youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz').id;
 
   const onChannelShortClick = (channel) => {
     utils.triggerVibrate();
@@ -129,7 +130,7 @@ function Youtube() {
               youtubeSortedVideos.map((video, key) => (
                 <li key={key} className='controls-apps-youtube-li-channel'>
                   <button
-                    className={`controls-apps-youtube-video-button ${video.id === selectionsSt.find(selection => selection.table === 'youtubeVideosLiz').id ? 'controls-apps-youtube-video-button--selected' : ''}`}
+                    className={`controls-apps-youtube-video-button ${video.id === youtubeVideosLizSelectedId ? 'controls-apps-youtube-video-button--selected' : ''}`}
                     onTouchStart={(e) => onTouchStart(e)}
                     onTouchMove={(e) => onTouchMove(e)}
                     onTouchEnd={(e) => onTouchEnd(e, 'video', video)}>
@@ -163,7 +164,7 @@ function Youtube() {
               youtubeSortedVideos.map((video, key) => (
                 <li key={key} className='controls-apps-youtube-li-search'>
                   <button
-                    className={`controls-apps-youtube-video-button ${video.id === selectionsSt.find(selection => selection.table === 'youtubeVideosLiz').id ? 'controls-apps-youtube-video-button--selected' : ''}`}
+                    className={`controls-apps-youtube-video-button ${video.id === youtubeVideosLizSelectedId ? 'controls-apps-youtube-video-button--selected' : ''}`}
                     onTouchStart={(e) => onTouchStart(e)}
                     onTouchMove={(e) => onTouchMove(e)}
                     onTouchEnd={(e) => onTouchEnd(e, 'video', video)}>

@@ -15,7 +15,6 @@ class Tables {
 
   async onScreensTableChange(change) {
     if (store.getState().isAppSt) {
-      CordovaPlugins.updateScreenSelected(change.label + ' ' + change.state.toUpperCase());
       CordovaPlugins.updateScreenState(change.state);
       CordovaPlugins.updateMuteState(change.mute);
     }
@@ -35,15 +34,11 @@ class Tables {
         }
       }
     }
-  }
-
-
-
-  onRokuAppsTableChange(change) {
-    if (change.state === 'selected') {
+    if (change.table === 'rokuApps') {
       store.getState().setRokuSearchModeSt('roku');
       if (store.getState().isAppSt) {
-        CordovaPlugins.updateAppSelected(change.label);
+        const label = store.getState().rokuAppsSt.find(app => app.rokuId === change.id).label;
+        CordovaPlugins.updateAppSelected(label);
       }
     }
   }

@@ -21,6 +21,8 @@ function Screens({ changeScreenParent }) {
       localStorage.setItem('screen-id', screen.id);
       if (isAppSt) {
         CordovaPlugins.updateScreenSelected(screen.label + ' ' + screen.state.toUpperCase());
+        CordovaPlugins.updateScreenState(screen.state);
+        CordovaPlugins.updateMuteState(screen.mute);
       }
     }
   };

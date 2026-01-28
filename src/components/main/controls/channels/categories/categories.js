@@ -6,8 +6,8 @@ import './categories.css';
 
 function Categories() {
   const cableChannelCategories = new CableChannelCategories().getCableChannelCategories();
-  const cableChannelsSt = store(v => v.cableChannelsSt);
-  let selectedImg = '/imgs/channels/' + cableChannelsSt.find(ch => ch.state === 'selected')?.id + '.png';
+  const cableChannelsSelectedId = store(v => v.selectionsSt.find(el => el.table === 'cableChannels')?.id);
+  let selectedImg = '/imgs/channels/' + cableChannelsSelectedId + '.png';
   const viewSt = store(v => v.viewSt);
 
   const onShortClick = async (keyup, value) => {

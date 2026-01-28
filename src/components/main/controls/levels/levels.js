@@ -15,6 +15,7 @@ function Levels() {
   const timeout3s = useRef(null);
   const timeout6s = useRef(null);
   const volumeChange = useRef(1);
+  const selectionsSt = store(v => v.selectionsSt);
 
   const onMuteShortClick = useCallback(async (keyup, key) => {
     if (screen.state === 'on') {
@@ -23,7 +24,7 @@ function Levels() {
         const device = screenSelectedSt;
         const value = screen.mute === 'on' ? 'off' : 'on';
         requests.sendIfttt({ device, key, value });
-        requests.updateTable({ new: { newId: device, newTable: 'screens', newMute: value } });
+        requests.updateTable({ newId: device, newTable: 'screens', newMute: value });
       }
     }
   }, [screenSelectedSt, screen])
@@ -47,7 +48,8 @@ function Levels() {
     let newChannel = {};
     const device = 'channelsSala';
     let newChannelOrder = 0;
-    const channelSelected = cableChannelsSt.find(ch => ch.state === 'selected');
+    const cableChannelsSelectedId = selectionsSt.find(el => el.table === 'cableChannels')?.id;
+    const channelSelected = cableChannelsSt.find(ch => ch.id === cableChannelsSelectedId);
     const channelOrderSelected = channelSelected.order;
     if (value === 'up') {
       newChannelOrder = channelOrderSelected + 1;
@@ -64,10 +66,7 @@ function Levels() {
       }
     }
     requests.sendIfttt({ device: device + newChannel.ifttt, key: 'selected', value: newChannel.id });
-    requests.updateTable({
-      current: { currentId: channelSelected.id, currentTable: 'cableChannels' },
-      new: { newId: newChannel.id, newTable: 'cableChannels' }
-    });
+    requests.updateSelections({ table: 'cableChannels', id: newChannel.id });
   }
 
   const onVolumeClick = (vol, button, vib = true) => {
@@ -76,15 +75,15 @@ function Levels() {
     if (button === 'up') {
       newVol = screen.volume + vol;
       requests.sendIfttt({ device, key: 'volume', value: button + vol });
-      requests.updateTable({ new: { newId: device, newTable: 'screens', newVolume: newVol } });
+      requests.updateTable({ newId: device, newTable: 'screens', newVolume: newVol });
     } else if (screen.volume !== 0) {
       if (screen.volume - vol >= 0) {
         newVol = screen.volume - vol;
         requests.sendIfttt({ device, key: 'volume', value: button + vol });
-        requests.updateTable({ new: { newId: device, newTable: 'screens', newVolume: newVol } });
+        requests.updateTable({ newId: device, newTable: 'screens', newVolume: newVol });
       } else {
         requests.sendIfttt({ device, key: 'volume', value: button + vol });
-        requests.updateTable({ new: { newId: device, newTable: 'screens', newVolume: '0' } });
+        requests.updateTable({ newId: device, newTable: 'screens', newVolume: '0' });
       }
     } else {
       requests.sendIfttt({ device, key: 'volume', value: button + vol });

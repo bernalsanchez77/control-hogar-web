@@ -90,13 +90,7 @@ class Requests {
     });
   }
   async updateTable(params) {
-    if (params.new) {
-      params.new.newDate = params.new.newDate || new Date().toISOString();
-    }
-    if (params.current && params.new) {
-      params.current.currentState = params.current.currentState || '';
-      params.new.newState = params.new.newState || 'selected';
-    }
+    params.date = params.date || new Date().toISOString();
     if (window.cordova) {
       if (window.cordova?.plugin?.http) {
         await this.cordovaApiRequest('updateTableInSupabase', params, 'patch', 'json');
@@ -107,7 +101,7 @@ class Requests {
       await this.normalApiRequest('updateTableInSupabase', params, 'patch');
     }
   }
-  async updateTable2(params) {
+  async updateSelections(params) {
     if (!params.date) {
       params.date = new Date().toISOString();
     }

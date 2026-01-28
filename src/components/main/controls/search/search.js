@@ -7,22 +7,20 @@ import './search.css';
 
 function Search() {
   const rokuSearchModeSt = store(v => v.rokuSearchModeSt);
-  const rokuAppsSt = store(v => v.rokuAppsSt);
   const viewSt = store(v => v.viewSt);
   const setYoutubeSearchVideosSt = store(v => v.setYoutubeSearchVideosSt);
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   const [searchText, setSearchText] = useState('');
   const [modeVisibility] = useState(false);
+  const selectionsSt = store(v => v.selectionsSt);
+  const rokuAppsSelectedRokuId = selectionsSt.find(el => el.table === 'rokuApps')?.id;
+  const rokuAppsSelectedLabel = store(v => v.rokuAppsSt.find(el => el.rokuId === rokuAppsSelectedRokuId)?.label);
   const inputRef = useRef(null);
   let placeholder = '';
 
   if (viewSt.selected === 'roku') {
-    //if (rokuAppsSt.find(app => app.state === 'selected')?.id === 'home') {
-    //placeholder = 'Buscar en Roku';
-    //} else {
-    placeholder = 'Buscar en ' + rokuAppsSt.find(app => app.state === 'selected')?.label;
-    //}
+    placeholder = rokuAppsSelectedLabel ? 'Buscar en ' + rokuAppsSelectedLabel : 'Buscar en Roku';
     if (viewSt.roku.apps.selected === 'youtube') {
       if (viewSt.roku.apps.youtube.mode) {
         if (viewSt.roku.apps.youtube.mode === 'channel') {

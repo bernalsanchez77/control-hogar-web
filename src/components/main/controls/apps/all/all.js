@@ -9,23 +9,21 @@ function Apps() {
   const rokuAppsSt = store(v => v.rokuAppsSt);
   const viewSt = store(v => v.viewSt);
   const wifiNameSt = store(v => v.wifiNameSt);
+  const selectionsSt = store(v => v.selectionsSt);
+  const rokuAppsSelectedRokuId = selectionsSt.find(el => el.table === 'rokuApps')?.id;
 
   const onShortClick = (keyup, value) => {
     if (keyup) {
       utils.triggerVibrate();
       const device = 'rokuSala';
       const app = rokuAppsSt.find(app => app.id === value);
-      const currentId = rokuAppsSt.find(app => app.state === 'selected').id;
       setRokuSearchModeSt('roku');
       if (wifiNameSt === 'Noky') {
         requests.fetchRoku({ key: 'launch', value: app.rokuId });
       } else {
         requests.sendIfttt({ device, key: 'app', value });
       }
-      requests.updateTable({
-        current: { currentId, currentTable: 'rokuApps' },
-        new: { newId: app.id, newTable: 'rokuApps' }
-      });
+      requests.updateSelections({ table: 'rokuApps', id: app.rokuId });
       if (app.id !== 'youtube') {
         youtube.clearCurrentVideo();
         youtube.clearQueue();
@@ -47,7 +45,7 @@ function Apps() {
           <li key={key} className='controls-apps-li'>
             <div className='controls-apps-element'>
               <button
-                className={`controls-apps-button ${app.state === 'selected' ? "controls-apps-button--on" : "controls-apps-button--off"}`}
+                className={`controls-apps-button ${app.rokuId === rokuAppsSelectedRokuId ? "controls-apps-button--on" : "controls-apps-button--off"}`}
                 onTouchStart={(e) => utils.onTouchStart(app.id, e, onShortClick)}
                 onTouchEnd={(e) => utils.onTouchEnd(app.id, e, onShortClick, onLongClick)}>
                 <img

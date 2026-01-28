@@ -1,5 +1,4 @@
 import React, { useEffect, useCallback, useRef } from 'react';
-import { store } from "../../store/store";
 import Screens from './screens/screens';
 import Devices from './devices/devices';
 import Options from './options/options';
@@ -16,6 +15,7 @@ import Roku from '../../global/roku';
 import CordovaPlugins from '../../global/cordova-plugins';
 import Tables from '../../global/tables';
 import events from '../../global/events';
+import { store } from '../../store/store';
 import './load.css';
 
 function Load() {
@@ -40,6 +40,7 @@ function Load() {
   const isPcSt = store(v => v.isPcSt);
   const isAppSt = store(v => v.isAppSt);
   const screenSelectedSt = store(v => v.screenSelectedSt);
+
   // const [inRange, setInRange] = useState(false);
 
   //useRef Variables
@@ -125,13 +126,13 @@ function Load() {
     const screenSelected = store.getState().screensSt.find(el => el.id === screenSelectedSt);
     CordovaPlugins.updateScreenSelected(screenSelected.label + ' ' + screenSelected.state.toUpperCase());
     CordovaPlugins.updateScreenState(screenSelected.state);
-    const appSelected = store.getState().rokuAppsSt.find(el => el.state === 'selected');
-    CordovaPlugins.updateAppSelected(appSelected.label);
+    const rokuAppsSelectedRokuId = store.getState().selectionsSt.find(el => el.table === 'rokuApps').id;
+    const appSelectedLabel = store.getState().rokuAppsSt.find(el => el.rokuId === rokuAppsSelectedRokuId).label;
+    CordovaPlugins.updateAppSelected(appSelectedLabel);
     CordovaPlugins.updateMuteState(screenSelected.mute);
   }, [screenSelectedSt]);
 
   const load = useCallback(async (firstLoad = false) => {
-    let selectionsTable = null;
     if (firstLoad) {
       setIsLoadingSt(true);
     }
@@ -149,18 +150,16 @@ function Load() {
       });
 
       setIsLoadingSt(false);
-      newView.selected = hdmiSalaTable.table.data.find(el => el.state === 'selected').id;
-      await viewRouter.changeView(newView);
-      await setData('rokuApps', true, (change) => {
-        Tables.onRokuAppsTableChange(change);
+      await setData('selections', true, (change) => {
+        Tables.onSelectionsTableChange(change);
       });
+      newView.selected = store.getState().selectionsSt.find(el => el.table === 'hdmiSala').id;
+      await viewRouter.changeView(newView);
+      await setData('rokuApps');
       await setData('devices');
       await setData('youtubeChannelsLiz');
       await setData('cableChannels');
       await setData('youtubeVideosLiz');
-      selectionsTable = await setData('selections', true, (change) => {
-        Tables.onSelectionsTableChange(change);
-      });
     }
     if (isAppSt) {
       updateNotificationBar();
@@ -170,7 +169,6 @@ function Load() {
     }
     setIsLoadingSt(false);
     isLoadingRef.current = false;
-    return selectionsTable;
   }, [setData, setIsLoadingSt, viewSt, wifiNameSt, isAppSt, updateNotificationBar]);
 
   // event functions
@@ -183,14 +181,15 @@ function Load() {
 
   const init = useCallback(async () => {
     await supabasePeers.subscribeToPeersChannel();
-    const selectionsTable = await load(true);
+    await load(true);
     if (wifiNameSt === 'Noky') {
       Roku.setIsConnectedToNokyWifi(true);
     }
-    const currentVideo = store.getState().youtubeVideosLizSt.find(video => video.id === selectionsTable.find(table => table.table === 'youtubeVideosLiz').id);
-    if (currentVideo) {
+    const youtubeVideosLizSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+    if (youtubeVideosLizSelectedId) {
       if (!Roku.playStateInterval) {
-        Roku.startPlayStateListener(currentVideo);
+        const youtubeVideosLizSelected = store.getState().youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId);
+        Roku.startPlayStateListener(youtubeVideosLizSelected);
       }
     }
     isReadyRef.current = true;

@@ -1,6 +1,7 @@
 
 import { store } from "../store/store";
 import requests from './requests';
+
 import utils from './utils';
 let position = 0;
 let playState = {};
@@ -40,8 +41,9 @@ class Roku {
     try {
       const activeApp = await requests.getRokuData('active-app');
       if (activeApp && activeApp.status === 200) {
-        if (activeApp.data['active-app'].app.id !== 'youtube' && store.getState().selectionsSt.find(table => table.table === 'youtubeVideosLiz').id) {
-          requests.updateTable2({ table: 'youtubeVideosLiz', id: '' });
+        const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+        if (activeApp.data['active-app'].app.id !== 'youtube' && selectedVideoId) {
+          requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
         }
         return activeApp.data['active-app'].app.id;
       } else {
@@ -78,8 +80,9 @@ class Roku {
         case 'pause':
           break;
         case 'stop':
-          if (store.getState().selectionsSt.find(table => table.table === 'youtubeVideosLiz').id) {
-            requests.updateTable2({ table: 'youtubeVideosLiz', id: '' });
+          const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+          if (selectedVideoId) {
+            requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
           }
           break;
         default:
@@ -124,13 +127,13 @@ class Roku {
     const playState = await this.getPlayState();
     const hdmiSalaSt = store.getState().hdmiSalaSt;
     if (playState) {
-      if (hdmiSalaSt.find(hdmi => hdmi.id === 'roku').playState !== playState.state) {
-        requests.updateTable({
-          new: { newId: hdmiSalaSt.find(hdmi => hdmi.id === 'roku').id, newTable: 'hdmiSala', newPlayState: playState.state }
-        });
+      const hdmiSalaRoku = hdmiSalaSt.find(hdmi => hdmi.id === 'roku');
+      if (hdmiSalaRoku && hdmiSalaRoku.playState !== playState.state) {
+        requests.updateTable({ newId: hdmiSalaRoku.id, newTable: 'hdmiSala', newPlayState: playState.state });
       }
-      if (playState.state !== 'play' && playState.state !== 'pause' && store.getState().selectionsSt.find(table => table.table === 'youtubeVideosLiz').id) {
-        requests.updateTable2({ table: 'youtubeVideosLiz', id: '' });
+      const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+      if (playState.state !== 'play' && playState.state !== 'pause' && selectedVideoId) {
+        requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
       }
     }
   }
@@ -148,12 +151,9 @@ class Roku {
   async setRoku() {
     const rokuActiveApp = await this.getActiveApp();
     if (rokuActiveApp) {
-      const rokuAppsSt = store.getState().rokuAppsSt;
-      if (rokuActiveApp !== rokuAppsSt.find(v => v.state === 'selected').rokuId) {
-        requests.updateTable({
-          current: { currentId: rokuAppsSt.find(app => app.state === 'selected').id, currentTable: 'rokuApps' },
-          new: { newId: rokuAppsSt.find(app => app.rokuId === rokuActiveApp).id, newTable: 'rokuApps' }
-        });
+      const selectionId = store.getState().selectionsSt.find(el => el.table === 'rokuApps')?.id;
+      if (rokuActiveApp !== selectionId) {
+        requests.updateSelections({ table: 'rokuApps', id: rokuActiveApp });
       }
       this.updatePlayState();
     }

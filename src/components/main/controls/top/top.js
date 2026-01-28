@@ -18,26 +18,26 @@ function Controls() {
       const devices = ['parlantesSala', 'lamparaSala', 'lamparaComedor'];
       devices.forEach(device => {
         requests.sendIfttt({ device, value });
-        requests.updateTable({ new: { newId: device, newTable: 'devices', newState } });
+        requests.updateTable({ newId: device, newTable: 'devices', newState });
       });
       if (screen.state === 'on') {
         requests.sendIfttt({ device, value });
-        requests.updateTable({ new: { newId: device, newTable: 'screens', newState } });
+        requests.updateTable({ newId: device, newTable: 'screens', newState });
         setTimeout(() => {
           requests.sendIfttt({ device: 'proyectorSwitchSala', value });
-          requests.updateTable({ new: { newId: 'proyectorSwitchSala', newTable: 'devices', newState } });
+          requests.updateTable({ newId: 'proyectorSwitchSala', newTable: 'devices', newState });
         }, 30000);
       } else {
         requests.sendIfttt({ device: 'proyectorSwitchSala', value });
-        requests.updateTable({ new: { newId: 'proyectorSwitchSala', newTable: 'devices', newState } });
+        requests.updateTable({ newId: 'proyectorSwitchSala', newTable: 'devices', newState });
         setTimeout(() => {
           requests.sendIfttt({ device, value });
-          requests.updateTable({ new: { newId: device, newTable: 'screens', newState } });
+          requests.updateTable({ newId: device, newTable: 'screens', newState });
         }, 5000);
       }
     } else {
       requests.sendIfttt({ device, value });
-      requests.updateTable({ new: { newId: device, newTable: 'screens', newState } });
+      requests.updateTable({ newId: device, newTable: 'screens', newState });
     }
   }, [screen, screenSelectedSt]);
   const changeHdmi = () => {
@@ -46,12 +46,12 @@ function Controls() {
     if (viewSt.selected === 'roku') {
       const newId = 'cable';
       requests.sendIfttt({ device, value: newId });
-      requests.updateTable({ current: { currentId: viewSt.selected, currentTable: device }, new: { newId, newTable: device } });
+      requests.updateSelections({ table: 'hdmiSala', id: newId });
     }
     if (viewSt.selected === 'cable') {
       const newId = 'roku';
       requests.sendIfttt({ device, value: newId });
-      requests.updateTable({ current: { currentId: viewSt.selected, currentTable: device }, new: { newId, newTable: device } });
+      requests.updateSelections({ table: 'hdmiSala', id: newId });
     }
   };
   const changeInput = () => {

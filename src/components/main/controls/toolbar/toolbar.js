@@ -9,10 +9,12 @@ import './toolbar.css';
 function Toolbar() {
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
   const hdmiSalaSt = store(v => v.hdmiSalaSt);
-  const selectionsSt = store(v => v.selectionsSt);
   const wifiNameSt = store(v => v.wifiNameSt);
   const rokuPlayStatePositionSt = store(v => v.rokuPlayStatePositionSt);
   const leaderSt = store(v => v.leaderSt);
+  const selectionsSt = store(v => v.selectionsSt);
+  const youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+  const youtubeVideosLizSelected = youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId);
   const userNameSt = store(v => v.userNameSt);
   const rokuRow = hdmiSalaSt.find(hdmi => hdmi.id === 'roku');
   const [normalizedPercentageSt, setNormalizedPercentageSt] = useState(Math.min(100, Math.max(0, 0)));
@@ -33,9 +35,7 @@ function Toolbar() {
         requests.sendIfttt({ device, key: 'command', value });
         if (value === 'play') {
           const newPlayState = rokuRow.playState === "play" ? "pause" : "play";
-          requests.updateTable({
-            new: { newId: rokuRow.id, newTable: 'hdmiSala', newPlayState }
-          });
+          requests.updateTable({ newId: rokuRow.id, newTable: 'hdmiSala', newPlayState });
         }
       }
     }
@@ -73,7 +73,7 @@ function Toolbar() {
   useEffect(() => {
     if (youtubeVideosLizSt.length && selectionsSt.length) {
       const position = rokuPlayStatePositionSt;
-      const video = youtubeVideosLizSt.find(vid => vid.id === selectionsSt.find(table => table.table === 'youtubeVideosLiz').id);
+      const video = youtubeVideosLizSelected;
       const { normalizedPercentage, end } = utils.checkVideoEnd(position, video);
       setNormalizedPercentageSt(normalizedPercentage);
       if (leaderSt === userNameSt && end) {
@@ -85,7 +85,7 @@ function Toolbar() {
           if (nextVideo) {
             const rokuId = store.getState().rokuAppsSt.find(app => app.id === 'youtube').rokuId;
             requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: nextVideo.id } });
-            requests.updateTable2({ table: 'youtubeVideosLiz', id: nextVideo.id });
+            requests.updateSelections({ table: 'youtubeVideosLiz', id: nextVideo.id });
             youtube.handleQueue(nextVideo);
           } else {
             requests.fetchRoku({ key: 'keypress', value: 'Stop' });
@@ -94,7 +94,7 @@ function Toolbar() {
         }, 1000);
       }
     }
-  }, [leaderSt, userNameSt, getNextQueue, rokuPlayStatePositionSt, youtubeVideosLizSt, selectionsSt]);
+  }, [leaderSt, userNameSt, getNextQueue, rokuPlayStatePositionSt, youtubeVideosLizSt, selectionsSt, youtubeVideosLizSelected]);
 
   useEffect(() => {
     const performChangePlay = () => {
@@ -155,7 +155,7 @@ function Toolbar() {
       </div>
       <div className='controls-toolbar-row'>
         <div className="controls-toolbar-progress-bar-container">
-          {selectionsSt.length && selectionsSt.find(selection => selection.table === 'youtubeVideosLiz').id && wifiNameSt === 'Noky' &&
+          {youtubeVideosLizSelected?.id && wifiNameSt === 'Noky' &&
             <div className="controls-toolbar-progress-bar-track">
               <div
                 className="controls-toolbar-progress-bar-fill" style={{ width: `${normalizedPercentageSt}%` }}>
