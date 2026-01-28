@@ -107,12 +107,12 @@ class Requests {
     }
     if (window.cordova) {
       if (window.cordova?.plugin?.http) {
-        await this.cordovaApiRequest('updateTableInSupabase2', params, 'patch', 'json');
+        await this.cordovaApiRequest('updateSelectionsInSupabase', params, 'patch', 'json');
       } else {
-        console.log('fallo updateTableInSubabase por http');
+        console.log('fallo updateSelectionsInSubabase por http');
       }
     } else {
-      await this.normalApiRequest('updateTableInSupabase2', params, 'patch');
+      await this.normalApiRequest('updateSelectionsInSupabase', params, 'patch');
     }
   }
   async getTable(table) {
