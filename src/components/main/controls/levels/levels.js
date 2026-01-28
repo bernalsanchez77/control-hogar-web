@@ -24,7 +24,7 @@ function Levels() {
         const device = screenSelectedSt;
         const value = screen.mute === 'on' ? 'off' : 'on';
         requests.sendIfttt({ device, key, value });
-        requests.updateTable({ newId: device, newTable: 'screens', newMute: value });
+        requests.updateTable({ id: device, table: 'screens', mute: value });
       }
     }
   }, [screenSelectedSt, screen])
@@ -75,15 +75,15 @@ function Levels() {
     if (button === 'up') {
       newVol = screen.volume + vol;
       requests.sendIfttt({ device, key: 'volume', value: button + vol });
-      requests.updateTable({ newId: device, newTable: 'screens', newVolume: newVol });
+      requests.updateTable({ id: device, table: 'screens', volume: newVol });
     } else if (screen.volume !== 0) {
       if (screen.volume - vol >= 0) {
         newVol = screen.volume - vol;
         requests.sendIfttt({ device, key: 'volume', value: button + vol });
-        requests.updateTable({ newId: device, newTable: 'screens', newVolume: newVol });
+        requests.updateTable({ id: device, table: 'screens', volume: newVol });
       } else {
         requests.sendIfttt({ device, key: 'volume', value: button + vol });
-        requests.updateTable({ newId: device, newTable: 'screens', newVolume: '0' });
+        requests.updateTable({ id: device, table: 'screens', volume: '0' });
       }
     } else {
       requests.sendIfttt({ device, key: 'volume', value: button + vol });

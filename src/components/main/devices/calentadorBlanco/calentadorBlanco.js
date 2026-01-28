@@ -7,11 +7,11 @@ function CalentadorBlanco({ element }) {
     utils.triggerVibrate();
     if (element.state === 'on') {
       requests.sendIfttt({ device, key: 'state', value: 'off' });
-      requests.updateTable({ newId: device, newTable: 'devices', newState: 'off' });
+      requests.updateTable({ id: device, table: 'devices', state: 'off' });
     }
     if (element.state === 'off') {
       requests.sendIfttt({ device, key: 'state', value: 'on' });
-      requests.updateTable({ newId: device, newTable: 'devices', newState: 'on' });
+      requests.updateTable({ id: device, table: 'devices', state: 'on' });
     }
   }
 

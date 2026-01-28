@@ -6,7 +6,7 @@ class Youtube {
     const queueElements = store.getState().youtubeVideosLizSt.filter(video => video.queue > 0);
     if (queueElements.length > 0) {
       queueElements.forEach(video => {
-        requests.updateTable({ newId: video.id, newTable: 'youtubeVideosLiz', newQueue: 0 });
+        requests.updateTable({ id: video.id, table: 'youtubeVideosLiz', queue: 0 });
       });
     }
   }
@@ -28,10 +28,10 @@ class Youtube {
   }
   async handleQueue(video) {
     if (video.queue) {
-      requests.updateTable({ newId: video.id, newTable: 'youtubeVideosLiz', newQueue: 0, newDate: video.date });
+      requests.updateTable({ id: video.id, table: 'youtubeVideosLiz', queue: 0, date: video.date });
     } else {
       const lastQueue = this.getLastQueue().queue;
-      requests.updateTable({ newId: video.id, newTable: 'youtubeVideosLiz', newQueue: lastQueue + 1, newDate: video.date });
+      requests.updateTable({ id: video.id, table: 'youtubeVideosLiz', queue: lastQueue + 1, date: video.date });
     }
   }
   onVideoShortClick(video) {

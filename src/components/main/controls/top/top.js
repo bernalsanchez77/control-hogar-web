@@ -18,26 +18,26 @@ function Controls() {
       const devices = ['parlantesSala', 'lamparaSala', 'lamparaComedor'];
       devices.forEach(device => {
         requests.sendIfttt({ device, value });
-        requests.updateTable({ newId: device, newTable: 'devices', newState });
+        requests.updateTable({ id: device, table: 'devices', state: newState });
       });
       if (screen.state === 'on') {
         requests.sendIfttt({ device, value });
-        requests.updateTable({ newId: device, newTable: 'screens', newState });
+        requests.updateTable({ id: device, table: 'screens', state: newState });
         setTimeout(() => {
           requests.sendIfttt({ device: 'proyectorSwitchSala', value });
-          requests.updateTable({ newId: 'proyectorSwitchSala', newTable: 'devices', newState });
+          requests.updateTable({ id: 'proyectorSwitchSala', table: 'devices', state: newState });
         }, 30000);
       } else {
         requests.sendIfttt({ device: 'proyectorSwitchSala', value });
-        requests.updateTable({ newId: 'proyectorSwitchSala', newTable: 'devices', newState });
+        requests.updateTable({ id: 'proyectorSwitchSala', table: 'devices', state: newState });
         setTimeout(() => {
           requests.sendIfttt({ device, value });
-          requests.updateTable({ newId: device, newTable: 'screens', newState });
+          requests.updateTable({ id: device, table: 'screens', state: newState });
         }, 5000);
       }
     } else {
       requests.sendIfttt({ device, value });
-      requests.updateTable({ newId: device, newTable: 'screens', newState });
+      requests.updateTable({ id: device, table: 'screens', state: newState });
     }
   }, [screen, screenSelectedSt]);
   const changeHdmi = () => {

@@ -35,7 +35,7 @@ function Toolbar() {
         requests.sendIfttt({ device, key: 'command', value });
         if (value === 'play') {
           const newPlayState = rokuRow.playState === "play" ? "pause" : "play";
-          requests.updateTable({ newId: rokuRow.id, newTable: 'hdmiSala', newPlayState });
+          requests.updateTable({ id: rokuRow.id, table: 'hdmiSala', playState: newPlayState });
         }
       }
     }

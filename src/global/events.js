@@ -14,7 +14,7 @@ class Events {
             let newVol = 0;
             newVol = screen.volume + 1;
             requests.sendIfttt({ device: screen.id, key: 'volume', value: 'up' + 1 });
-            requests.updateTable({ newId: screen.id, newTable: 'screens', newVolume: newVol });
+            requests.updateTable({ id: screen.id, table: 'screens', volume: newVol });
         }
     }
     onVolumeDown(e) {
@@ -25,10 +25,10 @@ class Events {
                 if (screen.volume - 1 >= 0) {
                     newVol = screen.volume - 1;
                     requests.sendIfttt({ device: screen.id, key: 'volume', value: 'down' + 1 });
-                    requests.updateTable({ newId: screen.id, newTable: 'screens', newVolume: newVol });
+                    requests.updateTable({ id: screen.id, table: 'screens', volume: newVol });
                 } else {
                     requests.sendIfttt({ device: screen.id, key: 'volume', value: 'down' + 1 });
-                    requests.updateTable({ newId: screen.id, newTable: 'screens', newVolume: '0' });
+                    requests.updateTable({ id: screen.id, table: 'screens', volume: '0' });
                 }
             } else {
                 requests.sendIfttt({ device: screen.id, key: 'volume', value: 'down' + 1 });

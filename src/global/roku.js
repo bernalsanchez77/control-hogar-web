@@ -129,7 +129,7 @@ class Roku {
     if (playState) {
       const hdmiSalaRoku = hdmiSalaSt.find(hdmi => hdmi.id === 'roku');
       if (hdmiSalaRoku && hdmiSalaRoku.playState !== playState.state) {
-        requests.updateTable({ newId: hdmiSalaRoku.id, newTable: 'hdmiSala', newPlayState: playState.state });
+        requests.updateTable({ id: hdmiSalaRoku.id, table: 'hdmiSala', playState: playState.state });
       }
       const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
       if (playState.state !== 'play' && playState.state !== 'pause' && selectedVideoId) {

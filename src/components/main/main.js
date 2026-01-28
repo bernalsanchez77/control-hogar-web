@@ -39,14 +39,14 @@ function Main() {
   const onResume = useCallback(async (e) => {
     connection.updateConnection();
     setIsInForegroundSt(true);
-    requests.updateTable({ newId: userNameSt, newTable: 'users', newState: 'foreground' });
+    requests.updateTable({ id: userNameSt, table: 'users', state: 'foreground' });
     // await supabaseChannels.usersChannel.track({ name: userNameSt, status: 'foreground', date: new Date().toISOString(), wifiName: wifiNameSt });
   }, [setIsInForegroundSt, userNameSt]);
 
   const onPause = useCallback(async (e) => {
     setIsInForegroundSt(false);
     if (isConnectedToInternetSt) {
-      requests.updateTable({ newId: userNameSt, newTable: 'users', newState: 'background' });
+      requests.updateTable({ id: userNameSt, table: 'users', state: 'background' });
       // requests.sendLogs('salio', user);
     }
 
@@ -91,7 +91,7 @@ function Main() {
 
     if (store.getState().isConnectedToInternetSt) {
       requests.sendLogs('entro', user);
-      requests.updateTable({ newId: userName, newTable: 'users', newState: 'foreground' });
+      requests.updateTable({ id: userName, table: 'users', state: 'foreground' });
     } else {
       connection.onNoInternet();
     }

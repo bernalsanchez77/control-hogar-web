@@ -9,11 +9,11 @@ function LuzCuarto({ element }) {
       const device = element.id;
       if (element.state === 'off') {
         requests.sendIfttt({ device, key: 'state', value: 'on' });
-        requests.updateTable({ newId: device, newTable: 'devices', newState: 'on' });
+        requests.updateTable({ id: device, table: 'devices', state: 'on' });
       }
       setTimeout(() => {
         requests.sendIfttt({ device, key: 'color', value: value });
-        requests.updateTable({ newId: device, newTable: 'devices', newColor: value });
+        requests.updateTable({ id: device, table: 'devices', color: value });
       }, 1000);
     }
   };

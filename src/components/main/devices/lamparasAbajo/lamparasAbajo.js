@@ -36,7 +36,7 @@ function LamparasAbajo({ lamparaSala, lamparaComedor, chimeneaSala, lamparaTurca
       lamparasOff.forEach(lampara => {
         if (lampara.state === 'on') {
           requests.sendIfttt({ device: lampara.id, key: 'state', value: 'off' });
-          requests.updateTable({ newId: lampara.id, newTable: 'devices', newState: 'off' });
+          requests.updateTable({ id: lampara.id, table: 'devices', state: 'off' });
         }
       });
       setState('off');
@@ -44,7 +44,7 @@ function LamparasAbajo({ lamparaSala, lamparaComedor, chimeneaSala, lamparaTurca
       lamparasOn.forEach(lampara => {
         if (lampara.state === 'off') {
           requests.sendIfttt({ device: lampara.id, key: 'state', value: 'on' });
-          requests.updateTable({ newId: lampara.id, newTable: 'devices', newState: 'on' });
+          requests.updateTable({ id: lampara.id, table: 'devices', state: 'on' });
         }
       });
       setState('on');
