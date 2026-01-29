@@ -16,7 +16,7 @@ function Devices() {
       label: 'Lamparas Abajo',
       img: '/imgs/devices/lamparasabajo.png',
       state: 'off',
-      order: 13,
+      order: 20,
       public: true,
     }
   ] : [], [devicesSt]);
