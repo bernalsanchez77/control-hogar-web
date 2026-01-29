@@ -55,6 +55,12 @@ export const devicesOriginal = {
         id: 'ventiladorSala',
         img: '/imgs/devices/ventiladorsala.png',
     },
+    luzTeleSala: {
+        state: 'off',
+        label: 'Luz Tele Sala',
+        id: 'luzTeleSala',
+        img: '/imgs/devices/ventiladorsala.png',
+    },
     lamparasAbajo: {
         state: 'off',
         label: 'Lamparas Abajo',
@@ -125,7 +131,7 @@ export const devicesOriginal = {
         volume: '0',
         channelSelected: 'siete',
         input: {
-            state: 'hdmi1', 
+            state: 'hdmi1',
             label: {
                 hdmi1: 'Modo Normal',
                 hdmi2: 'Modo Firestick'

@@ -51,6 +51,7 @@ class PeersChannel {
                 const newState = this.peersChannel.presenceState();
                 const realPeers = this.getRealPeers(newState);
                 currentPeers = Object.values(newState).flat();
+                console.log('currentPeers: ', currentPeers);
                 const previousIds = new Set(previousPeers.map(p => p.name));
                 const currentIds = new Set(currentPeers.map(p => p.name));
                 const joinedIds = currentPeers.filter(peer => !previousIds.has(peer.name));

@@ -1,26 +1,11 @@
-import './calentadorBlanco.css';
-import requests from '../../../../global/requests';
-import utils from '../../../../global/utils';
-
-function CalentadorBlanco({ element }) {
-  const changeControl = (device) => {
-    utils.triggerVibrate();
-    if (element.state === 'on') {
-      requests.sendIfttt({ device, key: 'state', value: 'off' });
-      requests.updateTable({ id: device, table: 'devices', state: 'off' });
-    }
-    if (element.state === 'off') {
-      requests.sendIfttt({ device, key: 'state', value: 'on' });
-      requests.updateTable({ id: device, table: 'devices', state: 'on' });
-    }
-  }
-
+function CalentadorBlanco({ element, onTouchStartParent, onTouchEndParent }) {
   return (
     <div className="calentadorBlanco">
       <div>
         <button
           className={`devices-button ${element.state === 'on' ? "devices-button--on" : "devices-button-off"}`}
-          onTouchStart={() => changeControl(element.id)}>
+          onTouchStart={(e) => onTouchStartParent(element, e)}
+          onTouchEnd={(e) => onTouchEndParent(element, e)}>
           <img
             className='devices-button-img'
             src={element.img}
@@ -32,5 +17,4 @@ function CalentadorBlanco({ element }) {
     </div>
   );
 }
-
 export default CalentadorBlanco;

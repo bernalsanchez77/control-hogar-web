@@ -53,9 +53,10 @@ class Youtube {
         requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
       }
     }
-    const rokuActiveAppId = this.rokuAppsSelectedId;
-    if (rokuActiveAppId !== 'youtube') {
-      requests.updateSelections({ table: 'rokuApps', id: this.rokuAppsSelectedRokuId });
+    const rokuAppsSelectedId = store.getState().selectionsSt.find(el => el.table === 'rokuApps')?.id;
+    const youtubeAppId = store.getState().rokuAppsSt.find(app => app.id === 'youtube').rokuId;
+    if (rokuAppsSelectedId !== youtubeAppId) {
+      requests.updateSelections({ table: 'rokuApps', id: youtubeAppId });
     }
     this.clearQueue();
   }

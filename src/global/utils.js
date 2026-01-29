@@ -2,6 +2,8 @@ class Utils {
   supabaseChannels = {};
   longClickTimeout = null;
   longClick = false;
+  touchMoved = false;
+  touchStartY = 0;
   isHome(lat, lon) {
     const latCentro = 9.9333;
     const lonCentro = -84.0845;
@@ -164,6 +166,8 @@ class Utils {
   }
   onTouchStart(value, e, onShortClick) {
     e.preventDefault();
+    this.touchStartY = e.touches[0].clientY;
+    this.touchMoved = false;
     this.longClickTimeout = setTimeout(() => {
       this.longClick = true;
     }, 500);
@@ -172,14 +176,22 @@ class Utils {
   onTouchEnd(value, e, onShortClick, onLongClick) {
     e.preventDefault();
     clearTimeout(this.longClickTimeout);
-    if (this.longClick) {
-      if (onLongClick) {
-        onLongClick(value);
+    if (!this.touchMoved) {
+      if (this.longClick) {
+        if (onLongClick) {
+          onLongClick(value);
+        }
+      } else {
+        onShortClick(true, value);
       }
-    } else {
-      onShortClick(true, value);
     }
     this.longClick = false;
+  }
+  onTouchMove(e) {
+    const deltaY = Math.abs(e.touches[0].clientY - this.touchStartY);
+    if (deltaY > 10) {
+      this.touchMoved = true;
+    }
   }
 }
 const utils = new Utils();

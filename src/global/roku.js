@@ -5,7 +5,7 @@ import requests from './requests';
 import utils from './utils';
 let position = 0;
 let playState = {};
-const simulatePlayState = true;
+const simulatePlayState = false;
 let testCount = 0;
 
 class Roku {
@@ -42,7 +42,8 @@ class Roku {
       const activeApp = await requests.getRokuData('active-app');
       if (activeApp && activeApp.status === 200) {
         const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
-        if (activeApp.data['active-app'].app.id !== 'youtube' && selectedVideoId) {
+        const youtubeAppId = store.getState().rokuAppsSt.find(app => app.id === 'youtube')?.rokuId;
+        if (activeApp.data['active-app'].app.id !== youtubeAppId && selectedVideoId) {
           requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
         }
         return activeApp.data['active-app'].app.id;
@@ -149,7 +150,12 @@ class Roku {
   }
 
   async setRoku() {
-    const rokuActiveApp = await this.getActiveApp();
+    let rokuActiveApp;
+    if (simulatePlayState) {
+      rokuActiveApp = '837';
+    } else {
+      rokuActiveApp = await this.getActiveApp();
+    }
     if (rokuActiveApp) {
       const selectionId = store.getState().selectionsSt.find(el => el.table === 'rokuApps')?.id;
       if (rokuActiveApp !== selectionId) {

@@ -1,119 +1,135 @@
+import { useEffect, useCallback, useMemo } from 'react';
 import { store } from "../../../store/store";
-import LamparaComedor from './lamparaComedor/lamparaComedor';
-import LamparaTurca from './lamparaTurca/lamparaTurca';
-import LamparaSala from './lamparaSala/lamparaSala';
-import LamparaRotatoria from './lamparaRotatoria/lamparaRotatoria';
-import LuzCuarto from './luzCuarto/luzCuarto';
-import LuzEscalera from './luzEscalera/luzEscalera';
-import ChimeneaSala from './chimeneaSala/chimeneaSala';
-import ParlantesSala from './parlantesSala/parlantesSala';
-import VentiladorSala from './ventiladorSala/ventiladorSala';
-import CalentadorNegro from './calentadorNegro/calentadorNegro';
-import CalentadorBlanco from './calentadorBlanco/calentadorBlanco';
-import LamparasAbajo from './lamparasAbajo/lamparasAbajo';
 import viewRouter from '../../../global/view-router';
+import utils from '../../../global/utils';
+import requests from '../../../global/requests';
 import './devices.css';
 
 
 function Devices() {
   const userTypeSt = store(v => v.userTypeSt);
   const devicesSt = store(v => v.devicesSt);
+  const allDevices = useMemo(() => devicesSt.length ? [
+    ...devicesSt,
+    {
+      id: 'lamparasAbajo',
+      label: 'Lamparas Abajo',
+      img: '/imgs/devices/lamparasabajo.png',
+      state: 'off',
+      order: 13,
+      public: true,
+    }
+  ] : [], [devicesSt]);
   const viewSt = store(v => v.viewSt);
+  const lamparasOn = [
+    devicesSt.find(device => device.id === 'lamparaComedor'),
+    devicesSt.find(device => device.id === 'lamparaSala'),
+    devicesSt.find(device => device.id === 'chimeneaSala'),
+    devicesSt.find(device => device.id === 'lamparaTurca'),
+  ];
+  const lamparasOff = useMemo(() => [
+    devicesSt.find(device => device.id === 'lamparaComedor'),
+    devicesSt.find(device => device.id === 'lamparaSala'),
+    devicesSt.find(device => device.id === 'chimeneaSala'),
+    devicesSt.find(device => device.id === 'lamparaTurca'),
+  ], [devicesSt]);
+
+  const setLamparasState = useCallback(async () => {
+    let lamps = 0;
+    lamparasOff.forEach(lampara => {
+      if (lampara.state === 'on') {
+        lamps++;
+      }
+    });
+    if (lamps > 1) {
+      allDevices.find(device => device.id === 'lamparasAbajo').state = 'on';
+    } else {
+      allDevices.find(device => device.id === 'lamparasAbajo').state = 'off';
+    }
+  }, [lamparasOff, allDevices]);
+
   const changeView = async (device) => {
     const newView = structuredClone(viewSt);
-    newView.devices.device = device;
+    newView.devices.device = device.id;
     await viewRouter.changeView(newView);
   }
-  const lamparaComedor = devicesSt.find(device => device.id === 'lamparaComedor');
-  const lamparaTurca = devicesSt.find(device => device.id === 'lamparaTurca');
-  const lamparaSala = devicesSt.find(device => device.id === 'lamparaSala');
-  const lamparaRotatoria = devicesSt.find(device => device.id === 'lamparaRotatoria');
-  const chimeneaSala = devicesSt.find(device => device.id === 'chimeneaSala');
-  const parlantesSala = devicesSt.find(device => device.id === 'parlantesSala');
-  const ventiladorSala = devicesSt.find(device => device.id === 'ventiladorSala');
-  const calentadorNegro = devicesSt.find(device => device.id === 'calentadorNegro');
-  const calentadorBlanco = devicesSt.find(device => device.id === 'calentadorBlanco');
-  const luzCuarto = devicesSt.find(device => device.id === 'luzCuarto');
-  const luzEscalera = devicesSt.find(device => device.id === 'luzEscalera');
+
+  const onDevicesShortClick = (keyup, device) => {
+    if (keyup) {
+      if (device.state === 'on') {
+        if (device.id === 'lamparasAbajo') {
+          lamparasOff.forEach(lampara => {
+            if (lampara.state === 'on') {
+              requests.sendIfttt({ device: lampara.id, key: 'state', value: 'off' });
+              requests.updateTable({ id: lampara.id, table: 'devices', state: 'off' });
+            }
+          });
+        } else {
+          requests.sendIfttt({ device: device.id, key: 'state', value: 'off' });
+          requests.updateTable({ id: device.id, table: 'devices', state: 'off' });
+        }
+
+      }
+      if (device.state === 'off') {
+        if (device.id === 'lamparasAbajo') {
+          lamparasOn.forEach(lampara => {
+            if (lampara.state === 'off') {
+              requests.sendIfttt({ device: lampara.id, key: 'state', value: 'on' });
+              requests.updateTable({ id: lampara.id, table: 'devices', state: 'on' });
+            }
+          });
+        } else {
+          requests.sendIfttt({ device: device.id, key: 'state', value: 'on' });
+          requests.updateTable({ id: device.id, table: 'devices', state: 'on' });
+        }
+      }
+    }
+  }
+
+  const onDevicesLongClick = (device) => {
+    changeView(device);
+  }
+
+  const onTouchStart = (device, e) => {
+    utils.onTouchStart(device, e, onDevicesShortClick)
+  }
+
+  const onTouchEnd = (device, e) => {
+    utils.onTouchEnd(device, e, onDevicesShortClick, onDevicesLongClick)
+  }
+
+  const onTouchMove = (e) => {
+    utils.onTouchMove(e)
+  }
+
+  useEffect(() => {
+    setLamparasState();
+  }, [setLamparasState]);
+
 
   return (
     <div className="devices">
-      <div className='devices-row'>
-        <div className='devices-element'>
-          <LamparaComedor
-            element={lamparaComedor}>
-          </LamparaComedor>
-        </div>
-        <div className='devices-element'>
-          <LamparaTurca
-            element={lamparaTurca}>
-          </LamparaTurca>
-        </div>
-        <div className='devices-element'>
-          <LamparaSala
-            element={lamparaSala}>
-          </LamparaSala>
-        </div>
-        <div className='devices-element'>
-          <LamparaRotatoria
-            element={lamparaRotatoria}>
-          </LamparaRotatoria>
-        </div>
-        <div className='devices-element'>
-          <ChimeneaSala
-            element={chimeneaSala}>
-          </ChimeneaSala>
-        </div>
-        <div className='devices-element'>
-          <ParlantesSala
-            element={parlantesSala}>
-          </ParlantesSala>
-        </div>
-      </div>
-      <div className='devices-row'>
-        <div className='devices-element'>
-          <VentiladorSala
-            element={ventiladorSala}>
-          </VentiladorSala>
-        </div>
-        {(userTypeSt === 'owner' || userTypeSt === 'dev') &&
-          <div className='devices-element'>
-            <CalentadorNegro
-              element={calentadorNegro}>
-            </CalentadorNegro>
-          </div>
+      <ul className='devices-ul'>
+        {
+          allDevices.filter(device => device.order !== 0).sort((a, b) => a.order - b.order).map((device, key) => (
+            (userTypeSt === 'owner' || userTypeSt === 'dev' || device.public) &&
+            <li key={key} className='devices-element'>
+              <button
+                className={`devices-button ${device.state === 'on' || (device.id === 'lamparasAbajo' && device.state === 'on') ? "devices-button--on" : "devices-button-off"}`}
+                onTouchStart={(e) => onTouchStart(device, e)}
+                onTouchEnd={(e) => onTouchEnd(device, e)}
+                onTouchMove={(e) => onTouchMove(e)}>
+                <img
+                  className='devices-button-img'
+                  src={device.img}
+                  alt="icono">
+                </img>
+                <div className='devices-led'></div>
+              </button>
+            </li>
+          ))
         }
-        {(userTypeSt === 'owner' || userTypeSt === 'dev') &&
-          <div className='devices-element'>
-            <CalentadorBlanco
-              element={calentadorBlanco}>
-            </CalentadorBlanco>
-          </div>
-        }
-        <div className='devices-element'>
-          <LamparasAbajo
-            chimeneaSala={chimeneaSala}
-            lamparaTurca={lamparaTurca}
-            lamparaSala={lamparaSala}
-            lamparaComedor={lamparaComedor}>
-          </LamparasAbajo>
-        </div>
-        {(userTypeSt === 'owner' || userTypeSt === 'dev') &&
-          <div className='devices-element'>
-            <LuzCuarto
-              element={luzCuarto}
-              changeViewParent={changeView}>
-            </LuzCuarto>
-          </div>
-        }
-        {(userTypeSt === 'owner' || userTypeSt === 'dev') &&
-          <div className='devices-element'>
-            <LuzEscalera
-              element={luzEscalera}>
-            </LuzEscalera>
-          </div>
-        }
-      </div>
+      </ul>
     </div>
   );
 }

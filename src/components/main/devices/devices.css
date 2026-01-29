@@ -2,19 +2,29 @@
   height: 15vh;
   position: fixed;
   bottom: 5vh;
+  width: 80vw;
+  overflow-y: scroll;
+  padding-left: 10vw;
+}
+
+.devices-ul {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-flow: wrap;
-  width: 100%;
+  padding: 0;
 }
+
 .devices-row {
   display: inline-block;
+  padding: 0 40px;
 }
+
 .devices-element {
   float: left;
   margin: 1vh;
 }
+
 .devices-button {
   background-color: transparent;
   width: 100%;
@@ -23,10 +33,12 @@
   -webkit-user-select: none;
   padding: 0;
 }
+
 button.devices-button:active {
   background-color: white;
   transition: background-color 0.1s;
 }
+
 .devices-button--on .devices-led {
   background-color: #39FF14;
   width: 5px;
@@ -41,9 +53,10 @@ button.devices-button:active {
   width: 35px;
   user-select: none;
   -webkit-user-select: none;
-  -webkit-user-select: none;     /* Safari */
-  -webkit-touch-callout: none;   /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -webkit-touch-callout: none;
+  /* iOS Safari */
   user-select: none;
-  pointer-events: none; 
+  pointer-events: none;
 }
-
