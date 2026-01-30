@@ -101,6 +101,18 @@ class Requests {
       await this.normalApiRequest('updateTableInSupabase', params, 'patch');
     }
   }
+  async upsertTable(params) {
+    params.date = params.date || new Date().toISOString();
+    if (window.cordova) {
+      if (window.cordova?.plugin?.http) {
+        await this.cordovaApiRequest('upsertTableInSupabase', params, 'patch', 'json');
+      } else {
+        console.log('fallo upsertTableInSubabase por http');
+      }
+    } else {
+      await this.normalApiRequest('upsertTableInSupabase', params, 'patch');
+    }
+  }
   async updateSelections(params) {
     if (!params.date) {
       params.date = new Date().toISOString();
@@ -127,7 +139,6 @@ class Requests {
       return await this.normalApiRequest('getTableFromSupabase', { table }, 'get');
     }
   }
-
   async searchYoutube(text) {
     let res = {};
     console.log('searchYoutube', text);

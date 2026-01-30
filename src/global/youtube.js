@@ -42,7 +42,7 @@ class Youtube {
         requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
       } else {
         requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
-        requests.updateTable({ id: video.id, table: 'youtubeVideosLiz' });
+        requests.upsertTable({ id: video.id, table: 'youtubeVideosLiz' });
       }
     }
     const rokuAppsSelectedId = store.getState().selectionsSt.find(el => el.table === 'rokuApps')?.id;
