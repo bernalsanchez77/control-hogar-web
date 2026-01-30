@@ -45,6 +45,7 @@ function Youtube() {
       title: item.snippet.title,
       description: item.snippet.description,
       img: item.snippet.thumbnails.medium.url,
+      duration: utils.formatYoutubeDuration(item.contentDetails.duration),
     }));
   }
 

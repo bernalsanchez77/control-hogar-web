@@ -192,8 +192,10 @@ function Load() {
     const youtubeVideosLizSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
     if (youtubeVideosLizSelectedId) {
       if (userNameSt === store.getState().leaderSt && !Roku.playStateInterval) {
-        const youtubeVideosLizSelected = store.getState().youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId);
-        Roku.startPlayStateListener(youtubeVideosLizSelected);
+        const youtubeVideosLizSelected = store.getState().youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId) || {};
+        if (youtubeVideosLizSelected) {
+          Roku.startPlayStateListener(youtubeVideosLizSelected);
+        }
       }
     }
     isReadyRef.current = true;

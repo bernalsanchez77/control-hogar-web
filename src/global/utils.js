@@ -193,6 +193,22 @@ class Utils {
       this.touchMoved = true;
     }
   }
+  parseYoutubeDurationToSeconds(duration) {
+    const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+    const hours = (parseInt(match[1]) || 0);
+    const minutes = (parseInt(match[2]) || 0);
+    const seconds = (parseInt(match[3]) || 0);
+    return (hours * 3600) + (minutes * 60) + seconds;
+  }
+  formatYoutubeDuration(isoDuration) {
+    if (!isoDuration) return "00:00:00";
+    const match = isoDuration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+    const hours = (parseInt(match[1]) || 0);
+    const minutes = (parseInt(match[2]) || 0);
+    const seconds = (parseInt(match[3]) || 0);
+    const pad = (num) => num.toString().padStart(2, '0');
+    return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+  }
 }
 const utils = new Utils();
 export default utils;
