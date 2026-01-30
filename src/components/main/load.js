@@ -27,6 +27,7 @@ function Load() {
   const isInForegroundSt = store(v => v.isInForegroundSt);
   const userTypeSt = store(v => v.userTypeSt);
   const userNameSt = store(v => v.userNameSt);
+  const leaderSt = store(v => v.leaderSt);
   const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
   const wifiNameSt = store(v => v.wifiNameSt);
   const networkTypeSt = store(v => v.networkTypeSt);
@@ -217,6 +218,19 @@ function Load() {
       supabasePeers.peersChannel.track({ name: userNameSt, status: status, date: new Date().toISOString(), wifiName: wifiNameSt });
     }
   }, [wifiNameSt, networkTypeSt, isPcSt, isInForegroundSt, userNameSt, isConnectedToInternetSt]);
+
+  useEffect(() => {
+    if (userNameSt === leaderSt && !Roku.playStateInterval) {
+      const youtubeVideosLizSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+      if (youtubeVideosLizSelectedId) {
+        const youtubeVideosLizSelected = store.getState().youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId);
+        Roku.startPlayStateListener(youtubeVideosLizSelected);
+      }
+    }
+    if (userNameSt !== leaderSt && Roku.playStateInterval) {
+      Roku.stopPlayStateListener();
+    }
+  }, [leaderSt, userNameSt]);
 
   useEffect(() => {
     if (isAppSt) {

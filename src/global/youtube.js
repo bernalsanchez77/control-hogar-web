@@ -35,23 +35,9 @@ class Youtube {
     }
   }
   onVideoShortClick(video) {
-    const rokuId = store.getState().rokuAppsSt.find(app => app.id === 'youtube').rokuId;
-    const isInYoutubeVideosLizSt = store.getState().youtubeVideosLizSt.find(vid => vid.id === video.id);
-    const currentVideoId = this.youtubeVideosLizSelectedId;
-    if (currentVideoId) {
-      if (currentVideoId !== video.id) {
-        requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: video.id } });
-        if (isInYoutubeVideosLizSt) {
-          requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
-        } else {
-          requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
-        }
-      }
-    } else {
-      requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: video.id } });
-      if (isInYoutubeVideosLizSt) {
-        requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
-      }
+    const currentVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+    if (currentVideoId !== video.id) {
+      requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
     }
     const rokuAppsSelectedId = store.getState().selectionsSt.find(el => el.table === 'rokuApps')?.id;
     const youtubeAppId = store.getState().rokuAppsSt.find(app => app.id === 'youtube').rokuId;

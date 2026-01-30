@@ -10,6 +10,7 @@ function Youtube() {
   const youtubeChannelsLizSt = store(v => v.youtubeChannelsLizSt);
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
   const viewSt = store(v => v.viewSt);
+  const leaderSt = store(v => v.leaderSt);
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   let youtubeSortedVideos = [];
@@ -75,8 +76,10 @@ function Youtube() {
           onChannelShortClick(video.id);
         }
         if (type === 'video') {
-          utils.triggerVibrate();
-          youtube.onVideoShortClick(video);
+          if (leaderSt) {
+            utils.triggerVibrate();
+            youtube.onVideoShortClick(video);
+          }
         }
       }
     }

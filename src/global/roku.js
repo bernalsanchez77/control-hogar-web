@@ -123,7 +123,7 @@ class Roku {
   setIsConnectedToNokyWifi(isConnectedToNokyWifi) {
     this.isConnectedToNokyWifi = isConnectedToNokyWifi;
     if (!isConnectedToNokyWifi) {
-      // this.stopPlayStateListener();
+      this.stopPlayStateListener();
     }
   }
 

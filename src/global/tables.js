@@ -3,6 +3,7 @@ import viewRouter from './view-router';
 import { store } from '../store/store';
 import CordovaPlugins from './cordova-plugins';
 import roku from './roku';
+import requests from './requests';
 class Tables {
   async onHdmiSalaTableChange(change) {
     if (store.getState().isAppSt) {
@@ -28,6 +29,8 @@ class Tables {
           roku.stopPlayStateListener();
         }
         if (store.getState().userNameSt === store.getState().leaderSt) {
+          const rokuId = store.getState().rokuAppsSt.find(app => app.label === 'Youtube').rokuId;
+          requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: change.id } });
           const currentVideo = store.getState().youtubeVideosLizSt.find(video => video.id === change.id);
           roku.startPlayStateListener(currentVideo);
         }

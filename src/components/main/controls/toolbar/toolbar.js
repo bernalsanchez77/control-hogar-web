@@ -155,7 +155,7 @@ function Toolbar() {
       </div>
       <div className='controls-toolbar-row'>
         <div className="controls-toolbar-progress-bar-container">
-          {youtubeVideosLizSelected?.id && wifiNameSt === 'Noky' &&
+          {youtubeVideosLizSelected?.id &&
             <div className="controls-toolbar-progress-bar-track">
               <div
                 className="controls-toolbar-progress-bar-fill" style={{ width: `${normalizedPercentageSt}%` }}>

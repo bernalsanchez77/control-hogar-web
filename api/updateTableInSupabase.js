@@ -26,7 +26,6 @@ export default async function handler(req, res) {
     queue = req.body.queue;
     position = req.body.position;
   }
-  console.log('position: ', position);
 
   let data, error;
   ({ data, error } = await supabase.from(table).update({ volume, mute, color, date, state, playState, queue, position }).eq('id', id));
