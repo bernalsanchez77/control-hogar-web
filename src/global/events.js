@@ -6,7 +6,7 @@ import requests from './requests';
 class Events {
     async onNavigationBack(e) {
         e.preventDefault();
-        await viewRouter.onNavigationBack(store.getState().viewSt);
+        await viewRouter.onNavigationBack();
     }
     onVolumeUp(e) {
         const screen = store.getState().screensSt.find(screen => screen.id === store.getState().screenSelectedSt);

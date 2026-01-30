@@ -7,7 +7,7 @@ class PeersChannel {
     }
 
     getLeader(peers) {
-        const leader = peers.find(peer => peer.wifiName === 'Noky');
+        const leader = peers.findLast(peer => peer.wifiName === 'Noky');
         return leader ? leader.name : '';
     }
 

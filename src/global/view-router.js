@@ -151,7 +151,8 @@ class ViewRouter {
     }
     store.getState().setViewSt(newView);
   }
-  async onNavigationBack(currentView) {
+  async onNavigationBack() {
+    const currentView = store.getState().viewSt;
     const newView = structuredClone(currentView);
     if (currentView.selected === 'roku') {
       if (currentView.roku.apps.selected) {
@@ -183,8 +184,8 @@ class ViewRouter {
     }
     window.navigator.app.exitApp();
   }
-  async onHdmiSalaTableChange(currentView, id) {
-    const newView = structuredClone(currentView);
+  async onHdmiSalaTableChange(id) {
+    const newView = structuredClone(store.getState().viewSt);
     newView.selected = id;
     if (newView.selected === 'roku') {
       newView.cable.channels.category = [];
@@ -194,7 +195,7 @@ class ViewRouter {
       newView.roku.apps.youtube.mode = '';
       newView.roku.apps.youtube.channel = '';
     }
-    await this.changeView(newView, currentView);
+    await this.changeView(newView, store.getState().viewSt);
   }
 }
 const viewRouter = new ViewRouter();

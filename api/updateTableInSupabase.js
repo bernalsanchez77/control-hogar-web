@@ -12,6 +12,7 @@ export default async function handler(req, res) {
   let color = null;
   let playState = null;
   let queue = null;
+  let position = null;
 
   if (req.body) {
     id = req.body.id;
@@ -23,10 +24,11 @@ export default async function handler(req, res) {
     color = req.body.color;
     playState = req.body.playState;
     queue = req.body.queue;
+    position = req.body.position;
   }
 
   let data, error;
-  ({ data, error } = await supabase.from(table).update({ volume, mute, color, date, state, playState, queue }).eq('id', id));
+  ({ data, error } = await supabase.from(table).update({ volume, mute, color, date, state, playState, queue, position }).eq('id', id));
   if (error) {
     return res.status(500).json({ error: error.message });
   }

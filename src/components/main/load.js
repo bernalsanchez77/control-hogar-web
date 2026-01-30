@@ -159,7 +159,9 @@ function Load() {
       await setData('devices');
       await setData('youtubeChannelsLiz');
       await setData('cableChannels');
-      await setData('youtubeVideosLiz');
+      await setData('youtubeVideosLiz', true, (change) => {
+        Tables.onYoutubeVideosLizTableChange(change);
+      });
     }
     if (isAppSt) {
       updateNotificationBar();
@@ -184,16 +186,17 @@ function Load() {
     await load(true);
     if (wifiNameSt === 'Noky') {
       Roku.setIsConnectedToNokyWifi(true);
+      // requests.updateSelections({ table: 'users', id: userNameSt });
     }
     const youtubeVideosLizSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
     if (youtubeVideosLizSelectedId) {
-      if (!Roku.playStateInterval) {
+      if (userNameSt === store.getState().leaderSt && !Roku.playStateInterval) {
         const youtubeVideosLizSelected = store.getState().youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId);
         Roku.startPlayStateListener(youtubeVideosLizSelected);
       }
     }
     isReadyRef.current = true;
-  }, [load, wifiNameSt]);
+  }, [load, wifiNameSt, userNameSt]);
 
   // useEffects
 

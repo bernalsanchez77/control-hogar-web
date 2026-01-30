@@ -5,7 +5,7 @@ import requests from './requests';
 import utils from './utils';
 let position = 0;
 let playState = {};
-const simulatePlayState = false;
+const simulatePlayState = true;
 let testCount = 0;
 
 class Roku {
@@ -13,6 +13,7 @@ class Roku {
     this.isConnectedToNokyWifi = '';
     this.testCount = testCount;
     this.playStateInterval = null;
+    this.currentVideo = null;
     this.currentVideoDuration = 0;
   }
 
@@ -76,7 +77,8 @@ class Roku {
     if (playState) {
       switch (playState.state) {
         case 'play':
-          store.getState().setRokuPlayStatePositionSt(position);
+          requests.updateTable({ id: this.currentVideo.id, table: 'youtubeVideosLiz', position: position });
+          // store.getState().setRokuPlayStatePositionSt(position);
           break;
         case 'pause':
           break;
@@ -93,6 +95,7 @@ class Roku {
   }
 
   async startPlayStateListener(currentVideo) {
+    this.currentVideo = currentVideo;
     this.currentVideoDuration = utils.timeToMs(currentVideo.duration);
     console.log('playstatelistener started');
     position = 0;
