@@ -74,7 +74,7 @@ function Toolbar() {
         }
       }
     }
-  }, [rokuRow, wifiNameSt, viewSt]);
+  }, [rokuRow, wifiNameSt, viewSt, setLizEnabledSt]);
 
   const onLongClick = (value) => {
     const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
@@ -230,7 +230,7 @@ function Toolbar() {
                     fill="#fff" />
                 </svg>
               </button>
-              {userTypeSt === 'owner' || userTypeSt === 'dev' &&
+              {(userTypeSt === 'owner' || userTypeSt === 'dev') &&
                 <button
                   className={`controls-toolbar-playlist-liz`}
                   onTouchStart={(e) => utils.onTouchStart('liz', e, onShortClick)}

@@ -124,7 +124,7 @@ function Youtube() {
 
   const saveSavedChannel = () => {
     utils.triggerVibrate();
-    requests.upsertTable({ id: savedChannelRef.current, table: 'youtubeChannelsLiz', title: savedChannelRef.current, user: lizEnabledSt ? 'elizabeth' : userNameSt, date: null });
+    requests.upsertTable({ id: savedChannelRef.current, table: 'youtubeChannelsLiz', title: savedChannelRef.current, user: lizEnabledSt ? 'elizabeth' : userNameSt });
     requests.upsertTable({ id: savedVideo.id, table: 'youtubeVideosLiz', title: utils.decodeYoutubeTitle(savedVideo.title), duration: savedVideo.duration, channelId: savedChannelRef.current });
   };
 
