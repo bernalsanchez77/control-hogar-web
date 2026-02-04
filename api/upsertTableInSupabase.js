@@ -17,6 +17,7 @@ export default async function handler(req, res) {
   let channelId = null;
   let user = null;
   let order = null;
+  let img = null;
 
   if (req.body) {
     id = req.body.id;
@@ -34,10 +35,16 @@ export default async function handler(req, res) {
     channelId = req.body.channelId;
     user = req.body.user;
     order = req.body.order;
+    img = req.body.img;
   }
 
   let data, error;
-  ({ data, error } = await supabase.from(table).upsert({ id, volume, mute, color, date, state, playState, queue, position, title, duration, channelId, user, order }));
+  if (table === 'youtubeChannelsLiz') {
+    ({ data, error } = await supabase.from(table).upsert({ id, title, order, user, img }));
+  }
+  if (table === 'youtubeVideosLiz') {
+    ({ data, error } = await supabase.from(table).upsert({ id, volume, mute, color, date, state, playState, queue, position, title, duration, channelId, user, order }));
+  }
   if (error) {
     return res.status(500).json({ error: error.message });
   }
