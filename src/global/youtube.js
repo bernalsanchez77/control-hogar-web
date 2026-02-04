@@ -11,8 +11,8 @@ class Youtube {
     }
   }
   clearCurrentVideo() {
-    if (store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id) {
-      requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+    if (store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz2')?.id) {
+      requests.updateSelections({ table: 'youtubeVideosLiz2', id: '' });
     }
   }
   getLastQueue() {
@@ -36,13 +36,14 @@ class Youtube {
   }
   onVideoShortClick(video) {
     const isInYoutubeVideosLizSt = store.getState().youtubeVideosLizSt.find(vid => vid.id === video.id);
-    const currentVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+    const currentVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz2')?.id;
     if (currentVideoId !== video.id) {
       if (isInYoutubeVideosLizSt) {
-        requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
+        requests.updateSelections({ table: 'youtubeVideosLiz2', id: video.id });
       } else {
-        requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
-        requests.upsertTable({ id: video.id, table: 'youtubeVideosLiz', title: video.title, duration: video.duration, channelId: store.getState().userNameSt });
+        setTimeout(() => {
+          requests.updateSelections({ table: 'youtubeVideosLiz2', id: video.id });
+        }, 1000);
       }
     }
     const rokuAppsSelectedId = store.getState().selectionsSt.find(el => el.table === 'rokuApps')?.id;

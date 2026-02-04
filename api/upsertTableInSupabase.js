@@ -15,6 +15,8 @@ export default async function handler(req, res) {
   let title = null;
   let duration = null;
   let channelId = null;
+  let user = null;
+  let order = null;
 
   if (req.body) {
     id = req.body.id;
@@ -30,10 +32,12 @@ export default async function handler(req, res) {
     title = req.body.title;
     duration = req.body.duration;
     channelId = req.body.channelId;
+    user = req.body.user;
+    order = req.body.order;
   }
 
   let data, error;
-  ({ data, error } = await supabase.from(table).upsert({ id, volume, mute, color, date, state, playState, queue, position, title, duration, channelId }));
+  ({ data, error } = await supabase.from(table).upsert({ id, volume, mute, color, date, state, playState, queue, position, title, duration, channelId, user, order }));
   if (error) {
     return res.status(500).json({ error: error.message });
   }

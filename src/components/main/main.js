@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { store } from "../../store/store";
-import eruda from 'eruda';
 import Internet from './views/internet/internet.js';
 import Restricted from './views/restricted/restricted.js';
 import Credentials from './views/credentials/credentials.js';
@@ -23,12 +22,14 @@ function Main() {
   const userNameSt = store(v => v.userNameSt);
   const setUserTypeSt = store(v => v.setUserTypeSt);
   const setUserNameSt = store(v => v.setUserNameSt);
+  const setUserDeviceSt = store(v => v.setUserDeviceSt);
   const setScreenSelectedSt = store(v => v.setScreenSelectedSt);
   const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
   const wifiNameSt = store(v => v.wifiNameSt);
   const setIsPcSt = store(v => v.setIsPcSt);
   const setIsAppSt = store(v => v.setIsAppSt);
   const isAppSt = store(v => v.isAppSt);
+  const setLizEnabledSt = store(v => v.setLizEnabledSt);
   const [isReadySt, setIsReadySt] = useState(false);
 
   //useRef Variables
@@ -65,6 +66,7 @@ function Main() {
 
   const init = useCallback(async (isApp) => {
     const userName = localStorage.getItem('user-name');
+    const userDevice = localStorage.getItem('user-device');
     if (isApp) {
       await CordovaPlugins.getPermissions();
       await CordovaPlugins.startWifiNameListener(connection.onWifiNameChange);
@@ -88,6 +90,8 @@ function Main() {
     setScreenSelectedSt(screenId);
     setUserTypeSt(localStorage.getItem('user-type'));
     setUserNameSt(userName);
+    setUserDeviceSt(userDevice);
+    setLizEnabledSt(localStorage.getItem('lizEnabled') === 'true' ? true : false);
 
     if (store.getState().isConnectedToInternetSt) {
       requests.sendLogs('entro', user);
@@ -98,10 +102,7 @@ function Main() {
     setTimeout(() => {
       setIsReadySt(true);
     }, 0);
-    if (localStorage.getItem('user-type') !== 'guest' && localStorage.getItem('user-type') !== 'owner') {
-      eruda.init();
-    }
-  }, [setUserNameSt, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt]);
+  }, [setUserNameSt, setUserDeviceSt, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt]);
 
   useEffect(() => {
     if (isAppSt) {

@@ -23,17 +23,24 @@
 }
 
 .controls-apps-youtube-li-channel {
+  position: relative;
   padding: 0 2px 2px;
   list-style-type: none;
 }
 
 .controls-apps-youtube-li-search {
+  position: relative;
   padding: 0 2px 15px;
   list-style-type: none;
 }
 
 .controls-apps-youtube-channel-img {
   width: 8vh;
+}
+
+.controls-apps-youtube-options-title {
+  color: white;
+  font-size: 12px;
 }
 
 .controls-apps-youtube-video-img {
@@ -108,10 +115,40 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  color: #fff;
 }
 
 .controls-apps-youtube-video-duration {
   font-size: 12px;
+  font-size: 12px;
+  width: auto;
+  margin: 0;
+  padding-top: 2px;
+}
+
+.controls-apps-youtube-video-options {
+  color: #08ff08;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.controls-apps-youtube-video-options-container {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+.controls-apps-youtube-video-options-title {
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  padding: 5px;
+}
+
+.controls-apps-youtube-video-options-img {
+  width: 2vh;
 }
 
 button.controls-apps-youtube-video-button:active {

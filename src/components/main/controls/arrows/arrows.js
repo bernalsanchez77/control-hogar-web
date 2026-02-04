@@ -7,8 +7,9 @@ import './arrows.css';
 
 function Arrows() {
   const wifiNameSt = store(v => v.wifiNameSt);
-  const leaderSt = store(v => v.leaderSt)
-  const userNameSt = store(v => v.userNameSt)
+  const leaderSt = store(v => v.leaderSt);
+  const userNameSt = store(v => v.userNameSt);
+  const userDeviceSt = store(v => v.userDeviceSt);
   const device = 'rokuSala';
 
   const onShortClick = (keyup, value) => {
@@ -52,7 +53,7 @@ function Arrows() {
           </div>
           <div className='controls-arrows-element'>
             <button
-              className={`controls-arrows-button controls-arrows-button--circle ${leaderSt === userNameSt ? 'controls-arrows-button--leader' : ''}`}
+              className={`controls-arrows-button controls-arrows-button--circle ${leaderSt === userNameSt + '-' + userDeviceSt ? 'controls-arrows-button--leader' : ''}`}
               onTouchStart={(e) => utils.onTouchStart('select', e, onShortClick)}
               onTouchEnd={(e) => utils.onTouchEnd('select', e, onShortClick, onLongClick)}>
               ok

@@ -201,13 +201,29 @@ class Utils {
     return (hours * 3600) + (minutes * 60) + seconds;
   }
   formatYoutubeDuration(isoDuration) {
-    if (!isoDuration) return "00:00:00";
+    if (!isoDuration || isoDuration === 'P0D') return "00:00:00";
     const match = isoDuration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+    if (!match) return "00:00:00";
     const hours = (parseInt(match[1]) || 0);
     const minutes = (parseInt(match[2]) || 0);
     const seconds = (parseInt(match[3]) || 0);
     const pad = (num) => num.toString().padStart(2, '0');
     return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+  }
+  decodeYoutubeTitle(title) {
+    if (!title) return "";
+
+    return title
+      // 1. Decode Decimal Entities (like &#39; -> ')
+      .replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec))
+      // 2. Decode Hex Entities (like &#x27; -> ')
+      .replace(/&#x([0-9A-Fa-f]+);/g, (match, hex) => String.fromCharCode(parseInt(hex, 16)))
+      // 3. Decode Common Named Entities
+      .replace(/&quot;/g, '"')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&apos;/g, "'");
   }
 }
 const utils = new Utils();

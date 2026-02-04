@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useRef } from 'react';
 import Screens from './screens/screens';
 import Devices from './devices/devices';
 import Options from './options/options';
+import eruda from 'eruda';
 // import Notifications from './notifications/notifications';
 import Controls from './controls/controls';
 import Loading from './views/loading/loading';
@@ -27,6 +28,7 @@ function Load() {
   const isInForegroundSt = store(v => v.isInForegroundSt);
   const userTypeSt = store(v => v.userTypeSt);
   const userNameSt = store(v => v.userNameSt);
+  const userDeviceSt = store(v => v.userDeviceSt);
   const leaderSt = store(v => v.leaderSt);
   const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
   const wifiNameSt = store(v => v.wifiNameSt);
@@ -189,9 +191,9 @@ function Load() {
       Roku.setIsConnectedToNokyWifi(true);
       // requests.updateSelections({ table: 'users', id: userNameSt });
     }
-    const youtubeVideosLizSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+    const youtubeVideosLizSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz2')?.id;
     if (youtubeVideosLizSelectedId) {
-      if (userNameSt === store.getState().leaderSt && !Roku.playStateInterval) {
+      if (userNameSt + '-' + userDeviceSt === store.getState().leaderSt && !Roku.playStateInterval) {
         const youtubeVideosLizSelected = store.getState().youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId) || {};
         if (youtubeVideosLizSelected) {
           Roku.startPlayStateListener(youtubeVideosLizSelected);
@@ -199,6 +201,9 @@ function Load() {
       }
     }
     isReadyRef.current = true;
+    if (localStorage.getItem('user-type') !== 'guest' && localStorage.getItem('user-type') !== 'owner') {
+      eruda.init();
+    }
   }, [load, wifiNameSt, userNameSt]);
 
   // useEffects
@@ -217,22 +222,22 @@ function Load() {
         Roku.setIsConnectedToNokyWifi(false);
       }
       const status = isInForegroundSt ? 'foreground' : 'background';
-      supabasePeers.peersChannel.track({ name: userNameSt, status: status, date: new Date().toISOString(), wifiName: wifiNameSt });
+      supabasePeers.peersChannel.track({ name: userNameSt + '-' + userDeviceSt, status: status, date: new Date().toISOString(), wifiName: wifiNameSt });
     }
-  }, [wifiNameSt, networkTypeSt, isPcSt, isInForegroundSt, userNameSt, isConnectedToInternetSt]);
+  }, [wifiNameSt, networkTypeSt, isPcSt, isInForegroundSt, userNameSt, userDeviceSt, isConnectedToInternetSt]);
 
   useEffect(() => {
-    if (userNameSt === leaderSt && !Roku.playStateInterval) {
-      const youtubeVideosLizSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+    if (userNameSt + '-' + userDeviceSt === leaderSt && !Roku.playStateInterval) {
+      const youtubeVideosLizSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz2')?.id;
       if (youtubeVideosLizSelectedId) {
         const youtubeVideosLizSelected = store.getState().youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId);
         Roku.startPlayStateListener(youtubeVideosLizSelected);
       }
     }
-    if (userNameSt !== leaderSt && Roku.playStateInterval) {
+    if (userNameSt + '-' + userDeviceSt !== leaderSt && Roku.playStateInterval) {
       Roku.stopPlayStateListener();
     }
-  }, [leaderSt, userNameSt]);
+  }, [leaderSt, userNameSt, userDeviceSt]);
 
   useEffect(() => {
     if (isAppSt) {

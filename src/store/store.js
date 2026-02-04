@@ -7,6 +7,7 @@ export const store = create((set) => ({
   isInForegroundSt: true,
   userTypeSt: '',
   userNameSt: '',
+  userDeviceSt: '',
   screenSelectedSt: '',
   isConnectedToInternetSt: true,
   wifiNameSt: '',
@@ -27,6 +28,7 @@ export const store = create((set) => ({
   isAppSt: false,
   peersSt: [],
   leaderSt: '',
+  lizEnabledSt: false,
   viewSt: { selected: '', cable: { channels: { category: [] } }, roku: { apps: { selected: '', youtube: { mode: '', channel: '' } } }, devices: { device: '' } },
 
   // --- Actions ---
@@ -36,6 +38,7 @@ export const store = create((set) => ({
   setIsInForegroundSt: (v) => set({ isInForegroundSt: v }),
   setUserTypeSt: (v) => set({ userTypeSt: v }),
   setUserNameSt: (v) => set({ userNameSt: v }),
+  setUserDeviceSt: (v) => set({ userDeviceSt: v }),
   setScreenSelectedSt: (v) => set({ screenSelectedSt: v }),
   setIsConnectedToInternetSt: (v) => set({ isConnectedToInternetSt: v }),
   setWifiNameSt: (v) => set({ wifiNameSt: v }),
@@ -54,12 +57,23 @@ export const store = create((set) => ({
   setIsPcSt: (v) => set({ isPcSt: v }),
   setIsAppSt: (v) => set({ isAppSt: v }),
   setViewSt: (v) => set({ viewSt: v }),
+  setLizEnabledSt: (v) => set({ lizEnabledSt: v }),
   updateTablesSt: (tableName, newItem) => {
-    if (tableName === 'selectionsSt') {
-      set((state) => ({ [tableName]: state[tableName].map((item) => item.table === newItem.table ? newItem : item) }))
-    } else {
-      set((state) => ({ [tableName]: state[tableName].map((item) => item.id === newItem.id ? newItem : item) }))
-    }
+    set((state) => {
+      const currentList = state[tableName];
+      const idKey = tableName === 'selectionsSt' ? 'table' : 'id';
+      const targetId = newItem[idKey];
+      const exists = currentList.some((item) => item[idKey] === targetId);
+      let updatedList;
+      if (exists) {
+        updatedList = currentList.map((item) =>
+          item[idKey] === targetId ? newItem : item
+        );
+      } else {
+        updatedList = [...currentList, newItem];
+      }
+      return { [tableName]: updatedList };
+    });
   },
   setTableSt: (tableName, newTable) => set({ [tableName]: newTable }),
   setPeersSt: (v) => set({ peersSt: v }),

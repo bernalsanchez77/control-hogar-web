@@ -102,7 +102,9 @@ class Requests {
     }
   }
   async upsertTable(params) {
-    params.date = params.date || new Date().toISOString();
+    if (params.date !== null) {
+      params.date = params.date || new Date().toISOString();
+    }
     if (window.cordova) {
       if (window.cordova?.plugin?.http) {
         await this.cordovaApiRequest('upsertTableInSupabase', params, 'patch', 'json');

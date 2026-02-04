@@ -1,7 +1,7 @@
 .controls-toolbar {
-  height: 5vh;
+  height: 7vh;
   width: 240px;
-  margin: 0 auto;
+  margin: 1vh auto 0;
 }
 
 .controls-toolbar-row {
@@ -84,15 +84,18 @@ button.controls-toolbar-button:active {
 }
 
 /* ProgressBar.css */
+.controls-toolbar-row-wrapper {
+  display: flex;
+}
+
 .controls-toolbar-progress-bar-container {
-  width: 230px;
-  position: absolute;
-  padding: 7px 5px 0;
+  width: 100%;
+  padding: 10px 5px 0;
 }
 
 .controls-toolbar-progress-bar-track {
   width: 100%;
-  height: 4px;
+  height: 6px;
   /* Set a height for visibility */
   background-color: #e0e0e0;
   /* Light background for the track */
@@ -114,7 +117,59 @@ button.controls-toolbar-button:active {
 
 .controls-toolbar-progress-bar-label {
   display: block;
-  margin-top: 10px;
+  margin-top: 3px;
   font-family: sans-serif;
-  text-align: center;
+  color: white;
+  font-size: 12px;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+
+.controls-toolbar-progress-bar-marquee {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-100%, 0);
+  }
+}
+
+.controls-toolbar-progress-bar-label-title {
+  font-weight: bold;
+}
+
+.controls-toolbar-progress-bar-label-duration {
+  margin-left: 5px;
+  font-weight: bold;
+}
+
+.controls-toolbar-playlist {
+  float: right;
+  display: flex;
+}
+
+.controls-toolbar-playlist-button {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin-top: 5px;
+}
+
+.controls-toolbar-playlist-liz {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin-top: 10px;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
 }

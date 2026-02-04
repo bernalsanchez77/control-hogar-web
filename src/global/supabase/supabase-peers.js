@@ -33,10 +33,11 @@ class PeersChannel {
         let previousPeers = [];
         let currentPeers = [];
         const userName = store.getState().userNameSt;
+        const userDevice = store.getState().userDeviceSt;
         this.peersChannel = supabase.channel('peers', {
             config: {
                 presence: {
-                    key: userName, // identifying the user
+                    key: userName + '-' + userDevice, // identifying the user
                 },
             },
         })
@@ -75,7 +76,7 @@ class PeersChannel {
                     case 'SUBSCRIBED':
                         this.peersChannel.status = 'subscribed';
                         await this.peersChannel.track({
-                            name: store.getState().userNameSt,
+                            name: store.getState().userNameSt + '-' + store.getState().userDeviceSt,
                             status: store.getState().isInForegroundSt ? 'foreground' : 'background',
                             date: new Date().toISOString(),
                             wifiName: store.getState().wifiNameSt,

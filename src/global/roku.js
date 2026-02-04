@@ -42,10 +42,10 @@ class Roku {
     try {
       const activeApp = await requests.getRokuData('active-app');
       if (activeApp && activeApp.status === 200) {
-        const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+        const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz2')?.id;
         const youtubeAppId = store.getState().rokuAppsSt.find(app => app.id === 'youtube')?.rokuId;
         if (activeApp.data['active-app'].app.id !== youtubeAppId && selectedVideoId) {
-          requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+          requests.updateSelections({ table: 'youtubeVideosLiz2', id: '' });
         }
         return activeApp.data['active-app'].app.id;
       } else {
@@ -83,9 +83,9 @@ class Roku {
         case 'pause':
           break;
         case 'stop':
-          const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+          const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz2')?.id;
           if (selectedVideoId) {
-            requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+            requests.updateSelections({ table: 'youtubeVideosLiz2', id: '' });
           }
           break;
         default:
@@ -135,9 +135,9 @@ class Roku {
       if (hdmiSalaRoku && hdmiSalaRoku.playState !== playState.state) {
         requests.updateTable({ id: hdmiSalaRoku.id, table: 'hdmiSala', playState: playState.state });
       }
-      const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+      const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz2')?.id;
       if (playState.state !== 'play' && playState.state !== 'pause' && selectedVideoId) {
-        requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+        requests.updateSelections({ table: 'youtubeVideosLiz2', id: '' });
       }
     }
   }

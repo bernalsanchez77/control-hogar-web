@@ -71,18 +71,29 @@ class ViewRouter {
                 // youtube is in a mode
                 if (newView.roku.apps.youtube.mode === 'channel') {
                   // youtube is in channel mode
-                  const youtubeChannel = newView.roku.apps.youtube.channel;
-                  window.history.pushState({ page: youtubeChannel }, youtubeChannel, '#' + youtubeChannel);
-                  const videos = await requests.getTable('youtubeVideosLiz');
-                  if (videos) {
-                    store.getState().setYoutubeVideosLizSt(videos.data);
-                    // const subscriptionResponse = await this.subscribeToSupabaseChannel('youtubeVideosLiz', onNoInternet);
-                    store.getState().setRokuSearchModeSt('default');
+                  if (currentView.roku.apps.youtube.mode === '') {
+                    // was in no mode (youtube home)
+                    const youtubeChannel = newView.roku.apps.youtube.channel;
+                    window.history.pushState({ page: youtubeChannel }, youtubeChannel, '#' + youtubeChannel);
+                    const videos = await requests.getTable('youtubeVideosLiz');
+                    if (videos) {
+                      store.getState().setYoutubeVideosLizSt(videos.data);
+                      // const subscriptionResponse = await this.subscribeToSupabaseChannel('youtubeVideosLiz', onNoInternet);
+                      store.getState().setRokuSearchModeSt('default');
+                    }
                   }
                 }
                 if (newView.roku.apps.youtube.mode === 'search') {
                   // youtube is in search mode
                   window.history.pushState({ page: 'search' }, 'search', '#search');
+                }
+                if (newView.roku.apps.youtube.mode === 'options') {
+                  // youtube is in options mode
+                  window.history.pushState({ page: 'options' }, 'options', '#options');
+                }
+                if (newView.roku.apps.youtube.mode === 'queue') {
+                  // youtube is in queue mode
+                  window.history.pushState({ page: 'queue' }, 'queue', '#queue');
                 }
               } else {
                 // youtube is in home mode
@@ -163,6 +174,18 @@ class ViewRouter {
           }
           await this.changeView(newView, currentView);
           return
+        } else if (currentView.roku.apps.youtube.mode === 'options') {
+          if (currentView.roku.apps.youtube.channel === '') {
+            newView.roku.apps.youtube.mode = 'search';
+          } else {
+            newView.roku.apps.youtube.mode = 'channel';
+          }
+          await this.changeView(newView, currentView);
+          return;
+        } else if (currentView.roku.apps.youtube.mode === 'queue') {
+          newView.roku.apps.youtube.mode = '';
+          await this.changeView(newView, currentView);
+          return;
         } else {
           newView.roku.apps.selected = '';
           await this.changeView(newView, currentView);
