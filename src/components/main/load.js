@@ -204,7 +204,7 @@ function Load() {
     if (localStorage.getItem('user-type') !== 'guest' && localStorage.getItem('user-type') !== 'owner') {
       eruda.init();
     }
-  }, [load, wifiNameSt, userNameSt]);
+  }, [load, wifiNameSt, userNameSt, userDeviceSt]);
 
   // useEffects
 

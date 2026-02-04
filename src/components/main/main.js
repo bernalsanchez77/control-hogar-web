@@ -102,7 +102,7 @@ function Main() {
     setTimeout(() => {
       setIsReadySt(true);
     }, 0);
-  }, [setUserNameSt, setUserDeviceSt, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt]);
+  }, [setLizEnabledSt, setUserNameSt, setUserDeviceSt, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt]);
 
   useEffect(() => {
     if (isAppSt) {
