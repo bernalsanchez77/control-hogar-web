@@ -5,7 +5,6 @@ import requests from './requests';
 import utils from './utils';
 let position = 0;
 let playState = {};
-const simulatePlayState = true;
 let testCount = 0;
 
 class Roku {
@@ -42,10 +41,10 @@ class Roku {
     try {
       const activeApp = await requests.getRokuData('active-app');
       if (activeApp && activeApp.status === 200) {
-        const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz2')?.id;
+        const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
         const youtubeAppId = store.getState().rokuAppsSt.find(app => app.id === 'youtube')?.rokuId;
         if (activeApp.data['active-app'].app.id !== youtubeAppId && selectedVideoId) {
-          requests.updateSelections({ table: 'youtubeVideosLiz2', id: '' });
+          requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
         }
         return activeApp.data['active-app'].app.id;
       } else {
@@ -57,7 +56,7 @@ class Roku {
   }
 
   async runPlayStateListener() {
-    if (simulatePlayState) {
+    if (store.getState().simulatePlayStateSt) {
       this.testCount = this.testCount + 5000;
       playState.position = this.testCount;
       if (playState.position >= this.currentVideoDuration) {
@@ -83,9 +82,9 @@ class Roku {
         case 'pause':
           break;
         case 'stop':
-          const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz2')?.id;
+          const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
           if (selectedVideoId) {
-            requests.updateSelections({ table: 'youtubeVideosLiz2', id: '' });
+            requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
           }
           break;
         default:
@@ -135,9 +134,9 @@ class Roku {
       if (hdmiSalaRoku && hdmiSalaRoku.playState !== playState.state) {
         requests.updateTable({ id: hdmiSalaRoku.id, table: 'hdmiSala', playState: playState.state });
       }
-      const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz2')?.id;
+      const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
       if (playState.state !== 'play' && playState.state !== 'pause' && selectedVideoId) {
-        requests.updateSelections({ table: 'youtubeVideosLiz2', id: '' });
+        requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
       }
     }
   }
@@ -154,7 +153,7 @@ class Roku {
 
   async setRoku() {
     let rokuActiveApp;
-    if (simulatePlayState) {
+    if (store.getState().simulatePlayStateSt) {
       rokuActiveApp = '837';
     } else {
       rokuActiveApp = await this.getActiveApp();

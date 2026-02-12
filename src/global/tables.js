@@ -30,24 +30,9 @@ class Tables {
         }
         if (store.getState().userNameSt + '-' + store.getState().userDeviceSt === store.getState().leaderSt) {
           const rokuId = store.getState().rokuAppsSt.find(app => app.label === 'Youtube').rokuId;
-          requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: change.id } });
-          const currentVideo = store.getState().youtubeVideosLizSt.find(video => video.id === change.id);
-          roku.startPlayStateListener(currentVideo);
-        }
-      } else {
-        if (roku.playStateInterval) {
-          roku.stopPlayStateListener();
-        }
-      }
-    }
-    if (change.table === 'youtubeVideosLiz2') {
-      if (change.id) {
-        if (roku.playStateInterval) {
-          roku.stopPlayStateListener();
-        }
-        if (store.getState().userNameSt + '-' + store.getState().userDeviceSt === store.getState().leaderSt) {
-          // const rokuId = store.getState().rokuAppsSt.find(app => app.label === 'Youtube').rokuId;
-          //requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: change.id } });
+          if (!store.getState().simulatePlayStateSt) {
+            requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: change.id } });
+          }
           const currentVideo = store.getState().youtubeVideosLizSt.find(video => video.id === change.id);
           roku.startPlayStateListener(currentVideo);
         }

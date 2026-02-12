@@ -9,16 +9,19 @@ import './youtube.css';
 function Youtube() {
   const youtubeSearchVideosSt = store(v => v.youtubeSearchVideosSt);
   const youtubeChannelsLizSt = store(v => v.youtubeChannelsLizSt);
+  const youtubeChannelsImagesSt = store(v => v.youtubeChannelsImagesSt);
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
   const viewSt = store(v => v.viewSt);
   const leaderSt = store(v => v.leaderSt);
   const userNameSt = store(v => v.userNameSt);
   const lizEnabledSt = store(v => v.lizEnabledSt);
   const [savedChannel, setSavedChannel] = useState('');
+  const [savedChannelImg, setSavedChannelImg] = useState('');
   const [savedVideo, setSavedVideo] = useState('');
   const timeout3s = useRef(null);
   const longClick = useRef(false);
   const savedChannelRef = useRef('');
+  const savedChannelImgRef = useRef('');
   let youtubeSortedVideos = [];
   let youtubeSortedChannels = [];
   let youtubeSortedQueue = [];
@@ -26,7 +29,7 @@ function Youtube() {
   let touchStartY = 0;
   const channelSelected = useRef('');
   const selectionsSt = store(v => v.selectionsSt);
-  const youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz2').id;
+  const youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
 
   const onChannelShortClick = (channel) => {
     utils.triggerVibrate();
@@ -38,7 +41,7 @@ function Youtube() {
     viewRouter.changeView(newView);
   };
 
-  if (viewSt.roku.apps.youtube.mode === '') {
+  if (viewSt.roku.apps.youtube.mode === '' || viewSt.roku.apps.youtube.mode === 'options') {
     youtubeSortedChannels = Object.values(youtubeChannelsLizSt).sort((a, b) => a.order - b.order);
   }
   if (viewSt.roku.apps.youtube.mode === 'channel') {
@@ -100,6 +103,10 @@ function Youtube() {
           newView.roku.apps.youtube.mode = 'options';
           viewRouter.changeView(newView);
         }
+        if (type === 'image') {
+          setSavedChannelImg(video.id);
+          savedChannelImgRef.current = video.path;
+        }
       }
     }
     longClick.current = false;
@@ -124,7 +131,7 @@ function Youtube() {
 
   const saveSavedChannel = () => {
     utils.triggerVibrate();
-    requests.upsertTable({ id: savedChannelRef.current, table: 'youtubeChannelsLiz', title: savedChannelRef.current, user: lizEnabledSt ? 'elizabeth' : userNameSt });
+    requests.upsertTable({ id: savedChannelRef.current, table: 'youtubeChannelsLiz', title: savedChannelRef.current, user: lizEnabledSt ? 'elizabeth' : userNameSt, img: savedChannelImgRef.current });
     requests.upsertTable({ id: savedVideo.id, table: 'youtubeVideosLiz', title: utils.decodeYoutubeTitle(savedVideo.title), duration: savedVideo.duration, channelId: savedChannelRef.current });
   };
 
@@ -135,7 +142,7 @@ function Youtube() {
           <ul className='controls-apps-youtube-ul'>
             {
               youtubeSortedChannels.map((channel, key) => (
-                (channel.user === userNameSt || (lizEnabledSt && channel.user === 'elizabeth')) &&
+                ((!lizEnabledSt && channel.user === userNameSt) || (lizEnabledSt && channel.user === 'elizabeth')) &&
                 <li key={key} className='controls-apps-youtube-li'>
                   <button
                     className={'controls-apps-youtube-channel-button'}
@@ -266,22 +273,52 @@ function Youtube() {
       }
       {(viewSt.roku.apps.youtube.mode === 'options') &&
         <div className='controls-apps-youtube controls-apps-youtube--options'>
+          <div className='controls-apps-youtube-save-channel-select'>
+            <select
+              onChange={(e) => addSavedChannel(e.target.value)}
+              value={savedChannel}>
+              <option defaultValue value="">Selecciona un canal</option>
+              {
+                youtubeSortedChannels.map((channel, key) => (
+                  ((lizEnabledSt && channel.user === 'elizabeth') || (!lizEnabledSt && channel.user === userNameSt)) &&
+                  <option key={key} value={channel.id}>{channel.title}</option>
+                ))
+              }
+            </select>
+          </div>
           <div className='controls-apps-youtube-save-channel-input'>
             <input
               type="text"
-              placeholder='Nombre del canal'
+              placeholder='Nombre del nuevo canal'
               onChange={(e) => addSavedChannel(e.target.value)}
               value={savedChannel}>
             </input>
           </div>
-          <button
-            className='controls-apps-youtube-save-channel-button'
-            onClick={saveSavedChannel}>
-            Guardar
-          </button>
+          <div className='controls-apps-youtube-save-channel-images'>
+            {
+              youtubeChannelsImagesSt.map((image, key) => (
+                <div key={key} className={`controls-apps-youtube-save-channel-image ${image.id === savedChannelImg ? 'controls-apps-youtube-save-channel-image--selected' : ''}`}>
+                  <img
+                    src={image.path}
+                    alt=""
+                    onTouchStart={(e) => onTouchStart(e)}
+                    onTouchMove={(e) => onTouchMove(e)}
+                    onTouchEnd={(e) => onTouchEnd(e, 'image', image)} />
+                </div>
+              ))
+            }
+          </div>
+          <div className='controls-apps-youtube-save-channel-button'>
+            <button
+              className='controls-apps-youtube-save-channel-button'
+              onClick={saveSavedChannel}>
+              Guardar
+            </button>
+          </div>
         </div>
       }
-      {(viewSt.roku.apps.youtube.mode === 'queue') &&
+      {
+        (viewSt.roku.apps.youtube.mode === 'queue') &&
         <div className='controls-apps-youtube controls-apps-youtube--channel'>
           <ul className='controls-apps-youtube-ul'>
             {
@@ -337,7 +374,7 @@ function Youtube() {
           </ul>
         </div>
       }
-    </div>
+    </div >
   )
 }
 

@@ -85,7 +85,10 @@ class ViewRouter {
                 }
                 if (newView.roku.apps.youtube.mode === 'search') {
                   // youtube is in search mode
-                  window.history.pushState({ page: 'search' }, 'search', '#search');
+                  if (currentView.roku.apps.youtube.mode === '') {
+                    // was in no mode (youtube home)
+                    window.history.pushState({ page: 'search' }, 'search', '#search');
+                  }
                 }
                 if (newView.roku.apps.youtube.mode === 'options') {
                   // youtube is in options mode

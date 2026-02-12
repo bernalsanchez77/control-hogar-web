@@ -1,9 +1,10 @@
 import { create } from "zustand";
 export const store = create((set) => ({
   // --- Global states ---
-  sendEnabledSt: false,
+  sendEnabledSt: true,
+  simulatePlayStateSt: false,
   isLoadingSt: false,
-  themeSt: 'black',
+  themeSt: 'dark',
   isInForegroundSt: true,
   userTypeSt: '',
   userNameSt: '',
@@ -18,6 +19,7 @@ export const store = create((set) => ({
   cableChannelsSt: [],
   youtubeSearchVideosSt: [],
   youtubeChannelsLizSt: [],
+  youtubeChannelsImagesSt: [],
   youtubeVideosLizSt: [],
   rokuAppsSt: [],
   hdmiSalaSt: [],
@@ -33,6 +35,7 @@ export const store = create((set) => ({
 
   // --- Actions ---
   setSendEnabledSt: (v) => set({ sendEnabledSt: v }),
+  setSimulatePlayStateSt: (v) => set({ simulatePlayStateSt: v }),
   setIsLoadingSt: (v) => set({ isLoadingSt: v }),
   setThemeSt: (v) => set({ themeSt: v }),
   setIsInForegroundSt: (v) => set({ isInForegroundSt: v }),
@@ -49,6 +52,7 @@ export const store = create((set) => ({
   setCableChannelsSt: (v) => set({ cableChannelsSt: v }),
   setYoutubeSearchVideosSt: (v) => set({ youtubeSearchVideosSt: v }),
   setYoutubeChannelsLizSt: (v) => set({ youtubeChannelsLizSt: v }),
+  setYoutubeChannelsImagesSt: (v) => set({ youtubeChannelsImagesSt: v }),
   setYoutubeVideosLizSt: (v) => set({ youtubeVideosLizSt: v }),
   setRokuAppsSt: (v) => set({ rokuAppsSt: v }),
   setHdmiSalaSt: (v) => set({ hdmiSalaSt: v }),

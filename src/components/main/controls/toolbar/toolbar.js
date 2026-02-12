@@ -15,7 +15,13 @@ function Toolbar() {
   const leaderSt = store(v => v.leaderSt);
   const selectionsSt = store(v => v.selectionsSt);
   const viewSt = store(v => v.viewSt);
-  const youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz2')?.id;
+  const simulatePlayStateSt = store(v => v.simulatePlayStateSt);
+  let youtubeVideosLizSelectedId;
+  if (simulatePlayStateSt) {
+    youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+  } else {
+    youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+  }
   const youtubeVideosLizSelected = youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId);
   const userNameSt = store(v => v.userNameSt);
   const userDeviceSt = store(v => v.userDeviceSt);
@@ -120,7 +126,7 @@ function Toolbar() {
           if (nextVideo) {
             const rokuId = store.getState().rokuAppsSt.find(app => app.id === 'youtube').rokuId;
             requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: nextVideo.id } });
-            requests.updateSelections({ table: 'youtubeVideosLiz2', id: nextVideo.id });
+            requests.updateSelections({ table: 'youtubeVideosLiz', id: nextVideo.id });
             youtube.handleQueue(nextVideo);
           } else {
             requests.fetchRoku({ key: 'keypress', value: 'Stop' });

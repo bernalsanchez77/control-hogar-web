@@ -11,8 +11,8 @@ class Youtube {
     }
   }
   clearCurrentVideo() {
-    if (store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz2')?.id) {
-      requests.updateSelections({ table: 'youtubeVideosLiz2', id: '' });
+    if (store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id) {
+      requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
     }
   }
   getLastQueue() {
@@ -36,13 +36,13 @@ class Youtube {
   }
   onVideoShortClick(video) {
     const isInYoutubeVideosLizSt = store.getState().youtubeVideosLizSt.find(vid => vid.id === video.id);
-    const currentVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz2')?.id;
+    const currentVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
     if (currentVideoId !== video.id) {
       if (isInYoutubeVideosLizSt) {
-        requests.updateSelections({ table: 'youtubeVideosLiz2', id: video.id });
+        requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
       } else {
         setTimeout(() => {
-          requests.updateSelections({ table: 'youtubeVideosLiz2', id: video.id });
+          requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
         }, 1000);
       }
     }
