@@ -11,6 +11,11 @@ export default async function handler(req, res) {
   let mute = null;
   let color = null;
   let playState = null;
+  let videoId = null;
+  let videoTitle = null;
+  let videoDuration = null;
+  let videoPosition = null;
+  let videoImg = null;
   let queue = null;
   let position = null;
 
@@ -23,12 +28,17 @@ export default async function handler(req, res) {
     mute = req.body.mute;
     color = req.body.color;
     playState = req.body.playState;
+    videoId = req.body.videoId;
+    videoTitle = req.body.videoTitle;
+    videoDuration = req.body.videoDuration;
+    videoPosition = req.body.videoPosition;
+    videoImg = req.body.videoImg;
     queue = req.body.queue;
     position = req.body.position;
   }
 
   let data, error;
-  ({ data, error } = await supabase.from(table).update({ volume, mute, color, date, state, playState, queue, position }).eq('id', id));
+  ({ data, error } = await supabase.from(table).update({ volume, mute, color, date, state, playState, videoId, videoTitle, videoDuration, videoPosition, videoImg, queue, position }).eq('id', id));
   if (error) {
     return res.status(500).json({ error: error.message });
   }

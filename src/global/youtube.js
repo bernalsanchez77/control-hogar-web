@@ -52,6 +52,7 @@ class Youtube {
       requests.updateSelections({ table: 'rokuApps', id: youtubeAppId });
     }
     this.clearQueue();
+    store.getState().setCurrentYoutubeVideoSt(video);
   }
 }
 const youtube = new Youtube();

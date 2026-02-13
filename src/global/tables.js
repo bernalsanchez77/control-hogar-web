@@ -33,11 +33,12 @@ class Tables {
           if (!store.getState().simulatePlayStateSt) {
             requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: change.id } });
           }
-          const currentVideo = store.getState().youtubeVideosLizSt.find(video => video.id === change.id);
+          const currentVideo = store.getState().youtubeVideosLizSt.find(video => video.id === change.id) || store.getState().currentYoutubeVideoSt;
           roku.startPlayStateListener(currentVideo);
         }
       } else {
         if (roku.playStateInterval) {
+          store.getState().setCurrentYoutubeVideoSt({ title: '', duration: '', id: '', img: '' });
           roku.stopPlayStateListener();
         }
       }
