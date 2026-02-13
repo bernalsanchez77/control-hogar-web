@@ -1,27 +1,22 @@
-import { useRef, useState } from 'react';
+import { useState, useRef } from 'react';
 import { store } from "../../../../../store/store";
 import viewRouter from '../../../../../global/view-router';
 import youtube from '../../../../../global/youtube';
 import utils from '../../../../../global/utils';
-import requests from '../../../../../global/requests';
+import Edit from './modules/edit';
 import './youtube.css';
 
 function Youtube() {
   const youtubeSearchVideosSt = store(v => v.youtubeSearchVideosSt);
   const youtubeChannelsLizSt = store(v => v.youtubeChannelsLizSt);
-  const youtubeChannelsImagesSt = store(v => v.youtubeChannelsImagesSt);
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
   const viewSt = store(v => v.viewSt);
   const leaderSt = store(v => v.leaderSt);
   const userNameSt = store(v => v.userNameSt);
   const lizEnabledSt = store(v => v.lizEnabledSt);
-  const [savedChannel, setSavedChannel] = useState('');
-  const [savedChannelImg, setSavedChannelImg] = useState('');
-  const [savedVideo, setSavedVideo] = useState('');
+  const [videoToSave, setVideoToSave] = useState(null);
   const timeout3s = useRef(null);
   const longClick = useRef(false);
-  const savedChannelRef = useRef('');
-  const savedChannelImgRef = useRef('');
   let youtubeSortedVideos = [];
   let youtubeSortedChannels = [];
   let youtubeSortedQueue = [];
@@ -98,14 +93,10 @@ function Youtube() {
         }
         if (type === 'options') {
           utils.triggerVibrate();
-          setSavedVideo(video);
+          setVideoToSave(video);
           const newView = structuredClone(viewSt);
           newView.roku.apps.youtube.mode = 'options';
           viewRouter.changeView(newView);
-        }
-        if (type === 'image') {
-          setSavedChannelImg(video.id);
-          savedChannelImgRef.current = video.path;
         }
       }
     }
@@ -122,17 +113,6 @@ function Youtube() {
     } else {
       return 0;
     }
-  };
-
-  const addSavedChannel = (channel) => {
-    setSavedChannel(channel);
-    savedChannelRef.current = channel;
-  };
-
-  const saveSavedChannel = () => {
-    utils.triggerVibrate();
-    requests.upsertTable({ id: savedChannelRef.current, table: 'youtubeChannelsLiz', title: savedChannelRef.current, user: lizEnabledSt ? 'elizabeth' : userNameSt, img: savedChannelImgRef.current });
-    requests.upsertTable({ id: savedVideo.id, table: 'youtubeVideosLiz', title: utils.decodeYoutubeTitle(savedVideo.title), duration: savedVideo.duration, channelId: savedChannelRef.current });
   };
 
   return (
@@ -249,20 +229,36 @@ function Youtube() {
                       onTouchStart={(e) => onTouchStart(e)}
                       onTouchMove={(e) => onTouchMove(e)}
                       onTouchEnd={(e) => onTouchEnd(e, 'options', video)}>
-                      <svg
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="20"
-                        width="20">
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                          d="M3.2 2.6666666666666665c0 -0.29454933333333333 0.238784 -0.5333333333333333 0.5333333333333333 -0.5333333333333333h8.533333333333333c0.2945066666666667 0 0.5333333333333333 0.238784 0.5333333333333333 0.5333333333333333v11.733333333333333c0 0.19391999999999998 -0.10517333333333333 0.37248000000000003 -0.2747733333333333 0.46645333333333333 -0.1696 0.09397333333333333 -0.3768533333333333 0.08853333333333334 -0.5412266666666666 -0.014186666666666665L8 12.36224 4.016 14.852266666666665c-0.16440533333333332 0.10271999999999999 -0.3716373333333333 0.10816 -0.5412053333333334 0.014186666666666665C3.305216 14.77248 3.2 14.59392 3.2 14.4v-11.733333333333333ZM4.266666666666667 3.2v10.23776l3.168 -1.9800533333333334c0.345888 -0.21610666666666667 0.7847786666666666 -0.21610666666666667 1.1306666666666667 0L11.733333333333333 13.437759999999999V3.2H4.266666666666667Z"
-                          fill="#fff"
-                          stroke-width="1.0667">
-                        </path>
-                      </svg>
+                      {(() => {
+                        const savedVideo = youtubeVideosLizSt.find(v => v.id === video.id);
+                        const hasCustomChannel = savedVideo && savedVideo.channelId !== 'zz-channel';
+                        return (
+                          <svg
+                            viewBox="0 0 16 16"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="20"
+                            width="20">
+                            {!hasCustomChannel &&
+                              <path
+                                fillRule="evenodd"
+                                clipRule="evenodd"
+                                d="M3.2 2.6666666666666665c0 -0.29454933333333333 0.238784 -0.5333333333333333 0.5333333333333333 -0.5333333333333333h8.533333333333333c0.2945066666666667 0 0.5333333333333333 0.238784 0.5333333333333333 0.5333333333333333v11.733333333333333c0 0.19391999999999998 -0.10517333333333333 0.37248000000000003 -0.2747733333333333 0.46645333333333333 -0.1696 0.09397333333333333 -0.3768533333333333 0.08853333333333334 -0.5412266666666666 -0.014186666666666665L8 12.36224 4.016 14.852266666666665c-0.16440533333333332 0.10271999999999999 -0.3716373333333333 0.10816 -0.5412053333333334 0.014186666666666665C3.305216 14.77248 3.2 14.59392 3.2 14.4v-11.733333333333333ZM4.266666666666667 3.2v10.23776l3.168 -1.9800533333333334c0.345888 -0.21610666666666667 0.7847786666666666 -0.21610666666666667 1.1306666666666667 0L11.733333333333333 13.437759999999999V3.2H4.266666666666667Z"
+                                fill="#fff"
+                                strokeWidth="1.0667">
+                              </path>
+                            }
+                            {hasCustomChannel &&
+                              <path
+                                fillRule="evenodd"
+                                clipRule="evenodd"
+                                d="M3.2 2.6666666666666665c0 -0.29454933333333333 0.238784 -0.5333333333333333 0.5333333333333333 -0.5333333333333333h8.533333333333333c0.2945066666666667 0 0.5333333333333333 0.238784 0.5333333333333333 0.5333333333333333v11.733333333333333c0 0.19391999999999998 -0.10517333333333333 0.37248000000000003 -0.2747733333333333 0.46645333333333333 -0.1696 0.09397333333333333 -0.3768533333333333 0.08853333333333334 -0.5412266666666666 -0.014186666666666665L8 12.36224 4.016 14.852266666666665c-0.16440533333333332 0.10271999999999999 -0.3716373333333333 0.10816 -0.5412053333333334 0.014186666666666665C3.305216 14.77248 3.2 14.59392 3.2 14.4v-11.733333333333333Z"
+                                fill="#FFFFFF"
+                              />
+                            }
+                          </svg>
+                        );
+                      })()}
                     </button>
                   </div>
                 </li>
@@ -272,50 +268,7 @@ function Youtube() {
         </div>
       }
       {(viewSt.roku.apps.youtube.mode === 'options') &&
-        <div className='controls-apps-youtube controls-apps-youtube--options'>
-          <div className='controls-apps-youtube-save-channel-select'>
-            <select
-              onChange={(e) => addSavedChannel(e.target.value)}
-              value={savedChannel}>
-              <option defaultValue value="">Selecciona un canal</option>
-              {
-                youtubeSortedChannels.map((channel, key) => (
-                  ((lizEnabledSt && channel.user === 'elizabeth') || (!lizEnabledSt && channel.user === userNameSt)) &&
-                  <option key={key} value={channel.id}>{channel.title}</option>
-                ))
-              }
-            </select>
-          </div>
-          <div className='controls-apps-youtube-save-channel-input'>
-            <input
-              type="text"
-              placeholder='Nombre del nuevo canal'
-              onChange={(e) => addSavedChannel(e.target.value)}
-              value={savedChannel}>
-            </input>
-          </div>
-          <div className='controls-apps-youtube-save-channel-images'>
-            {
-              youtubeChannelsImagesSt.map((image, key) => (
-                <div key={key} className={`controls-apps-youtube-save-channel-image ${image.id === savedChannelImg ? 'controls-apps-youtube-save-channel-image--selected' : ''}`}>
-                  <img
-                    src={image.path}
-                    alt=""
-                    onTouchStart={(e) => onTouchStart(e)}
-                    onTouchMove={(e) => onTouchMove(e)}
-                    onTouchEnd={(e) => onTouchEnd(e, 'image', image)} />
-                </div>
-              ))
-            }
-          </div>
-          <div className='controls-apps-youtube-save-channel-button'>
-            <button
-              className='controls-apps-youtube-save-channel-button'
-              onClick={saveSavedChannel}>
-              Guardar
-            </button>
-          </div>
-        </div>
+        <Edit videoToSave={videoToSave} />
       }
       {
         (viewSt.roku.apps.youtube.mode === 'queue') &&

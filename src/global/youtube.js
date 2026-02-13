@@ -1,5 +1,6 @@
 import requests from './requests';
 import { store } from '../store/store';
+import utils from './utils';
 
 class Youtube {
   clearQueue() {
@@ -35,15 +36,16 @@ class Youtube {
     }
   }
   onVideoShortClick(video) {
-    const isInYoutubeVideosLizSt = store.getState().youtubeVideosLizSt.find(vid => vid.id === video.id);
-    const currentVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+    const currentVideoId = store.getState().hdmiSalaSt.find(el => el.id === 'roku')?.videoId;
     if (currentVideoId !== video.id) {
-      if (isInYoutubeVideosLizSt) {
-        requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
-      } else {
+      const existingVideo = store.getState().youtubeVideosLizSt.find(v => v.id === video.id);
+      if (!existingVideo) {
+        requests.upsertTable({ id: video.id, table: 'youtubeVideosLiz', title: utils.decodeYoutubeTitle(video.title), duration: video.duration, channelId: 'zz-channel' });
         setTimeout(() => {
           requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
         }, 1000);
+      } else {
+        requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
       }
     }
     const rokuAppsSelectedId = store.getState().selectionsSt.find(el => el.table === 'rokuApps')?.id;
@@ -52,7 +54,6 @@ class Youtube {
       requests.updateSelections({ table: 'rokuApps', id: youtubeAppId });
     }
     this.clearQueue();
-    store.getState().setCurrentYoutubeVideoSt(video);
   }
 }
 const youtube = new Youtube();

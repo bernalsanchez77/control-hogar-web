@@ -38,7 +38,6 @@ class Tables {
         }
       } else {
         if (roku.playStateInterval) {
-          store.getState().setCurrentYoutubeVideoSt({ title: '', duration: '', id: '', img: '' });
           roku.stopPlayStateListener();
         }
       }
