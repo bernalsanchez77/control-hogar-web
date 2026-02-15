@@ -9,12 +9,23 @@ function Edit({ videoToSave }) {
   const userNameSt = store(v => v.userNameSt);
   const youtubeChannelsImagesSt = store(v => v.youtubeChannelsImagesSt);
   const youtubeChannelsLizSt = store(v => v.youtubeChannelsLizSt);
-  const [channel, setChannel] = useState(videoToSave.channelId);
-  const [channelImg, setChannelImg] = useState(videoToSave.channelImg);
+  const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
+
+  // Look up existing video data to pre-populate form
+  const savedVideo = youtubeVideosLizSt.find(v => v.id === videoToSave.id);
+  const existingChannelId = savedVideo?.channelId || '';
+  const existingChannel = youtubeChannelsLizSt.find(c => c.id === existingChannelId);
+  const existingChannelImgPath = existingChannel?.img || '';
+  // Find the image ID from the path
+  const existingImage = youtubeChannelsImagesSt.find(img => img.path === existingChannelImgPath);
+  const existingChannelImgId = existingImage?.id || '';
+
+  const [channel, setChannel] = useState(existingChannelId);
+  const [channelImg, setChannelImg] = useState(existingChannelImgId);
   const youtubeSortedChannels = Object.values(youtubeChannelsLizSt).sort((a, b) => a.order - b.order);
 
-  const channelRef = useRef(videoToSave.channelId);
-  const channelImgRef = useRef(videoToSave.channelImg);
+  const channelRef = useRef(existingChannelId);
+  const channelImgRef = useRef(existingChannelImgPath);
 
   let touchMoved = false;
   let touchStartY = 0;
@@ -58,15 +69,25 @@ function Edit({ videoToSave }) {
   };
 
   const saveChannel = () => {
+    if (channelRef.current && channelRef.current.trim() !== '') {
+      utils.triggerVibrate();
+      requests.upsertTable({ id: channelRef.current, table: 'youtubeChannelsLiz', title: channelRef.current, user: lizEnabledSt ? 'elizabeth' : userNameSt, img: channelImgRef.current });
+      requests.upsertTable({ id: videoToSave.id, table: 'youtubeVideosLiz', title: utils.decodeYoutubeTitle(videoToSave.title), duration: videoToSave.duration, channelId: channelRef.current });
+      window.history.back();
+    }
+  };
+
+  const cancelChannel = () => {
     utils.triggerVibrate();
-    requests.upsertTable({ id: channelRef.current, table: 'youtubeChannelsLiz', title: channelRef.current, user: lizEnabledSt ? 'elizabeth' : userNameSt, img: channelImgRef.current });
-    requests.upsertTable({ id: videoToSave.id, table: 'youtubeVideosLiz', title: utils.decodeYoutubeTitle(videoToSave.title), duration: videoToSave.duration, channelId: channelRef.current });
     window.history.back();
   };
 
   return (
     <div>
       <div className='controls-apps-youtube controls-apps-youtube--options'>
+        <p className='controls-apps-youtube-edit-video-title'>
+          {utils.decodeYoutubeTitle(videoToSave.title)}
+        </p>
         <div className='controls-apps-youtube-save-channel-select'>
           <select
             onChange={(e) => addChannel(e.target.value)}
@@ -105,15 +126,13 @@ function Edit({ videoToSave }) {
         <div className='controls-apps-youtube-save-channel-buttons'>
           <button
             className='controls-apps-youtube-save-channel-button'
-            onClick={() => {
-              utils.triggerVibrate();
-              window.history.back();
-            }}>
+            onClick={cancelChannel}>
             Cancelar
           </button>
           <button
             className='controls-apps-youtube-save-channel-button'
-            onClick={saveChannel}>
+            onClick={saveChannel}
+            disabled={!channel || channel.trim() === ''}>
             Guardar
           </button>
         </div>

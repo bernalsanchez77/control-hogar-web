@@ -14,6 +14,7 @@ class Roku {
     this.playStateInterval = null;
     this.currentVideo = null;
     this.currentVideoDuration = 0;
+    this.lastLaunchTime = 0;
   }
 
   async getPlayState(data) {
@@ -84,7 +85,10 @@ class Roku {
         case 'stop':
           const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
           if (selectedVideoId) {
-            requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+            const isWithinGracePeriod = Date.now() - this.lastLaunchTime < 10000;
+            if (!isWithinGracePeriod) {
+              requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+            }
           }
           break;
         default:
@@ -96,6 +100,7 @@ class Roku {
   async startPlayStateListener(currentVideo) {
     this.currentVideo = currentVideo;
     this.currentVideoDuration = utils.timeToMs(currentVideo.duration);
+    this.lastLaunchTime = Date.now();
     console.log('playstatelistener started');
     position = 0;
     this.runPlayStateListener();
@@ -136,7 +141,10 @@ class Roku {
       }
       const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
       if (playState.state !== 'play' && playState.state !== 'pause' && selectedVideoId) {
-        requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+        const isWithinGracePeriod = Date.now() - this.lastLaunchTime < 10000;
+        if (!isWithinGracePeriod) {
+          requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+        }
       }
     }
   }

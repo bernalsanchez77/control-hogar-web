@@ -91,6 +91,7 @@ button.controls-toolbar-button:active {
 .controls-toolbar-progress-bar-container {
   width: 100%;
   padding: 10px 5px 0;
+  min-width: 0;
 }
 
 .controls-toolbar-progress-bar-track {
@@ -123,8 +124,9 @@ button.controls-toolbar-button:active {
   font-size: 12px;
   text-align: left;
   overflow: hidden;
-  white-space: nowrap;
   position: relative;
+  width: 100%;
+  white-space: nowrap;
 }
 
 .controls-toolbar-progress-bar-marquee {

@@ -33,7 +33,7 @@ function Controls() {
           <Toolbar>
           </Toolbar>
         }
-        {viewSt.selected === 'roku' && rokuAppsSt.length && !viewSt.roku.apps.youtube.channel &&
+        {viewSt.selected === 'roku' && rokuAppsSt.length && !viewSt.roku.apps.youtube.channel && viewSt.roku.apps.youtube.mode !== 'options' &&
           <Search>
           </Search>
         }

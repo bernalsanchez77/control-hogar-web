@@ -10,6 +10,9 @@ class SupabaseChannels {
   screensCallback = null;
   youtubeVideosLizCallback = null;
   selectionsCallback = null;
+  youtubeChannelsLizCallback = null;
+  youtubeChannelsImagesCallback = null;
+  cableChannelsCallback = null;
 
   async subscribeToSupabaseChannel(tableName, callback, first) {
     if (handlingNoInternet) {
@@ -21,6 +24,9 @@ class SupabaseChannels {
     if (!this.youtubeVideosLizCallback && tableName === 'youtubeVideosLiz') this.youtubeVideosLizCallback = callback;
     if (!this.hdmiSalaCallback && tableName === 'hdmiSala') this.hdmiSalaCallback = callback;
     if (!this.selectionsCallback && tableName === 'selections') this.selectionsCallback = callback;
+    if (!this.youtubeChannelsLizCallback && tableName === 'youtubeChannelsLiz') this.youtubeChannelsLizCallback = callback;
+    if (!this.youtubeChannelsImagesCallback && tableName === 'youtubeChannelsImages') this.youtubeChannelsImagesCallback = callback;
+    if (!this.cableChannelsCallback && tableName === 'cableChannels') this.cableChannelsCallback = callback;
     if (!this.supabaseChannels[tableName]) {
       this.supabaseChannels[tableName] = {};
     }
@@ -132,10 +138,13 @@ class SupabaseChannels {
     await this.unsubscribeFromSupabaseChannel('screens');
     await this.unsubscribeFromSupabaseChannel('youtubeVideosLiz');
     await this.unsubscribeFromSupabaseChannel('selections');
+    await this.unsubscribeFromSupabaseChannel('youtubeChannelsLiz');
+    await this.unsubscribeFromSupabaseChannel('youtubeChannelsImages');
+    await this.unsubscribeFromSupabaseChannel('cableChannels');
   }
 
   async subscribeToAllSupabaseChannels() {
-    const tableNames = ['hdmiSala', 'rokuApps', 'devices', 'screens', 'youtubeVideosLiz', 'selections'];
+    const tableNames = ['hdmiSala', 'rokuApps', 'devices', 'screens', 'youtubeVideosLiz', 'selections', 'youtubeChannelsLiz', 'youtubeChannelsImages', 'cableChannels'];
     for (const tableName of tableNames) {
       await this.subscribeToSupabaseChannel(tableName, this[tableName + 'Callback'], true).then((res) => {
         if (res.success) {
