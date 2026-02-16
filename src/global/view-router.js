@@ -90,9 +90,9 @@ class ViewRouter {
                     window.history.pushState({ page: 'search' }, 'search', '#search');
                   }
                 }
-                if (newView.roku.apps.youtube.mode === 'options') {
-                  // youtube is in options mode
-                  window.history.pushState({ page: 'options' }, 'options', '#options');
+                if (newView.roku.apps.youtube.mode === 'edit') {
+                  // youtube is in edit mode
+                  window.history.pushState({ page: 'edit' }, 'edit', '#edit');
                 }
                 if (newView.roku.apps.youtube.mode === 'queue') {
                   // youtube is in queue mode
@@ -177,7 +177,7 @@ class ViewRouter {
           }
           await this.changeView(newView, currentView);
           return
-        } else if (currentView.roku.apps.youtube.mode === 'options') {
+        } else if (currentView.roku.apps.youtube.mode === 'edit') {
           if (currentView.roku.apps.youtube.channel === '') {
             newView.roku.apps.youtube.mode = 'search';
           } else {

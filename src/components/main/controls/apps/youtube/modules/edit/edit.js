@@ -84,7 +84,7 @@ function Edit({ videoToSave }) {
 
   return (
     <div>
-      <div className='controls-apps-youtube controls-apps-youtube--options'>
+      <div className='controls-apps-youtube controls-apps-youtube--edit'>
         <p className='controls-apps-youtube-edit-video-title'>
           {utils.decodeYoutubeTitle(videoToSave.title)}
         </p>

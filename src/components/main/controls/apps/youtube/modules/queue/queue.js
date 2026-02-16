@@ -80,15 +80,15 @@ function Queue() {
               <p className='controls-apps-youtube-video-title'>
                 {video.title}
               </p>
-              <div className='controls-apps-youtube-video-options-container'>
+              <div className='controls-apps-youtube-video-edit-container'>
                 <p className='controls-apps-youtube-video-duration'>
                   {video.duration}
                 </p>
                 <button
-                  className={`controls-apps-youtube-video-options`}
+                  className={`controls-apps-youtube-video-edit`}
                   onTouchStart={(e) => onTouchStart(e)}
                   onTouchMove={(e) => onTouchMove(e)}
-                  onTouchEnd={(e) => onTouchEnd(e, 'options', video)}>
+                  onTouchEnd={(e) => onTouchEnd(e, 'edit', video)}>
                   {(() => {
                     const savedVideo = youtubeVideosLizSt.find(v => v.id === video.id);
                     const hasCustomChannel = savedVideo && savedVideo.channelId !== 'zz-channel';

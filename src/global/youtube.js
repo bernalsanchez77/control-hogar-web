@@ -62,11 +62,8 @@ class Youtube {
       return Number(a.queue) - Number(b.queue);
     });
     sortedQueue = sortedQueue.filter(obj => Number(obj.queue) !== 0);
-    if (sortedQueue.includes(video)) {
-      return sortedQueue.findIndex(obj => obj.id === video.id) + 1;
-    } else {
-      return 0;
-    }
+    const index = sortedQueue.findIndex(obj => obj.id === video.id);
+    return index !== -1 ? index + 1 : 0;
   };
 }
 const youtube = new Youtube();
