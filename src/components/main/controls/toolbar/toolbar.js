@@ -11,7 +11,7 @@ function Toolbar() {
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
   const wifiNameSt = store(v => v.wifiNameSt);
   const rokuPlayStatePositionSt = store(v => v.rokuPlayStatePositionSt);
-  const leaderSt = store(v => v.leaderSt);
+  const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
   const selectionsSt = store(v => v.selectionsSt);
   const viewSt = store(v => v.viewSt);
   const simulatePlayStateSt = store(v => v.simulatePlayStateSt);

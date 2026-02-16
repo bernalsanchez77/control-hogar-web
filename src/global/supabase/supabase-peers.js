@@ -68,7 +68,6 @@ class PeersChannel {
                 }
                 previousPeers = currentPeers;
                 store.getState().setPeersSt(realPeers);
-                store.getState().setLeaderSt(this.getLeader(realPeers));
                 console.log('leader: ', this.getLeader(realPeers));
             })
             .subscribe(async (status) => {

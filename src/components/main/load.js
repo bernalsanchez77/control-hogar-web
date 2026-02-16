@@ -29,7 +29,7 @@ function Load() {
   const userTypeSt = store(v => v.userTypeSt);
   const userNameSt = store(v => v.userNameSt);
   const userDeviceSt = store(v => v.userDeviceSt);
-  const leaderSt = store(v => v.leaderSt);
+  const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
   const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
   const wifiNameSt = store(v => v.wifiNameSt);
   const networkTypeSt = store(v => v.networkTypeSt);
@@ -194,7 +194,8 @@ function Load() {
     }
     const youtubeVideosLizSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
     if (youtubeVideosLizSelectedId) {
-      if (userNameSt + '-' + userDeviceSt === store.getState().leaderSt && !Roku.playStateInterval) {
+      const leader = store.getState().peersSt.findLast(p => p.wifiName === 'Noky')?.name || '';
+      if (userNameSt + '-' + userDeviceSt === leader && !Roku.playStateInterval) {
         const youtubeVideosLizSelected = store.getState().youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId) || {};
         if (youtubeVideosLizSelected) {
           Roku.startPlayStateListener(youtubeVideosLizSelected);

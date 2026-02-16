@@ -9,7 +9,7 @@ import './channel.css';
 function Channel({ setVideoToSave }) {
     const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
     const viewSt = store(v => v.viewSt);
-    const leaderSt = store(v => v.leaderSt);
+    const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
     const selectionsSt = store(v => v.selectionsSt);
     const youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
 

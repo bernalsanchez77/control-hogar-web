@@ -7,7 +7,7 @@ import './arrows.css';
 
 function Arrows() {
   const wifiNameSt = store(v => v.wifiNameSt);
-  const leaderSt = store(v => v.leaderSt);
+  const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
   const userNameSt = store(v => v.userNameSt);
   const userDeviceSt = store(v => v.userDeviceSt);
   const device = 'rokuSala';

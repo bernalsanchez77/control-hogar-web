@@ -13,7 +13,7 @@ import './youtube.css';
 function Youtube() {
   const youtubeChannelsLizSt = store(v => v.youtubeChannelsLizSt);
   const viewSt = store(v => v.viewSt);
-  const leaderSt = store(v => v.leaderSt);
+  const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
   const userNameSt = store(v => v.userNameSt);
   const lizEnabledSt = store(v => v.lizEnabledSt);
   const [videoToSave, setVideoToSave] = useState(null);

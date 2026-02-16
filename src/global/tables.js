@@ -25,12 +25,14 @@ class Tables {
 
   async onSelectionsTableChange(change) {
     this.userName = store.getState().userNameSt + '-' + store.getState().userDeviceSt;
+    const leader = store.getState().peersSt.findLast(p => p.wifiName === 'Noky')?.name || '';
+
     if (change.table === 'youtubeVideosLiz') {
       if (change.id) {
         if (roku.playStateInterval) {
           roku.stopPlayStateListener();
         }
-        if (this.userName === store.getState().leaderSt) {
+        if (this.userName === leader) {
           const rokuId = store.getState().rokuAppsSt.find(app => app.label === 'Youtube').rokuId;
           if (!store.getState().simulatePlayStateSt) {
             requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: change.id } });
@@ -46,7 +48,7 @@ class Tables {
     }
     if (change.table === 'rokuApps') {
       store.getState().setRokuSearchModeSt('roku');
-      if (this.userName === store.getState().leaderSt) {
+      if (this.userName === leader) {
         if (store.getState().wifiNameSt === 'Noky') {
           requests.fetchRoku({ key: 'launch', value: change.id });
         } else {
@@ -76,7 +78,7 @@ class Tables {
       if (store.getState().isAppSt) {
         CordovaPlugins.updatePlayState(change.id === 'play');
       }
-      if (this.userName === store.getState().leaderSt) {
+      if (this.userName === leader) {
         const rokuPlayState = await roku.getPlayState('state');
         if (rokuPlayState !== change.id) {
           requests.fetchRoku({ key: 'keypress', value: change.id });

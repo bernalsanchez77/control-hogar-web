@@ -7,7 +7,7 @@ import './queue.css';
 function Queue() {
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
   const selectionsSt = store(v => v.selectionsSt);
-  const leaderSt = store(v => v.leaderSt);
+  const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
   const youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
   let youtubeSortedQueue = youtubeVideosLizSt.filter(video => video.queue > 0);
   youtubeSortedQueue = Object.values(youtubeSortedQueue).sort((a, b) => a.queue - b.queue);
