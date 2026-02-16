@@ -2,6 +2,7 @@ import { store } from "../../../../../store/store";
 import CableChannelCategories from '../../../../../global/cable-channel-categories';
 import utils from '../../../../../global/utils';
 import viewRouter from '../../../../../global/view-router';
+import { useTouch } from '../../../../../hooks/useTouch';
 import './categories.css';
 
 function Categories() {
@@ -10,17 +11,17 @@ function Categories() {
   let selectedImg = '/imgs/channels/' + cableChannelsSelectedId + '.png';
   const viewSt = store(v => v.viewSt);
 
-  const onShortClick = async (keyup, value) => {
-    if (keyup) {
-      utils.triggerVibrate();
-      const newView = structuredClone(viewSt);
-      newView.cable.channels.category = value;
-      await viewRouter.changeView(newView);
-    }
+  const onShortClick = async (e, value) => {
+    utils.triggerVibrate();
+    const newView = structuredClone(viewSt);
+    newView.cable.channels.category = value;
+    await viewRouter.changeView(newView);
   }
 
-  const onLongClick = (value) => {
+  const onLongClick = (e, value) => {
   }
+
+  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(onShortClick, onLongClick);
 
   return (
     <div>
@@ -44,8 +45,9 @@ function Categories() {
                   return (
                     <div key={colIndex} className={`controls-channels-element controls-channels-element--${position}`}>
                       <button className='controls-channels-elements-button'
-                        onTouchStart={(e) => utils.onTouchStart(item.categories, e, onShortClick)}
-                        onTouchEnd={(e) => utils.onTouchEnd(item.categories, e, onShortClick, onLongClick)}>
+                        onTouchStart={(e) => onTouchStart(e)}
+                        onTouchMove={(e) => onTouchMove(e)}
+                        onTouchEnd={(e) => onTouchEnd(e, item.categories)}>
                         {item.label}
                       </button>
                     </div>

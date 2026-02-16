@@ -7,6 +7,7 @@ import Edit from './modules/edit/edit';
 import Queue from './modules/queue/queue';
 import Search from './modules/search/search';
 import Channel from './modules/channel/channel';
+import { useTouch } from '../../../../../hooks/useTouch';
 import './youtube.css';
 
 function Youtube() {
@@ -16,11 +17,7 @@ function Youtube() {
   const userNameSt = store(v => v.userNameSt);
   const lizEnabledSt = store(v => v.lizEnabledSt);
   const [videoToSave, setVideoToSave] = useState(null);
-  const timeout3s = useRef(null);
-  const longClick = useRef(false);
   let youtubeSortedChannels = [];
-  let touchMoved = false;
-  let touchStartY = 0;
   const channelSelected = useRef('');
 
   const onChannelShortClick = (channel) => {
@@ -37,52 +34,32 @@ function Youtube() {
     youtubeSortedChannels = Object.values(youtubeChannelsLizSt).sort((a, b) => a.order - b.order);
   }
 
-
-
-  const onTouchStart = (e) => {
-    touchStartY = e.touches[0].clientY;
-    touchMoved = false;
-    timeout3s.current = setTimeout(() => {
-      longClick.current = true;
-    }, 500);
-  };
-
-  const onTouchMove = (e) => {
-    const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
-    if (deltaY > 10) {
-      touchMoved = true;
+  const handleShortPress = (e, type, video) => {
+    if (type === 'channel') {
+      utils.triggerVibrate();
+      onChannelShortClick(video.id);
     }
-  };
-
-  const onTouchEnd = (e, type, video) => {
-    e.preventDefault();
-    clearTimeout(timeout3s.current);
-    if (!touchMoved) {
-      if (longClick.current) {
+    if (type === 'video') {
+      if (leaderSt) {
         utils.triggerVibrate();
-        youtube.handleQueue(video);
-      } else {
-        if (type === 'channel') {
-          utils.triggerVibrate();
-          onChannelShortClick(video.id);
-        }
-        if (type === 'video') {
-          if (leaderSt) {
-            utils.triggerVibrate();
-            youtube.onVideoShortClick(video);
-          }
-        }
-        if (type === 'edit') {
-          utils.triggerVibrate();
-          setVideoToSave(video);
-          const newView = structuredClone(viewSt);
-          newView.roku.apps.youtube.mode = 'edit';
-          viewRouter.changeView(newView);
-        }
+        youtube.onVideoShortClick(video);
       }
     }
-    longClick.current = false;
+    if (type === 'edit') {
+      utils.triggerVibrate();
+      setVideoToSave(video);
+      const newView = structuredClone(viewSt);
+      newView.roku.apps.youtube.mode = 'edit';
+      viewRouter.changeView(newView);
+    }
   };
+
+  const handleLongPress = (e, type, video) => {
+    utils.triggerVibrate();
+    youtube.handleQueue(video);
+  };
+
+  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(handleShortPress, handleLongPress);
 
   return (
     <div>

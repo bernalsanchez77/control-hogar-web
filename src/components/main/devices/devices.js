@@ -3,6 +3,7 @@ import { store } from "../../../store/store";
 import viewRouter from '../../../global/view-router';
 import utils from '../../../global/utils';
 import requests from '../../../global/requests';
+import { useTouch } from '../../../hooks/useTouch';
 import './devices.css';
 
 
@@ -54,53 +55,41 @@ function Devices() {
     await viewRouter.changeView(newView);
   }
 
-  const onDevicesShortClick = (keyup, device) => {
-    if (keyup) {
-      if (device.state === 'on') {
-        if (device.id === 'lamparasAbajo') {
-          lamparasOff.forEach(lampara => {
-            if (lampara.state === 'on') {
-              requests.sendIfttt({ device: lampara.id, key: 'state', value: 'off' });
-              requests.updateTable({ id: lampara.id, table: 'devices', state: 'off' });
-            }
-          });
-        } else {
-          requests.sendIfttt({ device: device.id, key: 'state', value: 'off' });
-          requests.updateTable({ id: device.id, table: 'devices', state: 'off' });
-        }
-
+  const onDevicesShortClick = (e, device) => {
+    if (device.state === 'on') {
+      if (device.id === 'lamparasAbajo') {
+        lamparasOff.forEach(lampara => {
+          if (lampara.state === 'on') {
+            requests.sendIfttt({ device: lampara.id, key: 'state', value: 'off' });
+            requests.updateTable({ id: lampara.id, table: 'devices', state: 'off' });
+          }
+        });
+      } else {
+        requests.sendIfttt({ device: device.id, key: 'state', value: 'off' });
+        requests.updateTable({ id: device.id, table: 'devices', state: 'off' });
       }
-      if (device.state === 'off') {
-        if (device.id === 'lamparasAbajo') {
-          lamparasOn.forEach(lampara => {
-            if (lampara.state === 'off') {
-              requests.sendIfttt({ device: lampara.id, key: 'state', value: 'on' });
-              requests.updateTable({ id: lampara.id, table: 'devices', state: 'on' });
-            }
-          });
-        } else {
-          requests.sendIfttt({ device: device.id, key: 'state', value: 'on' });
-          requests.updateTable({ id: device.id, table: 'devices', state: 'on' });
-        }
+
+    }
+    if (device.state === 'off') {
+      if (device.id === 'lamparasAbajo') {
+        lamparasOn.forEach(lampara => {
+          if (lampara.state === 'off') {
+            requests.sendIfttt({ device: lampara.id, key: 'state', value: 'on' });
+            requests.updateTable({ id: lampara.id, table: 'devices', state: 'on' });
+          }
+        });
+      } else {
+        requests.sendIfttt({ device: device.id, key: 'state', value: 'on' });
+        requests.updateTable({ id: device.id, table: 'devices', state: 'on' });
       }
     }
   }
 
-  const onDevicesLongClick = (device) => {
+  const onDevicesLongClick = (e, device) => {
     changeView(device);
   }
 
-  const onTouchStart = (device, e) => {
-    utils.onTouchStart(device, e, onDevicesShortClick)
-  }
-
-  const onTouchEnd = (device, e) => {
-    utils.onTouchEnd(device, e, onDevicesShortClick, onDevicesLongClick)
-  }
-
-  const onTouchMove = (e) => {
-    utils.onTouchMove(e)
-  }
+  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(onDevicesShortClick, onDevicesLongClick);
 
   useEffect(() => {
     setLamparasState();
@@ -116,8 +105,8 @@ function Devices() {
             <li key={key} className='devices-element'>
               <button
                 className={`devices-button ${device.state === 'on' || (device.id === 'lamparasAbajo' && device.state === 'on') ? "devices-button--on" : "devices-button-off"}`}
-                onTouchStart={(e) => onTouchStart(device, e)}
-                onTouchEnd={(e) => onTouchEnd(device, e)}
+                onTouchStart={(e) => onTouchStart(e)}
+                onTouchEnd={(e) => onTouchEnd(e, device)}
                 onTouchMove={(e) => onTouchMove(e)}>
                 <img
                   className='devices-button-img'

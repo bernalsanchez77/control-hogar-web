@@ -3,6 +3,7 @@ import requests from "../../../../global/requests";
 import utils from '../../../../global/utils';
 import { store } from '../../../../store/store';
 import roku from '../../../../global/roku';
+import { useTouch } from '../../../../hooks/useTouch';
 import './arrows.css';
 
 function Arrows() {
@@ -12,22 +13,22 @@ function Arrows() {
   const userDeviceSt = store(v => v.userDeviceSt);
   const device = 'rokuSala';
 
-  const onShortClick = (keyup, value) => {
+  const onShortClick = (e, value) => {
     const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
-    if (keyup) {
-      if (wifiNameSt === 'Noky') {
-        utils.triggerVibrate();
-        requests.fetchRoku({ key: 'keypress', value: rokuValue });
-        roku.updatePlayState(1000);
-      } else {
-        utils.triggerVibrate();
-        requests.sendIfttt({ device, key: 'command', value });
-      }
+    if (wifiNameSt === 'Noky') {
+      utils.triggerVibrate();
+      requests.fetchRoku({ key: 'keypress', value: rokuValue });
+      roku.updatePlayState(1000);
+    } else {
+      utils.triggerVibrate();
+      requests.sendIfttt({ device, key: 'command', value });
     }
   }
 
-  const onLongClick = (value) => {
+  const onLongClick = (e, value) => {
   }
+
+  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(onShortClick, onLongClick);
 
   return (
     <div className='controls-arrows'>
@@ -36,8 +37,9 @@ function Arrows() {
           <div className='controls-arrows-element'>
             <button
               className="controls-arrows-button"
-              onTouchStart={(e) => utils.onTouchStart('up', e, onShortClick)}
-              onTouchEnd={(e) => utils.onTouchEnd('up', e, onShortClick, onLongClick)}>
+              onTouchStart={(e) => onTouchStart(e)}
+              onTouchMove={(e) => onTouchMove(e)}
+              onTouchEnd={(e) => onTouchEnd(e, 'up')}>
               &#9650;
             </button>
           </div>
@@ -46,24 +48,27 @@ function Arrows() {
           <div className='controls-arrows-element controls-arrows-element--left'>
             <button
               className="controls-arrows-button control-arrows-button--left"
-              onTouchStart={(e) => utils.onTouchStart('left', e, onShortClick)}
-              onTouchEnd={(e) => utils.onTouchEnd('left', e, onShortClick, onLongClick)}>
+              onTouchStart={(e) => onTouchStart(e)}
+              onTouchMove={(e) => onTouchMove(e)}
+              onTouchEnd={(e) => onTouchEnd(e, 'left')}>
               &#9664;
             </button>
           </div>
           <div className='controls-arrows-element'>
             <button
               className={`controls-arrows-button controls-arrows-button--circle ${leaderSt === userNameSt + '-' + userDeviceSt ? 'controls-arrows-button--leader' : ''}`}
-              onTouchStart={(e) => utils.onTouchStart('select', e, onShortClick)}
-              onTouchEnd={(e) => utils.onTouchEnd('select', e, onShortClick, onLongClick)}>
+              onTouchStart={(e) => onTouchStart(e)}
+              onTouchMove={(e) => onTouchMove(e)}
+              onTouchEnd={(e) => onTouchEnd(e, 'select')}>
               ok
             </button>
           </div>
           <div className='controls-arrows-element controls-arrows-element--right'>
             <button
               className="controls-arrows-button"
-              onTouchStart={(e) => utils.onTouchStart('right', e, onShortClick)}
-              onTouchEnd={(e) => utils.onTouchEnd('right', e, onShortClick, onLongClick)}>
+              onTouchStart={(e) => onTouchStart(e)}
+              onTouchMove={(e) => onTouchMove(e)}
+              onTouchEnd={(e) => onTouchEnd(e, 'right')}>
               &#9654;
             </button>
           </div>
@@ -72,8 +77,9 @@ function Arrows() {
           <div className='controls-arrows-element'>
             <button
               className="controls-arrows-button"
-              onTouchStart={(e) => utils.onTouchStart('down', e, onShortClick)}
-              onTouchEnd={(e) => utils.onTouchEnd('down', e, onShortClick, onLongClick)}>
+              onTouchStart={(e) => onTouchStart(e)}
+              onTouchMove={(e) => onTouchMove(e)}
+              onTouchEnd={(e) => onTouchEnd(e, 'down')}>
               &#9660;
             </button>
           </div>

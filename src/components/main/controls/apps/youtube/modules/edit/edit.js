@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { store } from "../../../../../../../store/store";
 import requests from '../../../../../../../global/requests';
 import utils from '../../../../../../../global/utils';
+import { useTouch } from '../../../../../../../hooks/useTouch';
 import './edit.css';
 
 function Edit({ videoToSave }) {
@@ -27,41 +28,18 @@ function Edit({ videoToSave }) {
   const channelRef = useRef(existingChannelId);
   const channelImgRef = useRef(existingChannelImgPath);
 
-  let touchMoved = false;
-  let touchStartY = 0;
-  const timeout3s = useRef(null);
-  const longClick = useRef(false);
-
-  const onTouchStart = (e) => {
-    touchStartY = e.touches[0].clientY;
-    touchMoved = false;
-    timeout3s.current = setTimeout(() => {
-      longClick.current = true;
-    }, 500);
-  };
-
-  const onTouchMove = (e) => {
-    const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
-    if (deltaY > 10) {
-      touchMoved = true;
+  const handleShortPress = (e, type, video) => {
+    if (type === 'image') {
+      setChannelImg(video.id);
+      channelImgRef.current = video.path;
     }
   };
 
-  const onTouchEnd = (e, type, video) => {
-    e.preventDefault();
-    clearTimeout(timeout3s.current);
-    if (!touchMoved) {
-      if (longClick.current) {
-        utils.triggerVibrate();
-      } else {
-        if (type === 'image') {
-          setChannelImg(video.id);
-          channelImgRef.current = video.path;
-        }
-      }
-    }
-    longClick.current = false;
+  const handleLongPress = () => {
+    utils.triggerVibrate();
   };
+
+  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(handleShortPress, handleLongPress);
 
   const addChannel = (channel) => {
     setChannel(channel);

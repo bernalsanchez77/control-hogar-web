@@ -5,6 +5,7 @@ import utils from '../../../../global/utils';
 import youtube from '../../../../global/youtube';
 import roku from '../../../../global/roku';
 import viewRouter from '../../../../global/view-router';
+import { useTouch } from '../../../../hooks/useTouch';
 import './toolbar.css';
 
 function Toolbar() {
@@ -32,57 +33,55 @@ function Toolbar() {
   const lizEnabledSt = store(v => v.lizEnabledSt);
   const setLizEnabledSt = store(v => v.setLizEnabledSt);
 
-  const onShortClick = useCallback((keyup, value) => {
+  const onShortClick = useCallback((e, value) => {
     const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
-    if (keyup) {
-      utils.triggerVibrate();
-      if (wifiNameSt === 'Noky') {
-        if (value === 'play') {
-          requests.fetchRoku({ key: 'keypress', value: 'Play' });
-          roku.updatePlayState(1000);
+    utils.triggerVibrate();
+    if (wifiNameSt === 'Noky') {
+      if (value === 'play') {
+        requests.fetchRoku({ key: 'keypress', value: 'Play' });
+        roku.updatePlayState(1000);
+      }
+      if (value === 'rev' || value === 'fwd') {
+        requests.fetchRoku({ key: 'keydown', value: rokuValue });
+      }
+      if (value === 'queue') {
+        const newView = structuredClone(viewSt);
+        newView.roku.apps.youtube.mode = 'queue';
+        viewRouter.changeView(newView);
+      }
+      if (value === 'liz') {
+        if (localStorage.getItem('lizEnabled') === 'true') {
+          localStorage.setItem('lizEnabled', 'false');
+          setLizEnabledSt(false);
+        } else {
+          localStorage.setItem('lizEnabled', 'true');
+          setLizEnabledSt(true);
         }
-        if (value === 'rev' || value === 'fwd') {
-          requests.fetchRoku({ key: 'keydown', value: rokuValue });
-        }
-        if (value === 'queue') {
-          const newView = structuredClone(viewSt);
-          newView.roku.apps.youtube.mode = 'queue';
-          viewRouter.changeView(newView);
-        }
-        if (value === 'liz') {
-          if (localStorage.getItem('lizEnabled') === 'true') {
-            localStorage.setItem('lizEnabled', 'false');
-            setLizEnabledSt(false);
-          } else {
-            localStorage.setItem('lizEnabled', 'true');
-            setLizEnabledSt(true);
-          }
+      }
+    } else {
+      if (value === 'queue') {
+        const newView = structuredClone(viewSt);
+        newView.roku.apps.youtube.mode = 'queue';
+        viewRouter.changeView(newView);
+      } else if (value === 'liz') {
+        if (localStorage.getItem('lizEnabled') === 'true') {
+          localStorage.setItem('lizEnabled', 'false');
+          setLizEnabledSt(false);
+        } else {
+          localStorage.setItem('lizEnabled', 'true');
+          setLizEnabledSt(true);
         }
       } else {
-        if (value === 'queue') {
-          const newView = structuredClone(viewSt);
-          newView.roku.apps.youtube.mode = 'queue';
-          viewRouter.changeView(newView);
-        } else if (value === 'liz') {
-          if (localStorage.getItem('lizEnabled') === 'true') {
-            localStorage.setItem('lizEnabled', 'false');
-            setLizEnabledSt(false);
-          } else {
-            localStorage.setItem('lizEnabled', 'true');
-            setLizEnabledSt(true);
-          }
-        } else {
-          requests.sendIfttt({ device, key: 'command', value });
-        }
-        if (value === 'play') {
-          const newPlayState = rokuRow.playState === "play" ? "pause" : "play";
-          requests.updateTable({ id: rokuRow.id, table: 'hdmiSala', playState: newPlayState });
-        }
+        requests.sendIfttt({ device, key: 'command', value });
+      }
+      if (value === 'play') {
+        const newPlayState = rokuRow.playState === "play" ? "pause" : "play";
+        requests.updateTable({ id: rokuRow.id, table: 'hdmiSala', playState: newPlayState });
       }
     }
   }, [rokuRow, wifiNameSt, viewSt, setLizEnabledSt]);
 
-  const onLongClick = (value) => {
+  const onLongClick = (e, value) => {
     const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
     if (wifiNameSt === 'Noky') {
       if (value === 'play') {
@@ -96,6 +95,8 @@ function Toolbar() {
       }
     }
   }
+
+  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(onShortClick, onLongClick);
 
   const getNextQueue = useCallback((currentQueue) => {
     const higherQueueVideos = youtubeVideosLizSt.filter(obj => {
@@ -151,8 +152,9 @@ function Toolbar() {
         <div className='controls-toolbar-element controls-toolbar-element--left'>
           <button
             className={`controls-toolbar-button ${wifiNameSt === 'Noky' ? 'controls-toolbar-button--connected' : ''}`}
-            onTouchStart={(e) => utils.onTouchStart('rev', e, onShortClick)}
-            onTouchEnd={(e) => utils.onTouchEnd('rev', e, onShortClick, onLongClick)}>
+            onTouchStart={(e) => onTouchStart(e)}
+            onTouchMove={(e) => onTouchMove(e)}
+            onTouchEnd={(e) => onTouchEnd(e, 'rev')}>
             <img
               className='controls-toolbar-img controls-toolbar-img--button'
               src="/imgs/rewind-50.png"
@@ -163,8 +165,9 @@ function Toolbar() {
         <div className='controls-toolbar-element'>
           <button
             className={`controls-toolbar-button ${wifiNameSt === 'Noky' ? 'controls-toolbar-button--connected' : ''}`}
-            onTouchStart={(e) => utils.onTouchStart('play', e, onShortClick)}
-            onTouchEnd={(e) => utils.onTouchEnd('play', e, onShortClick, onLongClick)}>
+            onTouchStart={(e) => onTouchStart(e)}
+            onTouchMove={(e) => onTouchMove(e)}
+            onTouchEnd={(e) => onTouchEnd(e, 'play')}>
             {rokuRow.playState === 'play' &&
               <img
                 className='controls-toolbar-img controls-toolbar-img--button'
@@ -184,8 +187,9 @@ function Toolbar() {
         <div className='controls-toolbar-element controls-toolbar-element--right'>
           <button
             className={`controls-toolbar-button ${wifiNameSt === 'Noky' ? 'controls-toolbar-button--connected' : ''}`}
-            onTouchStart={(e) => utils.onTouchStart('fwd', e, onShortClick)}
-            onTouchEnd={(e) => utils.onTouchEnd('fwd', e, onShortClick, onLongClick)}>
+            onTouchStart={(e) => onTouchStart(e)}
+            onTouchMove={(e) => onTouchMove(e)}
+            onTouchEnd={(e) => onTouchEnd(e, 'fwd')}>
             <img
               className='controls-toolbar-img controls-toolbar-img--button'
               src="/imgs/forward-50.png"
@@ -221,8 +225,9 @@ function Toolbar() {
             <div className="controls-toolbar-playlist">
               <button
                 className={`controls-toolbar-playlist-button`}
-                onTouchStart={(e) => utils.onTouchStart('queue', e, onShortClick)}
-                onTouchEnd={(e) => utils.onTouchEnd('queue', e, onShortClick, onLongClick)}>
+                onTouchStart={(e) => onTouchStart(e)}
+                onTouchMove={(e) => onTouchMove(e)}
+                onTouchEnd={(e) => onTouchEnd(e, 'queue')}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="30px"
@@ -239,8 +244,9 @@ function Toolbar() {
               {(userTypeSt === 'owner' || userTypeSt === 'dev') &&
                 <button
                   className={`controls-toolbar-playlist-liz`}
-                  onTouchStart={(e) => utils.onTouchStart('liz', e, onShortClick)}
-                  onTouchEnd={(e) => utils.onTouchEnd('liz', e, onShortClick, onLongClick)}>
+                  onTouchStart={(e) => onTouchStart(e)}
+                  onTouchMove={(e) => onTouchMove(e)}
+                  onTouchEnd={(e) => onTouchEnd(e, 'liz')}>
                   <svg
                     width="20px"
                     height="20px"

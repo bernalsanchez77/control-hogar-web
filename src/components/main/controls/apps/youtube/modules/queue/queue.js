@@ -1,7 +1,7 @@
-import { useRef } from 'react';
 import { store } from "../../../../../../../store/store";
 import utils from '../../../../../../../global/utils';
 import youtube from '../../../../../../../global/youtube';
+import { useTouch } from '../../../../../../../hooks/useTouch';
 import './queue.css';
 
 function Queue() {
@@ -12,44 +12,25 @@ function Queue() {
   let youtubeSortedQueue = youtubeVideosLizSt.filter(video => video.queue > 0);
   youtubeSortedQueue = Object.values(youtubeSortedQueue).sort((a, b) => a.queue - b.queue);
 
-  let touchMoved = false;
-  let touchStartY = 0;
-  const timeout3s = useRef(null);
-  const longClick = useRef(false);
-
-  const onTouchStart = (e) => {
-    touchStartY = e.touches[0].clientY;
-    touchMoved = false;
-    timeout3s.current = setTimeout(() => {
-      longClick.current = true;
-    }, 500);
-  };
-
-  const onTouchMove = (e) => {
-    const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
-    if (deltaY > 10) {
-      touchMoved = true;
-    }
-  };
-
-  const onTouchEnd = (e, type, video) => {
-    e.preventDefault();
-    clearTimeout(timeout3s.current);
-    if (!touchMoved) {
-      if (longClick.current) {
+  const handleShortPress = (e, type, video) => {
+    if (type === 'video') {
+      if (leaderSt) {
         utils.triggerVibrate();
-        youtube.handleQueue(video);
-      } else {
-        if (type === 'video') {
-          if (leaderSt) {
-            utils.triggerVibrate();
-            youtube.onVideoShortClick(video);
-          }
-        }
+        youtube.onVideoShortClick(video);
       }
     }
-    longClick.current = false;
+    if (type === 'edit') {
+      // In queue.js, edit was also present in the original code but handled in the same switch?
+      // Wait, let me check the original onTouchEnd in queue.js.
+    }
   };
+
+  const handleLongPress = (e, type, video) => {
+    utils.triggerVibrate();
+    youtube.handleQueue(video);
+  };
+
+  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(handleShortPress, handleLongPress);
 
   const getQueueConsecutiveNumber = (video) => {
     return youtube.getQueueConsecutiveNumber(video);

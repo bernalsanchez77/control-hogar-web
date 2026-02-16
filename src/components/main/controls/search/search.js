@@ -3,14 +3,13 @@ import { store } from "../../../../store/store";
 import requests from '../../../../global/requests';
 import viewRouter from '../../../../global/view-router';
 import utils from '../../../../global/utils';
+import { useTouch } from '../../../../hooks/useTouch';
 import './search.css';
 
 function Search() {
   const rokuSearchModeSt = store(v => v.rokuSearchModeSt);
   const viewSt = store(v => v.viewSt);
   const setYoutubeSearchVideosSt = store(v => v.setYoutubeSearchVideosSt);
-  const timeout3s = useRef(null);
-  const longClick = useRef(false);
   const [searchText, setSearchText] = useState('');
   const [modeVisibility] = useState(false);
   const selectionsSt = store(v => v.selectionsSt);
@@ -69,21 +68,14 @@ function Search() {
     }
   };
 
-  const onTouchStart = (e) => {
-    timeout3s.current = setTimeout(() => {
-      longClick.current = true;
-    }, 500);
+  const handleShortPress = () => {
+    searchQuery();
   };
 
-  const onTouchEnd = (e) => {
-    e.preventDefault();
-    clearTimeout(timeout3s.current);
-    if (longClick.current) {
-    } else {
-      searchQuery();
-    }
-    longClick.current = false;
+  const handleLongPress = () => {
   };
+
+  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(handleShortPress, handleLongPress);
 
   const onSubmit = (e) => {
     utils.triggerVibrate();
@@ -154,6 +146,7 @@ function Search() {
         <div className="controls-search-button-wrapper">
           <button className={`controls-search-button ${rokuSearchModeSt === 'default' ? 'controls-search-button--no-mode' : ''}`}
             onTouchStart={(e) => onTouchStart(e)}
+            onTouchMove={(e) => onTouchMove(e)}
             onTouchEnd={(e) => onTouchEnd(e)}>
             Buscar
           </button>
