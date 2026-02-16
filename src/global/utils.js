@@ -225,6 +225,9 @@ class Utils {
       .replace(/&gt;/g, '>')
       .replace(/&apos;/g, "'");
   }
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 }
 const utils = new Utils();
 export default utils;

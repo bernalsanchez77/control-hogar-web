@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
-import { store } from "../../../../../../store/store";
-import requests from '../../../../../../global/requests';
-import utils from '../../../../../../global/utils';
+import { store } from "../../../../../../../store/store";
+import requests from '../../../../../../../global/requests';
+import utils from '../../../../../../../global/utils';
 import './edit.css';
 
 function Edit({ videoToSave }) {

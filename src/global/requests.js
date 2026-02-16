@@ -251,7 +251,7 @@ class Requests {
             );
           });
           const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Roku not responding")), 500)
+            setTimeout(() => reject(new Error("Roku not responding")), 1000)
           );
           Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
           }).catch(async () => {
@@ -278,7 +278,7 @@ class Requests {
           axios.post(url, {}, { headers: contentTypeX }).then(response => { resolve(true); }).catch(error => { reject(error); });
         });
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Roku not responding")), 500)
+          setTimeout(() => reject(new Error("Roku not responding")), 1000)
         );
         Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
         }).catch(async () => {
