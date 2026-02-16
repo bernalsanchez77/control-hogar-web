@@ -28,7 +28,8 @@ class Youtube {
     });
   }
   async handleQueue(video) {
-    if (video.queue) {
+    const videoFromLiz = store.getState().youtubeVideosLizSt.find(v => v.id === video.id);
+    if (videoFromLiz.queue) {
       requests.updateTable({ id: video.id, table: 'youtubeVideosLiz', queue: 0, date: video.date });
     } else {
       const lastQueue = this.getLastQueue().queue;
