@@ -3,14 +3,12 @@ import { store } from "../../../../store/store";
 import requests from '../../../../global/requests';
 import utils from '../../../../global/utils';
 import youtube from '../../../../global/youtube';
-import roku from '../../../../global/roku';
 import viewRouter from '../../../../global/view-router';
 import { useTouch } from '../../../../hooks/useTouch';
 import './toolbar.css';
 
 function Toolbar() {
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
-  const hdmiSalaSt = store(v => v.hdmiSalaSt);
   const wifiNameSt = store(v => v.wifiNameSt);
   const rokuPlayStatePositionSt = store(v => v.rokuPlayStatePositionSt);
   const leaderSt = store(v => v.leaderSt);
@@ -27,20 +25,31 @@ function Toolbar() {
   const userNameSt = store(v => v.userNameSt);
   const userDeviceSt = store(v => v.userDeviceSt);
   const userTypeSt = store(v => v.userTypeSt);
-  const rokuRow = hdmiSalaSt.find(hdmi => hdmi.id === 'roku');
+  const selectionsPlayState = selectionsSt.find(el => el.table === 'rokuSala')?.id;
   const [normalizedPercentageSt, setNormalizedPercentageSt] = useState(Math.min(100, Math.max(0, 0)));
-  const device = 'rokuSala';
   const lizEnabledSt = store(v => v.lizEnabledSt);
   const setLizEnabledSt = store(v => v.setLizEnabledSt);
+  const device = 'rokuSala';
 
   const onShortClick = useCallback((e, value) => {
-    const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
     utils.triggerVibrate();
-    if (wifiNameSt === 'Noky') {
-      if (value === 'play') {
-        requests.fetchRoku({ key: 'keypress', value: 'Play' });
-        roku.updatePlayState(1000);
+    if (value === 'play') {
+      let playState = '';
+      if (selectionsPlayState === 'stop') {
+        playState = 'play';
       }
+      if (selectionsPlayState === 'play') {
+        playState = 'pause';
+      }
+      if (selectionsPlayState === 'pause') {
+        playState = 'play';
+      }
+      requests.updateSelections({ table: 'rokuSala', id: playState });
+    }
+
+
+    const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
+    if (wifiNameSt === 'Noky') {
       if (value === 'rev' || value === 'fwd') {
         requests.fetchRoku({ key: 'keydown', value: rokuValue });
       }
@@ -74,26 +83,22 @@ function Toolbar() {
       } else {
         requests.sendIfttt({ device, key: 'command', value });
       }
-      if (value === 'play') {
-        const newPlayState = rokuRow.playState === "play" ? "pause" : "play";
-        requests.updateTable({ id: rokuRow.id, table: 'hdmiSala', playState: newPlayState });
-      }
     }
-  }, [rokuRow, wifiNameSt, viewSt, setLizEnabledSt]);
+  }, [selectionsPlayState, wifiNameSt, viewSt, setLizEnabledSt]);
 
   const onLongClick = (e, value) => {
-    const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
-    if (wifiNameSt === 'Noky') {
-      if (value === 'play') {
-        utils.triggerVibrate();
-        requests.fetchRoku({ key: 'keypress', value: 'Play' });
-        roku.updatePlayState(1000);
-      } else {
-        utils.triggerVibrate();
-        requests.fetchRoku({ key: 'keyup', value: rokuValue });
-        roku.updatePlayState(1000);
-      }
-    }
+    // const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
+    // if (wifiNameSt === 'Noky') {
+    //   if (value === 'play') {
+    //     utils.triggerVibrate();
+    //     requests.fetchRoku({ key: 'keypress', value: 'Play' });
+    //     roku.updatePlayState(1000);
+    //   } else {
+    //     utils.triggerVibrate();
+    //     requests.fetchRoku({ key: 'keyup', value: rokuValue });
+    //     roku.updatePlayState(1000);
+    //   }
+    // }
   }
 
   const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(onShortClick, onLongClick);
@@ -168,14 +173,14 @@ function Toolbar() {
             onTouchStart={(e) => onTouchStart(e)}
             onTouchMove={(e) => onTouchMove(e)}
             onTouchEnd={(e) => onTouchEnd(e, 'play')}>
-            {rokuRow.playState === 'play' &&
+            {selectionsPlayState === 'play' &&
               <img
                 className='controls-toolbar-img controls-toolbar-img--button'
                 src="/imgs/pause-50.png"
                 alt="icono">
               </img>
             }
-            {(rokuRow.playState === 'pause' || rokuRow.playState === 'none' || rokuRow.playState === 'close') &&
+            {(selectionsPlayState === 'pause' || selectionsPlayState === 'none' || selectionsPlayState === 'close') &&
               <img
                 className='controls-toolbar-img controls-toolbar-img--button'
                 src="/imgs/play-50.png"

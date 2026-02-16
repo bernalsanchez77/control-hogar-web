@@ -165,7 +165,7 @@ class Roku {
       if (rokuActiveApp !== selectionId) {
         requests.updateSelections({ table: 'rokuApps', id: rokuActiveApp });
       }
-      this.updatePlayState();
+      // this.updatePlayState();
     }
   }
 }

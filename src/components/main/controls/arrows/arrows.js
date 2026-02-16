@@ -2,7 +2,6 @@
 import requests from "../../../../global/requests";
 import utils from '../../../../global/utils';
 import { store } from '../../../../store/store';
-import roku from '../../../../global/roku';
 import { useTouch } from '../../../../hooks/useTouch';
 import './arrows.css';
 
@@ -18,7 +17,6 @@ function Arrows() {
     if (wifiNameSt === 'Noky') {
       utils.triggerVibrate();
       requests.fetchRoku({ key: 'keypress', value: rokuValue });
-      roku.updatePlayState(1000);
     } else {
       utils.triggerVibrate();
       requests.sendIfttt({ device, key: 'command', value });

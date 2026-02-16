@@ -4,11 +4,12 @@ import { store } from '../store/store';
 import CordovaPlugins from './cordova-plugins';
 import roku from './roku';
 import requests from './requests';
+import youtube from './youtube';
 class Tables {
+  constructor() {
+    this.userName = '';
+  }
   async onHdmiSalaTableChange(change) {
-    if (store.getState().isAppSt) {
-      CordovaPlugins.updatePlayState(change.playState === 'play');
-    }
   }
 
   async onScreensTableChange(change) {
@@ -22,13 +23,14 @@ class Tables {
     store.getState().setRokuPlayStatePositionSt(change.position);
   }
 
-  onSelectionsTableChange(change) {
+  async onSelectionsTableChange(change) {
+    this.userName = store.getState().userNameSt + '-' + store.getState().userDeviceSt;
     if (change.table === 'youtubeVideosLiz') {
       if (change.id) {
         if (roku.playStateInterval) {
           roku.stopPlayStateListener();
         }
-        if (store.getState().userNameSt + '-' + store.getState().userDeviceSt === store.getState().leaderSt) {
+        if (this.userName === store.getState().leaderSt) {
           const rokuId = store.getState().rokuAppsSt.find(app => app.label === 'Youtube').rokuId;
           if (!store.getState().simulatePlayStateSt) {
             requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: change.id } });
@@ -44,6 +46,22 @@ class Tables {
     }
     if (change.table === 'rokuApps') {
       store.getState().setRokuSearchModeSt('roku');
+      if (this.userName === store.getState().leaderSt) {
+        if (store.getState().wifiNameSt === 'Noky') {
+          requests.fetchRoku({ key: 'launch', value: change.id });
+        } else {
+          requests.sendIfttt({ device: 'rokuSala', key: 'app', value: change.id });
+        }
+        const app = store.getState().rokuAppsSt.find(app => app.rokuId === change.id);
+        if (app.id !== 'youtube') {
+          youtube.clearCurrentVideo();
+          youtube.clearQueue();
+        }
+        if (app.id === 'home') {
+          requests.updateSelections({ table: 'rokuSala', id: 'stop' });
+        }
+      }
+      store.getState().setRokuSearchModeSt('roku');
       if (store.getState().isAppSt) {
         const label = store.getState().rokuAppsSt.find(app => app.rokuId === change.id).label;
         CordovaPlugins.updateAppSelected(label);
@@ -52,6 +70,17 @@ class Tables {
     if (change.table === 'hdmiSala') {
       if (store.getState().viewSt.selected !== change.id) {
         viewRouter.onHdmiSalaTableChange(change.id);
+      }
+    }
+    if (change.table === 'rokuSala') {
+      if (store.getState().isAppSt) {
+        CordovaPlugins.updatePlayState(change.id === 'play');
+      }
+      if (this.userName === store.getState().leaderSt) {
+        const rokuPlayState = await roku.getPlayState('state');
+        if (rokuPlayState !== change.id) {
+          requests.fetchRoku({ key: 'keypress', value: change.id });
+        }
       }
     }
     if (change.table === 'users') {

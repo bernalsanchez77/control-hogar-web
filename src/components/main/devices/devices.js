@@ -1,7 +1,6 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import { store } from "../../../store/store";
 import viewRouter from '../../../global/view-router';
-import utils from '../../../global/utils';
 import requests from '../../../global/requests';
 import { useTouch } from '../../../hooks/useTouch';
 import './devices.css';

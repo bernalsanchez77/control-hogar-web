@@ -124,7 +124,7 @@ function Load() {
   }, [subscribeToSupabaseChannel, setTableSt]);
 
   const updateNotificationBar = useCallback(async () => {
-    const isPlaying = store.getState().hdmiSalaSt.find(el => el.id === 'roku').playState === 'play';
+    const isPlaying = store.getState().selectionsSt.find(el => el.table === 'rokuSala')?.id === 'play';
     CordovaPlugins.updatePlayState(isPlaying);
     const screenSelected = store.getState().screensSt.find(el => el.id === screenSelectedSt);
     CordovaPlugins.updateScreenSelected(screenSelected.label + ' ' + screenSelected.state.toUpperCase());
