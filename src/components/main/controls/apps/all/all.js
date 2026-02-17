@@ -6,7 +6,6 @@ import { useTouch } from '../../../../../hooks/useTouch';
 import './all.css';
 function Apps() {
   const rokuAppsSt = store(v => v.rokuAppsSt);
-  const viewSt = store(v => v.viewSt);
   const selectionsSt = store(v => v.selectionsSt);
   const rokuAppsSelectedRokuId = selectionsSt.find(el => el.table === 'rokuApps')?.id;
 
@@ -18,9 +17,7 @@ function Apps() {
 
   const onLongClick = async (e, value) => {
     utils.triggerVibrate();
-    const newView = structuredClone(viewSt);
-    newView.roku.apps.selected = value;
-    await viewRouter.changeView(newView);
+    await viewRouter.navigateToRokuApp(value);
   }
 
   const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(onShortClick, onLongClick);

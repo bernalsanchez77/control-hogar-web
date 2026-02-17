@@ -1,32 +1,17 @@
-
-import requests from "../../../../global/requests";
-import utils from '../../../../global/utils';
-import { store } from '../../../../store/store';
-import { useTouch } from '../../../../hooks/useTouch';
+import { useArrows } from './useArrows';
 import './arrows.css';
 
 function Arrows() {
-  const wifiNameSt = store(v => v.wifiNameSt);
-  const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
-  const userNameSt = store(v => v.userNameSt);
-  const userDeviceSt = store(v => v.userDeviceSt);
-  const device = 'rokuSala';
+  const {
+    leaderSt,
+    userNameSt,
+    userDeviceSt,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd
+  } = useArrows();
 
-  const onShortClick = (e, value) => {
-    const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
-    if (wifiNameSt === 'Noky') {
-      utils.triggerVibrate();
-      requests.fetchRoku({ key: 'keypress', value: rokuValue });
-    } else {
-      utils.triggerVibrate();
-      requests.sendIfttt({ device, key: 'command', value });
-    }
-  }
-
-  const onLongClick = (e, value) => {
-  }
-
-  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(onShortClick, onLongClick);
+  const isLeader = leaderSt === userNameSt + '-' + userDeviceSt;
 
   return (
     <div className='controls-arrows'>
@@ -54,7 +39,7 @@ function Arrows() {
           </div>
           <div className='controls-arrows-element'>
             <button
-              className={`controls-arrows-button controls-arrows-button--circle ${leaderSt === userNameSt + '-' + userDeviceSt ? 'controls-arrows-button--leader' : ''}`}
+              className={`controls-arrows-button controls-arrows-button--circle ${isLeader ? 'controls-arrows-button--leader' : ''}`}
               onTouchStart={(e) => onTouchStart(e)}
               onTouchMove={(e) => onTouchMove(e)}
               onTouchEnd={(e) => onTouchEnd(e, 'select')}>

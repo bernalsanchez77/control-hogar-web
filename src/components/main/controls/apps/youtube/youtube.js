@@ -24,10 +24,7 @@ function Youtube() {
     utils.triggerVibrate();
     localStorage.setItem('channelSelected', channel);
     channelSelected.current = channel;
-    const newView = structuredClone(viewSt);
-    newView.roku.apps.youtube.channel = channel;
-    newView.roku.apps.youtube.mode = 'channel';
-    viewRouter.changeView(newView);
+    viewRouter.navigateToYoutubeChannel(channel);
   };
 
   if (viewSt.roku.apps.youtube.mode === '' || viewSt.roku.apps.youtube.mode === 'edit') {
@@ -48,9 +45,7 @@ function Youtube() {
     if (type === 'edit') {
       utils.triggerVibrate();
       setVideoToSave(video);
-      const newView = structuredClone(viewSt);
-      newView.roku.apps.youtube.mode = 'edit';
-      viewRouter.changeView(newView);
+      viewRouter.navigateToYoutubeEdit();
     }
   };
 

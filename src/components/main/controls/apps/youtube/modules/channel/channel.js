@@ -8,7 +8,6 @@ import './channel.css';
 
 function Channel({ setVideoToSave }) {
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
-  const viewSt = store(v => v.viewSt);
   const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
   const selectionsSt = store(v => v.selectionsSt);
   const youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
@@ -28,9 +27,7 @@ function Channel({ setVideoToSave }) {
     if (type === 'edit') {
       utils.triggerVibrate();
       setVideoToSave(video);
-      const newView = structuredClone(viewSt);
-      newView.roku.apps.youtube.mode = 'edit';
-      viewRouter.changeView(newView);
+      viewRouter.navigateToYoutubeEdit();
     }
   };
 

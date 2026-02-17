@@ -223,6 +223,63 @@ class ViewRouter {
     }
     await this.changeView(newView, store.getState().viewSt);
   }
+  async applyViewUpdate(updateFn) {
+    const currentView = store.getState().viewSt;
+    const newView = structuredClone(currentView);
+    updateFn(newView);
+    await this.changeView(newView);
+  }
+
+  async _setYoutubeMode(newView, mode, channel = '') {
+    newView.selected = 'roku';
+    newView.roku.apps.selected = 'youtube';
+    newView.roku.apps.youtube.mode = mode;
+    newView.roku.apps.youtube.channel = channel;
+  }
+
+  async navigateToYoutubeSearch() {
+    await this.applyViewUpdate((view) => {
+      this._setYoutubeMode(view, 'search');
+      view.devices.device = '';
+    });
+  }
+
+  async navigateToYoutubeChannel(channelId) {
+    await this.applyViewUpdate((view) => {
+      this._setYoutubeMode(view, 'channel', channelId);
+    });
+  }
+
+  async navigateToYoutubeQueue() {
+    await this.applyViewUpdate((view) => {
+      this._setYoutubeMode(view, 'queue');
+    });
+  }
+
+  async navigateToRokuApp(appId) {
+    await this.applyViewUpdate((view) => {
+      view.selected = 'roku';
+      view.roku.apps.selected = appId;
+    });
+  }
+
+  async navigateToCableCategory(category) {
+    await this.applyViewUpdate((view) => {
+      view.cable.channels.category = category;
+    });
+  }
+
+  async navigateToYoutubeEdit() {
+    await this.applyViewUpdate((view) => {
+      this._setYoutubeMode(view, 'edit');
+    });
+  }
+
+  async navigateToDevice(deviceId) {
+    await this.applyViewUpdate((view) => {
+      view.devices.device = deviceId;
+    });
+  }
 }
 const viewRouter = new ViewRouter();
 export default viewRouter;

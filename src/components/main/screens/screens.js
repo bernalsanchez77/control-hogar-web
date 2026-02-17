@@ -1,31 +1,25 @@
-import { store } from "../../../store/store";
-import utils from '../../../global/utils';
-import CordovaPlugins from '../../../global/cordova-plugins';
+import { useScreens } from './useScreens';
 import './screens.css';
-function Screens({ changeScreenParent }) {
-  const isInForegroundSt = store(v => v.isInForegroundSt);
-  const userTypeSt = store(v => v.userTypeSt);
-  const screenSelectedSt = store(v => v.screenSelectedSt);
-  const setScreenSelectedSt = store(v => v.setScreenSelectedSt);
-  const screensSt = store(v => v.screensSt);
-  const isAppSt = store(v => v.isAppSt);
-  const teleSalaScreen = screensSt.find(screen => screen.id === 'teleSala');
-  const teleCuartoScreen = screensSt.find(screen => screen.id === 'teleCuarto');
-  const teleCocinaScreen = screensSt.find(screen => screen.id === 'teleCocina');
-  const proyectorSalaScreen = screensSt.find(screen => screen.id === 'proyectorSala');
 
-  const onScreenChanged = (screen) => {
-    if (screenSelectedSt !== screen.id) {
-      utils.triggerVibrate();
-      setScreenSelectedSt(screen.id);
-      localStorage.setItem('screen-id', screen.id);
-      if (isAppSt) {
-        CordovaPlugins.updateScreenSelected(screen.label + ' ' + screen.state.toUpperCase());
-        CordovaPlugins.updateScreenState(screen.state);
-        CordovaPlugins.updateMuteState(screen.mute);
-      }
-    }
+function Screens() {
+  const {
+    isInForegroundSt,
+    userTypeSt,
+    screenSelectedSt,
+    teleSalaScreen,
+    teleCuartoScreen,
+    teleCocinaScreen,
+    proyectorSalaScreen,
+    onScreenChanged
+  } = useScreens();
+
+  const getButtonClass = (screenId) => {
+    const isSelected = screenSelectedSt === screenId;
+    const flashClass = (isInForegroundSt && isSelected) ? "flash-shadow" : "no-flash";
+    const onOffClass = isSelected ? "screens-button--on" : "screens-button--off";
+    return `screens-button ${flashClass} ${onOffClass}`;
   };
+
   return (
     <div>
       <div className='screens'>
@@ -33,7 +27,7 @@ function Screens({ changeScreenParent }) {
           {(userTypeSt === 'owner' || userTypeSt === 'dev' || userTypeSt === '') &&
             <div className='screens-element'>
               <button
-                className={`screens-button ${isInForegroundSt && screenSelectedSt === teleCuartoScreen.id ? "flash-shadow" : "no-flash"}  ${screenSelectedSt === teleCuartoScreen.id ? "screens-button--on" : "screens-button--off"}`}
+                className={getButtonClass(teleCuartoScreen.id)}
                 onTouchStart={() => onScreenChanged(teleCuartoScreen)}>
                 {teleCuartoScreen.label}
               </button>
@@ -41,21 +35,21 @@ function Screens({ changeScreenParent }) {
           }
           <div className='screens-element'>
             <button
-              className={`screens-button ${isInForegroundSt && screenSelectedSt === teleSalaScreen.id ? "flash-shadow" : "no-flash"} ${screenSelectedSt === teleSalaScreen.id ? "screens-button--on" : "screens-button--off"}`}
+              className={getButtonClass(teleSalaScreen.id)}
               onTouchStart={() => onScreenChanged(teleSalaScreen)}>
               {teleSalaScreen.label}
             </button>
           </div>
           <div className='screens-element'>
             <button
-              className={`screens-button ${isInForegroundSt && screenSelectedSt === teleCocinaScreen.id ? "flash-shadow" : "no-flash"} ${screenSelectedSt === teleCocinaScreen.id ? "screens-button--on" : "screens-button--off"}`}
+              className={getButtonClass(teleCocinaScreen.id)}
               onTouchStart={() => onScreenChanged(teleCocinaScreen)}>
               {teleCocinaScreen.label}
             </button>
           </div>
           <div className='screens-element'>
             <button
-              className={`screens-button ${isInForegroundSt && screenSelectedSt === proyectorSalaScreen.id ? "flash-shadow" : "no-flash"} ${screenSelectedSt === proyectorSalaScreen.id ? "screens-button--on" : "screens-button--off"}`}
+              className={getButtonClass(proyectorSalaScreen.id)}
               onTouchStart={() => onScreenChanged(proyectorSalaScreen)}>
               {proyectorSalaScreen.label}
             </button>
@@ -63,7 +57,7 @@ function Screens({ changeScreenParent }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default Screens;

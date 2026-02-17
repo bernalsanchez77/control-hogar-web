@@ -9,13 +9,10 @@ function Categories() {
   const cableChannelCategories = new CableChannelCategories().getCableChannelCategories();
   const cableChannelsSelectedId = store(v => v.selectionsSt.find(el => el.table === 'cableChannels')?.id);
   let selectedImg = '/imgs/channels/' + cableChannelsSelectedId + '.png';
-  const viewSt = store(v => v.viewSt);
 
   const onShortClick = async (e, value) => {
     utils.triggerVibrate();
-    const newView = structuredClone(viewSt);
-    newView.cable.channels.category = value;
-    await viewRouter.changeView(newView);
+    await viewRouter.navigateToCableCategory(value);
   }
 
   const onLongClick = (e, value) => {

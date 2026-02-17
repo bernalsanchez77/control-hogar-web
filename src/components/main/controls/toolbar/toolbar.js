@@ -1,136 +1,19 @@
-import { useEffect, useCallback, useState } from 'react';
-import { store } from "../../../../store/store";
-import requests from '../../../../global/requests';
-import utils from '../../../../global/utils';
-import youtube from '../../../../global/youtube';
-import viewRouter from '../../../../global/view-router';
-import { useTouch } from '../../../../hooks/useTouch';
+import { useToolbar } from './useToolbar';
 import './toolbar.css';
 
 function Toolbar() {
-  const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
-  const wifiNameSt = store(v => v.wifiNameSt);
-  const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
-  const selectionsSt = store(v => v.selectionsSt);
-  const viewSt = store(v => v.viewSt);
-  const simulatePlayStateSt = store(v => v.simulatePlayStateSt);
-  let youtubeVideosLizSelectedId;
-  if (simulatePlayStateSt) {
-    youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
-  } else {
-    youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
-  }
-  const youtubeVideosLizSelected = youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId);
-  const userNameSt = store(v => v.userNameSt);
-  const userDeviceSt = store(v => v.userDeviceSt);
-  const userTypeSt = store(v => v.userTypeSt);
-  const selectionsPlayState = selectionsSt.find(el => el.table === 'rokuSala')?.id;
-  const [normalizedPercentageSt, setNormalizedPercentageSt] = useState(Math.min(100, Math.max(0, 0)));
-  const lizEnabledSt = store(v => v.lizEnabledSt);
-  const setLizEnabledSt = store(v => v.setLizEnabledSt);
-  const device = 'rokuSala';
-
-  const onShortClick = useCallback((e, value) => {
-    utils.triggerVibrate();
-    if (value === 'play') {
-      let playState = '';
-      if (selectionsPlayState === 'stop') {
-        playState = 'play';
-      }
-      if (selectionsPlayState === 'play') {
-        playState = 'pause';
-      }
-      if (selectionsPlayState === 'pause') {
-        playState = 'play';
-      }
-      requests.updateSelections({ table: 'rokuSala', id: playState });
-    }
-
-
-    const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
-    if (wifiNameSt === 'Noky') {
-      if (value === 'rev' || value === 'fwd') {
-        requests.fetchRoku({ key: 'keydown', value: rokuValue });
-      }
-      if (value === 'queue') {
-        const newView = structuredClone(viewSt);
-        newView.roku.apps.youtube.mode = 'queue';
-        viewRouter.changeView(newView);
-      }
-      if (value === 'liz') {
-        if (localStorage.getItem('lizEnabled') === 'true') {
-          localStorage.setItem('lizEnabled', 'false');
-          setLizEnabledSt(false);
-        } else {
-          localStorage.setItem('lizEnabled', 'true');
-          setLizEnabledSt(true);
-        }
-      }
-    } else {
-      if (value === 'queue') {
-        const newView = structuredClone(viewSt);
-        newView.roku.apps.youtube.mode = 'queue';
-        viewRouter.changeView(newView);
-      } else if (value === 'liz') {
-        if (localStorage.getItem('lizEnabled') === 'true') {
-          localStorage.setItem('lizEnabled', 'false');
-          setLizEnabledSt(false);
-        } else {
-          localStorage.setItem('lizEnabled', 'true');
-          setLizEnabledSt(true);
-        }
-      } else {
-        requests.sendIfttt({ device, key: 'command', value });
-      }
-    }
-  }, [selectionsPlayState, wifiNameSt, viewSt, setLizEnabledSt]);
-
-  const onLongClick = (e, value) => {
-    // const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
-    // if (wifiNameSt === 'Noky') {
-    //   if (value === 'play') {
-    //     utils.triggerVibrate();
-    //     requests.fetchRoku({ key: 'keypress', value: 'Play' });
-    //     roku.updatePlayState(1000);
-    //   } else {
-    //     utils.triggerVibrate();
-    //     requests.fetchRoku({ key: 'keyup', value: rokuValue });
-    //     roku.updatePlayState(1000);
-    //   }
-    // }
-  }
-
-  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(onShortClick, onLongClick);
-
-  useEffect(() => {
-    if (youtubeVideosLizSt.length && selectionsSt.length) {
-      const video = youtubeVideosLizSelected;
-      const { normalizedPercentage, end } = utils.checkVideoEnd(video);
-      setNormalizedPercentageSt(normalizedPercentage);
-      if (leaderSt === userNameSt + '-' + userDeviceSt && end) {
-        if (video) {
-          youtube.clearCurrentVideo();
-        }
-        setTimeout(() => {
-          const nextVideo = youtube.getNextQueue(video.queue);
-          if (nextVideo) {
-            requests.updateSelections({ table: 'youtubeVideosLiz', id: nextVideo.id });
-            youtube.handleQueue(nextVideo);
-          } else {
-            youtube.clearCurrentVideo();
-          }
-        }, 1000);
-      }
-    }
-  }, [leaderSt, userNameSt, userDeviceSt, youtubeVideosLizSt, selectionsSt, youtubeVideosLizSelected]);
-
-  useEffect(() => {
-    const performChangePlay = () => {
-      onShortClick(true, 'play');
-    };
-    window.addEventListener('play-state-change', performChangePlay);
-    return () => window.removeEventListener('play-state-change', performChangePlay);
-  }, [onShortClick]);
+  const {
+    wifiNameSt,
+    viewSt,
+    userTypeSt,
+    lizEnabledSt,
+    youtubeVideosLizSelected,
+    selectionsPlayState,
+    normalizedPercentageSt,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd
+  } = useToolbar();
 
   return (
     <div className='controls-toolbar'>
@@ -161,7 +44,7 @@ function Toolbar() {
                 alt="icono">
               </img>
             }
-            {(selectionsPlayState === 'pause' || selectionsPlayState === 'none' || selectionsPlayState === 'close') &&
+            {selectionsPlayState === 'pause' &&
               <img
                 className='controls-toolbar-img controls-toolbar-img--button'
                 src="/imgs/play-50.png"
@@ -207,7 +90,7 @@ function Toolbar() {
               </div>
             }
           </div>
-          {viewSt.roku.apps.selected === 'youtube' && viewSt.roku.apps.youtube.mode === '' &&
+          {viewSt.selected === 'roku' && viewSt.roku.apps.selected === 'youtube' && viewSt.roku.apps.youtube.mode === '' &&
             <div className="controls-toolbar-playlist">
               <button
                 className={`controls-toolbar-playlist-button`}
@@ -221,8 +104,8 @@ function Toolbar() {
                   viewBox="0 0 24 24"
                   fill="none">
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M2.25 6C2.25 5.58579 2.58579 5.25 3 5.25H15C15.4142 5.25 15.75 5.58579 15.75 6C15.75 6.41421 15.4142 6.75 15 6.75H3C2.58579 6.75 2.25 6.41421 2.25 6ZM17 7.25C17.4142 7.25 17.75 7.58579 17.75 8C17.75 9.79493 19.2051 11.25 21 11.25C21.4142 11.25 21.75 11.5858 21.75 12C21.75 12.4142 21.4142 12.75 21 12.75C19.7428 12.75 18.5997 12.2616 17.75 11.4641V16.5C17.75 18.2949 16.2949 19.75 14.5 19.75C12.7051 19.75 11.25 18.2949 11.25 16.5C11.25 14.7051 12.7051 13.25 14.5 13.25C15.1443 13.25 15.7449 13.4375 16.25 13.7609V8C16.25 7.58579 16.5858 7.25 17 7.25ZM16.25 16.5C16.25 15.5335 15.4665 14.75 14.5 14.75C13.5335 14.75 12.75 15.5335 12.75 16.5C12.75 17.4665 13.5335 18.25 14.5 18.25C15.4665 18.25 16.25 17.4665 16.25 16.5ZM2.25 10C2.25 9.58579 2.58579 9.25 3 9.25H13C13.4142 9.25 13.75 9.58579 13.75 10C13.75 10.4142 13.4142 10.75 13 10.75H3C2.58579 10.75 2.25 10.4142 2.25 10ZM2.25 14C2.25 13.5858 2.58579 13.25 3 13.25H9C9.41421 13.25 9.75 13.5858 9.75 14C9.75 14.4142 9.41421 14.75 9 14.75H3C2.58579 14.75 2.25 14.4142 2.25 14ZM2.25 18C2.25 17.5858 2.58579 17.25 3 17.25H8C8.41421 17.25 8.75 17.5858 8.75 18C8.75 18.4142 8.41421 18.75 8 18.75H3C2.58579 18.75 2.25 18.4142 2.25 18Z"
                     fill="#fff" />
                 </svg>
