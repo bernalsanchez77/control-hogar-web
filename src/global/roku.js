@@ -78,7 +78,6 @@ class Roku {
         switch (playState.state) {
           case 'play':
             requests.updateTable({ id: this.currentVideo.id, table: 'youtubeVideosLiz', position: position });
-            // store.getState().setRokuPlayStatePositionSt(position);
             break;
           case 'pause':
             break;
@@ -112,7 +111,6 @@ class Roku {
 
   async stopPlayStateListener() {
     if (this.playStateInterval) {
-      store.getState().setRokuPlayStatePositionSt(0);
       console.log('playstatelistener stopped');
       position = 0;
       clearInterval(this.playStateInterval);
@@ -130,12 +128,7 @@ class Roku {
 
   async updateState() {
     const playState = await this.getPlayState();
-    const hdmiSalaSt = store.getState().hdmiSalaSt;
     if (playState) {
-      const hdmiSalaRoku = hdmiSalaSt.find(hdmi => hdmi.id === 'roku');
-      if (hdmiSalaRoku && hdmiSalaRoku.playState !== playState.state) {
-        requests.updateTable({ id: hdmiSalaRoku.id, table: 'hdmiSala', playState: playState.state });
-      }
       const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
       if (playState.state !== 'play' && playState.state !== 'pause' && selectedVideoId) {
         requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
@@ -165,7 +158,6 @@ class Roku {
       if (rokuActiveApp !== selectionId) {
         requests.updateSelections({ table: 'rokuApps', id: rokuActiveApp });
       }
-      // this.updatePlayState();
     }
   }
 }

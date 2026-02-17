@@ -30,6 +30,7 @@ function Load() {
   const userNameSt = store(v => v.userNameSt);
   const userDeviceSt = store(v => v.userDeviceSt);
   const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
+  const peersSt = store(v => v.peersSt);
   const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
   const wifiNameSt = store(v => v.wifiNameSt);
   const networkTypeSt = store(v => v.networkTypeSt);
@@ -39,6 +40,7 @@ function Load() {
   const setTableSt = store((v) => v.setTableSt);
   const screensSt = store(v => v.screensSt);
   const devicesSt = store(v => v.devicesSt);
+  const selectionsSt = store(v => v.selectionsSt);
   const viewSt = store(v => v.viewSt);
   const isPcSt = store(v => v.isPcSt);
   const isAppSt = store(v => v.isAppSt);
@@ -51,6 +53,7 @@ function Load() {
   const isLoadInitializedRef = useRef(false);
   const isReadyRef = useRef(false);
   const loadFnRef = useRef(null);
+  const selectionsRef = useRef(null);
 
   const subscribeToSupabaseChannel = useCallback(async (tableName, callback) => {
     let response = '';
@@ -186,12 +189,12 @@ function Load() {
   // init
 
   const init = useCallback(async () => {
-    await supabasePeers.subscribeToPeersChannel();
     await load(true);
     if (wifiNameSt === 'Noky') {
       Roku.setIsConnectedToNokyWifi(true);
       // requests.updateSelections({ table: 'users', id: userNameSt });
     }
+    await supabasePeers.subscribeToPeersChannel();
     const youtubeVideosLizSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
     if (youtubeVideosLizSelectedId) {
       const leader = store.getState().peersSt.findLast(p => p.wifiName === 'Noky')?.name || '';
@@ -260,6 +263,24 @@ function Load() {
       }
     };
   }, [isAppSt]);
+
+  useEffect(() => {
+    console.log('se corrio el effect');
+    (async () => {
+      if (userNameSt && userDeviceSt && leaderSt && userNameSt + '-' + userDeviceSt === leaderSt) {
+        console.log('se corrio luego');
+        const playState = await Roku.getPlayState('state');
+        if (playState && playState !== selectionsRef.current.find(el => el.table === 'rokuSala')?.id) {
+          console.log('playState de ahora', playState);
+          requests.updateSelections({ table: 'rokuSala', id: playState });
+        }
+      }
+    })();
+  }, [peersSt, leaderSt, userNameSt, userDeviceSt, selectionsRef]);
+
+  useEffect(() => {
+    selectionsRef.current = selectionsSt;
+  }, [selectionsSt]);
 
   loadFnRef.current = load;
   if (!isLoadInitializedRef.current) {

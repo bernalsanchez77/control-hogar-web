@@ -27,6 +27,19 @@ class Youtube {
       }
     });
   }
+  getNextQueue(currentQueue) {
+    const higherQueueVideos = store.getState().youtubeVideosLizSt.filter(obj => {
+      const propValue = Number(obj['queue']);
+      return propValue > currentQueue;
+    });
+    if (higherQueueVideos.length === 0) {
+      return null;
+    }
+    higherQueueVideos.sort((a, b) => {
+      return Number(a.queue) - Number(b.queue);
+    });
+    return higherQueueVideos[0];
+  }
   async handleQueue(video) {
     const videoFromLiz = store.getState().youtubeVideosLizSt.find(v => v.id === video.id);
     if (videoFromLiz.queue) {
@@ -46,7 +59,6 @@ class Youtube {
           requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
         }, 1000);
       } else {
-        requests.updateTable({ id: video.id, table: 'youtubeVideosLiz', position: '0' });
         requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
       }
     }

@@ -10,7 +10,6 @@ import './toolbar.css';
 function Toolbar() {
   const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
   const wifiNameSt = store(v => v.wifiNameSt);
-  const rokuPlayStatePositionSt = store(v => v.rokuPlayStatePositionSt);
   const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
   const selectionsSt = store(v => v.selectionsSt);
   const viewSt = store(v => v.viewSt);
@@ -103,45 +102,27 @@ function Toolbar() {
 
   const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(onShortClick, onLongClick);
 
-  const getNextQueue = useCallback((currentQueue) => {
-    const higherQueueVideos = youtubeVideosLizSt.filter(obj => {
-      const propValue = Number(obj['queue']);
-      return propValue > currentQueue;
-    });
-    if (higherQueueVideos.length === 0) {
-      return null;
-    }
-    higherQueueVideos.sort((a, b) => {
-      return Number(a.queue) - Number(b.queue);
-    });
-    return higherQueueVideos[0];
-  }, [youtubeVideosLizSt]);
-
   useEffect(() => {
     if (youtubeVideosLizSt.length && selectionsSt.length) {
-      const position = rokuPlayStatePositionSt;
       const video = youtubeVideosLizSelected;
-      const { normalizedPercentage, end } = utils.checkVideoEnd(position, video);
+      const { normalizedPercentage, end } = utils.checkVideoEnd(video);
       setNormalizedPercentageSt(normalizedPercentage);
       if (leaderSt === userNameSt + '-' + userDeviceSt && end) {
         if (video) {
           youtube.clearCurrentVideo();
         }
         setTimeout(() => {
-          const nextVideo = getNextQueue(video.queue);
+          const nextVideo = youtube.getNextQueue(video.queue);
           if (nextVideo) {
-            const rokuId = store.getState().rokuAppsSt.find(app => app.id === 'youtube').rokuId;
-            requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: nextVideo.id } });
             requests.updateSelections({ table: 'youtubeVideosLiz', id: nextVideo.id });
             youtube.handleQueue(nextVideo);
           } else {
-            requests.fetchRoku({ key: 'keypress', value: 'Stop' });
             youtube.clearCurrentVideo();
           }
         }, 1000);
       }
     }
-  }, [leaderSt, userNameSt, userDeviceSt, getNextQueue, rokuPlayStatePositionSt, youtubeVideosLizSt, selectionsSt, youtubeVideosLizSelected]);
+  }, [leaderSt, userNameSt, userDeviceSt, youtubeVideosLizSt, selectionsSt, youtubeVideosLizSelected]);
 
   useEffect(() => {
     const performChangePlay = () => {

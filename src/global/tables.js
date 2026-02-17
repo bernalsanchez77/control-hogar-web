@@ -20,7 +20,6 @@ class Tables {
   }
 
   onYoutubeVideosLizTableChange(change) {
-    store.getState().setRokuPlayStatePositionSt(change.position);
   }
 
   async onSelectionsTableChange(change) {
@@ -39,8 +38,13 @@ class Tables {
           }
           const currentVideo = store.getState().youtubeVideosLizSt.find(video => video.id === change.id) || store.getState().currentYoutubeVideoSt;
           roku.startPlayStateListener(currentVideo);
+          // youtube.handleQueue(currentVideo);
         }
       } else {
+        if (this.userName === leader) {
+          requests.fetchRoku({ key: 'keypress', value: 'Stop' });
+          requests.updateSelections({ table: 'rokuSala', id: 'stop' });
+        }
         if (roku.playStateInterval) {
           roku.stopPlayStateListener();
         }
@@ -80,8 +84,14 @@ class Tables {
       }
       if (this.userName === leader) {
         const rokuPlayState = await roku.getPlayState('state');
-        if (rokuPlayState !== change.id) {
-          requests.fetchRoku({ key: 'keypress', value: change.id });
+        if (change.id) {
+          requests.updateTable({ id: change.id, table: 'youtubeVideosLiz', position: '0' });
+          if (rokuPlayState !== change.id) {
+            const rokuValue = change.id.charAt(0).toUpperCase() + change.id.slice(1);
+            requests.fetchRoku({ key: 'keypress', value: rokuValue });
+          }
+        } else {
+          requests.fetchRoku({ key: 'keypress', value: 'Stop' });
         }
       }
     }

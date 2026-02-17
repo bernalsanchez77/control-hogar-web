@@ -40,9 +40,11 @@ function Main() {
   const onResume = useCallback(async (e) => {
     connection.updateConnection();
     setIsInForegroundSt(true);
+    console.log('resume');
     requests.updateTable({ id: userNameSt, table: 'users', state: 'foreground' });
-    // await supabaseChannels.usersChannel.track({ name: userNameSt, status: 'foreground', date: new Date().toISOString(), wifiName: wifiNameSt });
+    // supabasePeers.peersChannel.track({ name: userNameSt + '-' + userDeviceSt, status: 'foreground', date: new Date().toISOString(), wifiName: wifiNameSt });
   }, [setIsInForegroundSt, userNameSt]);
+
 
   const onPause = useCallback(async (e) => {
     setIsInForegroundSt(false);
