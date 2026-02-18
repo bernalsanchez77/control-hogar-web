@@ -12,11 +12,11 @@ function Queue() {
   let youtubeSortedQueue = youtubeVideosLizSt.filter(video => video.queue > 0);
   youtubeSortedQueue = Object.values(youtubeSortedQueue).sort((a, b) => a.queue - b.queue);
 
-  const handleShortPress = (e, type, video) => {
+  const handleShortPress = async (e, type, video) => {
     if (type === 'video') {
       if (leaderSt) {
         utils.triggerVibrate();
-        youtube.onVideoShortClick(video);
+        await youtube.onVideoShortClick(video);
       }
     }
     if (type === 'edit') {

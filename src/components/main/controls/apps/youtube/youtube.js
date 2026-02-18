@@ -31,7 +31,7 @@ function Youtube() {
     youtubeSortedChannels = Object.values(youtubeChannelsLizSt).sort((a, b) => a.order - b.order);
   }
 
-  const handleShortPress = (e, type, video) => {
+  const handleShortPress = async (e, type, video) => {
     if (type === 'channel') {
       utils.triggerVibrate();
       onChannelShortClick(video.id);
@@ -39,7 +39,7 @@ function Youtube() {
     if (type === 'video') {
       if (leaderSt) {
         utils.triggerVibrate();
-        youtube.onVideoShortClick(video);
+        await youtube.onVideoShortClick(video);
       }
     }
     if (type === 'edit') {

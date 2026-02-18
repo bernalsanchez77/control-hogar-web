@@ -1,25 +1,15 @@
-import { store } from "../../../../../store/store";
-import requests from '../../../../../global/requests';
-import utils from '../../../../../global/utils';
-import { useTouch } from '../../../../../hooks/useTouch';
+import { useCategory } from './useCategory';
 import './category.css';
 
 function Category() {
-  const category = store(v => v.viewSt.cable.channels.category);
-  const cableChannelsSt = store(v => v.cableChannelsSt);
-  const cableChannelsSelectedId = store(v => v.selectionsSt.find(el => el.table === 'cableChannels')?.id);
-  const onShortClick = (e, value) => {
-    utils.triggerVibrate();
-    const device = 'channelsSala';
-    const ifttt = cableChannelsSt.find(ch => ch.id === value).ifttt;
-    requests.sendIfttt({ device: device + ifttt, key: 'selected', value: value });
-    requests.updateSelections({ table: 'cableChannels', id: value });
-  }
-
-  const onLongClick = (e, value) => {
-  }
-
-  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(onShortClick, onLongClick);
+  const {
+    category,
+    cableChannelsSt,
+    cableChannelsSelectedId,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd
+  } = useCategory();
 
   return (
     <div>

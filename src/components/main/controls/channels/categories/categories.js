@@ -1,24 +1,14 @@
-import { store } from "../../../../../store/store";
-import CableChannelCategories from '../../../../../global/cable-channel-categories';
-import utils from '../../../../../global/utils';
-import viewRouter from '../../../../../global/view-router';
-import { useTouch } from '../../../../../hooks/useTouch';
+import { useCategories } from './useCategories';
 import './categories.css';
 
 function Categories() {
-  const cableChannelCategories = new CableChannelCategories().getCableChannelCategories();
-  const cableChannelsSelectedId = store(v => v.selectionsSt.find(el => el.table === 'cableChannels')?.id);
-  let selectedImg = '/imgs/channels/' + cableChannelsSelectedId + '.png';
-
-  const onShortClick = async (e, value) => {
-    utils.triggerVibrate();
-    await viewRouter.navigateToCableCategory(value);
-  }
-
-  const onLongClick = (e, value) => {
-  }
-
-  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(onShortClick, onLongClick);
+  const {
+    cableChannelCategories,
+    selectedImg,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd
+  } = useCategories();
 
   return (
     <div>

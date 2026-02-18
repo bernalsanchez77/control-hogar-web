@@ -127,7 +127,7 @@ function Load() {
   }, [subscribeToSupabaseChannel, setTableSt]);
 
   const updateNotificationBar = useCallback(async () => {
-    const isPlaying = store.getState().selectionsSt.find(el => el.table === 'rokuSala')?.id === 'play';
+    const isPlaying = store.getState().selectionsSt.find(el => el.table === 'playState')?.id === 'play';
     CordovaPlugins.updatePlayState(isPlaying);
     const screenSelected = store.getState().screensSt.find(el => el.id === screenSelectedSt);
     CordovaPlugins.updateScreenSelected(screenSelected.label + ' ' + screenSelected.state.toUpperCase());
@@ -265,14 +265,11 @@ function Load() {
   }, [isAppSt]);
 
   useEffect(() => {
-    console.log('se corrio el effect');
     (async () => {
       if (userNameSt && userDeviceSt && leaderSt && userNameSt + '-' + userDeviceSt === leaderSt) {
-        console.log('se corrio luego');
         const playState = await Roku.getPlayState('state');
-        if (playState && playState !== selectionsRef.current.find(el => el.table === 'rokuSala')?.id) {
-          console.log('playState de ahora', playState);
-          requests.updateSelections({ table: 'rokuSala', id: playState });
+        if (playState && playState !== selectionsRef.current.find(el => el.table === 'playState')?.id) {
+          requests.updateSelections({ table: 'playState', id: playState });
         }
       }
     })();

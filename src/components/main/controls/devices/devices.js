@@ -1,12 +1,9 @@
-import { store } from "../../../../store/store";
+import { useDevicesControls } from './useDevicesControls';
 import LuzCuarto from './luzCuarto/luzCuarto';
 import './devices.css';
 
 function Devices() {
-  const devicesSt = store(v => v.devicesSt);
-  const viewSt = store(v => v.viewSt);
-
-  const luzCuarto = devicesSt.find(device => device.id === 'luzCuarto');
+  const { viewSt, luzCuarto } = useDevicesControls();
 
   return (
     <div>

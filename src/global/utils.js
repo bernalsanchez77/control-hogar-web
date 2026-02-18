@@ -145,16 +145,16 @@ class Utils {
       return `${finalMinutes}:${formattedSeconds}`;
     }
   }
-  checkVideoEnd(video) {
+  checkVideoEnd(video, position) {
     let normalizedPercentage = 0;
     if (video && video.id) {
       let currentVideoDuration = 0;
       if (video.duration) {
         currentVideoDuration = utils.timeToMs(video.duration);
       }
-      console.log('position:', video.position, 'duration:', currentVideoDuration);
-      const timeLeft = currentVideoDuration - video.position;
-      const percentage = (video.position * 100) / currentVideoDuration;
+      console.log('position:', position, 'duration:', currentVideoDuration);
+      const timeLeft = currentVideoDuration - position;
+      const percentage = (position * 100) / currentVideoDuration;
       normalizedPercentage = Math.round(Math.min(100, Math.max(0, (percentage))));
       console.log(normalizedPercentage + '%');
       if (timeLeft && timeLeft < 10000) {

@@ -1,26 +1,8 @@
-import { useTouch } from '../../../../../hooks/useTouch';
+import { useLuzCuarto } from './useLuzCuarto';
 import './luzCuarto.css';
-import requests from '../../../../../global/requests';
-import utils from '../../../../../global/utils';
 
 function LuzCuarto({ element }) {
-  const onShortClick = (e, value) => {
-    utils.triggerVibrate();
-    const device = element.id;
-    if (element.state === 'off') {
-      requests.sendIfttt({ device, key: 'state', value: 'on' });
-      requests.updateTable({ id: device, table: 'devices', state: 'on' });
-    }
-    setTimeout(() => {
-      requests.sendIfttt({ device, key: 'color', value: value });
-      requests.updateTable({ id: device, table: 'devices', color: value });
-    }, 1000);
-  };
-
-  const onLongClick = (e, value) => {
-  }
-
-  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(onShortClick, onLongClick);
+  const { onTouchStart, onTouchMove, onTouchEnd } = useLuzCuarto(element);
 
   return (
     <div>

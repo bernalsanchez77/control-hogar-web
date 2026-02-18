@@ -77,15 +77,11 @@ class Roku {
       if (playState) {
         switch (playState.state) {
           case 'play':
-            requests.updateTable({ id: this.currentVideo.id, table: 'youtubeVideosLiz', position: position });
+            requests.updateSelections({ table: 'playPosition', id: position });
             break;
           case 'pause':
             break;
           case 'stop':
-            const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
-            if (selectedVideoId) {
-              requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
-            }
             break;
           default:
             break;
@@ -111,7 +107,6 @@ class Roku {
 
   async stopPlayStateListener() {
     if (this.playStateInterval) {
-      console.log('playstatelistener stopped');
       position = 0;
       clearInterval(this.playStateInterval);
       this.playStateInterval = null;

@@ -1,8 +1,8 @@
 import { create } from "zustand";
 export const store = create((set) => ({
   // --- Global states ---
-  sendEnabledSt: true,
-  simulatePlayStateSt: false,
+  sendEnabledSt: false,
+  simulatePlayStateSt: true,
   isLoadingSt: false,
   themeSt: 'dark',
   isInForegroundSt: true,

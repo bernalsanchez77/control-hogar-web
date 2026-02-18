@@ -17,11 +17,11 @@ function Channel({ setVideoToSave }) {
   let youtubeSortedVideos = youtubeVideosLizSt.filter(video => video.channelId === channelSelected.current);
   youtubeSortedVideos = Object.values(youtubeSortedVideos).sort((a, b) => new Date(a.date) - new Date(b.date));
 
-  const handleShortPress = (e, type, video) => {
+  const handleShortPress = async (e, type, video) => {
     if (type === 'video') {
       if (leaderSt) {
         utils.triggerVibrate();
-        youtube.onVideoShortClick(video);
+        await youtube.onVideoShortClick(video);
       }
     }
     if (type === 'edit') {

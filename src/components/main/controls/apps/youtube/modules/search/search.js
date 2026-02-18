@@ -21,11 +21,11 @@ function Search({ setVideoToSave }) {
         duration: utils.formatYoutubeDuration(item.contentDetails.duration),
     }));
 
-    const handleShortPress = (e, type, video) => {
+    const handleShortPress = async (e, type, video) => {
         if (type === 'video') {
             if (leaderSt) {
                 utils.triggerVibrate();
-                youtube.onVideoShortClick(video);
+                await youtube.onVideoShortClick(video);
             }
         }
         if (type === 'edit') {

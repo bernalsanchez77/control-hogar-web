@@ -11,11 +11,6 @@ class Youtube {
       });
     }
   }
-  clearCurrentVideo() {
-    if (store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id) {
-      requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
-    }
-  }
   getLastQueue() {
     return store.getState().youtubeVideosLizSt.reduce((maxObject, currentObject) => {
       const maxVal = maxObject['queue'];
@@ -55,11 +50,17 @@ class Youtube {
       const existingVideo = store.getState().youtubeVideosLizSt.find(v => v.id === video.id);
       if (!existingVideo) {
         requests.upsertTable({ id: video.id, table: 'youtubeVideosLiz', title: utils.decodeYoutubeTitle(video.title), duration: video.duration, channelId: 'zz-channel' });
+        setTimeout(async () => {
+          requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+          setTimeout(() => {
+            requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
+          }, 1000);
+        }, 1000);
+      } else {
+        requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
         setTimeout(() => {
           requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
         }, 1000);
-      } else {
-        requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
       }
     }
     const rokuAppsSelectedId = store.getState().selectionsSt.find(el => el.table === 'rokuApps')?.id;
