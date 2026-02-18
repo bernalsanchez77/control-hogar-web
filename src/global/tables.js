@@ -88,8 +88,6 @@ class Tables {
             const rokuValue = change.id.charAt(0).toUpperCase() + change.id.slice(1);
             requests.fetchRoku({ key: 'keypress', value: rokuValue });
           }
-        } else {
-          requests.fetchRoku({ key: 'keypress', value: 'Stop' });
         }
       }
     }
