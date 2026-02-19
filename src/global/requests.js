@@ -47,10 +47,8 @@ class Requests {
       }
 
       if (response.status === 200) {
-        // console.log(`${method} request to ${api} succeeded`);
         return { status: response.status, data: response.data };
       } else {
-        // console.log(`${method} request to ${api} failed`);
         return { status: response.status, data: '' };
       }
     } catch (error) {
@@ -78,11 +76,9 @@ class Requests {
         longApiUrl + api,
         info,
         (response) => {
-          // console.log(`${method} request to ${api} succeeded`);
           resolve({ status: response.status, data: JSON.parse(response.data) });
         },
         (error) => {
-          // console.error(`${method} request to ${api} failed: `, error);
           this.requestErrorHandler();
           reject(error);
         }
@@ -141,7 +137,6 @@ class Requests {
   }
   async searchYoutube(text) {
     let res = {};
-    console.log('searchYoutube', text);
     if (window.cordova) {
       if (window.cordova?.plugin?.http) {
         res = await this.cordovaApiRequest('getVideosFromYoutube', { q: text }, 'get');
@@ -191,7 +186,7 @@ class Requests {
         data: xmlParser.parse(response.data)
       };
     }).catch((error) => {
-      console.error("Roku Data Request Error:", error.message || error);
+      console.log("Roku Data Request Error:", error.message || error);
       return null;
     });
   }
@@ -213,7 +208,6 @@ class Requests {
     }
   }
   async sendIfttt(params, sendEnabled) {
-    console.log('sentifttt', params);
     params.key = params.key || 'state';
     if (sendEnabled === undefined) {
       sendEnabled = store.getState().sendEnabledSt;
@@ -231,7 +225,6 @@ class Requests {
     }
   }
   async fetchRoku(params) {
-    console.log('sentRoku', params);
     if (window.cordova) {
       let url = '';
       if (params.params) {

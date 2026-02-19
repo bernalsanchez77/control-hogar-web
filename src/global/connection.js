@@ -60,6 +60,7 @@ class Connection {
   async onNetworkTypeChange(netType) {
     console.log('changed in network type: ', netType);
     console.log('peersChannel status: ', supabasePeers.peersChannel.status);
+    store.getState().setWifiNameSt('');
     if (supabasePeers.peersChannel.status === 'unsubscribed') {
       await supabasePeers.subscribeToPeersChannel();
     }

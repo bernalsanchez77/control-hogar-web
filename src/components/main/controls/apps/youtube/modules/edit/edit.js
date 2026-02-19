@@ -1,68 +1,27 @@
-import { useRef, useState } from 'react';
-import { store } from "../../../../../../../store/store";
-import requests from '../../../../../../../global/requests';
+import React from 'react';
+import { useEdit } from './useEdit';
 import utils from '../../../../../../../global/utils';
-import { useTouch } from '../../../../../../../hooks/useTouch';
 import './edit.css';
 
 function Edit({ videoToSave }) {
-  const lizEnabledSt = store(v => v.lizEnabledSt);
-  const userNameSt = store(v => v.userNameSt);
-  const youtubeChannelsImagesSt = store(v => v.youtubeChannelsImagesSt);
-  const youtubeChannelsLizSt = store(v => v.youtubeChannelsLizSt);
-  const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
-
-  // Look up existing video data to pre-populate form
-  const savedVideo = youtubeVideosLizSt.find(v => v.id === videoToSave.id);
-  const existingChannelId = savedVideo?.channelId || '';
-  const existingChannel = youtubeChannelsLizSt.find(c => c.id === existingChannelId);
-  const existingChannelImgPath = existingChannel?.img || '';
-  // Find the image ID from the path
-  const existingImage = youtubeChannelsImagesSt.find(img => img.path === existingChannelImgPath);
-  const existingChannelImgId = existingImage?.id || '';
-
-  const [channel, setChannel] = useState(existingChannelId);
-  const [channelImg, setChannelImg] = useState(existingChannelImgId);
-  const youtubeSortedChannels = Object.values(youtubeChannelsLizSt).sort((a, b) => a.order - b.order);
-
-  const channelRef = useRef(existingChannelId);
-  const channelImgRef = useRef(existingChannelImgPath);
-
-  const handleShortPress = (e, type, video) => {
-    if (type === 'image') {
-      setChannelImg(video.id);
-      channelImgRef.current = video.path;
-    }
-  };
-
-  const handleLongPress = () => {
-    utils.triggerVibrate();
-  };
-
-  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(handleShortPress, handleLongPress);
-
-  const addChannel = (channel) => {
-    setChannel(channel);
-    channelRef.current = channel;
-  };
-
-  const saveChannel = () => {
-    if (channelRef.current && channelRef.current.trim() !== '') {
-      utils.triggerVibrate();
-      requests.upsertTable({ id: channelRef.current, table: 'youtubeChannelsLiz', title: channelRef.current, user: lizEnabledSt ? 'elizabeth' : userNameSt, img: channelImgRef.current });
-      requests.upsertTable({ id: videoToSave.id, table: 'youtubeVideosLiz', title: utils.decodeYoutubeTitle(videoToSave.title), duration: videoToSave.duration, channelId: channelRef.current });
-      window.history.back();
-    }
-  };
-
-  const cancelChannel = () => {
-    utils.triggerVibrate();
-    window.history.back();
-  };
+  const {
+    lizEnabledSt,
+    userNameSt,
+    youtubeChannelsImagesSt,
+    youtubeSortedChannels,
+    channel,
+    channelImg,
+    addChannel,
+    saveChannel,
+    cancelChannel,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd
+  } = useEdit(videoToSave);
 
   return (
     <div>
-      <div className='controls-apps-youtube controls-apps-youtube--edit'>
+      <div className='controls-apps-youtube--edit'>
         <p className='controls-apps-youtube-edit-video-title'>
           {utils.decodeYoutubeTitle(videoToSave.title)}
         </p>

@@ -1,43 +1,20 @@
-import { store } from "../../../../../../../store/store";
-import utils from '../../../../../../../global/utils';
-import youtube from '../../../../../../../global/youtube';
-import { useTouch } from '../../../../../../../hooks/useTouch';
+import React from 'react';
+import { useQueue } from './useQueue';
 import './queue.css';
 
 function Queue() {
-  const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
-  const selectionsSt = store(v => v.selectionsSt);
-  const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
-  const youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
-  let youtubeSortedQueue = youtubeVideosLizSt.filter(video => video.queue > 0);
-  youtubeSortedQueue = Object.values(youtubeSortedQueue).sort((a, b) => a.queue - b.queue);
-
-  const handleShortPress = async (e, type, video) => {
-    if (type === 'video') {
-      if (leaderSt) {
-        utils.triggerVibrate();
-        await youtube.onVideoShortClick(video);
-      }
-    }
-    if (type === 'edit') {
-      // In queue.js, edit was also present in the original code but handled in the same switch?
-      // Wait, let me check the original onTouchEnd in queue.js.
-    }
-  };
-
-  const handleLongPress = (e, type, video) => {
-    utils.triggerVibrate();
-    youtube.handleQueue(video);
-  };
-
-  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(handleShortPress, handleLongPress);
-
-  const getQueueConsecutiveNumber = (video) => {
-    return youtube.getQueueConsecutiveNumber(video);
-  };
+  const {
+    youtubeSortedQueue,
+    youtubeVideosLizSelectedId,
+    youtubeVideosLizSt,
+    getQueueConsecutiveNumber,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd
+  } = useQueue();
 
   return (
-    <div className='controls-apps-youtube controls-apps-youtube--channel'>
+    <div className='controls-apps-youtube--channel'>
       <ul className='controls-apps-youtube-ul'>
         {
           youtubeSortedQueue.map((video, key) => (

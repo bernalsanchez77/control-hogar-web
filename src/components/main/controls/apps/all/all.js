@@ -1,26 +1,15 @@
-import { store } from "../../../../../store/store";
-import utils from '../../../../../global/utils';
-import requests from '../../../../../global/requests';
-import viewRouter from '../../../../../global/view-router';
-import { useTouch } from '../../../../../hooks/useTouch';
+import React from 'react';
+import { useAllApps } from './useAllApps';
 import './all.css';
+
 function Apps() {
-  const rokuAppsSt = store(v => v.rokuAppsSt);
-  const selectionsSt = store(v => v.selectionsSt);
-  const rokuAppsSelectedRokuId = selectionsSt.find(el => el.table === 'rokuApps')?.id;
-
-  const onShortClick = (e, value) => {
-    utils.triggerVibrate();
-    const app = rokuAppsSt.find(app => app.id === value);
-    requests.updateSelections({ table: 'rokuApps', id: app.rokuId });
-  }
-
-  const onLongClick = async (e, value) => {
-    utils.triggerVibrate();
-    await viewRouter.navigateToRokuApp(value);
-  }
-
-  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(onShortClick, onLongClick);
+  const {
+    rokuAppsSt,
+    rokuAppsSelectedRokuId,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd
+  } = useAllApps();
 
   return (
     <div className='controls-apps'>

@@ -1,4 +1,5 @@
-import { store } from '../../../store/store';
+import React from 'react';
+import { useControls } from './useControls';
 import Top from './top/top';
 import Arrows from './arrows/arrows';
 import Levels from './levels/levels';
@@ -10,44 +11,38 @@ import Apps from './apps/apps';
 import './controls.css';
 
 function Controls() {
-  const screensSt = store(v => v.screensSt);
-  const rokuAppsSt = store(v => v.rokuAppsSt);
-  const hdmiSalaSt = store(v => v.hdmiSalaSt);
-  const devicesSt = store(v => v.devicesSt);
-  const viewSt = store(v => v.viewSt);
+  const {
+    screensSt,
+    rokuAppsSt,
+    hdmiSalaSt,
+    devicesSt,
+    viewSt
+  } = useControls();
 
   return (
     <div>
       <div className='controls'>
-        {screensSt.length &&
-          <Top>
-          </Top>
+        {screensSt.length > 0 &&
+          <Top />
         }
-        <Arrows>
-        </Arrows>
-        {screensSt.length &&
-          <Levels>
-          </Levels>
+        <Arrows />
+        {screensSt.length > 0 &&
+          <Levels />
         }
-        {hdmiSalaSt.length &&
-          <Toolbar>
-          </Toolbar>
+        {hdmiSalaSt.length > 0 &&
+          <Toolbar />
         }
-        {viewSt.selected === 'roku' && rokuAppsSt.length && !viewSt.roku.apps.youtube.channel && viewSt.roku.apps.youtube.mode !== 'edit' &&
-          <Search>
-          </Search>
+        {viewSt.selected === 'roku' && rokuAppsSt.length > 0 && !viewSt.roku.apps.youtube.channel && viewSt.roku.apps.youtube.mode !== 'edit' &&
+          <Search />
         }
         {viewSt.selected === 'roku' &&
-          <Apps>
-          </Apps>
+          <Apps />
         }
         {viewSt.selected === 'cable' &&
-          <Channels>
-          </Channels>
+          <Channels />
         }
-        {viewSt.devices.device !== '' && devicesSt.length &&
-          <Devices>
-          </Devices>
+        {viewSt.devices.device !== '' && devicesSt.length > 0 &&
+          <Devices />
         }
       </div>
     </div>

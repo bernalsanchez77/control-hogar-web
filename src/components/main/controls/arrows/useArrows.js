@@ -7,7 +7,7 @@ import { useTouch } from '../../../../hooks/useTouch';
 export function useArrows() {
     // 1. Store / Global State
     const wifiNameSt = store(v => v.wifiNameSt);
-    const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
+    const leaderSt = store(v => v.leaderSt);
     const userNameSt = store(v => v.userNameSt);
     const userDeviceSt = store(v => v.userDeviceSt);
     const device = 'rokuSala';

@@ -1,0 +1,278 @@
+import { useEffect, useCallback, useRef } from 'react';
+import eruda from 'eruda';
+import supabaseChannels from '../../../global/supabase/supabase-channels';
+import supabasePeers from '../../../global/supabase/supabase-peers';
+import viewRouter from '../../../global/view-router';
+import requests from '../../../global/requests';
+import Roku from '../../../global/roku';
+import CordovaPlugins from '../../../global/cordova-plugins';
+import Tables from '../../../global/tables';
+import events from '../../../global/events';
+import { store } from '../../../store/store';
+
+export function useLoad() {
+    // 1. Store / Global State
+    const isLoadingSt = store(v => v.isLoadingSt);
+    const setIsLoadingSt = store(v => v.setIsLoadingSt);
+    const isInForegroundSt = store(v => v.isInForegroundSt);
+    const userTypeSt = store(v => v.userTypeSt);
+    const userNameSt = store(v => v.userNameSt);
+    const userDeviceSt = store(v => v.userDeviceSt);
+    const peersSt = store(v => v.peersSt);
+    const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
+    const wifiNameSt = store(v => v.wifiNameSt);
+    const networkTypeSt = store(v => v.networkTypeSt);
+    const supabaseTimeoutSt = store(v => v.supabaseTimeoutSt);
+    const setSupabaseTimeoutSt = store(v => v.supabaseSetTimeoutSt);
+    const updateTablesSt = store((v) => v.updateTablesSt);
+    const setTableSt = store((v) => v.setTableSt);
+    const screensSt = store(v => v.screensSt);
+    const devicesSt = store(v => v.devicesSt);
+    const selectionsSt = store(v => v.selectionsSt);
+    const viewSt = store(v => v.viewSt);
+    const isPcSt = store(v => v.isPcSt);
+    const isAppSt = store(v => v.isAppSt);
+    const screenSelectedSt = store(v => v.screenSelectedSt);
+    const leaderSt = store(v => v.leaderSt);
+
+    // 2. Refs
+    const isLoadingRef = useRef(false);
+    const isLoadInitializedRef = useRef(false);
+    const isReadyRef = useRef(false);
+    const loadFnRef = useRef(null);
+    const selectionsRef = useRef(null);
+
+    // 3. Callbacks / Functions
+    const subscribeToSupabaseChannel = useCallback(async (tableName, callback) => {
+        let response = '';
+        await supabaseChannels.subscribeToSupabaseChannel(tableName, async (itemName, newItem) => {
+            updateTablesSt(tableName + 'St', newItem);
+            if (callback) {
+                await callback(newItem);
+            }
+        }, true).then((res) => {
+            if (res.success) {
+                response = 'SUBSCRIBED';
+                setSupabaseTimeoutSt(false);
+            } else {
+                switch (res.msg) {
+                    case 'TIMED_OUT':
+                        response = res.msg;
+                        setSupabaseTimeoutSt(true);
+                        break;
+                    case 'CHANNEL_ERROR':
+                        response = res.msg;
+                        setSupabaseTimeoutSt(false);
+                        break;
+                    case 'CLOSED':
+                        response = res.msg;
+                        setSupabaseTimeoutSt(false);
+                        break;
+                    default:
+                        setSupabaseTimeoutSt(false);
+                }
+            }
+        }).catch((res) => {
+            response = res.msg;
+        });
+        return response;
+    }, [setSupabaseTimeoutSt, updateTablesSt]);
+
+    const setData = useCallback(async (tableName, data, callback) => {
+        let subscriptionResponse = '';
+        let table = await requests.getTable(tableName);
+        if (table && table.status === 200 && table.data) {
+            setTableSt(tableName + 'St', table.data);
+            const tableChannel = supabaseChannels.getSupabaseChannelState(tableName);
+            if (tableChannel?.channel) {
+                const state = tableChannel.channel.state;
+                switch (state) {
+                    case 'joined':
+                        break;
+                    case undefined:
+                        if (tableChannel.subscribed) {
+                            await supabaseChannels.unsubscribeFromSupabaseChannel(tableName);
+                        }
+                        subscriptionResponse = await subscribeToSupabaseChannel(tableName, callback);
+                        break;
+                    default:
+                        if (tableChannel.subscribed) {
+                            await supabaseChannels.unsubscribeFromSupabaseChannel(tableName);
+                        }
+                        subscriptionResponse = await subscribeToSupabaseChannel(tableName, callback);
+                }
+            } else {
+                subscriptionResponse = await subscribeToSupabaseChannel(tableName, callback);
+            }
+            if (data) {
+                return table.data;
+            } else {
+                return { table, subscriptionResponse };
+            }
+        } else {
+            return { table: null };
+        }
+    }, [subscribeToSupabaseChannel, setTableSt]);
+
+    const updateNotificationBar = useCallback(async () => {
+        const isPlaying = store.getState().selectionsSt.find(el => el.table === 'playState')?.id === 'play';
+        CordovaPlugins.updatePlayState(isPlaying);
+        const screenSelected = store.getState().screensSt.find(el => el.id === screenSelectedSt);
+        CordovaPlugins.updateScreenSelected(screenSelected.label + ' ' + screenSelected.state.toUpperCase());
+        CordovaPlugins.updateScreenState(screenSelected.state);
+        const rokuAppsSelectedRokuId = store.getState().selectionsSt.find(el => el.table === 'rokuApps').id;
+        const appSelectedLabel = store.getState().rokuAppsSt.find(el => el.rokuId === rokuAppsSelectedRokuId).label;
+        CordovaPlugins.updateAppSelected(appSelectedLabel);
+        CordovaPlugins.updateMuteState(screenSelected.mute);
+    }, [screenSelectedSt]);
+
+    const load = useCallback(async (firstLoad = false) => {
+        if (firstLoad) {
+            setIsLoadingSt(true);
+        }
+        isLoadingRef.current = true;
+        const newView = structuredClone(viewSt);
+
+        const hdmiSalaTable = await setData('hdmiSala', false, async (change) => {
+            Tables.onHdmiSalaTableChange(change);
+        });
+
+        if (hdmiSalaTable.table && hdmiSalaTable.subscriptionResponse === 'SUBSCRIBED') {
+            await setData('screens', false, async (change) => {
+                Tables.onScreensTableChange(change);
+            });
+
+            setIsLoadingSt(false);
+            await setData('selections', true, (change) => {
+                Tables.onSelectionsTableChange(change);
+            });
+            newView.selected = store.getState().selectionsSt.find(el => el.table === 'hdmiSala').id;
+            await viewRouter.changeView(newView);
+            await setData('rokuApps');
+            await setData('devices');
+            await setData('youtubeChannelsLiz');
+            await setData('youtubeChannelsImages');
+            await setData('cableChannels');
+            await setData('youtubeVideosLiz', true, (change) => {
+                Tables.onYoutubeVideosLizTableChange(change);
+            });
+        }
+        if (isAppSt) {
+            updateNotificationBar();
+        }
+        if (wifiNameSt === 'Noky') {
+            Roku.setRoku();
+        }
+        setIsLoadingSt(false);
+        isLoadingRef.current = false;
+    }, [setData, setIsLoadingSt, viewSt, wifiNameSt, isAppSt, updateNotificationBar]);
+
+    const onSupabaseTimeout = async () => {
+        await load();
+    };
+
+    const init = useCallback(async () => {
+        await load(true);
+        if (wifiNameSt === 'Noky') {
+            Roku.setIsConnectedToNokyWifi(true);
+        }
+        await supabasePeers.subscribeToPeersChannel();
+        const youtubeVideosLizSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+        if (youtubeVideosLizSelectedId) {
+            if (userNameSt + '-' + userDeviceSt === leaderSt && !Roku.playStateInterval) {
+                const youtubeVideosLizSelected = store.getState().youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId) || {};
+                if (youtubeVideosLizSelected) {
+                    Roku.startPlayStateListener(youtubeVideosLizSelected);
+                }
+            }
+        }
+        isReadyRef.current = true;
+        if (localStorage.getItem('user-type') !== 'guest' && localStorage.getItem('user-type') !== 'owner') {
+            eruda.init();
+        }
+    }, [load, wifiNameSt, userNameSt, userDeviceSt, leaderSt]);
+
+    // 4. Effects
+    useEffect(() => {
+        if (isReadyRef.current && isLoadInitializedRef.current && isInForegroundSt && isConnectedToInternetSt) {
+            loadFnRef.current();
+        }
+    }, [isInForegroundSt, isConnectedToInternetSt]);
+
+    useEffect(() => {
+        if (isReadyRef.current) {
+            if (isConnectedToInternetSt && ((isPcSt && wifiNameSt === 'Noky') || (wifiNameSt === 'Noky' && networkTypeSt === 'wifi'))) {
+                Roku.setIsConnectedToNokyWifi(true);
+            } else {
+                Roku.setIsConnectedToNokyWifi(false);
+            }
+        }
+    }, [wifiNameSt, networkTypeSt, isPcSt, isInForegroundSt, userNameSt, userDeviceSt, isConnectedToInternetSt]);
+
+    useEffect(() => {
+        if (userNameSt + '-' + userDeviceSt === leaderSt && !Roku.playStateInterval) {
+            const youtubeVideosLizSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+            if (youtubeVideosLizSelectedId) {
+                const youtubeVideosLizSelected = store.getState().youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId);
+                Roku.startPlayStateListener(youtubeVideosLizSelected);
+            }
+        }
+        if (userNameSt + '-' + userDeviceSt !== leaderSt && Roku.playStateInterval) {
+            Roku.stopPlayStateListener();
+        }
+    }, [leaderSt, userNameSt, userDeviceSt]);
+
+    useEffect(() => {
+        if (isAppSt) {
+            document.addEventListener("backbutton", events.onNavigationBack);
+            document.addEventListener("volumeupbutton", events.onVolumeUp);
+            document.addEventListener("volumedownbutton", events.onVolumeDown);
+        } else {
+            window.addEventListener("popstate", events.onNavigationBack);
+        }
+
+        return () => {
+            if (isAppSt) {
+                document.removeEventListener("backbutton", events.onNavigationBack);
+                document.removeEventListener("volumeupbutton", events.onVolumeUp);
+                document.removeEventListener("volumedownbutton", events.onVolumeDown);
+            } else {
+                window.removeEventListener("popstate", events.onNavigationBack);
+            }
+        };
+    }, [isAppSt]);
+
+    useEffect(() => {
+        (async () => {
+            if (userNameSt && userDeviceSt && leaderSt && userNameSt + '-' + userDeviceSt === leaderSt) {
+                const playState = await Roku.getPlayState('state');
+                if (playState && playState !== selectionsRef.current.find(el => el.table === 'playState')?.id) {
+                    requests.updateSelections({ table: 'playState', id: playState });
+                }
+            }
+        })();
+    }, [peersSt, leaderSt, userNameSt, userDeviceSt, selectionsRef]);
+
+    useEffect(() => {
+        selectionsRef.current = selectionsSt;
+    }, [selectionsSt]);
+
+    // 5. Initialization
+    loadFnRef.current = load;
+    if (!isLoadInitializedRef.current) {
+        isLoadInitializedRef.current = true;
+        init();
+    }
+
+    return {
+        viewSt,
+        isLoadingSt,
+        userTypeSt,
+        wifiNameSt,
+        isConnectedToInternetSt,
+        supabaseTimeoutSt,
+        screensSt,
+        devicesSt,
+        onSupabaseTimeout
+    };
+}

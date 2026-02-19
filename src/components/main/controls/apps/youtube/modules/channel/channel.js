@@ -1,49 +1,19 @@
-import { useRef } from 'react';
-import { store } from "../../../../../../../store/store";
-import utils from '../../../../../../../global/utils';
-import youtube from '../../../../../../../global/youtube';
-import viewRouter from '../../../../../../../global/view-router';
-import { useTouch } from '../../../../../../../hooks/useTouch';
+import React from 'react';
+import { useChannel } from './useChannel';
 import './channel.css';
 
 function Channel({ setVideoToSave }) {
-  const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
-  const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
-  const selectionsSt = store(v => v.selectionsSt);
-  const youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
-
-  const channelSelected = useRef(localStorage.getItem('channelSelected') || '');
-
-  let youtubeSortedVideos = youtubeVideosLizSt.filter(video => video.channelId === channelSelected.current);
-  youtubeSortedVideos = Object.values(youtubeSortedVideos).sort((a, b) => new Date(a.date) - new Date(b.date));
-
-  const handleShortPress = async (e, type, video) => {
-    if (type === 'video') {
-      if (leaderSt) {
-        utils.triggerVibrate();
-        await youtube.onVideoShortClick(video);
-      }
-    }
-    if (type === 'edit') {
-      utils.triggerVibrate();
-      setVideoToSave(video);
-      viewRouter.navigateToYoutubeEdit();
-    }
-  };
-
-  const handleLongPress = (e, type, video) => {
-    utils.triggerVibrate();
-    youtube.handleQueue(video);
-  };
-
-  const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(handleShortPress, handleLongPress);
-
-  const getQueueConsecutiveNumber = (video) => {
-    return youtube.getQueueConsecutiveNumber(video);
-  };
+  const {
+    youtubeSortedVideos,
+    youtubeVideosLizSelectedId,
+    getQueueConsecutiveNumber,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd
+  } = useChannel(setVideoToSave);
 
   return (
-    <div className='controls-apps-youtube controls-apps-youtube--channel'>
+    <div className='controls-apps-youtube--channel'>
       <ul className='controls-apps-youtube-ul'>
         {
           youtubeSortedVideos.map((video, key) => (

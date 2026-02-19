@@ -38,7 +38,6 @@ class SupabaseChannels {
     this.supabaseChannels[tableName].errorType = '';
 
     channel.on('postgres_changes', { event: '*', schema: 'public', table: tableName }, async (change) => {
-      console.log(change.table, 'changed');
       if (callback) {
         callback('set' + change.table.charAt(0).toUpperCase() + change.table.slice(1) + 'St', change.new);
       }
@@ -57,7 +56,7 @@ class SupabaseChannels {
           switch (status) {
             case 'SUBSCRIBED':
               if (first && tableName === 'hdmiSala') {
-                console.log('Subscribed to:', tableName);
+                // console.log('Subscribed to:', tableName);
               }
               resolve({ success: true, msg: status });
               break;

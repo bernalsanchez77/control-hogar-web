@@ -1,55 +1,20 @@
-import { store } from "../../../../../../../store/store";
-import utils from '../../../../../../../global/utils';
-import youtube from '../../../../../../../global/youtube';
-import viewRouter from '../../../../../../../global/view-router';
-import { useTouch } from '../../../../../../../hooks/useTouch';
+import React from 'react';
+import { useSearch } from './useSearch';
 import './search.css';
 
 function Search({ setVideoToSave }) {
-    const youtubeSearchVideosSt = store(v => v.youtubeSearchVideosSt);
-    const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
-    const viewSt = store(v => v.viewSt);
-    const leaderSt = store(v => v.peersSt.findLast(p => p.wifiName === 'Noky')?.name || '');
-    const selectionsSt = store(v => v.selectionsSt);
-    const youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
-
-    let youtubeSortedVideos = youtubeSearchVideosSt.map(item => ({
-        id: item.id.videoId,
-        title: item.snippet.title,
-        description: item.snippet.description,
-        img: item.snippet.thumbnails.medium.url,
-        duration: utils.formatYoutubeDuration(item.contentDetails.duration),
-    }));
-
-    const handleShortPress = async (e, type, video) => {
-        if (type === 'video') {
-            if (leaderSt) {
-                utils.triggerVibrate();
-                await youtube.onVideoShortClick(video);
-            }
-        }
-        if (type === 'edit') {
-            utils.triggerVibrate();
-            setVideoToSave(video);
-            const newView = structuredClone(viewSt);
-            newView.roku.apps.youtube.mode = 'edit';
-            viewRouter.changeView(newView);
-        }
-    };
-
-    const handleLongPress = (e, type, video) => {
-        utils.triggerVibrate();
-        youtube.handleQueue(video);
-    };
-
-    const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(handleShortPress, handleLongPress);
-
-    const getQueueConsecutiveNumber = (video) => {
-        return youtube.getQueueConsecutiveNumber(video);
-    };
+    const {
+        youtubeSortedVideos,
+        youtubeVideosLizSelectedId,
+        youtubeVideosLizSt,
+        getQueueConsecutiveNumber,
+        onTouchStart,
+        onTouchMove,
+        onTouchEnd
+    } = useSearch(setVideoToSave);
 
     return (
-        <div className='controls-apps-youtube controls-apps-youtube--search'>
+        <div className='controls-apps-youtube--search'>
             <ul className='controls-apps-youtube-ul'>
                 {
                     youtubeSortedVideos.map((video, key) => (

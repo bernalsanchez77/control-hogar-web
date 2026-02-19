@@ -24,7 +24,7 @@ class Tables {
 
   async onSelectionsTableChange(change) {
     this.userName = store.getState().userNameSt + '-' + store.getState().userDeviceSt;
-    const leader = store.getState().peersSt.findLast(p => p.wifiName === 'Noky')?.name || '';
+    const leader = store.getState().leaderSt;
 
     if (change.table === 'youtubeVideosLiz') {
       if (change.id) {
@@ -96,8 +96,9 @@ class Tables {
         viewRouter.onHdmiSalaTableChange(change.id);
       }
     }
-    if (change.table === 'users') {
-      console.log('user selected:', change.id);
+    if (change.table === 'leader') {
+      console.log('leader changed:', change.id);
+      store.getState().setLeaderSt(change.id);
     }
   }
 }

@@ -91,8 +91,6 @@ class Utils {
   triggerVibrate(length = 100) {
     if (window.cordova && navigator.vibrate) {
       navigator.vibrate([length]);
-    } else {
-      console.log('No se puede vibrar');
     }
   }
   getUser(screenSize) {
@@ -152,11 +150,9 @@ class Utils {
       if (video.duration) {
         currentVideoDuration = utils.timeToMs(video.duration);
       }
-      console.log('position:', position, 'duration:', currentVideoDuration);
       const timeLeft = currentVideoDuration - position;
       const percentage = (position * 100) / currentVideoDuration;
       normalizedPercentage = Math.round(Math.min(100, Math.max(0, (percentage))));
-      console.log(normalizedPercentage + '%');
       if (timeLeft && timeLeft < 10000) {
         console.log('terminando');
         return { normalizedPercentage, end: true };
