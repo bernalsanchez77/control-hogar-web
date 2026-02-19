@@ -8,7 +8,7 @@ import { useTouch } from '../../../../../../../hooks/useTouch';
 export function useChannel(setVideoToSave) {
     // 1. Store / Global State
     const youtubeVideosSt = store(v => v.youtubeVideosSt);
-    const leaderSt = store(v => v.leaderSt);
+    const leaderSt = store(v => v.selectionsSt.find(el => el.table === 'leader')?.id);
     const selectionsSt = store(v => v.selectionsSt);
     const youtubeVideosSelectedId = selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
 

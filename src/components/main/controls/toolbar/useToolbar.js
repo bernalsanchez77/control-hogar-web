@@ -10,7 +10,7 @@ export function useToolbar() {
   // 1. Store / Global State
   const youtubeVideosSt = store(v => v.youtubeVideosSt);
   const wifiNameSt = store(v => v.wifiNameSt);
-  const leaderSt = store(v => v.leaderSt);
+  const leaderSt = store(v => v.selectionsSt.find(el => el.table === 'leader')?.id);
   const selectionsSt = store(v => v.selectionsSt);
   const viewSt = store(v => v.viewSt);
   const userNameSt = store(v => v.userNameSt);

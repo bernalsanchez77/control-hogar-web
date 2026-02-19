@@ -51,7 +51,7 @@ class PeersChannel {
         const sortedByNewest = [...realPeers].sort((a, b) => new Date(b.date) - new Date(a.date));
         const potentialLeader = sortedByNewest.find(p => p.wifiName === 'Noky');
         const me = store.getState().userNameSt + '-' + store.getState().userDeviceSt;
-        const currentLeaderInDb = store.getState().leaderSt;
+        const currentLeaderInDb = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
 
         if (potentialLeader) {
           if (potentialLeader.name === me && currentLeaderInDb !== me) {

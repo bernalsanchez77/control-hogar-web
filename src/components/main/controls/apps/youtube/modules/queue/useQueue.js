@@ -9,7 +9,7 @@ export function useQueue() {
     // 1. Store / Global State
     const youtubeVideosSt = store(v => v.youtubeVideosSt);
     const selectionsSt = store(v => v.selectionsSt);
-    const leaderSt = store(v => v.leaderSt);
+    const leaderSt = store(v => v.selectionsSt.find(el => el.table === 'leader')?.id);
     const youtubeVideosSelectedId = selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
 
     // 2. Callbacks / Functions

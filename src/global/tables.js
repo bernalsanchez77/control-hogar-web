@@ -24,7 +24,7 @@ class Tables {
 
   async onSelectionsTableChange(change) {
     this.userName = store.getState().userNameSt + '-' + store.getState().userDeviceSt;
-    const leader = store.getState().leaderSt;
+    const leader = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
 
     if (change.table === 'youtubeVideos') {
       if (change.id) {
@@ -98,7 +98,6 @@ class Tables {
     }
     if (change.table === 'leader') {
       console.log('leader changed:', change.id);
-      store.getState().setLeaderSt(change.id);
     }
   }
 }

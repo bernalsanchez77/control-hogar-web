@@ -29,7 +29,6 @@ export const store = create((set) => ({
   isAppSt: false,
   peersSt: [],
   lizEnabledSt: false,
-  leaderSt: '',
   viewSt: { selected: '', cable: { channels: { category: [] } }, roku: { apps: { selected: '', youtube: { mode: '', channel: '' } } }, devices: { device: '' } },
 
   // --- Actions ---
@@ -60,7 +59,6 @@ export const store = create((set) => ({
   setIsAppSt: (v) => set({ isAppSt: v }),
   setViewSt: (v) => set({ viewSt: v }),
   setLizEnabledSt: (v) => set({ lizEnabledSt: v }),
-  setLeaderSt: (v) => set({ leaderSt: v }),
   updateTablesSt: (tableName, newItem) => {
     set((state) => {
       const currentList = state[tableName];

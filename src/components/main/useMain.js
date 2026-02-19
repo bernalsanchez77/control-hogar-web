@@ -24,7 +24,7 @@ export function useMain() {
     const setIsAppSt = store(v => v.setIsAppSt);
     const isAppSt = store(v => v.isAppSt);
     const setLizEnabledSt = store(v => v.setLizEnabledSt);
-    const leaderSt = store(v => v.leaderSt);
+    const leaderSt = store(v => v.selectionsSt.find(el => el.table === 'leader')?.id);
 
     // 2. Local State
     const [isReadySt, setIsReadySt] = useState(false);
