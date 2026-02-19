@@ -8,11 +8,11 @@ import { useTouch } from '../../../../../../../hooks/useTouch';
 export function useSearch(setVideoToSave) {
     // 1. Store / Global State
     const youtubeSearchVideosSt = store(v => v.youtubeSearchVideosSt);
-    const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
+    const youtubeVideosSt = store(v => v.youtubeVideosSt);
     const viewSt = store(v => v.viewSt);
     const leaderSt = store(v => v.leaderSt);
     const selectionsSt = store(v => v.selectionsSt);
-    const youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+    const youtubeVideosSelectedId = selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
 
     // 2. Callbacks / Functions
     const handleShortPress = async (e, type, video) => {
@@ -55,8 +55,8 @@ export function useSearch(setVideoToSave) {
 
     return {
         youtubeSortedVideos,
-        youtubeVideosLizSelectedId,
-        youtubeVideosLizSt,
+        youtubeVideosSelectedId,
+        youtubeVideosSt,
         getQueueConsecutiveNumber,
         onTouchStart,
         onTouchMove,

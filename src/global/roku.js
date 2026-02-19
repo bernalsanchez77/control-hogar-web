@@ -41,10 +41,10 @@ class Roku {
     try {
       const activeApp = await requests.getRokuData('active-app');
       if (activeApp && activeApp.status === 200) {
-        const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+        const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
         const youtubeAppId = store.getState().rokuAppsSt.find(app => app.id === 'youtube')?.rokuId;
         if (activeApp.data['active-app'].app.id !== youtubeAppId && selectedVideoId) {
-          requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+          requests.updateSelections({ table: 'youtubeVideos', id: '' });
         }
         return activeApp.data['active-app'].app.id;
       } else {
@@ -124,9 +124,9 @@ class Roku {
   async updateState() {
     const playState = await this.getPlayState();
     if (playState) {
-      const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+      const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
       if (playState.state !== 'play' && playState.state !== 'pause' && selectedVideoId) {
-        requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+        requests.updateSelections({ table: 'youtubeVideos', id: '' });
       }
     }
   }

@@ -8,7 +8,7 @@ import { useTouch } from '../../../../hooks/useTouch';
 
 export function useToolbar() {
   // 1. Store / Global State
-  const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
+  const youtubeVideosSt = store(v => v.youtubeVideosSt);
   const wifiNameSt = store(v => v.wifiNameSt);
   const leaderSt = store(v => v.leaderSt);
   const selectionsSt = store(v => v.selectionsSt);
@@ -21,13 +21,13 @@ export function useToolbar() {
   const device = 'rokuSala';
 
   // 2. Derived Values
-  const youtubeVideosLizSelectedId = useMemo(() => {
-    return selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+  const youtubeVideosSelectedId = useMemo(() => {
+    return selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
   }, [selectionsSt]);
 
-  const youtubeVideosLizSelected = useMemo(() => {
-    return youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId);
-  }, [youtubeVideosLizSt, youtubeVideosLizSelectedId]);
+  const youtubeVideosSelected = useMemo(() => {
+    return youtubeVideosSt.find(el => el.id === youtubeVideosSelectedId);
+  }, [youtubeVideosSt, youtubeVideosSelectedId]);
 
   const selectionsPlayState = useMemo(() => {
     return selectionsSt.find(el => el.table === 'playState')?.id;
@@ -86,19 +86,19 @@ export function useToolbar() {
   // 6. Effects
   useEffect(() => {
     const handleVideoEnd = async () => {
-      if (youtubeVideosLizSt.length && selectionsSt.length) {
-        const video = youtubeVideosLizSelected;
+      if (youtubeVideosSt.length && selectionsSt.length) {
+        const video = youtubeVideosSelected;
         const position = selectionsSt.find(el => el.table === 'playPosition')?.id;
         const { normalizedPercentage, end } = utils.checkVideoEnd(video, position);
         setNormalizedPercentageSt(normalizedPercentage);
 
         if (leaderSt === userNameSt + '-' + userDeviceSt && end) {
           if (video) {
-            requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+            requests.updateSelections({ table: 'youtubeVideos', id: '' });
             setTimeout(() => {
               const nextVideo = youtube.getNextQueue(video.queue);
               if (nextVideo) {
-                requests.updateSelections({ table: 'youtubeVideosLiz', id: nextVideo.id });
+                requests.updateSelections({ table: 'youtubeVideos', id: nextVideo.id });
                 youtube.handleQueue(nextVideo);
               }
             }, 1000);
@@ -107,7 +107,7 @@ export function useToolbar() {
       }
     };
     handleVideoEnd();
-  }, [leaderSt, userNameSt, userDeviceSt, youtubeVideosLizSt, selectionsSt, youtubeVideosLizSelected]);
+  }, [leaderSt, userNameSt, userDeviceSt, youtubeVideosSt, selectionsSt, youtubeVideosSelected]);
 
   useEffect(() => {
     const performChangePlay = () => {
@@ -122,7 +122,7 @@ export function useToolbar() {
     viewSt,
     userTypeSt,
     lizEnabledSt,
-    youtubeVideosLizSelected,
+    youtubeVideosSelected,
     selectionsPlayState,
     normalizedPercentageSt,
     onTouchStart,

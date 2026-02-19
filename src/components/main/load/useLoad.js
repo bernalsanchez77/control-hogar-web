@@ -153,8 +153,8 @@ export function useLoad() {
             await setData('youtubeChannelsLiz');
             await setData('youtubeChannelsImages');
             await setData('cableChannels');
-            await setData('youtubeVideosLiz', true, (change) => {
-                Tables.onYoutubeVideosLizTableChange(change);
+            await setData('youtubeVideos', true, (change) => {
+                Tables.onYoutubeVideosTableChange(change);
             });
         }
         if (isAppSt) {
@@ -177,12 +177,12 @@ export function useLoad() {
             Roku.setIsConnectedToNokyWifi(true);
         }
         await supabasePeers.subscribeToPeersChannel();
-        const youtubeVideosLizSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
-        if (youtubeVideosLizSelectedId) {
+        const youtubeVideosSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
+        if (youtubeVideosSelectedId) {
             if (userNameSt + '-' + userDeviceSt === leaderSt && !Roku.playStateInterval) {
-                const youtubeVideosLizSelected = store.getState().youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId) || {};
-                if (youtubeVideosLizSelected) {
-                    Roku.startPlayStateListener(youtubeVideosLizSelected);
+                const youtubeVideosSelected = store.getState().youtubeVideosSt.find(el => el.id === youtubeVideosSelectedId) || {};
+                if (youtubeVideosSelected) {
+                    Roku.startPlayStateListener(youtubeVideosSelected);
                 }
             }
         }
@@ -211,10 +211,10 @@ export function useLoad() {
 
     useEffect(() => {
         if (userNameSt + '-' + userDeviceSt === leaderSt && !Roku.playStateInterval) {
-            const youtubeVideosLizSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
-            if (youtubeVideosLizSelectedId) {
-                const youtubeVideosLizSelected = store.getState().youtubeVideosLizSt.find(el => el.id === youtubeVideosLizSelectedId);
-                Roku.startPlayStateListener(youtubeVideosLizSelected);
+            const youtubeVideosSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
+            if (youtubeVideosSelectedId) {
+                const youtubeVideosSelected = store.getState().youtubeVideosSt.find(el => el.id === youtubeVideosSelectedId);
+                Roku.startPlayStateListener(youtubeVideosSelected);
             }
         }
         if (userNameSt + '-' + userDeviceSt !== leaderSt && Roku.playStateInterval) {

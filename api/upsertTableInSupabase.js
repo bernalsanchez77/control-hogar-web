@@ -42,7 +42,7 @@ export default async function handler(req, res) {
   if (table === 'youtubeChannelsLiz') {
     ({ data, error } = await supabase.from(table).upsert({ id, title, order, user, img }));
   }
-  if (table === 'youtubeVideosLiz') {
+  if (table === 'youtubeVideos') {
     ({ data, error } = await supabase.from(table).upsert({ id, volume, mute, color, date, state, playState, queue, position, title, duration, channelId, user, order }));
   }
   if (error) {

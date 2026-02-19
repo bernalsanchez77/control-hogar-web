@@ -41,7 +41,7 @@ class ViewRouter {
             if (currentView.roku.apps.selected === 'youtube') {
               // app was Youtube
               if (currentView.roku.apps.youtube.channel) {
-                // supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideosLiz');     
+                // supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideos');     
               } else {
                 store.getState().setRokuSearchModeSt('roku');
               }
@@ -75,10 +75,10 @@ class ViewRouter {
                     // was in no mode (youtube home)
                     const youtubeChannel = newView.roku.apps.youtube.channel;
                     window.history.pushState({ page: youtubeChannel }, youtubeChannel, '#' + youtubeChannel);
-                    const videos = await requests.getTable('youtubeVideosLiz');
+                    const videos = await requests.getTable('youtubeVideos');
                     if (videos) {
-                      store.getState().setYoutubeVideosLizSt(videos.data);
-                      // const subscriptionResponse = await this.subscribeToSupabaseChannel('youtubeVideosLiz', onNoInternet);
+                      store.getState().setYoutubeVideosSt(videos.data);
+                      // const subscriptionResponse = await this.subscribeToSupabaseChannel('youtubeVideos', onNoInternet);
                       store.getState().setRokuSearchModeSt('default');
                     }
                   }
@@ -102,7 +102,7 @@ class ViewRouter {
                 // youtube is in home mode
                 store.getState().setRokuSearchModeSt('app');
                 if (currentView.roku.apps.youtube.mode === 'channel') {
-                  // supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideosLiz');
+                  // supabaseChannels.unsubscribeFromSupabaseChannel('youtubeVideos');
                 }
               }
             }

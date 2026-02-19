@@ -5,8 +5,8 @@ import './search.css';
 function Search({ setVideoToSave }) {
     const {
         youtubeSortedVideos,
-        youtubeVideosLizSelectedId,
-        youtubeVideosLizSt,
+        youtubeVideosSelectedId,
+        youtubeVideosSt,
         getQueueConsecutiveNumber,
         onTouchStart,
         onTouchMove,
@@ -20,7 +20,7 @@ function Search({ setVideoToSave }) {
                     youtubeSortedVideos.map((video, key) => (
                         <li key={key} className='controls-apps-youtube-li-search'>
                             <button
-                                className={`controls-apps-youtube-video-button ${video.id === youtubeVideosLizSelectedId ? 'controls-apps-youtube-video-button--selected' : ''}`}
+                                className={`controls-apps-youtube-video-button ${video.id === youtubeVideosSelectedId ? 'controls-apps-youtube-video-button--selected' : ''}`}
                                 onTouchStart={(e) => onTouchStart(e)}
                                 onTouchMove={(e) => onTouchMove(e)}
                                 onTouchEnd={(e) => onTouchEnd(e, 'video', video)}>
@@ -46,7 +46,7 @@ function Search({ setVideoToSave }) {
                                     onTouchMove={(e) => onTouchMove(e)}
                                     onTouchEnd={(e) => onTouchEnd(e, 'edit', video)}>
                                     {(() => {
-                                        const savedVideo = youtubeVideosLizSt.find(v => v.id === video.id);
+                                        const savedVideo = youtubeVideosSt.find(v => v.id === video.id);
                                         const hasCustomChannel = savedVideo && savedVideo.channelId !== 'zz-channel';
                                         return (
                                             <svg

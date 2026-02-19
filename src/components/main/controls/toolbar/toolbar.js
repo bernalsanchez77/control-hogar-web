@@ -7,7 +7,7 @@ function Toolbar() {
     viewSt,
     userTypeSt,
     lizEnabledSt,
-    youtubeVideosLizSelected,
+    youtubeVideosSelected,
     selectionsPlayState,
     normalizedPercentageSt,
     onTouchStart,
@@ -70,7 +70,7 @@ function Toolbar() {
       <div className='controls-toolbar-row'>
         <div className='controls-toolbar-row-wrapper'>
           <div className="controls-toolbar-progress-bar-container">
-            {youtubeVideosLizSelected?.id &&
+            {youtubeVideosSelected?.id &&
               <div>
                 <div className="controls-toolbar-progress-bar-track">
                   <div
@@ -80,10 +80,10 @@ function Toolbar() {
                 <div className="controls-toolbar-progress-bar-label">
                   <div className="controls-toolbar-progress-bar-marquee">
                     <span className="controls-toolbar-progress-bar-label-title">
-                      {youtubeVideosLizSelected?.title}
+                      {youtubeVideosSelected?.title}
                     </span>
                     <span className="controls-toolbar-progress-bar-label-duration">
-                      {youtubeVideosLizSelected?.duration}
+                      {youtubeVideosSelected?.duration}
                     </span>
                   </div>
                 </div>

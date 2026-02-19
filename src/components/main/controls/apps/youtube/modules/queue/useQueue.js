@@ -7,10 +7,10 @@ import { useTouch } from '../../../../../../../hooks/useTouch';
 
 export function useQueue() {
     // 1. Store / Global State
-    const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
+    const youtubeVideosSt = store(v => v.youtubeVideosSt);
     const selectionsSt = store(v => v.selectionsSt);
     const leaderSt = store(v => v.leaderSt);
-    const youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+    const youtubeVideosSelectedId = selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
 
     // 2. Callbacks / Functions
     const handleShortPress = async (e, type, video) => {
@@ -42,14 +42,14 @@ export function useQueue() {
 
     // 3. Memos
     const youtubeSortedQueue = useMemo(() => {
-        let queue = youtubeVideosLizSt.filter(video => video.queue > 0);
+        let queue = youtubeVideosSt.filter(video => video.queue > 0);
         return Object.values(queue).sort((a, b) => a.queue - b.queue);
-    }, [youtubeVideosLizSt]);
+    }, [youtubeVideosSt]);
 
     return {
         youtubeSortedQueue,
-        youtubeVideosLizSelectedId,
-        youtubeVideosLizSt,
+        youtubeVideosSelectedId,
+        youtubeVideosSt,
         getQueueConsecutiveNumber,
         onTouchStart,
         onTouchMove,

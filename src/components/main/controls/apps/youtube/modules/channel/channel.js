@@ -5,7 +5,7 @@ import './channel.css';
 function Channel({ setVideoToSave }) {
   const {
     youtubeSortedVideos,
-    youtubeVideosLizSelectedId,
+    youtubeVideosSelectedId,
     getQueueConsecutiveNumber,
     onTouchStart,
     onTouchMove,
@@ -19,7 +19,7 @@ function Channel({ setVideoToSave }) {
           youtubeSortedVideos.map((video, key) => (
             <li key={key} className='controls-apps-youtube-li-channel'>
               <button
-                className={`controls-apps-youtube-video-button ${video.id === youtubeVideosLizSelectedId ? 'controls-apps-youtube-video-button--selected' : ''}`}
+                className={`controls-apps-youtube-video-button ${video.id === youtubeVideosSelectedId ? 'controls-apps-youtube-video-button--selected' : ''}`}
                 onTouchStart={(e) => onTouchStart(e)}
                 onTouchMove={(e) => onTouchMove(e)}
                 onTouchEnd={(e) => onTouchEnd(e, 'video', video)}>

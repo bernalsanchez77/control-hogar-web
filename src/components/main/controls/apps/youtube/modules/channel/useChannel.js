@@ -7,10 +7,10 @@ import { useTouch } from '../../../../../../../hooks/useTouch';
 
 export function useChannel(setVideoToSave) {
     // 1. Store / Global State
-    const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
+    const youtubeVideosSt = store(v => v.youtubeVideosSt);
     const leaderSt = store(v => v.leaderSt);
     const selectionsSt = store(v => v.selectionsSt);
-    const youtubeVideosLizSelectedId = selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+    const youtubeVideosSelectedId = selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
 
     // 2. Refs
     const channelSelected = useRef(localStorage.getItem('channelSelected') || '');
@@ -43,13 +43,13 @@ export function useChannel(setVideoToSave) {
 
     // 4. Memos
     const youtubeSortedVideos = useMemo(() => {
-        let videos = youtubeVideosLizSt.filter(video => video.channelId === channelSelected.current);
+        let videos = youtubeVideosSt.filter(video => video.channelId === channelSelected.current);
         return Object.values(videos).sort((a, b) => new Date(a.date) - new Date(b.date));
-    }, [youtubeVideosLizSt]);
+    }, [youtubeVideosSt]);
 
     return {
         youtubeSortedVideos,
-        youtubeVideosLizSelectedId,
+        youtubeVideosSelectedId,
         getQueueConsecutiveNumber,
         onTouchStart,
         onTouchMove,

@@ -4,15 +4,15 @@ import utils from './utils';
 
 class Youtube {
   clearQueue() {
-    const queueElements = store.getState().youtubeVideosLizSt.filter(video => video.queue > 0);
+    const queueElements = store.getState().youtubeVideosSt.filter(video => video.queue > 0);
     if (queueElements.length > 0) {
       queueElements.forEach(video => {
-        requests.updateTable({ id: video.id, table: 'youtubeVideosLiz', queue: 0 });
+        requests.updateTable({ id: video.id, table: 'youtubeVideos', queue: 0 });
       });
     }
   }
   getLastQueue() {
-    return store.getState().youtubeVideosLizSt.reduce((maxObject, currentObject) => {
+    return store.getState().youtubeVideosSt.reduce((maxObject, currentObject) => {
       const maxVal = maxObject['queue'];
       const currentVal = currentObject['queue'];
       if (currentVal > maxVal) {
@@ -23,7 +23,7 @@ class Youtube {
     });
   }
   getNextQueue(currentQueue) {
-    const higherQueueVideos = store.getState().youtubeVideosLizSt.filter(obj => {
+    const higherQueueVideos = store.getState().youtubeVideosSt.filter(obj => {
       const propValue = Number(obj['queue']);
       return propValue > currentQueue;
     });
@@ -36,30 +36,30 @@ class Youtube {
     return higherQueueVideos[0];
   }
   async handleQueue(video) {
-    const videoFromLiz = store.getState().youtubeVideosLizSt.find(v => v.id === video.id);
+    const videoFromLiz = store.getState().youtubeVideosSt.find(v => v.id === video.id);
     if (videoFromLiz.queue) {
-      requests.updateTable({ id: video.id, table: 'youtubeVideosLiz', queue: 0, date: video.date });
+      requests.updateTable({ id: video.id, table: 'youtubeVideos', queue: 0, date: video.date });
     } else {
       const lastQueue = this.getLastQueue().queue;
-      requests.updateTable({ id: video.id, table: 'youtubeVideosLiz', queue: lastQueue + 1, date: video.date });
+      requests.updateTable({ id: video.id, table: 'youtubeVideos', queue: lastQueue + 1, date: video.date });
     }
   }
   onVideoShortClick(video) {
     const currentVideoId = store.getState().hdmiSalaSt.find(el => el.id === 'roku')?.videoId;
     if (currentVideoId !== video.id) {
-      const existingVideo = store.getState().youtubeVideosLizSt.find(v => v.id === video.id);
+      const existingVideo = store.getState().youtubeVideosSt.find(v => v.id === video.id);
       if (!existingVideo) {
-        requests.upsertTable({ id: video.id, table: 'youtubeVideosLiz', title: utils.decodeYoutubeTitle(video.title), duration: video.duration, channelId: 'zz-channel' });
+        requests.upsertTable({ id: video.id, table: 'youtubeVideos', title: utils.decodeYoutubeTitle(video.title), duration: video.duration, channelId: 'zz-channel' });
         setTimeout(async () => {
-          requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+          requests.updateSelections({ table: 'youtubeVideos', id: '' });
           setTimeout(() => {
-            requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
+            requests.updateSelections({ table: 'youtubeVideos', id: video.id });
           }, 1000);
         }, 1000);
       } else {
-        requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+        requests.updateSelections({ table: 'youtubeVideos', id: '' });
         setTimeout(() => {
-          requests.updateSelections({ table: 'youtubeVideosLiz', id: video.id });
+          requests.updateSelections({ table: 'youtubeVideos', id: video.id });
         }, 1000);
       }
     }
@@ -72,7 +72,7 @@ class Youtube {
   }
 
   getQueueConsecutiveNumber(video) {
-    let sortedQueue = [...store.getState().youtubeVideosLizSt].sort((a, b) => {
+    let sortedQueue = [...store.getState().youtubeVideosSt].sort((a, b) => {
       return Number(a.queue) - Number(b.queue);
     });
     sortedQueue = sortedQueue.filter(obj => Number(obj.queue) !== 0);

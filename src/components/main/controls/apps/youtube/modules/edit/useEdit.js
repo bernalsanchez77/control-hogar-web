@@ -10,10 +10,10 @@ export function useEdit(videoToSave) {
     const userNameSt = store(v => v.userNameSt);
     const youtubeChannelsImagesSt = store(v => v.youtubeChannelsImagesSt);
     const youtubeChannelsLizSt = store(v => v.youtubeChannelsLizSt);
-    const youtubeVideosLizSt = store(v => v.youtubeVideosLizSt);
+    const youtubeVideosSt = store(v => v.youtubeVideosSt);
 
     // 2. Prep data before State
-    const savedVideo = youtubeVideosLizSt.find(v => v.id === videoToSave.id);
+    const savedVideo = youtubeVideosSt.find(v => v.id === videoToSave.id);
     const existingChannelId = savedVideo?.channelId || '';
     const existingChannelPath = youtubeChannelsLizSt.find(c => c.id === existingChannelId)?.img || '';
     const existingChannelImgId = youtubeChannelsImagesSt.find(img => img.path === existingChannelPath)?.id || '';
@@ -57,7 +57,7 @@ export function useEdit(videoToSave) {
             });
             requests.upsertTable({
                 id: videoToSave.id,
-                table: 'youtubeVideosLiz',
+                table: 'youtubeVideos',
                 title: utils.decodeYoutubeTitle(videoToSave.title),
                 duration: videoToSave.duration,
                 channelId: channelRef.current

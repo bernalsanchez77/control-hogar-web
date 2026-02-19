@@ -19,14 +19,14 @@ class Tables {
     }
   }
 
-  onYoutubeVideosLizTableChange(change) {
+  onYoutubeVideosTableChange(change) {
   }
 
   async onSelectionsTableChange(change) {
     this.userName = store.getState().userNameSt + '-' + store.getState().userDeviceSt;
     const leader = store.getState().leaderSt;
 
-    if (change.table === 'youtubeVideosLiz') {
+    if (change.table === 'youtubeVideos') {
       if (change.id) {
         if (roku.playStateInterval) {
           roku.stopPlayStateListener();
@@ -36,11 +36,11 @@ class Tables {
           if (!store.getState().simulatePlayStateSt) {
             requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: change.id } });
           }
-          const currentVideo = store.getState().youtubeVideosLizSt.find(video => video.id === change.id) || store.getState().currentYoutubeVideoSt;
+          const currentVideo = store.getState().youtubeVideosSt.find(video => video.id === change.id) || store.getState().currentYoutubeVideoSt;
           roku.startPlayStateListener(currentVideo);
           setTimeout(() => {
             requests.updateSelections({ table: 'playState', id: 'play' });
-            requests.updateTable({ id: change.id, table: 'youtubeVideosLiz' });
+            requests.updateTable({ id: change.id, table: 'youtubeVideos' });
           }, 1000);
         }
       } else {
@@ -64,9 +64,9 @@ class Tables {
         }
         const app = store.getState().rokuAppsSt.find(app => app.rokuId === change.id);
         if (app.id !== 'youtube') {
-          const videoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideosLiz')?.id;
+          const videoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
           if (videoId) {
-            requests.updateSelections({ table: 'youtubeVideosLiz', id: '' });
+            requests.updateSelections({ table: 'youtubeVideos', id: '' });
           }
           youtube.clearQueue();
         }

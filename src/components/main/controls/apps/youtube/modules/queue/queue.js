@@ -5,8 +5,8 @@ import './queue.css';
 function Queue() {
   const {
     youtubeSortedQueue,
-    youtubeVideosLizSelectedId,
-    youtubeVideosLizSt,
+    youtubeVideosSelectedId,
+    youtubeVideosSt,
     getQueueConsecutiveNumber,
     onTouchStart,
     onTouchMove,
@@ -20,7 +20,7 @@ function Queue() {
           youtubeSortedQueue.map((video, key) => (
             <li key={key} className='controls-apps-youtube-li-channel'>
               <button
-                className={`controls-apps-youtube-video-button ${video.id === youtubeVideosLizSelectedId ? 'controls-apps-youtube-video-button--selected' : ''}`}
+                className={`controls-apps-youtube-video-button ${video.id === youtubeVideosSelectedId ? 'controls-apps-youtube-video-button--selected' : ''}`}
                 onTouchStart={(e) => onTouchStart(e)}
                 onTouchMove={(e) => onTouchMove(e)}
                 onTouchEnd={(e) => onTouchEnd(e, 'video', video)}>
@@ -48,7 +48,7 @@ function Queue() {
                   onTouchMove={(e) => onTouchMove(e)}
                   onTouchEnd={(e) => onTouchEnd(e, 'edit', video)}>
                   {(() => {
-                    const savedVideo = youtubeVideosLizSt.find(v => v.id === video.id);
+                    const savedVideo = youtubeVideosSt.find(v => v.id === video.id);
                     const hasCustomChannel = savedVideo && savedVideo.channelId !== 'zz-channel';
                     return (
                       <svg
