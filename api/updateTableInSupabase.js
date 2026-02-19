@@ -1,22 +1,15 @@
 import { supabase } from './_lib/supabase';
 
 export default async function handler(req, res) {
-  const {
-    id = null,
-    date = null,
-    table = null,
-    state = null,
-    volume = null,
-    mute = null,
-    color = null,
-    playState = null,
-    queue = null,
-    position = null,
-  } = req.body || {};
+  const { id, table, ...updateFields } = req.body || {};
+
+  if (!id || !table) {
+    return res.status(400).json({ error: 'Missing "id" or "table" in request body' });
+  }
 
   const { data, error } = await supabase
     .from(table)
-    .update({ volume, mute, color, date, state, playState, queue, position })
+    .update(updateFields)
     .eq('id', id);
 
   if (error) {
