@@ -5,12 +5,12 @@ import utils from '../../../../global/utils';
 import youtube from '../../../../global/youtube';
 import viewRouter from '../../../../global/view-router';
 import { useTouch } from '../../../../hooks/useTouch';
+import { useLeader, usePlayState, useYoutubeVideoSelectedId } from '../../../../hooks/useSelectors';
 
 export function useToolbar() {
   // 1. Store / Global State
   const youtubeVideosSt = store(v => v.youtubeVideosSt);
   const wifiNameSt = store(v => v.wifiNameSt);
-  const leaderSt = store(v => v.selectionsSt.find(el => el.table === 'leader')?.id);
   const selectionsSt = store(v => v.selectionsSt);
   const viewSt = store(v => v.viewSt);
   const userNameSt = store(v => v.userNameSt);
@@ -20,18 +20,14 @@ export function useToolbar() {
   const setLizEnabledSt = store(v => v.setLizEnabledSt);
   const device = 'rokuSala';
 
-  // 2. Derived Values
-  const youtubeVideosSelectedId = useMemo(() => {
-    return selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
-  }, [selectionsSt]);
+  // 2. Derived Values (Selectors)
+  const leaderSt = useLeader();
+  const selectionsPlayState = usePlayState();
+  const youtubeVideosSelectedId = useYoutubeVideoSelectedId();
 
   const youtubeVideosSelected = useMemo(() => {
     return youtubeVideosSt.find(el => el.id === youtubeVideosSelectedId);
   }, [youtubeVideosSt, youtubeVideosSelectedId]);
-
-  const selectionsPlayState = useMemo(() => {
-    return selectionsSt.find(el => el.table === 'playState')?.id;
-  }, [selectionsSt]);
 
   // 3. Local State
   const [normalizedPercentageSt, setNormalizedPercentageSt] = useState(0);

@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { store } from '../../store/store';
 import utils from '../../global/utils';
 import requests from '../../global/requests';
 import connection from '../../global/connection';
 import CordovaPlugins from '../../global/cordova-plugins';
+import { useAppLifecycle } from '../../hooks/useAppLifecycle';
 
 const user = utils.getUser(`${window.screen.width}x${window.screen.height}`);
 
@@ -24,40 +25,17 @@ export function useMain() {
     const setIsAppSt = store(v => v.setIsAppSt);
     const isAppSt = store(v => v.isAppSt);
     const setLizEnabledSt = store(v => v.setLizEnabledSt);
-    const leaderSt = store(v => v.selectionsSt.find(el => el.table === 'leader')?.id);
 
-    // 2. Local State
+    // 2. Lifecycle management
+    useAppLifecycle();
+
+    // 3. Local State
     const [isReadySt, setIsReadySt] = useState(false);
 
-    // 3. Refs
+    // 4. Refs
     const initializedRef = useRef(false);
 
-    // 4. Callbacks / Functions
-    const onResume = useCallback(async (e) => {
-        console.log('To Foreground, the leader is:', leaderSt);
-        connection.updateConnection();
-        setIsInForegroundSt(true);
-        if (isConnectedToInternetSt) {
-            requests.updateTable({ id: userNameSt, table: 'users', state: 'foreground' });
-        }
-    }, [setIsInForegroundSt, userNameSt, leaderSt, isConnectedToInternetSt]);
-
-    const onPause = useCallback(async (e) => {
-        console.log('To Background, the leader is:', leaderSt);
-        setIsInForegroundSt(false);
-        if (isConnectedToInternetSt) {
-            requests.updateTable({ id: userNameSt, table: 'users', state: 'background' });
-        }
-    }, [isConnectedToInternetSt, setIsInForegroundSt, userNameSt, leaderSt]);
-
-    const onVisibilityChange = useCallback(() => {
-        if (document.visibilityState === 'visible') {
-            onResume();
-        } else {
-            onPause();
-        }
-    }, [onPause, onResume]);
-
+    // 5. Callbacks / Functions
     const init = useCallback(async (isApp) => {
         const userName = localStorage.getItem('user-name');
         const userDevice = localStorage.getItem('user-device');
@@ -97,7 +75,7 @@ export function useMain() {
         }, 0);
     }, [setLizEnabledSt, setUserNameSt, setUserDeviceSt, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt]);
 
-    // 5. Initialisation logic (ran once during first render pass)
+    // 6. Initialisation logic (ran once during first render pass)
     if (!initializedRef.current) {
         const isApp = window.cordova ? true : false;
         if (isApp) {
@@ -109,25 +87,6 @@ export function useMain() {
         }
         initializedRef.current = true;
     }
-
-    // 6. Effects
-    useEffect(() => {
-        if (isAppSt) {
-            document.addEventListener("pause", onPause);
-            document.addEventListener("resume", onResume);
-        } else {
-            document.addEventListener('visibilitychange', onVisibilityChange);
-        }
-
-        return () => {
-            if (isAppSt) {
-                document.removeEventListener("pause", onPause);
-                document.removeEventListener("resume", onResume);
-            } else {
-                document.removeEventListener('visibilitychange', onVisibilityChange);
-            }
-        };
-    }, [isAppSt, onPause, onResume, onVisibilityChange]);
 
     return {
         isReadySt,

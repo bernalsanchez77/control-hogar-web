@@ -3,13 +3,14 @@ import requests from '../../../../global/requests';
 import utils from '../../../../global/utils';
 import { store } from '../../../../store/store';
 import { useTouch } from '../../../../hooks/useTouch';
+import { useLeader } from '../../../../hooks/useSelectors';
 
 export function useArrows() {
     // 1. Store / Global State
     const wifiNameSt = store(v => v.wifiNameSt);
     const userNameSt = store(v => v.userNameSt);
     const userDeviceSt = store(v => v.userDeviceSt);
-    const leaderSt = store(v => v.selectionsSt.find(el => el.table === 'leader')?.id);
+    const leaderSt = useLeader();
     const device = 'rokuSala';
 
     // 2. Callbacks / Functions

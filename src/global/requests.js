@@ -1,79 +1,78 @@
 import axios from 'axios';
+import { XMLParser } from 'fast-xml-parser';
 import { store } from "../store/store";
 import connection from './connection';
-import { XMLParser } from 'fast-xml-parser';
+import { API_CONFIG, CONTENT_TYPES, ROKU_CONFIG, ENDPOINTS } from './constants';
 
-const longApiUrl = 'https://control-hogar-psi.vercel.app/api/';
-const shortApiUrl = '/api/';
-const shortApiUrlPc = '/api/api/';
-const contentTypeJson = { 'Content-Type': 'application/json' };
-const contentTypeX = { 'Content-Type': 'application/x-www-form-urlencoded' };
-const rokuIp = 'http://192.168.86.28:8060/';
-const rokuIpPc = '/roku';
 const xmlParser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '' });
+
 class Requests {
   constructor(isPc) {
     this.isPc = isPc;
   }
+
   async requestErrorHandler() {
     const isConnectedToInternet = await connection.getIsConnectedToInternet();
     if (!isConnectedToInternet) {
       connection.onNoInternet();
     }
   }
+
   async normalApiRequest(api, params, method = 'get') {
     try {
-      let url = shortApiUrl + api;
-      if (this.isPc) {
-        url = shortApiUrlPc + api;
-      }
+      const baseUrl = this.isPc ? API_CONFIG.SHORT_URL_PC : API_CONFIG.SHORT_URL;
+      const url = baseUrl + api;
       let response = '';
+
+      const config = { headers: CONTENT_TYPES.JSON };
+
       if (method === 'get') {
         if (params) {
-          params = new URLSearchParams(params);
-          response = await axios.get(`${url}?${params.toString()}`, { headers: contentTypeJson });
+          const queryParams = new URLSearchParams(params);
+          response = await axios.get(`${url}?${queryParams.toString()}`, config);
         } else {
-          response = await axios.get(url, { headers: contentTypeJson });
+          response = await axios.get(url, config);
         }
-      }
-      if (method === 'post') {
-        response = await axios.post(url, params, { headers: contentTypeJson });
-      }
-      if (method === 'put') {
-        response = await axios.put(url, params, { headers: contentTypeJson });
-      }
-      if (method === 'patch') {
-        response = await axios.patch(url, params);
+      } else if (method === 'post') {
+        response = await axios.post(url, params, config);
+      } else if (method === 'put') {
+        response = await axios.put(url, params, config);
+      } else if (method === 'patch') {
+        response = await axios.patch(url, params, config);
       }
 
-      if (response.status === 200) {
+      if (response && response.status === 200) {
         return { status: response.status, data: response.data };
-      } else {
-        return { status: response.status, data: '' };
       }
+      return { status: response ? response.status : 0, data: '' };
     } catch (error) {
+      console.error(`Api Request Error (${api}):`, error.message);
       this.requestErrorHandler();
       return { status: 0, data: '' };
     }
   }
+
   async cordovaApiRequest(api, params, method, serializer) {
-    let info = { method, headers: contentTypeJson };
+    const info = { method, headers: CONTENT_TYPES.JSON };
     if (method === 'get') {
       info.params = params || {};
     }
     if (serializer) {
       info.serializer = serializer;
     }
-    if (method === 'post' || method === 'put' || method === 'patch') {
+    if (['post', 'put', 'patch'].includes(method)) {
       info.data = params;
     }
+
     return new Promise((resolve, reject) => {
-      window.cordova.plugin.http.setHeader('*', 'User-Agent', 'Mozilla/5.0');
-      window.cordova.plugin.http.setHeader('*', 'Accept', 'application/json');
-      window.cordova.plugin.http.setHeader('*', 'Origin', '');
-      window.cordova.plugin.http.setHeader('*', 'Referer', '');
-      window.cordova.plugin.http.sendRequest(
-        longApiUrl + api,
+      const { http } = window.cordova.plugin;
+      http.setHeader('*', 'User-Agent', 'Mozilla/5.0');
+      http.setHeader('*', 'Accept', 'application/json');
+      http.setHeader('*', 'Origin', '');
+      http.setHeader('*', 'Referer', '');
+
+      http.sendRequest(
+        API_CONFIG.LONG_URL + api,
         info,
         (response) => {
           resolve({ status: response.status, data: JSON.parse(response.data) });
@@ -85,201 +84,130 @@ class Requests {
       );
     });
   }
+
   async updateTable(params) {
     params.date = params.date || new Date().toISOString();
-    if (window.cordova) {
-      if (window.cordova?.plugin?.http) {
-        await this.cordovaApiRequest('updateTableInSupabase', params, 'patch', 'json');
-      } else {
-        console.log('fallo updateTableInSubabase por http');
-      }
-    } else {
-      await this.normalApiRequest('updateTableInSupabase', params, 'patch');
-    }
+    return this._genericRequest(ENDPOINTS.UPDATE_TABLE, params, 'patch', 'json');
   }
+
   async upsertTable(params) {
     params.date = params.date || new Date().toISOString();
-    if (window.cordova) {
-      if (window.cordova?.plugin?.http) {
-        await this.cordovaApiRequest('upsertTableInSupabase', params, 'patch', 'json');
-      } else {
-        console.log('fallo upsertTableInSubabase por http');
-      }
-    } else {
-      await this.normalApiRequest('upsertTableInSupabase', params, 'patch');
-    }
+    return this._genericRequest(ENDPOINTS.UPSERT_TABLE, params, 'patch', 'json');
   }
+
   async updateSelections(params) {
-    if (!params.date) {
-      params.date = new Date().toISOString();
-    }
-    if (window.cordova) {
-      if (window.cordova?.plugin?.http) {
-        await this.cordovaApiRequest('updateSelectionsInSupabase', params, 'patch', 'json');
-      } else {
-        console.log('fallo updateSelectionsInSubabase por http');
-      }
-    } else {
-      await this.normalApiRequest('updateSelectionsInSupabase', params, 'patch');
+    params.date = params.date || new Date().toISOString();
+    return this._genericRequest(ENDPOINTS.UPDATE_SELECTIONS, params, 'patch', 'json');
+  }
+
+  async getTable(table) {
+    return this._genericRequest(ENDPOINTS.GET_TABLE, { table }, 'get');
+  }
+
+  async searchYoutube(text) {
+    const res = await this._genericRequest(ENDPOINTS.GET_YOUTUBE_VIDEOS, { q: text }, 'get');
+    return res && res.status === 200 ? res.data.items : null;
+  }
+
+  async sendLogs(message, user) {
+    const logMessage = window.cordova ? `${window.device.model} ${message}` : `${user}${message}`;
+    return this._genericRequest(ENDPOINTS.SEND_LOGS, { message: logMessage }, 'post');
+  }
+
+  async validateUserType(userType) {
+    const response = await this._genericRequest(ENDPOINTS.VALIDATE_CREDENTIALS, { key: userType }, 'post');
+    return response && response.status === 200 && response.data.validUser ? response.data : '';
+  }
+
+  async sendIfttt(params, sendEnabled) {
+    params.key = params.key || 'state';
+    const isEnabled = sendEnabled !== undefined ? sendEnabled : store.getState().sendEnabledSt;
+    if (isEnabled) {
+      return this._genericRequest(ENDPOINTS.SEND_IFTTT, params, 'get');
     }
   }
-  async getTable(table) {
-    if (window.cordova) {
-      if (window.cordova?.plugin?.http) {
-        return await this.cordovaApiRequest('getTableFromSupabase', { table }, 'get');
-      } else {
-        console.log('failed getTableFromSupabase due to http not ready yet');
+
+  async _genericRequest(api, params, method, serializer) {
+    if (window.cordova && window.cordova.plugin?.http) {
+      try {
+        return await this.cordovaApiRequest(api, params, method, serializer);
+      } catch (err) {
+        console.error(`Cordova Request Fail (${api}):`, err);
         return null;
       }
-    } else {
-      return await this.normalApiRequest('getTableFromSupabase', { table }, 'get');
     }
+    return this.normalApiRequest(api, params, method);
   }
-  async searchYoutube(text) {
-    let res = {};
-    if (window.cordova) {
-      if (window.cordova?.plugin?.http) {
-        res = await this.cordovaApiRequest('getVideosFromYoutube', { q: text }, 'get');
-      } else {
-        console.log('fallo getVideosFromYoutube por http');
-      }
-    } else {
-      res = await this.normalApiRequest('getVideosFromYoutube', { q: text }, 'get');
-    }
-    if (res.status === 200) {
-      return res.data.items;
-    } else {
-      return null;
-    }
-  }
-  async sendLogs(message, user) {
-    if (window.cordova) {
-      if (window.cordova?.plugin?.http) {
-        return await this.cordovaApiRequest('sendLogs', { message: window.device.model + ' ' + message }, 'post');
-      } else {
-        console.log('fallo sendLogs por http');
-      }
-    } else {
-      return await this.normalApiRequest('sendLogs', { message: user + message }, 'post');
-    }
-  }
+
   async getRokuData(param) {
     const getRequestPromise = new Promise((resolve, reject) => {
       if (window.cordova?.plugin?.http) {
         window.cordova.plugin.http.sendRequest(
-          `${rokuIp}query/${param}`,
+          `${ROKU_CONFIG.IP}query/${param}`,
           { method: 'get', headers: {}, params: {} },
-          (response) => { resolve(response); },
-          (error) => { reject(error); }
+          (response) => resolve(response),
+          (error) => reject(error)
         );
       } else {
-        axios.get(`${rokuIpPc}/query/${param}`).then(response => { resolve(response); }).catch(error => { reject(error); });
+        axios.get(`${ROKU_CONFIG.IP_PC}/query/${param}`)
+          .then(resolve)
+          .catch(reject);
       }
     });
 
     const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('Roku not responding')), 2000)
+      setTimeout(() => reject(new Error('Roku not responding')), ROKU_CONFIG.TIMEOUT)
     );
-    return Promise.race([getRequestPromise, timeoutPromise]).then((response) => {
+
+    try {
+      const response = await Promise.race([getRequestPromise, timeoutPromise]);
       return {
         status: response.status,
         data: xmlParser.parse(response.data)
       };
-    }).catch((error) => {
+    } catch (error) {
       console.log("Roku Data Request Error:", error.message || error);
       return null;
-    });
-  }
-  async validateUserType(userType) {
-    let response = {};
-    if (window.cordova) {
-      if (window.cordova?.plugin?.http) {
-        response = await this.cordovaApiRequest('validateCredentials', { key: userType }, 'post');
-      } else {
-        console.log('fallo validateCredentials por http');
-      }
-    } else {
-      response = await this.normalApiRequest('validateCredentials', { key: userType }, 'post');
-    }
-    if (response.status === 200 && response.data.validUser) {
-      return response.data;
-    } else {
-      return '';
     }
   }
-  async sendIfttt(params, sendEnabled) {
-    params.key = params.key || 'state';
-    if (sendEnabled === undefined) {
-      sendEnabled = store.getState().sendEnabledSt;
-    }
-    if (sendEnabled) {
-      if (window.cordova) {
-        if (window.cordova?.plugin?.http) {
-          return await this.cordovaApiRequest('sendIfttt', params, 'get');
-        } else {
-          console.log('fallo sendIfttt por http');
-        }
-      } else {
-        return await this.normalApiRequest('sendIfttt', params, 'get');
-      }
-    }
-  }
+
   async fetchRoku(params) {
-    if (window.cordova) {
-      let url = '';
-      if (params.params) {
-        const par = new URLSearchParams(params.params);
-        url = `${rokuIp}${params.key}/${params.value}?${par.toString()}`;
-      } else {
-        url = `${rokuIp}${params.key}/${params.value}`;
-      }
-      if (store.getState().sendEnabledSt) {
-        if (window.cordova?.plugin?.http) {
-          const sendRequestPromise = new Promise((resolve, reject) => {
-            window.cordova.plugin.http.sendRequest(
-              url,
-              { method: 'post', headers: contentTypeX, data: {}, serializer: 'urlencoded' },
-              () => { resolve(true); },
-              (error) => { reject(error); }
-            );
-          });
-          const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Roku not responding")), 1000)
-          );
-          Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
-          }).catch(async () => {
-            if (window.cordova?.plugin?.http) {
-              return await this.cordovaApiRequest('sendIfttt', params, 'get');
-            } else {
-              console.log('fallo sendIfttt ult por http');
-            }
-          });
-        } else {
-          console.log('Cordova HTTP plugin not available');
-        }
-      }
-    } else {
-      let url = '';
-      if (params.params) {
-        const par = new URLSearchParams(params.params);
-        url = `${rokuIpPc}/${params.key}/${params.value}?${par.toString()}`;
-      } else {
-        url = `${rokuIpPc}/${params.key}/${params.value}`;
-      }
-      if (store.getState().sendEnabledSt) {
-        const sendRequestPromise = new Promise((resolve, reject) => {
-          axios.post(url, {}, { headers: contentTypeX }).then(response => { resolve(true); }).catch(error => { reject(error); });
-        });
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Roku not responding")), 1000)
+    const { sendEnabledSt } = store.getState();
+    if (!sendEnabledSt) return;
+
+    const query = params.params ? `?${new URLSearchParams(params.params).toString()}` : '';
+    const baseUrl = window.cordova ? ROKU_CONFIG.IP : ROKU_CONFIG.IP_PC;
+    const url = `${baseUrl}${params.key}/${params.value}${query}`;
+
+    const sendRequestPromise = new Promise((resolve, reject) => {
+      if (window.cordova?.plugin?.http) {
+        window.cordova.plugin.http.sendRequest(
+          url,
+          { method: 'post', headers: CONTENT_TYPES.X_WWW_FORM_URLENCODED, data: {}, serializer: 'urlencoded' },
+          resolve,
+          reject
         );
-        Promise.race([sendRequestPromise, timeoutPromise]).then(() => {
-        }).catch(async () => {
-          console.log('fallo sendIfttt ult por http');
-        });
+      } else {
+        axios.post(url, {}, { headers: CONTENT_TYPES.X_WWW_FORM_URLENCODED })
+          .then(resolve)
+          .catch(reject);
+      }
+    });
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Roku not responding")), ROKU_CONFIG.POST_TIMEOUT)
+    );
+
+    try {
+      await Promise.race([sendRequestPromise, timeoutPromise]);
+    } catch (error) {
+      console.log("Roku Fetch Error (Switching to IFTTT):", error.message);
+      if (window.cordova && window.cordova.plugin?.http) {
+        await this.cordovaApiRequest(ENDPOINTS.SEND_IFTTT, params, 'get');
       }
     }
   }
 }
+
 const requests = new Requests(window.location.hostname === 'localhost' && !window.cordova);
 export default requests;

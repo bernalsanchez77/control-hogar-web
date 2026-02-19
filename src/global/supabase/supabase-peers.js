@@ -61,7 +61,7 @@ class PeersChannel {
           // No one on Noky. Oldest overall peer clears the record.
           const oldestOverall = [...realPeers].sort((a, b) => new Date(a.date) - new Date(b.date))[0];
           if (oldestOverall.name === me && currentLeaderInDb !== '') {
-            requests.updateSelections({ table: 'leader', id: '' });
+            requests.updateSelections({ table: 'leader', id: 'none' });
           }
         }
         store.getState().setPeersSt(realPeers);
@@ -70,6 +70,7 @@ class PeersChannel {
         switch (status) {
           case 'SUBSCRIBED':
             this.peersChannel.status = 'subscribed';
+            console.log('subscribed with wifi:', store.getState().wifiNameSt);
             await this.peersChannel.track({
               name: store.getState().userNameSt + '-' + store.getState().userDeviceSt,
               status: store.getState().isInForegroundSt ? 'foreground' : 'background',

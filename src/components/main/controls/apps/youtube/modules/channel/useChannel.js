@@ -4,13 +4,13 @@ import utils from '../../../../../../../global/utils';
 import youtube from '../../../../../../../global/youtube';
 import viewRouter from '../../../../../../../global/view-router';
 import { useTouch } from '../../../../../../../hooks/useTouch';
+import { useLeader, useYoutubeVideoSelectedId } from '../../../../../../../hooks/useSelectors';
 
 export function useChannel(setVideoToSave) {
     // 1. Store / Global State
     const youtubeVideosSt = store(v => v.youtubeVideosSt);
-    const leaderSt = store(v => v.selectionsSt.find(el => el.table === 'leader')?.id);
-    const selectionsSt = store(v => v.selectionsSt);
-    const youtubeVideosSelectedId = selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
+    const leaderSt = useLeader();
+    const youtubeVideosSelectedId = useYoutubeVideoSelectedId();
 
     // 2. Refs
     const channelSelected = useRef(localStorage.getItem('channelSelected') || '');
