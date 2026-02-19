@@ -16,9 +16,11 @@ export function usePeerSync(userNameSt, userDeviceSt, leaderSt, peersSt, selecti
     }, [peersSt, leaderSt, userNameSt, userDeviceSt, selectionsRef]);
 
     useEffect(() => {
-        const initPeers = async () => {
-            await supabasePeers.subscribeToPeersChannel();
-        };
-        initPeers();
-    }, []);
+        if (leaderSt) {
+            const initPeers = async () => {
+                await supabasePeers.subscribeToPeersChannel();
+            };
+            initPeers();
+        }
+    }, [leaderSt]);
 }
