@@ -1,9 +1,8 @@
+import { useSupabaseTimeoutView } from './useSupabaseTimeoutView';
 import './supabaseTimeout.css';
 
-function SupabaseTimeout({restartParent}) {
-  const restart = () => {
-    restartParent('onSupabaseTimeout');
-  }
+function SupabaseTimeout({ onSupabaseTimeoutParent }) {
+  const { onRestart } = useSupabaseTimeoutView(onSupabaseTimeoutParent);
 
   return (
     <div className="views-supabasetimeout">
@@ -13,8 +12,8 @@ function SupabaseTimeout({restartParent}) {
       </div>
       <div className='views-supabasetimeout-button'>
         <button
-          onTouchStart={() => restart()}>
-            Reiniciar
+          onTouchStart={onRestart}>
+          Reiniciar
         </button>
       </div>
     </div>

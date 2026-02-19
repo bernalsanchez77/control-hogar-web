@@ -1,6 +1,9 @@
+import { useRestricted } from './useRestricted';
 import './restricted.css';
 
 function Restricted() {
+  useRestricted();
+
   return (
     <div className="views-restricted">
       <div className='views-restricted-text'>

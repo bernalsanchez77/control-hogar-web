@@ -96,6 +96,7 @@ export function useDevices() {
         setLamparasState();
     }, [setLamparasState]);
 
+    // 6. Return
     return {
         allDevices,
         userTypeSt,

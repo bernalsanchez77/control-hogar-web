@@ -32,6 +32,7 @@ export function useScreens() {
         }
     }, [screenSelectedSt, setScreenSelectedSt, isAppSt]);
 
+    // 4. Return
     return {
         isInForegroundSt,
         userTypeSt,
