@@ -1,6 +1,9 @@
+import { useLoadingView } from './useLoadingView';
 import './loading.css';
 
 function Loading() {
+  useLoadingView();
+
   return (
     <div className="views-loading-container">
       <span className="views-loading-text">Cargando</span>

@@ -1,14 +1,15 @@
-import { store } from "../../../store/store";
+import { useNotifications } from './useNotifications';
 import './notifications.css';
 
 function Notifications() {
-  const wifiNameSt = store(v => v.wifiNameSt);
+  const { wifiNameSt } = useNotifications();
+
   return (
     <div className='notifications'>
       <div className='notifications-row'>
         <span>
           {wifiNameSt === 'Noky'
-              ? 'Conectado a Noky y Roku'
+            ? 'Conectado a Noky y Roku'
             : 'Desconectado de Noky y Roku'}
         </span>
       </div>

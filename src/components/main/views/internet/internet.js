@@ -1,6 +1,9 @@
+import { useInternet } from './useInternet';
 import './internet.css';
 
-function Internet({restartParent}) {
+function Internet() {
+  useInternet();
+
   return (
     <div className="views-internet">
       <div className='views-internet-text'>
