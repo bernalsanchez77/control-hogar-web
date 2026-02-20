@@ -22,6 +22,7 @@ export function useLoad() {
     const peersSt = store(v => v.peersSt);
     const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
     const wifiNameSt = store(v => v.wifiNameSt);
+    const isConnectedToNokySt = store(v => v.isConnectedToNokySt);
     const networkTypeSt = store(v => v.networkTypeSt);
     const supabaseTimeoutSt = store(v => v.supabaseTimeoutSt);
     const setSupabaseTimeoutSt = store(v => v.supabaseSetTimeoutSt);
@@ -122,8 +123,6 @@ export function useLoad() {
             setIsLoadingSt(true);
         }
         isLoadingRef.current = true;
-        const newView = structuredClone(viewSt);
-
         const hdmiSalaTable = await setData('hdmiSala', false, async (change) => {
             Tables.onHdmiSalaTableChange(change);
         });
@@ -139,8 +138,7 @@ export function useLoad() {
             });
             const hdmiSelectionId = store.getState().selectionsSt.find(el => el.table === 'hdmiSala')?.id;
             if (hdmiSelectionId) {
-                newView.selected = hdmiSelectionId;
-                await viewRouter.changeView(newView);
+                await viewRouter.onHdmiSalaTableChange(hdmiSelectionId);
             }
             await setData('rokuApps');
             await setData('devices');
@@ -159,7 +157,7 @@ export function useLoad() {
         }
         setIsLoadingSt(false);
         isLoadingRef.current = false;
-    }, [setData, setIsLoadingSt, viewSt, wifiNameSt, isAppSt, updateNotificationBar]);
+    }, [setData, setIsLoadingSt, wifiNameSt, isAppSt, updateNotificationBar]);
 
     const onSupabaseTimeout = async () => {
         await load();
@@ -201,7 +199,21 @@ export function useLoad() {
                 Roku.setIsConnectedToNokyWifi(false);
             }
         }
-    }, [wifiNameSt, networkTypeSt, isPcSt, isInForegroundSt, userNameSt, userDeviceSt, isConnectedToInternetSt]);
+    }, [wifiNameSt, networkTypeSt, isPcSt, userNameSt, userDeviceSt, isConnectedToInternetSt]);
+
+    useEffect(() => {
+        if (isReadyRef.current) {
+            if (supabasePeers.peersChannel.status === 'unsubscribed') {
+                supabasePeers.subscribeToPeersChannel();
+            } else {
+                supabasePeers.peersChannel.track({
+                    name: userNameSt + '-' + userDeviceSt,
+                    date: new Date().toISOString(),
+                    isConnectedToNoky: isConnectedToNokySt,
+                });
+            }
+        }
+    }, [isConnectedToNokySt, userNameSt, userDeviceSt]);
 
     useEffect(() => {
         if (userNameSt + '-' + userDeviceSt === leaderSt && !Roku.playStateInterval) {

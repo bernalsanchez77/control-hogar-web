@@ -34,6 +34,7 @@ class Connection {
       store.getState().setWifiNameSt(wifiName);
       store.getState().setNetworkTypeSt(networkType);
       store.getState().setIsConnectedToInternetSt(false);
+      store.getState().setIsConnectedToNokySt(false);
       this.isConnectedToInternetInterval = setInterval(async () => {
         const isConnectedToInternet = await this.getIsConnectedToInternet();
         if (isConnectedToInternet) {
@@ -48,6 +49,8 @@ class Connection {
           store.getState().setWifiNameSt(wifiName);
           store.getState().setNetworkTypeSt(networkType);
           store.getState().setIsConnectedToInternetSt(true);
+          const isConnectedToNokySt = wifiName === 'Noky' && networkType === 'wifi';
+          store.getState().setIsConnectedToNokySt(isConnectedToNokySt);
           if (supabasePeers.peersChannel.status === 'unsubscribed') {
             supabasePeers.subscribeToPeersChannel();
           }
@@ -59,11 +62,17 @@ class Connection {
   }
   async onNetworkTypeChange(netType) {
     console.log('changed in network type: ', netType);
-    console.log('peersChannel status: ', supabasePeers.peersChannel.status);
-    store.getState().setWifiNameSt('');
-    if (supabasePeers.peersChannel.status === 'unsubscribed') {
-      await supabasePeers.subscribeToPeersChannel();
-    }
+    setTimeout(() => {
+      if (store.getState().wifiNameSt !== '' && store.getState().networkTypeSt !== 'wifi') {
+        store.getState().setWifiNameSt('');
+      }
+      setTimeout(() => {
+        const wifiName = store.getState().wifiNameSt;
+        const networkType = store.getState().networkTypeSt;
+        const isConnectedToNokySt = wifiName === 'Noky' && networkType === 'wifi';
+        store.getState().setIsConnectedToNokySt(isConnectedToNokySt);
+      }, 1000);
+    }, 1000);
     if (store.getState().userTypeSt === 'guest') {
       if (netType === 'wifi' && store.getState().wifiNameSt === 'Noky') {
         if (!this.netChangeRunning) {
@@ -84,10 +93,12 @@ class Connection {
   }
   async onWifiNameChange(wifiName) {
     console.log('changed in ssid: ', wifiName);
-    console.log('peersChannel status: ', supabasePeers.peersChannel.status);
-    if (supabasePeers.peersChannel.status === 'unsubscribed') {
-      await supabasePeers.subscribeToPeersChannel();
-    }
+    setTimeout(() => {
+      const wifiName = store.getState().wifiNameSt;
+      const networkType = store.getState().networkTypeSt;
+      const isConnectedToNokySt = wifiName === 'Noky' && networkType === 'wifi';
+      store.getState().setIsConnectedToNokySt(isConnectedToNokySt);
+    }, 1000);
     if (store.getState().userTypeSt === 'guest') {
       if (wifiName === 'Noky' && store.getState().networkTypeSt === 'wifi') {
         if (!this.netChangeRunning) {
@@ -113,7 +124,8 @@ class Connection {
     const wifiName = isAppSt ? await CordovaPlugins.getWifiName() : '';
     const networkType = isAppSt ? await CordovaPlugins.getNetworkType() : '';
     store.getState().setWifiNameSt(isPcSt ? 'Noky' : wifiName);
-    store.getState().setNetworkTypeSt(networkType);
+    store.getState().setNetworkTypeSt(isPcSt ? 'wifi' : networkType);
+    store.getState().setIsConnectedToNokySt(isPcSt ? true : wifiName === 'Noky' && networkType === 'wifi');
     store.getState().setIsConnectedToInternetSt(isConnectedToInternet);
   }
 }

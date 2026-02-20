@@ -49,7 +49,7 @@ class PeersChannel {
         const realPeers = this.getRealPeers(newState);
         // Deterministic Leader Selection: Newest peer on "Noky" wifi handles the record
         const sortedByNewest = [...realPeers].sort((a, b) => new Date(b.date) - new Date(a.date));
-        const potentialLeader = sortedByNewest.find(p => p.wifiName === 'Noky');
+        const potentialLeader = sortedByNewest.find(p => p.isConnectedToNoky);
         const me = store.getState().userNameSt + '-' + store.getState().userDeviceSt;
         const currentLeaderInDb = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
 
@@ -61,21 +61,22 @@ class PeersChannel {
           // No one on Noky. Oldest overall peer clears the record.
           const oldestOverall = [...realPeers].sort((a, b) => new Date(a.date) - new Date(b.date))[0];
           if (oldestOverall.name === me && currentLeaderInDb !== '') {
-            requests.updateSelections({ table: 'leader', id: 'none' });
+            requests.updateSelections({ table: 'leader', id: '' });
           }
         }
+        console.log('realPeers: ', realPeers);
         store.getState().setPeersSt(realPeers);
       })
       .subscribe(async (status) => {
         switch (status) {
           case 'SUBSCRIBED':
             this.peersChannel.status = 'subscribed';
-            console.log('subscribed with wifi:', store.getState().wifiNameSt);
+            console.log('subscribed and isConnectedToNoky:', store.getState().isConnectedToNokySt);
             await this.peersChannel.track({
               name: store.getState().userNameSt + '-' + store.getState().userDeviceSt,
               status: store.getState().isInForegroundSt ? 'foreground' : 'background',
               date: new Date().toISOString(),
-              wifiName: store.getState().wifiNameSt,
+              isConnectedToNoky: store.getState().isConnectedToNokySt,
             });
             break;
           case 'CHANNEL_ERROR':
@@ -93,7 +94,7 @@ class PeersChannel {
             }
             break;
           case 'CLOSED':
-            console.log('peers closed');
+            // console.log('peers closed');
             if (this.peersChannel.status !== 'unsubscribed') {
               this.peersChannel.status = 'unsubscribed';
               supabase.removeChannel(this.peersChannel);

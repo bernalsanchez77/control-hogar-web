@@ -94,7 +94,7 @@ class SupabaseChannels {
         if (isConnectedToInternet) {
           await this.subscribeToSupabaseChannel(tableName, callback).then((res) => {
             if (res.success) {
-              console.log('Re-subscribed to:', tableName);
+              // console.log('Re-subscribed to:', tableName);
             } else {
               console.warn('not re-subscribed, subscription status:', res.msg);
               switch (res.msg) {
@@ -147,7 +147,7 @@ class SupabaseChannels {
     for (const tableName of tableNames) {
       await this.subscribeToSupabaseChannel(tableName, this[tableName + 'Callback'], true).then((res) => {
         if (res.success) {
-          console.log('Re-subscribed to:', tableName, ' after internet restored');
+          // console.log('Re-subscribed to:', tableName, ' after internet restored');
         } else {
           console.warn('not re-subscribed, subscription status:', res.msg);
           switch (res.msg) {

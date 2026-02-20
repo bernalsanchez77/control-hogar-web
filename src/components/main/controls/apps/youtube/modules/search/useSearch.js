@@ -10,7 +10,6 @@ export function useSearch(setVideoToSave) {
     // 1. Store / Global State
     const youtubeSearchVideosSt = store(v => v.youtubeSearchVideosSt);
     const youtubeVideosSt = store(v => v.youtubeVideosSt);
-    const viewSt = store(v => v.viewSt);
     const leaderSt = useLeader();
     const youtubeVideosSelectedId = useYoutubeVideoSelectedId();
 
@@ -25,9 +24,7 @@ export function useSearch(setVideoToSave) {
         if (type === 'edit') {
             utils.triggerVibrate();
             setVideoToSave(video);
-            const newView = structuredClone(viewSt);
-            newView.roku.apps.youtube.mode = 'edit';
-            viewRouter.changeView(newView);
+            viewRouter.navigateToYoutubeEdit();
         }
     };
 

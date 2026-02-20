@@ -12,9 +12,7 @@ export function useMain() {
     // 1. Store / Global State
     const themeSt = store(v => v.themeSt);
     const setThemeSt = store(v => v.setThemeSt);
-    const setIsInForegroundSt = store(v => v.setIsInForegroundSt);
     const userTypeSt = store(v => v.userTypeSt);
-    const userNameSt = store(v => v.userNameSt);
     const setUserTypeSt = store(v => v.setUserTypeSt);
     const setUserNameSt = store(v => v.setUserNameSt);
     const setUserDeviceSt = store(v => v.setUserDeviceSt);
@@ -23,7 +21,6 @@ export function useMain() {
     const wifiNameSt = store(v => v.wifiNameSt);
     const setIsPcSt = store(v => v.setIsPcSt);
     const setIsAppSt = store(v => v.setIsAppSt);
-    const isAppSt = store(v => v.isAppSt);
     const setLizEnabledSt = store(v => v.setLizEnabledSt);
 
     // 2. Lifecycle management
