@@ -45,28 +45,32 @@ class Youtube {
     }
   }
   onVideoShortClick(video) {
+    let delay = 1000;
     const currentVideoId = store.getState().hdmiSalaSt.find(el => el.id === 'roku')?.videoId;
     if (currentVideoId !== video.id) {
+      const rokuAppsSelectedId = store.getState().selectionsSt.find(el => el.table === 'rokuApps')?.id;
+      const youtubeAppId = store.getState().rokuAppsSt.find(app => app.id === 'youtube').rokuId;
+      if (rokuAppsSelectedId !== youtubeAppId) {
+        requests.updateSelections({ table: 'rokuApps', id: youtubeAppId });
+        delay = 5000;
+      }
       const existingVideo = store.getState().youtubeVideosSt.find(v => v.id === video.id);
-      if (!existingVideo) {
+      if (existingVideo) {
+        setTimeout(() => {
+          requests.updateSelections({ table: 'youtubeVideos', id: '' });
+          setTimeout(() => {
+            requests.updateSelections({ table: 'youtubeVideos', id: video.id });
+          }, 1000);
+        }, delay);
+      } else {
         requests.upsertTable({ id: video.id, table: 'youtubeVideos', title: utils.decodeYoutubeTitle(video.title), duration: video.duration, channelId: 'zz-channel' });
         setTimeout(async () => {
           requests.updateSelections({ table: 'youtubeVideos', id: '' });
           setTimeout(() => {
             requests.updateSelections({ table: 'youtubeVideos', id: video.id });
           }, 1000);
-        }, 1000);
-      } else {
-        requests.updateSelections({ table: 'youtubeVideos', id: '' });
-        setTimeout(() => {
-          requests.updateSelections({ table: 'youtubeVideos', id: video.id });
-        }, 1000);
+        }, delay);
       }
-    }
-    const rokuAppsSelectedId = store.getState().selectionsSt.find(el => el.table === 'rokuApps')?.id;
-    const youtubeAppId = store.getState().rokuAppsSt.find(app => app.id === 'youtube').rokuId;
-    if (rokuAppsSelectedId !== youtubeAppId) {
-      requests.updateSelections({ table: 'rokuApps', id: youtubeAppId });
     }
     this.clearQueue();
   }

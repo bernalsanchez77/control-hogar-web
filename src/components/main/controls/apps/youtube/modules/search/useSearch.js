@@ -43,8 +43,8 @@ export function useSearch(setVideoToSave) {
     const youtubeSortedVideos = useMemo(() => {
         return youtubeSearchVideosSt.map(item => ({
             id: item.id.videoId,
-            title: item.snippet.title,
-            description: item.snippet.description,
+            title: utils.decodeYoutubeTitle(item.snippet.title),
+            description: utils.decodeYoutubeTitle(item.snippet.description),
             img: item.snippet.thumbnails.medium.url,
             duration: utils.formatYoutubeDuration(item.contentDetails.duration),
         }));

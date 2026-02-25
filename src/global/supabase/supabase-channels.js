@@ -10,7 +10,7 @@ class SupabaseChannels {
   screensCallback = null;
   youtubeVideosCallback = null;
   selectionsCallback = null;
-  youtubeChannelsLizCallback = null;
+  youtubeChannelsCallback = null;
   youtubeChannelsImagesCallback = null;
   cableChannelsCallback = null;
 
@@ -24,7 +24,7 @@ class SupabaseChannels {
     if (!this.youtubeVideosCallback && tableName === 'youtubeVideos') this.youtubeVideosCallback = callback;
     if (!this.hdmiSalaCallback && tableName === 'hdmiSala') this.hdmiSalaCallback = callback;
     if (!this.selectionsCallback && tableName === 'selections') this.selectionsCallback = callback;
-    if (!this.youtubeChannelsLizCallback && tableName === 'youtubeChannelsLiz') this.youtubeChannelsLizCallback = callback;
+    if (!this.youtubeChannelsCallback && tableName === 'youtubeChannels') this.youtubeChannelsCallback = callback;
     if (!this.youtubeChannelsImagesCallback && tableName === 'youtubeChannelsImages') this.youtubeChannelsImagesCallback = callback;
     if (!this.cableChannelsCallback && tableName === 'cableChannels') this.cableChannelsCallback = callback;
     if (!this.supabaseChannels[tableName]) {
@@ -137,13 +137,13 @@ class SupabaseChannels {
     await this.unsubscribeFromSupabaseChannel('screens');
     await this.unsubscribeFromSupabaseChannel('youtubeVideos');
     await this.unsubscribeFromSupabaseChannel('selections');
-    await this.unsubscribeFromSupabaseChannel('youtubeChannelsLiz');
+    await this.unsubscribeFromSupabaseChannel('youtubeChannels');
     await this.unsubscribeFromSupabaseChannel('youtubeChannelsImages');
     await this.unsubscribeFromSupabaseChannel('cableChannels');
   }
 
   async subscribeToAllSupabaseChannels() {
-    const tableNames = ['hdmiSala', 'rokuApps', 'devices', 'screens', 'youtubeVideos', 'selections', 'youtubeChannelsLiz', 'youtubeChannelsImages', 'cableChannels'];
+    const tableNames = ['hdmiSala', 'rokuApps', 'devices', 'screens', 'youtubeVideos', 'selections', 'youtubeChannels', 'youtubeChannelsImages', 'cableChannels'];
     for (const tableName of tableNames) {
       await this.subscribeToSupabaseChannel(tableName, this[tableName + 'Callback'], true).then((res) => {
         if (res.success) {

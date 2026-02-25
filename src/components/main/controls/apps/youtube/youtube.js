@@ -33,7 +33,7 @@ function Youtube() {
       }
       {
         (viewSt.roku.apps.youtube.mode === 'queue') &&
-        <Queue />
+        <Queue setVideoToSave={setVideoToSave} />
       }
     </div >
   )

@@ -9,13 +9,13 @@ export function useEdit(videoToSave) {
     const lizEnabledSt = store(v => v.lizEnabledSt);
     const userNameSt = store(v => v.userNameSt);
     const youtubeChannelsImagesSt = store(v => v.youtubeChannelsImagesSt);
-    const youtubeChannelsLizSt = store(v => v.youtubeChannelsLizSt);
+    const youtubeChannelsSt = store(v => v.youtubeChannelsSt);
     const youtubeVideosSt = store(v => v.youtubeVideosSt);
 
     // 2. Prep data before State
     const savedVideo = youtubeVideosSt.find(v => v.id === videoToSave.id);
     const existingChannelId = savedVideo?.channelId || '';
-    const existingChannelPath = youtubeChannelsLizSt.find(c => c.id === existingChannelId)?.img || '';
+    const existingChannelPath = youtubeChannelsSt.find(c => c.id === existingChannelId)?.img || '';
     const existingChannelImgId = youtubeChannelsImagesSt.find(img => img.path === existingChannelPath)?.id || '';
 
     // 3. Local State
@@ -48,19 +48,34 @@ export function useEdit(videoToSave) {
     const saveChannel = () => {
         if (channelRef.current && channelRef.current.trim() !== '') {
             utils.triggerVibrate();
+            const channelId = channelRef.current.toLowerCase().trim().replace(/\s+/g, '-');
+
+            const existingChannel = youtubeChannelsSt.find(c => c.id === channelId);
+            let order = existingChannel?.order;
+
+            if (order === undefined) {
+                const maxOrder = youtubeChannelsSt.length > 0
+                    ? Math.max(...youtubeChannelsSt.map(c => c.order || 0))
+                    : 0;
+                order = maxOrder + 1;
+            }
+
             requests.upsertTable({
-                id: channelRef.current,
-                table: 'youtubeChannelsLiz',
-                title: channelRef.current,
+                id: channelId,
+                table: 'youtubeChannels',
+                title: channelRef.current.trim(),
                 user: lizEnabledSt ? 'elizabeth' : userNameSt,
-                img: channelImgPathRef.current
+                img: channelImgPathRef.current,
+                order: order,
+                date: null
             });
             requests.upsertTable({
                 id: videoToSave.id,
                 table: 'youtubeVideos',
                 title: utils.decodeYoutubeTitle(videoToSave.title),
                 duration: videoToSave.duration,
-                channelId: channelRef.current
+                channelId: channelId,
+                date: null
             });
             window.history.back();
         }
@@ -73,8 +88,8 @@ export function useEdit(videoToSave) {
 
     // 6. Memos
     const youtubeSortedChannels = useMemo(() => {
-        return Object.values(youtubeChannelsLizSt).sort((a, b) => a.order - b.order);
-    }, [youtubeChannelsLizSt]);
+        return Object.values(youtubeChannelsSt).sort((a, b) => a.order - b.order);
+    }, [youtubeChannelsSt]);
 
     return {
         lizEnabledSt,

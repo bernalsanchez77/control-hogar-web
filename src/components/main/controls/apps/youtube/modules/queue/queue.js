@@ -2,7 +2,7 @@ import React from 'react';
 import { useQueue } from './useQueue';
 import './queue.css';
 
-function Queue() {
+function Queue({ setVideoToSave }) {
   const {
     youtubeSortedQueue,
     youtubeVideosSelectedId,
@@ -11,7 +11,7 @@ function Queue() {
     onTouchStart,
     onTouchMove,
     onTouchEnd
-  } = useQueue();
+  } = useQueue(setVideoToSave);
 
   return (
     <div className='controls-apps-youtube--channel'>

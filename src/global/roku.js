@@ -9,7 +9,6 @@ let testCount = 0;
 
 class Roku {
   constructor() {
-    this.isConnectedToNokyWifi = '';
     this.testCount = testCount;
     this.playStateInterval = null;
     this.currentVideo = null;
@@ -17,7 +16,7 @@ class Roku {
   }
 
   async getPlayState(data) {
-    if (this.isConnectedToNokyWifi) {
+    if (store.getState().isConnectedToNokySt) {
       try {
         const playState = await requests.getRokuData('media-player');
         if (playState && playState.status === 200) {
@@ -111,13 +110,6 @@ class Roku {
       clearInterval(this.playStateInterval);
       this.playStateInterval = null;
       this.refreshCounter();
-    }
-  }
-
-  setIsConnectedToNokyWifi(isConnectedToNokyWifi) {
-    this.isConnectedToNokyWifi = isConnectedToNokyWifi;
-    if (!isConnectedToNokyWifi) {
-      this.stopPlayStateListener();
     }
   }
 

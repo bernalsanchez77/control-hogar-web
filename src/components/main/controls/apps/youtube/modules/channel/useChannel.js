@@ -26,7 +26,7 @@ export function useChannel(setVideoToSave) {
         if (type === 'edit') {
             utils.triggerVibrate();
             setVideoToSave(video);
-            viewRouter.navigateToYoutubeEdit();
+            viewRouter.navigateToYoutubeEdit(channelSelected.current);
         }
     };
 
@@ -44,7 +44,11 @@ export function useChannel(setVideoToSave) {
     // 4. Memos
     const youtubeSortedVideos = useMemo(() => {
         let videos = youtubeVideosSt.filter(video => video.channelId === channelSelected.current);
-        return Object.values(videos).sort((a, b) => new Date(a.date) - new Date(b.date));
+        const decodedVideos = videos.map(video => ({
+            ...video,
+            title: utils.decodeYoutubeTitle(video.title)
+        }));
+        return Object.values(decodedVideos).sort((a, b) => new Date(a.date) - new Date(b.date));
     }, [youtubeVideosSt]);
 
     return {

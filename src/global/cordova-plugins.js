@@ -1,5 +1,8 @@
+const LISTENER_DEBOUNCE_DELAY = 1000;
 let firstWifiSsidChange = true;
 let firstNetworkTypeChange = true;
+let wifiNameDebounceTimer = null;
+let networkTypeDebounceTimer = null;
 class CordovaPlugins {
   async getPermissions() {
     var permissions = window.cordova.plugins.permissions;
@@ -45,7 +48,10 @@ class CordovaPlugins {
     window.cordova.plugins.netinfo.startSSIDListener(
       async (info) => {
         if (!firstWifiSsidChange) {
-          onWifiNameChange(info.ssid.replace(/"/g, '').trim());
+          clearTimeout(wifiNameDebounceTimer);
+          wifiNameDebounceTimer = setTimeout(() => {
+            onWifiNameChange(info.ssid.replace(/"/g, '').trim());
+          }, LISTENER_DEBOUNCE_DELAY);
         }
         firstWifiSsidChange = false;
       },
@@ -57,7 +63,10 @@ class CordovaPlugins {
     window.cordova.plugins.networkinfo.startNetworkTypeListener(
       async (info) => {
         if (!firstNetworkTypeChange) {
-          onNetworkTypeChange(info.networkType.replace(/"/g, '').trim());
+          clearTimeout(networkTypeDebounceTimer);
+          networkTypeDebounceTimer = setTimeout(() => {
+            onNetworkTypeChange(info.networkType.replace(/"/g, '').trim());
+          }, LISTENER_DEBOUNCE_DELAY);
         }
         firstNetworkTypeChange = false;
       },

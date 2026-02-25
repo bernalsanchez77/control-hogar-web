@@ -6,7 +6,7 @@ import { useTouch } from '../../../../../../../hooks/useTouch';
 
 export function useHome() {
     // 1. Store / Global State
-    const youtubeChannelsLizSt = store(v => v.youtubeChannelsLizSt);
+    const youtubeChannelsSt = store(v => v.youtubeChannelsSt);
     const userNameSt = store(v => v.userNameSt);
     const lizEnabledSt = store(v => v.lizEnabledSt);
 
@@ -31,8 +31,8 @@ export function useHome() {
 
     // 3. Memos
     const youtubeSortedChannels = useMemo(() => {
-        return Object.values(youtubeChannelsLizSt).sort((a, b) => a.order - b.order);
-    }, [youtubeChannelsLizSt]);
+        return Object.values(youtubeChannelsSt).sort((a, b) => a.order - b.order);
+    }, [youtubeChannelsSt]);
 
     return {
         userNameSt,

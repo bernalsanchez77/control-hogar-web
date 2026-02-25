@@ -6,9 +6,10 @@ import viewRouter from '../../../../../../../global/view-router';
 import { useTouch } from '../../../../../../../hooks/useTouch';
 import { useLeader, useYoutubeVideoSelectedId } from '../../../../../../../hooks/useSelectors';
 
-export function useQueue() {
+export function useQueue(setVideoToSave) {
     // 1. Store / Global State
     const youtubeVideosSt = store(v => v.youtubeVideosSt);
+
     const leaderSt = useLeader();
     const youtubeVideosSelectedId = useYoutubeVideoSelectedId();
 
@@ -22,10 +23,8 @@ export function useQueue() {
         }
         if (type === 'edit') {
             utils.triggerVibrate();
-            // In queue, edit logic might be missing or handled differently, 
-            // but let's follow the standard pattern if needed.
-            // Usually it navigates to edit view.
-            viewRouter.navigateToYoutubeEdit();
+            setVideoToSave(video);
+            viewRouter.navigateToYoutubeEdit('queue');
         }
     };
 
@@ -43,7 +42,11 @@ export function useQueue() {
     // 3. Memos
     const youtubeSortedQueue = useMemo(() => {
         let queue = youtubeVideosSt.filter(video => video.queue > 0);
-        return Object.values(queue).sort((a, b) => a.queue - b.queue);
+        const decodedQueue = queue.map(video => ({
+            ...video,
+            title: utils.decodeYoutubeTitle(video.title)
+        }));
+        return Object.values(decodedQueue).sort((a, b) => a.queue - b.queue);
     }, [youtubeVideosSt]);
 
     return {

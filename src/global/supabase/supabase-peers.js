@@ -1,6 +1,7 @@
 import supabase from './supabase-client';
 import requests from '../requests';
 import { store } from '../../store/store';
+import Roku from '../roku';
 
 class PeersChannel {
   constructor() {
@@ -51,19 +52,27 @@ class PeersChannel {
         const sortedByNewest = [...realPeers].sort((a, b) => new Date(b.date) - new Date(a.date));
         const potentialLeader = sortedByNewest.find(p => p.isConnectedToNoky);
         const me = store.getState().userNameSt + '-' + store.getState().userDeviceSt;
-        const currentLeaderInDb = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
+        let currentLeaderInDb = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
 
         if (potentialLeader) {
           if (potentialLeader.name === me && currentLeaderInDb !== me) {
             requests.updateSelections({ table: 'leader', id: me });
+            currentLeaderInDb = me;
           }
         } else if (realPeers.length > 0) {
           // No one on Noky. Oldest overall peer clears the record.
           const oldestOverall = [...realPeers].sort((a, b) => new Date(a.date) - new Date(b.date))[0];
           if (oldestOverall.name === me && currentLeaderInDb !== '') {
             requests.updateSelections({ table: 'leader', id: '' });
+            currentLeaderInDb = '';
           }
         }
+
+        if (currentLeaderInDb === me) {
+          const playState = await Roku.getPlayState('state');
+          requests.updateSelections({ table: 'playState', id: playState });
+        }
+
         console.log('realPeers: ', realPeers);
         store.getState().setPeersSt(realPeers);
       })
@@ -74,9 +83,9 @@ class PeersChannel {
             console.log('subscribed and isConnectedToNoky:', store.getState().isConnectedToNokySt);
             await this.peersChannel.track({
               name: store.getState().userNameSt + '-' + store.getState().userDeviceSt,
-              status: store.getState().isInForegroundSt ? 'foreground' : 'background',
               date: new Date().toISOString(),
               isConnectedToNoky: store.getState().isConnectedToNokySt,
+              isInForeground: store.getState().isInForegroundSt,
             });
             break;
           case 'CHANNEL_ERROR':

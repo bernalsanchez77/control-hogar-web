@@ -15,15 +15,11 @@ export function useLoad() {
     // 1. Store / Global State
     const isLoadingSt = store(v => v.isLoadingSt);
     const setIsLoadingSt = store(v => v.setIsLoadingSt);
-    const isInForegroundSt = store(v => v.isInForegroundSt);
     const userTypeSt = store(v => v.userTypeSt);
     const userNameSt = store(v => v.userNameSt);
     const userDeviceSt = store(v => v.userDeviceSt);
-    const peersSt = store(v => v.peersSt);
     const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
     const wifiNameSt = store(v => v.wifiNameSt);
-    const isConnectedToNokySt = store(v => v.isConnectedToNokySt);
-    const networkTypeSt = store(v => v.networkTypeSt);
     const supabaseTimeoutSt = store(v => v.supabaseTimeoutSt);
     const setSupabaseTimeoutSt = store(v => v.supabaseSetTimeoutSt);
     const updateTablesSt = store((v) => v.updateTablesSt);
@@ -32,16 +28,16 @@ export function useLoad() {
     const devicesSt = store(v => v.devicesSt);
     const selectionsSt = store(v => v.selectionsSt);
     const viewSt = store(v => v.viewSt);
-    const isPcSt = store(v => v.isPcSt);
     const isAppSt = store(v => v.isAppSt);
     const screenSelectedSt = store(v => v.screenSelectedSt);
+    const isLoadInitializedSt = store(v => v.isLoadInitializedSt);
+    const setIsLoadInitializedSt = store(v => v.setIsLoadInitializedSt);
+
     const leaderSt = useLeader();
 
     // 2. Refs
-    const isLoadingRef = useRef(false);
-    const isLoadInitializedRef = useRef(false);
     const isReadyRef = useRef(false);
-    const loadFnRef = useRef(null);
+    const isLoadingRef = useRef(false);
     const selectionsRef = useRef(null);
 
     // 3. Callbacks / Functions
@@ -119,6 +115,7 @@ export function useLoad() {
     }, [screenSelectedSt]);
 
     const load = useCallback(async (firstLoad = false) => {
+        console.log('load');
         if (firstLoad) {
             setIsLoadingSt(true);
         }
@@ -142,7 +139,7 @@ export function useLoad() {
             }
             await setData('rokuApps');
             await setData('devices');
-            await setData('youtubeChannelsLiz');
+            await setData('youtubeChannels');
             await setData('youtubeChannelsImages');
             await setData('cableChannels');
             await setData('youtubeVideos', true, (change) => {
@@ -164,10 +161,11 @@ export function useLoad() {
     };
 
     const init = useCallback(async () => {
+        console.log('init load');
         await load(true);
-        if (wifiNameSt === 'Noky') {
-            Roku.setIsConnectedToNokyWifi(true);
-        }
+        // if (wifiNameSt === 'Noky') {
+        //     Roku.setIsConnectedToNokyWifi(true);
+        // }
         await supabasePeers.subscribeToPeersChannel();
         const youtubeVideosSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
         if (youtubeVideosSelectedId) {
@@ -182,91 +180,90 @@ export function useLoad() {
         if (localStorage.getItem('user-type') !== 'guest' && localStorage.getItem('user-type') !== 'owner') {
             eruda.init();
         }
-    }, [load, wifiNameSt, userNameSt, userDeviceSt, leaderSt]);
+    }, [load, userNameSt, userDeviceSt, leaderSt]);
 
     // 4. Effects
     useEffect(() => {
-        if (isReadyRef.current && isLoadInitializedRef.current && isInForegroundSt && isConnectedToInternetSt) {
-            loadFnRef.current?.();
-        }
-    }, [isInForegroundSt, isConnectedToInternetSt]);
-
-    useEffect(() => {
-        if (isReadyRef.current) {
-            if (isConnectedToInternetSt && ((isPcSt && wifiNameSt === 'Noky') || (wifiNameSt === 'Noky' && networkTypeSt === 'wifi'))) {
-                Roku.setIsConnectedToNokyWifi(true);
-            } else {
-                Roku.setIsConnectedToNokyWifi(false);
+        const unsub = store.subscribe(
+            async (newState, oldState) => {
+                if (supabasePeers.peersChannel.status === 'unsubscribed') {
+                    console.log('resubscribing to peers channel from useEffect');
+                    supabasePeers.subscribeToPeersChannel();
+                } else {
+                    if (newState.isConnectedToNokySt !== oldState.isConnectedToNokySt) {
+                        console.log('resubscribing to peers channel from useEffect after isConnectedToNokySt change');
+                        supabasePeers.peersChannel.track({
+                            name: userNameSt + '-' + userDeviceSt,
+                            date: new Date().toISOString(),
+                            isConnectedToNoky: newState.isConnectedToNokySt,
+                            isInForeground: newState.isInForegroundSt,
+                        });
+                        if (newState.isConnectedToNokySt) {
+                            await load();
+                        }
+                    }
+                    if (newState.isInForegroundSt !== oldState.isInForegroundSt) {
+                        console.log('resubscribing to peers channel from useEffect after isInForegroundSt change');
+                        supabasePeers.peersChannel.track({
+                            name: userNameSt + '-' + userDeviceSt,
+                            date: store.getState().peersSt.find(el => el.name === userNameSt + '-' + userDeviceSt)?.date,
+                            isConnectedToNoky: newState.isConnectedToNokySt,
+                            isInForeground: newState.isInForegroundSt,
+                        });
+                        if (newState.isInForegroundSt) {
+                            await load();
+                        }
+                    }
+                    if (newState.leaderSt !== oldState.leaderSt) {
+                        if (newState.leaderSt === userNameSt + '-' + userDeviceSt) {
+                            if (!Roku.playStateInterval) {
+                                const youtubeVideosSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
+                                if (youtubeVideosSelectedId) {
+                                    const youtubeVideosSelected = store.getState().youtubeVideosSt.find(el => el.id === youtubeVideosSelectedId);
+                                    Roku.startPlayStateListener(youtubeVideosSelected);
+                                }
+                            }
+                            const playState = await Roku.getPlayState('state');
+                            if (playState && playState !== selectionsRef.current?.find(el => el.table === 'playState')?.id) {
+                                requests.updateSelections({ table: 'playState', id: playState });
+                            }
+                        } else {
+                            if (Roku.playStateInterval) {
+                                Roku.stopPlayStateListener();
+                            }
+                        }
+                    }
+                }
             }
-        }
-    }, [wifiNameSt, networkTypeSt, isPcSt, userNameSt, userDeviceSt, isConnectedToInternetSt]);
-
-    useEffect(() => {
-        if (isReadyRef.current) {
-            if (supabasePeers.peersChannel.status === 'unsubscribed') {
-                supabasePeers.subscribeToPeersChannel();
-            } else {
-                supabasePeers.peersChannel.track({
-                    name: userNameSt + '-' + userDeviceSt,
-                    date: new Date().toISOString(),
-                    isConnectedToNoky: isConnectedToNokySt,
-                });
-            }
-        }
-    }, [isConnectedToNokySt, userNameSt, userDeviceSt]);
-
-    useEffect(() => {
-        if (userNameSt + '-' + userDeviceSt === leaderSt && !Roku.playStateInterval) {
-            const youtubeVideosSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
-            if (youtubeVideosSelectedId) {
-                const youtubeVideosSelected = store.getState().youtubeVideosSt.find(el => el.id === youtubeVideosSelectedId);
-                Roku.startPlayStateListener(youtubeVideosSelected);
-            }
-        }
-        if (userNameSt + '-' + userDeviceSt !== leaderSt && Roku.playStateInterval) {
-            Roku.stopPlayStateListener();
-        }
-    }, [leaderSt, userNameSt, userDeviceSt]);
+        );
+        return unsub;
+    }, [userNameSt, userDeviceSt, load]);
 
     useEffect(() => {
         if (isAppSt) {
             document.addEventListener("backbutton", events.onNavigationBack);
             document.addEventListener("volumeupbutton", events.onVolumeUp);
             document.addEventListener("volumedownbutton", events.onVolumeDown);
-        } else {
-            window.addEventListener("popstate", events.onNavigationBack);
         }
+        window.addEventListener("popstate", events.onNavigationBack);
 
         return () => {
             if (isAppSt) {
                 document.removeEventListener("backbutton", events.onNavigationBack);
                 document.removeEventListener("volumeupbutton", events.onVolumeUp);
                 document.removeEventListener("volumedownbutton", events.onVolumeDown);
-            } else {
-                window.removeEventListener("popstate", events.onNavigationBack);
             }
+            window.removeEventListener("popstate", events.onNavigationBack);
         };
     }, [isAppSt]);
-
-    useEffect(() => {
-        (async () => {
-            if (userNameSt && userDeviceSt && leaderSt && userNameSt + '-' + userDeviceSt === leaderSt) {
-                const playState = await Roku.getPlayState('state');
-                if (playState && playState !== selectionsRef.current?.find(el => el.table === 'playState')?.id) {
-                    requests.updateSelections({ table: 'playState', id: playState });
-                }
-            }
-        })();
-    }, [peersSt, leaderSt, userNameSt, userDeviceSt]);
 
     useEffect(() => {
         selectionsRef.current = selectionsSt;
     }, [selectionsSt]);
 
     // 5. Initialization
-    loadFnRef.current = load;
-    if (!isLoadInitializedRef.current) {
-        isLoadInitializedRef.current = true;
+    if (!isLoadInitializedSt) {
+        setIsLoadInitializedSt(true);
         init();
     }
 

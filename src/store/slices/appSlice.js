@@ -3,6 +3,7 @@ export const createAppSlice = (set) => ({
     sendEnabledSt: true,
     simulatePlayStateSt: false,
     isLoadingSt: false,
+    isLoadInitializedSt: false,
     themeSt: 'dark',
     isInForegroundSt: true,
     isConnectedToInternetSt: true,
@@ -28,4 +29,5 @@ export const createAppSlice = (set) => ({
     setViewSt: (v) => set({ viewSt: v }),
     setLizEnabledSt: (v) => set({ lizEnabledSt: v }),
     setIsConnectedToNokySt: (v) => set({ isConnectedToNokySt: v }),
+    setIsLoadInitializedSt: (v) => set({ isLoadInitializedSt: v }),
 });

@@ -208,13 +208,16 @@ class Utils {
   }
   decodeYoutubeTitle(title) {
     if (!title) return "";
+    if (typeof document !== 'undefined') {
+      const txt = document.createElement("textarea");
+      txt.innerHTML = title;
+      return txt.value;
+    }
 
+    // Fallback for non-DOM environments
     return title
-      // 1. Decode Decimal Entities (like &#39; -> ')
       .replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec))
-      // 2. Decode Hex Entities (like &#x27; -> ')
       .replace(/&#x([0-9A-Fa-f]+);/g, (match, hex) => String.fromCharCode(parseInt(hex, 16)))
-      // 3. Decode Common Named Entities
       .replace(/&quot;/g, '"')
       .replace(/&amp;/g, '&')
       .replace(/&lt;/g, '<')

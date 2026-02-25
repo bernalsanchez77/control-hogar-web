@@ -6,8 +6,12 @@ function Dev() {
   const {
     sendEnabledSt,
     wifiNameSt,
+    networkTypeSt,
+    leaderSt,
     onEnableSend,
-    onWifiChange
+    onWifiChange,
+    onNetworkChange,
+    onLeaderChange
   } = useDev();
 
   return (
@@ -16,9 +20,17 @@ function Dev() {
         <div className='dev-element dev-element--send'>
           <button
             onContextMenu={(e) => e.preventDefault()}
-            className={`dev-button ${sendEnabledSt ? "dev-button--on" : "dev-button-off"}`}
+            className={`dev-button`}
             onClick={onEnableSend}>
-            Enable Changes
+            Send: {sendEnabledSt ? 'On' : 'Off'}
+          </button>
+        </div>
+        <div className='dev-element dev-element--leader'>
+          <button
+            onContextMenu={(e) => e.preventDefault()}
+            className={`dev-button`}
+            onClick={onLeaderChange}>
+            Leader: {leaderSt}
           </button>
         </div>
         <div className='dev-element dev-element--wifi'>
@@ -27,6 +39,14 @@ function Dev() {
             className={`dev-button`}
             onClick={onWifiChange}>
             Wifi: {wifiNameSt}
+          </button>
+        </div>
+        <div className='dev-element dev-element--network'>
+          <button
+            onContextMenu={(e) => e.preventDefault()}
+            className={`dev-button`}
+            onClick={onNetworkChange}>
+            Network: {networkTypeSt}
           </button>
         </div>
       </div>

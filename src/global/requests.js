@@ -86,12 +86,22 @@ class Requests {
   }
 
   async updateTable(params) {
-    params.date = params.date || new Date().toISOString();
+    if (params.date === undefined) {
+      params.date = new Date().toISOString();
+    }
+    if (params.date === null) {
+      delete params.date;
+    }
     return this._genericRequest(ENDPOINTS.UPDATE_TABLE, params, 'patch', 'json');
   }
 
   async upsertTable(params) {
-    params.date = params.date || new Date().toISOString();
+    if (params.date === undefined) {
+      params.date = new Date().toISOString();
+    }
+    if (params.date === null) {
+      delete params.date;
+    }
     return this._genericRequest(ENDPOINTS.UPSERT_TABLE, params, 'patch', 'json');
   }
 

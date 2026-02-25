@@ -34,12 +34,13 @@ export function useMain() {
 
     // 5. Callbacks / Functions
     const init = useCallback(async (isApp) => {
+        console.log('init main');
         const userName = localStorage.getItem('user-name');
         const userDevice = localStorage.getItem('user-device');
         if (isApp) {
             await CordovaPlugins.getPermissions();
-            await CordovaPlugins.startWifiNameListener(connection.onWifiNameChange);
-            await CordovaPlugins.startNetworkTypeListener(connection.onNetworkTypeChange);
+            await CordovaPlugins.startWifiNameListener((wifiName) => connection.onWifiNameChange(wifiName));
+            await CordovaPlugins.startNetworkTypeListener((netType) => connection.onNetworkTypeChange(netType));
         }
 
         if (document.readyState === 'complete') {

@@ -113,10 +113,10 @@ class ViewRouter {
             // supabaseChannels.unsubscribeFromSupabaseChannel('rokuApps');
             if (app === 'youtube') {
               // app is Youtube
-              // if (!youtubeChannelsLiz?.length) {
-              //   const channels = await requests.getTable('youtubeChannelsLiz');
+              // if (!youtubeChannels?.length) {
+              //   const channels = await requests.getTable('youtubeChannels');
               //   if (channels) {
-              //     setters.setYoutubeChannelsLiz(channels.data);
+              //     setters.setYoutubeChannels(channels.data);
               //   }
               // }
               store.getState().setRokuSearchModeSt('app');
@@ -180,6 +180,8 @@ class ViewRouter {
         } else if (currentView.roku.apps.youtube.mode === 'edit') {
           if (currentView.roku.apps.youtube.channel === '') {
             newView.roku.apps.youtube.mode = 'search';
+          } else if (currentView.roku.apps.youtube.channel === 'queue') {
+            newView.roku.apps.youtube.mode = 'queue';
           } else {
             newView.roku.apps.youtube.mode = 'channel';
           }
@@ -269,9 +271,9 @@ class ViewRouter {
     });
   }
 
-  async navigateToYoutubeEdit() {
+  async navigateToYoutubeEdit(channelId) {
     await this.applyViewUpdate((view) => {
-      this._setYoutubeMode(view, 'edit');
+      this._setYoutubeMode(view, 'edit', channelId);
     });
   }
 
