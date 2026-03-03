@@ -1,12 +1,8 @@
 import { useState, useCallback, useRef } from 'react';
 import { store } from '../../store/store';
-import utils from '../../global/utils';
-import requests from '../../global/requests';
 import connection from '../../global/connection';
 import CordovaPlugins from '../../global/cordova-plugins';
 import { useAppLifecycle } from '../../hooks/useAppLifecycle';
-
-const user = utils.getUser(`${window.screen.width}x${window.screen.height}`);
 
 export function useMain() {
     // 1. Store / Global State
@@ -17,6 +13,7 @@ export function useMain() {
     const setUserNameSt = store(v => v.setUserNameSt);
     const setUserDeviceSt = store(v => v.setUserDeviceSt);
     const setScreenSelectedSt = store(v => v.setScreenSelectedSt);
+    const setSendEnabledSt = store(v => v.setSendEnabledSt);
     const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
     const wifiNameSt = store(v => v.wifiNameSt);
     const setIsPcSt = store(v => v.setIsPcSt);
@@ -34,7 +31,6 @@ export function useMain() {
 
     // 5. Callbacks / Functions
     const init = useCallback(async (isApp) => {
-        console.log('init main');
         const userName = localStorage.getItem('user-name');
         const userDevice = localStorage.getItem('user-device');
         if (isApp) {
@@ -61,17 +57,18 @@ export function useMain() {
         setUserNameSt(userName);
         setUserDeviceSt(userDevice);
         setLizEnabledSt(localStorage.getItem('lizEnabled') === 'true' ? true : false);
+        setSendEnabledSt((localStorage.getItem('send-enabled') === 'true' || localStorage.getItem('user-type') !== 'dev') ? true : false);
 
         if (store.getState().isConnectedToInternetSt) {
-            requests.sendLogs('entro', user);
-            requests.updateTable({ id: userName, table: 'users', state: 'foreground' });
+            //requests.sendLogs('entro', user);
+            // requests.updateTable({ id: userName, table: 'users', state: 'foreground' });
         } else {
             connection.onNoInternet();
         }
         setTimeout(() => {
             setIsReadySt(true);
         }, 0);
-    }, [setLizEnabledSt, setUserNameSt, setUserDeviceSt, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt]);
+    }, [setSendEnabledSt, setLizEnabledSt, setUserNameSt, setUserDeviceSt, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt]);
 
     // 6. Initialisation logic (ran once during first render pass)
     if (!initializedRef.current) {

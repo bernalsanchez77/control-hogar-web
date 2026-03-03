@@ -11,7 +11,7 @@ export const CONTENT_TYPES = {
 
 export const ROKU_CONFIG = {
     IP: 'http://192.168.86.28:8060/',
-    IP_PC: '/roku',
+    IP_PC: '/roku/',
     TIMEOUT: 2000,
     POST_TIMEOUT: 1000,
 };

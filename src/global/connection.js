@@ -160,9 +160,9 @@ class Connection {
     const isConnectedToInternet = await this.getIsConnectedToInternet();
     const wifiName = isAppSt ? await CordovaPlugins.getWifiName() : '';
     const networkType = isAppSt ? await CordovaPlugins.getNetworkType() : '';
-    store.getState().setWifiNameSt(isPcSt ? 'Noky' : wifiName);
-    store.getState().setNetworkTypeSt(isPcSt ? 'wifi' : networkType);
-    store.getState().setIsConnectedToNokySt(isPcSt ? true : wifiName === 'Noky' && networkType === 'wifi');
+    store.getState().setWifiNameSt(isPcSt ? localStorage.getItem('wifi-name') : wifiName);
+    store.getState().setNetworkTypeSt(isPcSt ? localStorage.getItem('network-type') : networkType);
+    store.getState().setIsConnectedToNokySt(isPcSt ? localStorage.getItem('wifi-name') === 'Noky' && localStorage.getItem('network-type') === 'wifi' : wifiName === 'Noky' && networkType === 'wifi');
     store.getState().setIsConnectedToInternetSt(isConnectedToInternet);
   }
 }

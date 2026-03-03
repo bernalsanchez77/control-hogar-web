@@ -52,7 +52,7 @@ class Youtube {
       const youtubeAppId = store.getState().rokuAppsSt.find(app => app.id === 'youtube').rokuId;
       if (rokuAppsSelectedId !== youtubeAppId) {
         requests.updateSelections({ table: 'rokuApps', id: youtubeAppId });
-        delay = 5000;
+        delay = 10000;
       }
       const existingVideo = store.getState().youtubeVideosSt.find(v => v.id === video.id);
       if (existingVideo) {
@@ -60,7 +60,7 @@ class Youtube {
           requests.updateSelections({ table: 'youtubeVideos', id: '' });
           setTimeout(() => {
             requests.updateSelections({ table: 'youtubeVideos', id: video.id });
-          }, 1000);
+          }, 2000);
         }, delay);
       } else {
         requests.upsertTable({ id: video.id, table: 'youtubeVideos', title: utils.decodeYoutubeTitle(video.title), duration: video.duration, channelId: 'zz-channel' });
@@ -68,7 +68,7 @@ class Youtube {
           requests.updateSelections({ table: 'youtubeVideos', id: '' });
           setTimeout(() => {
             requests.updateSelections({ table: 'youtubeVideos', id: video.id });
-          }, 1000);
+          }, 2000);
         }, delay);
       }
     }

@@ -159,7 +159,7 @@ class Requests {
           (error) => reject(error)
         );
       } else {
-        axios.get(`${ROKU_CONFIG.IP_PC}/query/${param}`)
+        axios.get(`${ROKU_CONFIG.IP_PC}query/${param}`)
           .then(resolve)
           .catch(reject);
       }

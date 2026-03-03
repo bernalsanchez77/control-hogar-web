@@ -115,7 +115,6 @@ export function useLoad() {
     }, [screenSelectedSt]);
 
     const load = useCallback(async (firstLoad = false) => {
-        console.log('load');
         if (firstLoad) {
             setIsLoadingSt(true);
         }
@@ -142,6 +141,9 @@ export function useLoad() {
             await setData('youtubeChannels');
             await setData('youtubeChannelsImages');
             await setData('cableChannels');
+            await setData('userDevices', true, (change) => {
+                Tables.onUserDevicesTableChange(change);
+            });
             await setData('youtubeVideos', true, (change) => {
                 Tables.onYoutubeVideosTableChange(change);
             });
@@ -161,7 +163,6 @@ export function useLoad() {
     };
 
     const init = useCallback(async () => {
-        console.log('init load');
         await load(true);
         // if (wifiNameSt === 'Noky') {
         //     Roku.setIsConnectedToNokyWifi(true);
@@ -192,24 +193,14 @@ export function useLoad() {
                 } else {
                     if (newState.isConnectedToNokySt !== oldState.isConnectedToNokySt) {
                         console.log('resubscribing to peers channel from useEffect after isConnectedToNokySt change');
-                        supabasePeers.peersChannel.track({
-                            name: userNameSt + '-' + userDeviceSt,
-                            date: new Date().toISOString(),
-                            isConnectedToNoky: newState.isConnectedToNokySt,
-                            isInForeground: newState.isInForegroundSt,
-                        });
+                        await supabasePeers.trackPeers(new Date().toISOString(), newState.isConnectedToNokySt, newState.isInForegroundSt);
                         if (newState.isConnectedToNokySt) {
                             await load();
                         }
                     }
                     if (newState.isInForegroundSt !== oldState.isInForegroundSt) {
                         console.log('resubscribing to peers channel from useEffect after isInForegroundSt change');
-                        supabasePeers.peersChannel.track({
-                            name: userNameSt + '-' + userDeviceSt,
-                            date: store.getState().peersSt.find(el => el.name === userNameSt + '-' + userDeviceSt)?.date,
-                            isConnectedToNoky: newState.isConnectedToNokySt,
-                            isInForeground: newState.isInForegroundSt,
-                        });
+                        await supabasePeers.trackPeers(store.getState().peersSt.find(el => el.name === userNameSt + '-' + userDeviceSt)?.date, newState.isConnectedToNokySt, newState.isInForegroundSt);
                         if (newState.isInForegroundSt) {
                             await load();
                         }

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { store } from "../../../../../../../store/store";
 import utils from '../../../../../../../global/utils';
 import youtube from '../../../../../../../global/youtube';
@@ -13,11 +13,16 @@ export function useSearch(setVideoToSave) {
     const leaderSt = useLeader();
     const youtubeVideosSelectedId = useYoutubeVideoSelectedId();
 
+    // 2. States
+    const [animatingVideoId, setAnimatingVideoId] = useState(null);
+
     // 2. Callbacks / Functions
     const handleShortPress = async (e, type, video) => {
         if (type === 'video') {
             if (leaderSt) {
                 utils.triggerVibrate();
+                setAnimatingVideoId(video.id);
+                // setTimeout(() => setAnimatingVideoId(null), 5000);
                 await youtube.onVideoShortClick(video);
             }
         }
@@ -50,10 +55,18 @@ export function useSearch(setVideoToSave) {
         }));
     }, [youtubeSearchVideosSt]);
 
+    // 2. Effects
+    useEffect(() => {
+        if (youtubeVideosSelectedId === animatingVideoId) {
+            setAnimatingVideoId(null);
+        }
+    }, [youtubeVideosSelectedId, animatingVideoId]);
+
     return {
         youtubeSortedVideos,
         youtubeVideosSelectedId,
         youtubeVideosSt,
+        animatingVideoId,
         getQueueConsecutiveNumber,
         onTouchStart,
         onTouchMove,

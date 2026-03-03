@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useState, useEffect } from 'react';
 import { store } from "../../../../../../../store/store";
 import utils from '../../../../../../../global/utils';
 import youtube from '../../../../../../../global/youtube';
@@ -12,14 +12,18 @@ export function useChannel(setVideoToSave) {
     const leaderSt = useLeader();
     const youtubeVideosSelectedId = useYoutubeVideoSelectedId();
 
-    // 2. Refs
+    // 2. States
+    const [animatingVideoId, setAnimatingVideoId] = useState(null);
+
+    // 3. Refs
     const channelSelected = useRef(localStorage.getItem('channelSelected') || '');
 
-    // 3. Callbacks / Functions
+    // 4. Callbacks / Functions
     const handleShortPress = async (e, type, video) => {
         if (type === 'video') {
             if (leaderSt) {
                 utils.triggerVibrate();
+                setAnimatingVideoId(video.id);
                 await youtube.onVideoShortClick(video);
             }
         }
@@ -41,19 +45,28 @@ export function useChannel(setVideoToSave) {
         return youtube.getQueueConsecutiveNumber(video);
     };
 
-    // 4. Memos
+    // 5. Memos
+    // 5. Memos
     const youtubeSortedVideos = useMemo(() => {
-        let videos = youtubeVideosSt.filter(video => video.channelId === channelSelected.current);
+        let videos = youtubeVideosSt.filter(video => video && video.channelId === channelSelected.current);
         const decodedVideos = videos.map(video => ({
             ...video,
             title: utils.decodeYoutubeTitle(video.title)
         }));
-        return Object.values(decodedVideos).sort((a, b) => new Date(a.date) - new Date(b.date));
+        return Object.values(decodedVideos).sort((a, b) => new Date(a?.date || 0) - new Date(b?.date || 0));
     }, [youtubeVideosSt]);
+
+    // 2. Effects
+    useEffect(() => {
+        if (youtubeVideosSelectedId === animatingVideoId) {
+            setAnimatingVideoId(null);
+        }
+    }, [youtubeVideosSelectedId, animatingVideoId]);
 
     return {
         youtubeSortedVideos,
         youtubeVideosSelectedId,
+        animatingVideoId,
         getQueueConsecutiveNumber,
         onTouchStart,
         onTouchMove,

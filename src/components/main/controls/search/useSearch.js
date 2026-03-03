@@ -85,7 +85,9 @@ export function useSearch() {
     const onKeyDown = useCallback((e) => {
         if (rokuSearchModeSt === 'roku') {
             if (e.key === "Backspace") {
-                requests.fetchRoku({ key: 'keypress', value: 'Backspace' });
+                const enterNumber = parseInt(store.getState().selectionsSt.find(el => el.table === 'backspace')?.id);
+                const newEnterNumber = enterNumber + 1;
+                requests.updateSelections({ table: 'backspace', id: newEnterNumber });
             }
         }
     }, [rokuSearchModeSt]);
@@ -100,13 +102,16 @@ export function useSearch() {
                 const addedText = newValue.slice(oldValue.length);
                 for (const char of addedText) {
                     const value = char === ' ' ? 'Lit_%20' : `Lit_${encodeURIComponent(char)}`;
-                    requests.fetchRoku({ key: 'keypress', value });
+                    // requests.fetchRoku({ key: 'keypress', value });
+                    requests.updateSelections({ table: 'input', id: value });
                 }
             } else if (newValue.length < oldValue.length) {
                 // Characters were deleted
                 const numDeleted = oldValue.length - newValue.length;
                 for (let i = 0; i < numDeleted; i++) {
-                    requests.fetchRoku({ key: 'keypress', value: 'Backspace' });
+                    const enterNumber = parseInt(store.getState().selectionsSt.find(el => el.table === 'backspace')?.id);
+                    const newEnterNumber = enterNumber + 1;
+                    requests.updateSelections({ table: 'backspace', id: newEnterNumber });
                 }
             }
         }

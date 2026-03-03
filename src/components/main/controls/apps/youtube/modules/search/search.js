@@ -7,6 +7,7 @@ function Search({ setVideoToSave }) {
         youtubeSortedVideos,
         youtubeVideosSelectedId,
         youtubeVideosSt,
+        animatingVideoId,
         getQueueConsecutiveNumber,
         onTouchStart,
         onTouchMove,
@@ -24,13 +25,21 @@ function Search({ setVideoToSave }) {
                                 onTouchStart={(e) => onTouchStart(e)}
                                 onTouchMove={(e) => onTouchMove(e)}
                                 onTouchEnd={(e) => onTouchEnd(e, 'video', video)}>
-                                <img
-                                    className='controls-apps-youtube-video-img'
-                                    src={video.img}
-                                    alt="icono">
-                                </img>
-                                <div className='controls-apps-youtube-video-queue-number'>
-                                    <span>{getQueueConsecutiveNumber(video) || ''}</span>
+                                <div style={{ position: 'relative' }}>
+                                    <img
+                                        className='controls-apps-youtube-video-img'
+                                        src={video.img}
+                                        alt="icono">
+                                    </img>
+                                    {
+                                        animatingVideoId === video.id &&
+                                        <div className='controls-apps-youtube-video-animation'>
+                                            <div className='controls-apps-youtube-video-animation-bar'></div>
+                                        </div>
+                                    }
+                                    <div className='controls-apps-youtube-video-queue-number'>
+                                        <span>{getQueueConsecutiveNumber(video) || ''}</span>
+                                    </div>
                                 </div>
                             </button>
                             <p className='controls-apps-youtube-video-title'>
@@ -53,8 +62,8 @@ function Search({ setVideoToSave }) {
                                                 viewBox="0 0 16 16"
                                                 fill="none"
                                                 xmlns="http://www.w3.org/2000/svg"
-                                                height="18"
-                                                width="18">
+                                                height="17"
+                                                width="17">
                                                 {!hasCustomChannel &&
                                                     <path
                                                         fillRule="evenodd"
@@ -81,7 +90,7 @@ function Search({ setVideoToSave }) {
                     ))
                 }
             </ul>
-        </div>
+        </div >
     )
 }
 

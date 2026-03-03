@@ -6,24 +6,17 @@ import { useTouch } from '../../../../hooks/useTouch';
 import { useLeader } from '../../../../hooks/useSelectors';
 
 export function useArrows() {
-    // 1. Store / Global State
-    const wifiNameSt = store(v => v.wifiNameSt);
     const userNameSt = store(v => v.userNameSt);
     const userDeviceSt = store(v => v.userDeviceSt);
     const leaderSt = useLeader();
-    const device = 'rokuSala';
 
     // 2. Callbacks / Functions
     const onShortClick = useCallback((e, value) => {
-        const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
-        if (wifiNameSt === 'Noky') {
-            utils.triggerVibrate();
-            requests.fetchRoku({ key: 'keypress', value: rokuValue });
-        } else {
-            utils.triggerVibrate();
-            requests.sendIfttt({ device, key: 'command', value });
-        }
-    }, [wifiNameSt, device]);
+        utils.triggerVibrate();
+        const enterNumber = parseInt(store.getState().selectionsSt.find(el => el.table === value)?.id);
+        const newEnterNumber = enterNumber + 1;
+        requests.updateSelections({ table: value, id: newEnterNumber });
+    }, []);
 
     const onLongClick = useCallback(() => {
         // No long press action defined

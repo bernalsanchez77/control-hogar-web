@@ -20,7 +20,6 @@ export const handleRokuAppsChange = async (change, userName, leader) => {
             youtube.clearQueue();
         }
     }
-    store.getState().setRokuSearchModeSt('roku');
     if (store.getState().isAppSt) {
         const app = store.getState().rokuAppsSt.find(app => app.rokuId === change.id);
         if (app) {

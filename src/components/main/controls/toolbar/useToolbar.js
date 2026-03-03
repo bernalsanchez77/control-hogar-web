@@ -44,12 +44,11 @@ export function useToolbar() {
         requests.updateSelections({ table: 'playState', id: 'play' });
       }
     }
-
-    const rokuValue = typeof value === 'string' ? value.charAt(0).toUpperCase() + value.slice(1) : '';
-
     if (wifiNameSt === 'Noky') {
       if (value === 'rev' || value === 'fwd') {
-        requests.fetchRoku({ key: 'keydown', value: rokuValue });
+        const enterNumber = parseInt(store.getState().selectionsSt.find(el => el.table === value)?.id);
+        const newEnterNumber = enterNumber + 1;
+        requests.updateSelections({ table: value, id: newEnterNumber });
       }
       if (value === 'queue') {
         viewRouter.navigateToYoutubeQueue();

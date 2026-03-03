@@ -7,6 +7,7 @@ function Channel({ setVideoToSave }) {
     youtubeSortedVideos,
     youtubeVideosSelectedId,
     getQueueConsecutiveNumber,
+    animatingVideoId,
     onTouchStart,
     onTouchMove,
     onTouchEnd
@@ -23,12 +24,18 @@ function Channel({ setVideoToSave }) {
                 onTouchStart={(e) => onTouchStart(e)}
                 onTouchMove={(e) => onTouchMove(e)}
                 onTouchEnd={(e) => onTouchEnd(e, 'video', video)}>
-                <div>
+                <div style={{ position: 'relative' }}>
                   <img
                     className={`controls-apps-youtube-video-img ${video.queue > 0 ? 'controls-apps-youtube-video-img--queue' : ''}`}
                     src={video.img || 'https://img.youtube.com/vi/' + video.id + '/sddefault.jpg'}
                     alt="icono">
                   </img>
+                  {
+                    animatingVideoId === video.id &&
+                    <div className='controls-apps-youtube-video-animation'>
+                      <div className='controls-apps-youtube-video-animation-bar'></div>
+                    </div>
+                  }
                   <div className='controls-apps-youtube-video-queue-number'>
                     <span>{getQueueConsecutiveNumber(video) || ''}</span>
                   </div>
@@ -53,8 +60,8 @@ function Channel({ setVideoToSave }) {
                         viewBox="0 0 16 16"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        height="18"
-                        width="18">
+                        height="17"
+                        width="17">
                         {!hasCustomChannel &&
                           <path
                             fillRule="evenodd"

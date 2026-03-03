@@ -27,6 +27,7 @@ class SupabaseChannels {
     if (!this.youtubeChannelsCallback && tableName === 'youtubeChannels') this.youtubeChannelsCallback = callback;
     if (!this.youtubeChannelsImagesCallback && tableName === 'youtubeChannelsImages') this.youtubeChannelsImagesCallback = callback;
     if (!this.cableChannelsCallback && tableName === 'cableChannels') this.cableChannelsCallback = callback;
+    if (!this.userDevicesCallback && tableName === 'userDevices') this.userDevicesCallback = callback;
     if (!this.supabaseChannels[tableName]) {
       this.supabaseChannels[tableName] = {};
     }
@@ -140,10 +141,11 @@ class SupabaseChannels {
     await this.unsubscribeFromSupabaseChannel('youtubeChannels');
     await this.unsubscribeFromSupabaseChannel('youtubeChannelsImages');
     await this.unsubscribeFromSupabaseChannel('cableChannels');
+    await this.unsubscribeFromSupabaseChannel('userDevices');
   }
 
   async subscribeToAllSupabaseChannels() {
-    const tableNames = ['hdmiSala', 'rokuApps', 'devices', 'screens', 'youtubeVideos', 'selections', 'youtubeChannels', 'youtubeChannelsImages', 'cableChannels'];
+    const tableNames = ['hdmiSala', 'rokuApps', 'devices', 'screens', 'youtubeVideos', 'selections', 'youtubeChannels', 'youtubeChannelsImages', 'cableChannels', 'userDevices'];
     for (const tableName of tableNames) {
       await this.subscribeToSupabaseChannel(tableName, this[tableName + 'Callback'], true).then((res) => {
         if (res.success) {

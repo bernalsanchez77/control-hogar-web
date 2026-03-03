@@ -1,7 +1,6 @@
 import supabase from './supabase-client';
 import requests from '../requests';
 import { store } from '../../store/store';
-import Roku from '../roku';
 
 class PeersChannel {
   constructor() {
@@ -68,11 +67,6 @@ class PeersChannel {
           }
         }
 
-        if (currentLeaderInDb === me) {
-          const playState = await Roku.getPlayState('state');
-          requests.updateSelections({ table: 'playState', id: playState });
-        }
-
         console.log('realPeers: ', realPeers);
         store.getState().setPeersSt(realPeers);
       })
@@ -113,6 +107,17 @@ class PeersChannel {
             console.warn('Subscription error for other reason');
         }
       });
+  }
+
+  async trackPeers(date, isConnectedToNoky, isInForeground) {
+    if (this.peersChannel?.track) {
+      await this.peersChannel.track({
+        name: store.getState().userNameSt + '-' + store.getState().userDeviceSt,
+        date,
+        isConnectedToNoky,
+        isInForeground,
+      });
+    }
   }
 }
 const peersChannelInstance = new PeersChannel();

@@ -13,6 +13,7 @@ export function useAppLifecycle() {
     // 1. Store / Global State
     const setIsInForegroundSt = store(v => v.setIsInForegroundSt);
     const userNameSt = store(v => v.userNameSt);
+    const userDeviceSt = store(v => v.userDeviceSt);
     const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
     const isAppSt = store(v => v.isAppSt);
     const leaderSt = useLeader();
@@ -23,17 +24,17 @@ export function useAppLifecycle() {
         connection.updateConnection();
         setIsInForegroundSt(true);
         if (isConnectedToInternetSt && userNameSt) {
-            requests.updateTable({ id: userNameSt, table: 'users', state: 'foreground' });
+            requests.updateTable({ id: userNameSt + '-' + userDeviceSt, table: 'userDevices', isInForeground: true });
         }
-    }, [setIsInForegroundSt, userNameSt, leaderSt, isConnectedToInternetSt]);
+    }, [setIsInForegroundSt, userNameSt, leaderSt, isConnectedToInternetSt, userDeviceSt]);
 
     const onPause = useCallback(async () => {
         console.log('To Background, the leader is:', leaderSt);
         setIsInForegroundSt(false);
         if (isConnectedToInternetSt && userNameSt) {
-            requests.updateTable({ id: userNameSt, table: 'users', state: 'background' });
+            requests.updateTable({ id: userNameSt + '-' + userDeviceSt, table: 'userDevices', isInForeground: false });
         }
-    }, [isConnectedToInternetSt, setIsInForegroundSt, userNameSt, leaderSt]);
+    }, [isConnectedToInternetSt, setIsInForegroundSt, userNameSt, leaderSt, userDeviceSt]);
 
     const onVisibilityChange = useCallback(() => {
         if (document.visibilityState === 'visible') {

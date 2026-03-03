@@ -9,8 +9,6 @@ export function useLevels() {
     const screensSt = store(v => v.screensSt);
     const cableChannelsSt = store(v => v.cableChannelsSt);
     const viewSt = store(v => v.viewSt);
-    const isAppSt = store(v => v.isAppSt);
-    const wifiNameSt = store(v => v.wifiNameSt);
     const selectionsSt = store(v => v.selectionsSt);
 
     // 2. Derived Values
@@ -40,14 +38,10 @@ export function useLevels() {
 
     const onOptionsShortClick = useCallback((value) => {
         utils.triggerVibrate();
-        const device = viewSt.selected === 'roku' ? 'rokuSala' : 'cableSala';
-        const rokuValue = value.charAt(0).toUpperCase() + value.slice(1);
-        if (isAppSt && wifiNameSt === 'Noky') {
-            requests.fetchRoku({ key: 'keypress', value: rokuValue });
-        } else {
-            requests.sendIfttt({ device, key: 'command', value });
-        }
-    }, [viewSt.selected, isAppSt, wifiNameSt]);
+        const enterNumber = parseInt(store.getState().selectionsSt.find(el => el.table === value)?.id);
+        const newEnterNumber = enterNumber + 1;
+        requests.updateSelections({ table: value, id: newEnterNumber });
+    }, []);
 
     const onChannelShortClick = useCallback((value) => {
         utils.triggerVibrate();

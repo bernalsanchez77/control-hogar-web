@@ -31,7 +31,9 @@ export function useHome() {
 
     // 3. Memos
     const youtubeSortedChannels = useMemo(() => {
-        return Object.values(youtubeChannelsSt).sort((a, b) => a.order - b.order);
+        return Object.values(youtubeChannelsSt || {})
+            .filter(channel => channel && typeof channel === 'object')
+            .sort((a, b) => (a?.order || 0) - (b?.order || 0));
     }, [youtubeChannelsSt]);
 
     return {
