@@ -16,13 +16,10 @@ export function useCategory() {
     }, [selectionsSt]);
 
     // 3. Callbacks / Functions
-    const onShortClick = useCallback((e, value) => {
+    const onShortClick = (e, value) => {
         utils.triggerVibrate();
-        const device = 'channelsSala';
-        const ifttt = cableChannelsSt.find(ch => ch.id === value).ifttt;
-        requests.sendIfttt({ device: device + ifttt, key: 'selected', value: value });
         requests.updateSelections({ table: 'cableChannels', id: value });
-    }, [cableChannelsSt]);
+    };
 
     const onLongClick = useCallback(() => { }, []);
 

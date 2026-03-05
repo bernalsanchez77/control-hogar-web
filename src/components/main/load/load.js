@@ -12,7 +12,7 @@ import './load.css';
 function Load() {
     const {
         viewSt,
-        isLoadingSt,
+        isLoadingMessageShowingSt,
         userTypeSt,
         wifiNameSt,
         isConnectedToInternetSt,
@@ -24,7 +24,7 @@ function Load() {
 
     return (
         <div className='load'>
-            {viewSt && !isLoadingSt && (userTypeSt !== 'guest' || (userTypeSt === 'guest' && wifiNameSt === 'Noky')) && !supabaseTimeoutSt ?
+            {viewSt && !isLoadingMessageShowingSt && (userTypeSt !== 'guest' || (userTypeSt === 'guest' && wifiNameSt === 'Noky')) && !supabaseTimeoutSt ?
                 <div className='load-components'>
                     {/* <Notifications></Notifications> */}
                     {screensSt.length > 0 &&
@@ -42,10 +42,10 @@ function Load() {
                     }
                 </div> :
                 <div>
-                    {isLoadingSt &&
+                    {isLoadingMessageShowingSt &&
                         <div><Loading></Loading></div>
                     }
-                    {!isLoadingSt && isConnectedToInternetSt && !(wifiNameSt !== 'Noky' && userTypeSt === 'guest') && userTypeSt && supabaseTimeoutSt &&
+                    {!isLoadingMessageShowingSt && isConnectedToInternetSt && !(wifiNameSt !== 'Noky' && userTypeSt === 'guest') && userTypeSt && supabaseTimeoutSt &&
                         <div><SupabaseTimeout onSupabaseTimeoutParent={onSupabaseTimeout}></SupabaseTimeout></div>
                     }
                 </div>

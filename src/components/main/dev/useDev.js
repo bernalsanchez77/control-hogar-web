@@ -10,10 +10,9 @@ export function useDev() {
     const setSendEnabledSt = store(v => v.setSendEnabledSt);
     const wifiNameSt = store(v => v.wifiNameSt);
     const networkTypeSt = store(v => v.networkTypeSt);
-    const userNameSt = store(v => v.userNameSt);
-    const userDeviceSt = store(v => v.userDeviceSt);
     const isPcSt = store(v => v.isPcSt);
     const leaderSt = useLeader();
+    const userNameDeviceSt = store(v => v.userNameDeviceSt);
 
     // 2. Callbacks / Functions
     const onEnableSend = useCallback(() => {
@@ -63,10 +62,10 @@ export function useDev() {
     }, [networkTypeSt, isPcSt]);
 
     const onLeaderChange = useCallback(async () => {
-        if (wifiNameSt === 'Noky' && leaderSt !== userNameSt + '-' + userDeviceSt) {
+        if (wifiNameSt === 'Noky' && leaderSt !== userNameDeviceSt) {
             await supabasePeers.trackPeers(new Date().toISOString(), store.getState().isConnectedToNokySt, store.getState().isInForegroundSt);
         }
-    }, [leaderSt, userNameSt, userDeviceSt, wifiNameSt]);
+    }, [leaderSt, userNameDeviceSt, wifiNameSt]);
 
     return {
         sendEnabledSt,

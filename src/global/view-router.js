@@ -5,8 +5,9 @@ import { store } from '../store/store';
 
 class ViewRouter {
   async subscribeToSupabaseChannel(tableName, setters, onNoInternet) {
-    await supabaseChannels.subscribeToSupabaseChannel(tableName, (itemName, newItem) => {
-      setters[itemName](items => items.map(item => item.id === newItem.id ? newItem : item));
+    await supabaseChannels.subscribeToSupabaseChannel(tableName, (change) => {
+      const itemName = 'set' + change.table.charAt(0).toUpperCase() + change.table.slice(1) + 'St';
+      setters[itemName](items => items.map(item => item.id === change.new.id ? change.new : item));
     }, onNoInternet, true).then((res) => {
       if (res.success) {
         return 'subscribed';

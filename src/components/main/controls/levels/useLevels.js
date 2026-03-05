@@ -26,7 +26,7 @@ export function useLevels() {
                 utils.triggerVibrate();
                 const device = screenSelectedSt;
                 const value = screen.mute === 'on' ? 'off' : 'on';
-                requests.sendIfttt({ device, key, value });
+                // requests.sendIfttt({ device, key, value });
                 requests.updateTable({ id: device, table: 'screens', mute: value });
             }
         }

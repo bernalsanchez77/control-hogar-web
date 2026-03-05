@@ -2,15 +2,15 @@ import { store } from '../../store/store';
 import roku from '../roku';
 import requests from '../requests';
 
-export const handleArrowsChange = async (change, userName, leader) => {
+export const handleArrowsChange = async (oldItem, newItem, eventType, userName, leader) => {
     if (userName === leader) {
-        const rokuValue = change.table.charAt(0).toUpperCase() + change.table.slice(1);
+        const rokuValue = newItem.table.charAt(0).toUpperCase() + newItem.table.slice(1);
         if (store.getState().wifiNameSt === 'Noky') {
             requests.fetchRoku({ key: 'keypress', value: rokuValue });
         } else {
-            requests.sendIfttt({ device: 'rokuSala', key: 'command', value: change.table });
+            requests.sendIfttt({ device: 'rokuSala', key: 'command', value: newItem.table });
         }
-        if (change.table === 'select') {
+        if (newItem.table === 'select') {
             setTimeout(async () => {
                 const rokuPlayState = await roku.getPlayState('state');
                 if (rokuPlayState !== store.getState().selectionsSt.find(el => el.table === 'playState')?.id) {

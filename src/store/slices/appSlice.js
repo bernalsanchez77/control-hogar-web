@@ -2,7 +2,7 @@ export const createAppSlice = (set) => ({
     // --- Global states ---
     sendEnabledSt: true,
     simulatePlayStateSt: false,
-    isLoadingSt: false,
+    isLoadingMessageShowingSt: false,
     isLoadInitializedSt: false,
     themeSt: 'dark',
     isInForegroundSt: true,
@@ -13,12 +13,13 @@ export const createAppSlice = (set) => ({
     isPcSt: false,
     isAppSt: false,
     lizEnabledSt: false,
+    isLoadingSt: false,
     viewSt: { selected: '', cable: { channels: { category: [] } }, roku: { apps: { selected: '', youtube: { mode: '', channel: '' } } }, devices: { device: '' } },
 
     // --- Actions ---
     setSendEnabledSt: (v) => set({ sendEnabledSt: v }),
     setSimulatePlayStateSt: (v) => set({ simulatePlayStateSt: v }),
-    setIsLoadingSt: (v) => set({ isLoadingSt: v }),
+    setIsLoadingMessageShowingSt: (v) => set({ isLoadingMessageShowingSt: v }),
     setThemeSt: (v) => set({ themeSt: v }),
     setIsInForegroundSt: (v) => set({ isInForegroundSt: v }),
     setIsConnectedToInternetSt: (v) => set({ isConnectedToInternetSt: v }),
@@ -30,4 +31,5 @@ export const createAppSlice = (set) => ({
     setLizEnabledSt: (v) => set({ lizEnabledSt: v }),
     setIsConnectedToNokySt: (v) => set({ isConnectedToNokySt: v }),
     setIsLoadInitializedSt: (v) => set({ isLoadInitializedSt: v }),
+    setIsLoadingSt: (v) => set({ isLoadingSt: v }),
 });

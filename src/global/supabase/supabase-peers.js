@@ -25,12 +25,10 @@ class PeersChannel {
 
   subscribeToPeersChannel() {
     this.peersChannel.status = 'subscribing';
-    const userName = store.getState().userNameSt;
-    const userDevice = store.getState().userDeviceSt;
     this.peersChannel = supabase.channel('peers', {
       config: {
         presence: {
-          key: userName + '-' + userDevice, // identifying the user
+          key: store.getState().userNameDeviceSt, // identifying the user
         },
       },
     })
@@ -50,7 +48,7 @@ class PeersChannel {
         // Deterministic Leader Selection: Newest peer on "Noky" wifi handles the record
         const sortedByNewest = [...realPeers].sort((a, b) => new Date(b.date) - new Date(a.date));
         const potentialLeader = sortedByNewest.find(p => p.isConnectedToNoky);
-        const me = store.getState().userNameSt + '-' + store.getState().userDeviceSt;
+        const me = store.getState().userNameDeviceSt;
         let currentLeaderInDb = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
 
         if (potentialLeader) {
@@ -76,7 +74,7 @@ class PeersChannel {
             this.peersChannel.status = 'subscribed';
             console.log('subscribed and isConnectedToNoky:', store.getState().isConnectedToNokySt);
             await this.peersChannel.track({
-              name: store.getState().userNameSt + '-' + store.getState().userDeviceSt,
+              name: store.getState().userNameDeviceSt,
               date: new Date().toISOString(),
               isConnectedToNoky: store.getState().isConnectedToNokySt,
               isInForeground: store.getState().isInForegroundSt,
@@ -112,7 +110,7 @@ class PeersChannel {
   async trackPeers(date, isConnectedToNoky, isInForeground) {
     if (this.peersChannel?.track) {
       await this.peersChannel.track({
-        name: store.getState().userNameSt + '-' + store.getState().userDeviceSt,
+        name: store.getState().userNameDeviceSt,
         date,
         isConnectedToNoky,
         isInForeground,

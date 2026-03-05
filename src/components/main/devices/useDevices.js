@@ -60,12 +60,10 @@ export function useDevices() {
             if (device.id === 'lamparasAbajo') {
                 lamparasOff.forEach(lampara => {
                     if (lampara.state === 'on') {
-                        requests.sendIfttt({ device: lampara.id, key: 'state', value: 'off' });
                         requests.updateTable({ id: lampara.id, table: 'devices', state: 'off' });
                     }
                 });
             } else {
-                requests.sendIfttt({ device: device.id, key: 'state', value: 'off' });
                 requests.updateTable({ id: device.id, table: 'devices', state: 'off' });
             }
         }
@@ -73,12 +71,10 @@ export function useDevices() {
             if (device.id === 'lamparasAbajo') {
                 lamparasOn.forEach(lampara => {
                     if (lampara.state === 'off') {
-                        requests.sendIfttt({ device: lampara.id, key: 'state', value: 'on' });
                         requests.updateTable({ id: lampara.id, table: 'devices', state: 'on' });
                     }
                 });
             } else {
-                requests.sendIfttt({ device: device.id, key: 'state', value: 'on' });
                 requests.updateTable({ id: device.id, table: 'devices', state: 'on' });
             }
         }

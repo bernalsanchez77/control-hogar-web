@@ -12,29 +12,40 @@ import { useLeader } from './useSelectors';
 export function useAppLifecycle() {
     // 1. Store / Global State
     const setIsInForegroundSt = store(v => v.setIsInForegroundSt);
-    const userNameSt = store(v => v.userNameSt);
-    const userDeviceSt = store(v => v.userDeviceSt);
     const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
     const isAppSt = store(v => v.isAppSt);
     const leaderSt = useLeader();
+    const userNameDeviceSt = store(v => v.userNameDeviceSt);
 
     // 2. Callbacks / Functions
     const onResume = useCallback(async () => {
         console.log('To Foreground, the leader is:', leaderSt);
         connection.updateConnection();
         setIsInForegroundSt(true);
-        if (isConnectedToInternetSt && userNameSt) {
-            requests.updateTable({ id: userNameSt + '-' + userDeviceSt, table: 'userDevices', isInForeground: true });
+        if (isConnectedToInternetSt && userNameDeviceSt) {
+            requests.updateTable({
+                id: userNameDeviceSt,
+                table: 'userDevices',
+                isInForeground: true,
+                isConnectedToNoky: store.getState().isConnectedToNokySt,
+                isConnectedToInternet: store.getState().isConnectedToInternetSt
+            });
         }
-    }, [setIsInForegroundSt, userNameSt, leaderSt, isConnectedToInternetSt, userDeviceSt]);
+    }, [setIsInForegroundSt, leaderSt, isConnectedToInternetSt, userNameDeviceSt]);
 
     const onPause = useCallback(async () => {
         console.log('To Background, the leader is:', leaderSt);
         setIsInForegroundSt(false);
-        if (isConnectedToInternetSt && userNameSt) {
-            requests.updateTable({ id: userNameSt + '-' + userDeviceSt, table: 'userDevices', isInForeground: false });
+        if (isConnectedToInternetSt && userNameDeviceSt) {
+            requests.updateTable({
+                id: userNameDeviceSt,
+                table: 'userDevices',
+                isInForeground: false,
+                isConnectedToNoky: store.getState().isConnectedToNokySt,
+                isConnectedToInternet: store.getState().isConnectedToInternetSt
+            });
         }
-    }, [isConnectedToInternetSt, setIsInForegroundSt, userNameSt, leaderSt, userDeviceSt]);
+    }, [isConnectedToInternetSt, setIsInForegroundSt, leaderSt, userNameDeviceSt]);
 
     const onVisibilityChange = useCallback(() => {
         if (document.visibilityState === 'visible') {

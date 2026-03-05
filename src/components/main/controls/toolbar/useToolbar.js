@@ -13,12 +13,10 @@ export function useToolbar() {
   const wifiNameSt = store(v => v.wifiNameSt);
   const selectionsSt = store(v => v.selectionsSt);
   const viewSt = store(v => v.viewSt);
-  const userNameSt = store(v => v.userNameSt);
-  const userDeviceSt = store(v => v.userDeviceSt);
   const userTypeSt = store(v => v.userTypeSt);
+  const userNameDeviceSt = store(v => v.userNameDeviceSt);
   const lizEnabledSt = store(v => v.lizEnabledSt);
   const setLizEnabledSt = store(v => v.setLizEnabledSt);
-  const device = 'rokuSala';
 
   // 2. Derived Values (Selectors)
   const leaderSt = useLeader();
@@ -36,40 +34,27 @@ export function useToolbar() {
   const onShortClick = useCallback((e, value) => {
     utils.triggerVibrate();
 
+    // 1. Common Actions
     if (value === 'play') {
-      if (selectionsPlayState === 'play') {
-        requests.updateSelections({ table: 'playState', id: 'pause' });
-      }
-      if (selectionsPlayState === 'pause') {
-        requests.updateSelections({ table: 'playState', id: 'play' });
-      }
+      const nextId = selectionsPlayState === 'play' ? 'pause' : 'play';
+      requests.updateSelections({ table: 'playState', id: nextId });
+    } else if (value === 'rev' || value === 'fwd') {
+      const enterNumber = parseInt(store.getState().selectionsSt.find(el => el.table === value)?.id || 0);
+      requests.updateSelections({ table: value, id: enterNumber + 1 });
+    } else if (value === 'queue') {
+      viewRouter.navigateToYoutubeQueue();
+    } else if (value === 'liz') {
+      const currentLiz = localStorage.getItem('lizEnabled') === 'true';
+      const nextLiz = !currentLiz;
+      localStorage.setItem('lizEnabled', nextLiz);
+      setLizEnabledSt(nextLiz);
     }
-    if (wifiNameSt === 'Noky') {
-      if (value === 'rev' || value === 'fwd') {
-        const enterNumber = parseInt(store.getState().selectionsSt.find(el => el.table === value)?.id);
-        const newEnterNumber = enterNumber + 1;
-        requests.updateSelections({ table: value, id: newEnterNumber });
-      }
-      if (value === 'queue') {
-        viewRouter.navigateToYoutubeQueue();
-      }
-      if (value === 'liz') {
-        const currentLiz = localStorage.getItem('lizEnabled') === 'true';
-        localStorage.setItem('lizEnabled', !currentLiz);
-        setLizEnabledSt(!currentLiz);
-      }
-    } else {
-      if (value === 'queue') {
-        viewRouter.navigateToYoutubeQueue();
-      } else if (value === 'liz') {
-        const currentLiz = localStorage.getItem('lizEnabled') === 'true';
-        localStorage.setItem('lizEnabled', !currentLiz);
-        setLizEnabledSt(!currentLiz);
-      } else if (value !== 'play') {
-        requests.sendIfttt({ device, key: 'command', value });
-      }
+
+    // 2. Network Fallback (IFTTT)
+    if (wifiNameSt !== 'Noky' && !['play', 'queue', 'liz'].includes(value)) {
+      // requests.sendIfttt({ device, key: 'command', value });
     }
-  }, [selectionsPlayState, wifiNameSt, setLizEnabledSt, device]);
+  }, [selectionsPlayState, wifiNameSt, setLizEnabledSt]);
 
   const onLongClick = useCallback(() => {
     // Hidden logic for play/keyup omitted as per original file
@@ -87,7 +72,7 @@ export function useToolbar() {
         const { normalizedPercentage, end } = utils.checkVideoEnd(video, position);
         setNormalizedPercentageSt(normalizedPercentage);
 
-        if (leaderSt === userNameSt + '-' + userDeviceSt && end) {
+        if (leaderSt === userNameDeviceSt && end) {
           if (video) {
             requests.updateSelections({ table: 'youtubeVideos', id: '' });
             setTimeout(() => {
@@ -102,7 +87,7 @@ export function useToolbar() {
       }
     };
     handleVideoEnd();
-  }, [leaderSt, userNameSt, userDeviceSt, youtubeVideosSt, selectionsSt, youtubeVideosSelected]);
+  }, [leaderSt, userNameDeviceSt, youtubeVideosSt, selectionsSt, youtubeVideosSelected]);
 
   useEffect(() => {
     const performChangePlay = () => {

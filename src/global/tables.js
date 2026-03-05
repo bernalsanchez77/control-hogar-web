@@ -9,6 +9,8 @@ import { handleUserDevicesChange } from './tables/userDevicesHandler';
 import { handleLevelsChange } from './tables/levelsHandler';
 import { handleToolbarChange } from './tables/toolbarHandler';
 import { handleSearchChange } from './tables/searchHandler';
+import { handleCableChannelsChange } from './tables/cableChannelsHandler';
+import { handleDevicesChange } from './tables/devicesHandler';
 
 
 class Tables {
@@ -16,66 +18,77 @@ class Tables {
     this.userName = '';
   }
 
-  async onHdmiSalaTableChange(change) {
+  async onHdmiSalaTableChange(oldItem, newItem, eventType) {
     // Top-level hdmiSala table subscription (optional logic)
   }
 
-  async onScreensTableChange(change) {
-    await handleScreensChange(change);
+  async onScreensTableChange(oldItem, newItem, eventType) {
+    await handleScreensChange(oldItem, newItem, eventType);
   }
 
-  onYoutubeVideosTableChange(change) {
+  onYoutubeVideosTableChange(oldItem, newItem, eventType) {
     // Top-level youtubeVideos table subscription (optional logic)
   }
 
-  async onUserDevicesTableChange(change) {
+  async onDevicesTableChange(oldItem, newItem, eventType) {
     if (!this.userName) {
-      this.userName = store.getState().userNameSt + '-' + store.getState().userDeviceSt;
+      this.userName = store.getState().userNameDeviceSt;
     }
     const leader = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
-    await handleUserDevicesChange(change, this.userName, leader);
+    await handleDevicesChange(oldItem, newItem, eventType, this.userName, leader);
   }
 
-  async onSelectionsTableChange(change) {
+  async onUserDevicesTableChange(oldItem, newItem, eventType) {
     if (!this.userName) {
-      this.userName = store.getState().userNameSt + '-' + store.getState().userDeviceSt;
+      this.userName = store.getState().userNameDeviceSt;
+    }
+    const leader = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
+    await handleUserDevicesChange(oldItem, newItem, eventType, this.userName, leader);
+  }
+
+  async onSelectionsTableChange(oldItem, newItem, eventType) {
+    if (!this.userName) {
+      this.userName = store.getState().userNameDeviceSt;
     }
     const leader = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
 
-    switch (change.table) {
+    switch (newItem.table) {
       case 'youtubeVideos':
-        await handleYoutubeVideosChange(change, this.userName, leader);
+        await handleYoutubeVideosChange(oldItem, newItem, eventType, this.userName, leader);
         break;
       case 'rokuApps':
-        await handleRokuAppsChange(change, this.userName, leader);
+        await handleRokuAppsChange(oldItem, newItem, eventType, this.userName, leader);
         break;
       case 'playState':
-        await handlePlayStateChange(change, this.userName, leader);
+        await handlePlayStateChange(oldItem, newItem, eventType, this.userName, leader);
         break;
       case 'rev':
       case 'fwd':
-        await handleToolbarChange(change, this.userName, leader);
+        await handleToolbarChange(oldItem, newItem, eventType, this.userName, leader);
         break;
       case 'hdmiSala':
-        await handleHdmiSalaChange(change);
+        await handleHdmiSalaChange(oldItem, newItem, eventType);
+        break;
+      case 'cableChannels':
+        await handleCableChannelsChange(oldItem, newItem, eventType, this.userName, leader);
         break;
       case 'select':
       case 'up':
       case 'down':
       case 'left':
       case 'right':
-        await handleArrowsChange(change, this.userName, leader);
+        await handleArrowsChange(oldItem, newItem, eventType, this.userName, leader);
         break;
       case 'info':
       case 'back':
-        await handleLevelsChange(change, this.userName, leader);
+        await handleLevelsChange(oldItem, newItem, eventType, this.userName, leader);
         break;
       case 'backspace':
       case 'input':
-        await handleSearchChange(change, this.userName, leader);
+        await handleSearchChange(oldItem, newItem, eventType, this.userName, leader);
         break;
       case 'leader':
-        console.log('leader changed:', change.id);
+        console.log('leader changed:', newItem.id);
         break;
       default:
         // Other tables in selections if needed

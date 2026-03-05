@@ -40,7 +40,7 @@ class SupabaseChannels {
 
     channel.on('postgres_changes', { event: '*', schema: 'public', table: tableName }, async (change) => {
       if (callback) {
-        callback('set' + change.table.charAt(0).toUpperCase() + change.table.slice(1) + 'St', change.new);
+        callback(change);
       }
     });
 
