@@ -10,13 +10,13 @@ export function useQueue(setVideoToSave) {
     // 1. Store / Global State
     const youtubeVideosSt = store(v => v.youtubeVideosSt);
 
-    const leaderSt = useLeader();
+    const leader = useLeader();
     const youtubeVideosSelectedId = useYoutubeVideoSelectedId();
 
     // 2. Callbacks / Functions
     const handleShortPress = async (e, type, video) => {
         if (type === 'video') {
-            if (leaderSt) {
+            if (leader) {
                 utils.triggerVibrate();
                 await youtube.onVideoShortClick(video);
             }

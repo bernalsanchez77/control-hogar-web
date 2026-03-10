@@ -7,7 +7,7 @@ function Dev() {
     sendEnabledSt,
     wifiNameSt,
     networkTypeSt,
-    leaderSt,
+    leader,
     onEnableSend,
     onWifiChange,
     onNetworkChange,
@@ -30,7 +30,7 @@ function Dev() {
             onContextMenu={(e) => e.preventDefault()}
             className={`dev-button`}
             onClick={onLeaderChange}>
-            Leader: {leaderSt}
+            Leader: {leader}
           </button>
         </div>
         <div className='dev-element dev-element--wifi'>

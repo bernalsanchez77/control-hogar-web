@@ -3,6 +3,8 @@ import { store } from '../../store/store';
 import connection from '../../global/connection';
 import CordovaPlugins from '../../global/cordova-plugins';
 import { useAppLifecycle } from '../../hooks/useAppLifecycle';
+import requests from '../../global/requests';
+import timeSync from '../../global/timeSync';
 
 export function useMain() {
     // 1. Store / Global State
@@ -31,6 +33,7 @@ export function useMain() {
 
     // 5. Callbacks / Functions
     const init = useCallback(async (isApp) => {
+        await timeSync.init();
         const userName = localStorage.getItem('user-name');
         const userDevice = localStorage.getItem('user-device');
         if (isApp) {
@@ -50,7 +53,6 @@ export function useMain() {
 
         setIsAppSt(isApp);
         setIsPcSt(window.location.hostname === 'localhost' && !isApp);
-        await connection.updateConnection();
         setThemeSt(localStorage.getItem('theme'));
         setScreenSelectedSt(screenId);
         setUserTypeSt(localStorage.getItem('user-type'));
@@ -58,6 +60,16 @@ export function useMain() {
         setUserDeviceSt(userDevice);
         setLizEnabledSt(localStorage.getItem('lizEnabled') === 'true' ? true : false);
         setSendEnabledSt((localStorage.getItem('send-enabled') === 'true' || localStorage.getItem('user-type') !== 'dev') ? true : false);
+        await connection.updateConnection();
+        const date = timeSync.getSyncedIsoString();
+        requests.updateTable({
+            id: userName + '-' + userDevice,
+            table: 'userDevices',
+            date: date,
+            isInForeground: true,
+            isConnectedToNoky: store.getState().isConnectedToNokySt,
+            isConnectedToInternet: store.getState().isConnectedToInternetSt
+        });
 
         if (store.getState().isConnectedToInternetSt) {
             //requests.sendLogs('entro', user);

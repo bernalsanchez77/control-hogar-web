@@ -1,10 +1,12 @@
 import supabase from './supabase-client';
 import requests from '../requests';
 import { store } from '../../store/store';
+import timeSync from '../timeSync';
 
 class PeersChannel {
   constructor() {
     this.peersChannel = {};
+    this.reconnectTimeout = null;
   }
 
   getPeers() {
@@ -23,8 +25,13 @@ class PeersChannel {
     return Array.from(uniquePeersMap.values());
   }
 
+  killPeersChannel() {
+    supabase.removeChannel(this.peersChannel);
+    this.peersChannel = {};
+  }
+
   subscribeToPeersChannel() {
-    this.peersChannel.status = 'subscribing';
+    if (this.peersChannel?.state === 'joining' || this.peersChannel?.state === 'joined') return;
     this.peersChannel = supabase.channel('peers', {
       config: {
         presence: {
@@ -59,9 +66,9 @@ class PeersChannel {
         } else if (realPeers.length > 0) {
           // No one on Noky. Oldest overall peer clears the record.
           const oldestOverall = [...realPeers].sort((a, b) => new Date(a.date) - new Date(b.date))[0];
-          if (oldestOverall.name === me && currentLeaderInDb !== '') {
-            requests.updateSelections({ table: 'leader', id: '' });
-            currentLeaderInDb = '';
+          if (oldestOverall.name === me && currentLeaderInDb !== me) {
+            requests.updateSelections({ table: 'leader', id: me });
+            currentLeaderInDb = me;
           }
         }
 
@@ -71,49 +78,48 @@ class PeersChannel {
       .subscribe(async (status) => {
         switch (status) {
           case 'SUBSCRIBED':
-            this.peersChannel.status = 'subscribed';
-            console.log('subscribed and isConnectedToNoky:', store.getState().isConnectedToNokySt);
+            console.log('Peers channel SUBSCRIBED.');
             await this.peersChannel.track({
               name: store.getState().userNameDeviceSt,
-              date: new Date().toISOString(),
+              date: timeSync.getSyncedIsoString(),
               isConnectedToNoky: store.getState().isConnectedToNokySt,
               isInForeground: store.getState().isInForegroundSt,
+              isLeader: store.getState().selectionsSt.find(el => el.table === 'leader')?.id === store.getState().userNameDeviceSt,
+              isConnectedToInternet: store.getState().isConnectedToInternetSt,
             });
             break;
           case 'CHANNEL_ERROR':
-            console.log('peers error');
-            if (this.peersChannel.status !== 'unsubscribed') {
-              this.peersChannel.status = 'unsubscribed';
-              supabase.removeChannel(this.peersChannel);
-            }
-            break;
           case 'TIMED_OUT':
-            console.log('peers time out');
-            if (this.peersChannel.status !== 'unsubscribed') {
-              this.peersChannel.status = 'unsubscribed';
-              supabase.removeChannel(this.peersChannel);
-            }
-            break;
           case 'CLOSED':
-            // console.log('peers closed');
-            if (this.peersChannel.status !== 'unsubscribed') {
-              this.peersChannel.status = 'unsubscribed';
-              supabase.removeChannel(this.peersChannel);
-            }
+            // if (this.reconnectTimeout) return;
+            console.log(`Peers channel ${status}.`);
+
+            // supabase.removeChannel(this.peersChannel);
+            // this.peersChannel = {};
+
+            // if (store.getState().isConnectedToInternetSt) {
+            //   console.log('Attempting reconnect in 3s...');
+            //   this.reconnectTimeout = setTimeout(() => {
+            //     this.reconnectTimeout = null;
+            //     this.subscribeToPeersChannel();
+            //   }, 3000);
+            // }
             break;
           default:
-            console.warn('Subscription error for other reason');
+            console.warn('Subscription status change:', status);
         }
       });
   }
 
-  async trackPeers(date, isConnectedToNoky, isInForeground) {
+  async trackPeers(date) {
     if (this.peersChannel?.track) {
       await this.peersChannel.track({
         name: store.getState().userNameDeviceSt,
         date,
-        isConnectedToNoky,
-        isInForeground,
+        isConnectedToNoky: store.getState().isConnectedToNokySt,
+        isInForeground: store.getState().isInForegroundSt,
+        isLeader: store.getState().selectionsSt.find(el => el.table === 'leader')?.id === store.getState().userNameDeviceSt,
+        isConnectedToInternet: store.getState().isConnectedToInternetSt,
       });
     }
   }

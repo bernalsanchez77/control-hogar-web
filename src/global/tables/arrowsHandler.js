@@ -2,8 +2,8 @@ import { store } from '../../store/store';
 import roku from '../roku';
 import requests from '../requests';
 
-export const handleArrowsChange = async (oldItem, newItem, eventType, userName, leader) => {
-    if (userName === leader) {
+export const handleArrowsChange = async (oldItem, newItem, eventType, userNameDevice, leader) => {
+    if (userNameDevice === leader) {
         const rokuValue = newItem.table.charAt(0).toUpperCase() + newItem.table.slice(1);
         if (store.getState().wifiNameSt === 'Noky') {
             requests.fetchRoku({ key: 'keypress', value: rokuValue });

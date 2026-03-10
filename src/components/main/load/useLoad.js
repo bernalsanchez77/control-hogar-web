@@ -25,18 +25,16 @@ export function useLoad() {
     const setTableSt = store((v) => v.setTableSt);
     const screensSt = store(v => v.screensSt);
     const devicesSt = store(v => v.devicesSt);
-    const selectionsSt = store(v => v.selectionsSt);
     const viewSt = store(v => v.viewSt);
     const isAppSt = store(v => v.isAppSt);
     const screenSelectedSt = store(v => v.screenSelectedSt);
     const isLoadInitializedSt = store(v => v.isLoadInitializedSt);
     const setIsLoadInitializedSt = store(v => v.setIsLoadInitializedSt);
 
-    const leaderSt = useLeader();
+    const leader = useLeader();
 
     // 2. Refs
     const isReadyRef = useRef(false);
-    const selectionsRef = useRef(null);
 
     // 3. Callbacks / Functions
     const subscribeToSupabaseChannel = useCallback(async (tableName, callback) => {
@@ -115,7 +113,7 @@ export function useLoad() {
     }, [screenSelectedSt]);
 
     const load = useCallback(async (firstLoad = false) => {
-        if (store.getState().isLoadingSt) return;
+        // if (store.getState().isLoadingSt) return;
 
         console.log('load');
         store.getState().setIsLoadingSt(true);
@@ -159,9 +157,18 @@ export function useLoad() {
         if (wifiNameSt === 'Noky') {
             Roku.setRoku();
         }
+        if (supabasePeers.peersChannel?.state !== 'joined') {
+            await supabasePeers.subscribeToPeersChannel();
+        } else {
+            const presence = supabasePeers.peersChannel.presenceState();
+            if (!presence[userNameDeviceSt]) {
+                console.log("Channel is open but I'm missing from Presence. Re-tracking...");
+                await supabasePeers.trackPeers(store.getState().userDevicesSt.find(el => el.id === userNameDeviceSt)?.date);
+            }
+        }
         setIsLoadingMessageShowingSt(false);
         store.getState().setIsLoadingSt(false);
-    }, [setData, setIsLoadingMessageShowingSt, wifiNameSt, isAppSt, updateNotificationBar]);
+    }, [setData, setIsLoadingMessageShowingSt, wifiNameSt, isAppSt, updateNotificationBar, userNameDeviceSt]);
 
     const onSupabaseTimeout = async () => {
         await load();
@@ -169,10 +176,9 @@ export function useLoad() {
 
     const init = useCallback(async () => {
         await load(true);
-        await supabasePeers.subscribeToPeersChannel();
         const youtubeVideosSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
         if (youtubeVideosSelectedId) {
-            if (userNameDeviceSt === leaderSt && !Roku.playStateInterval) {
+            if (userNameDeviceSt === leader && !Roku.playStateInterval) {
                 const youtubeVideosSelected = store.getState().youtubeVideosSt.find(el => el.id === youtubeVideosSelectedId) || {};
                 if (youtubeVideosSelected) {
                     Roku.startPlayStateListener(youtubeVideosSelected);
@@ -183,38 +189,15 @@ export function useLoad() {
         if (localStorage.getItem('user-type') !== 'guest' && localStorage.getItem('user-type') !== 'owner') {
             eruda.init();
         }
-    }, [load, userNameDeviceSt, leaderSt]);
+    }, [load, userNameDeviceSt, leader]);
 
     // 4. Effects
     useEffect(() => {
         const unsub = store.subscribe(
             async (newState, oldState) => {
                 if (newState.isLoadingSt && !oldState.isLoadingSt) {
+                    console.log('isLoadingSt changed to true, running load');
                     await load();
-                }
-                if (supabasePeers.peersChannel.status === 'unsubscribed') {
-                    console.log('resubscribing to peers channel from useEffect');
-                    supabasePeers.subscribeToPeersChannel();
-                } else {
-                    if (newState.leaderSt !== oldState.leaderSt) {
-                        if (newState.leaderSt === userNameDeviceSt) {
-                            if (!Roku.playStateInterval) {
-                                const youtubeVideosSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
-                                if (youtubeVideosSelectedId) {
-                                    const youtubeVideosSelected = store.getState().youtubeVideosSt.find(el => el.id === youtubeVideosSelectedId);
-                                    Roku.startPlayStateListener(youtubeVideosSelected);
-                                }
-                            }
-                            const playState = await Roku.getPlayState('state');
-                            if (playState && playState !== selectionsRef.current?.find(el => el.table === 'playState')?.id) {
-                                requests.updateSelections({ table: 'playState', id: playState });
-                            }
-                        } else {
-                            if (Roku.playStateInterval) {
-                                Roku.stopPlayStateListener();
-                            }
-                        }
-                    }
                 }
             }
         );
@@ -238,10 +221,6 @@ export function useLoad() {
             window.removeEventListener("popstate", events.onNavigationBack);
         };
     }, [isAppSt]);
-
-    useEffect(() => {
-        selectionsRef.current = selectionsSt;
-    }, [selectionsSt]);
 
     // 5. Initialization
     if (!isLoadInitializedSt) {

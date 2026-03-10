@@ -13,7 +13,6 @@ class Events {
         if (screen.state === 'on') {
             let newVol = 0;
             newVol = screen.volume + 1;
-            requests.sendIfttt({ device: screen.id, key: 'volume', value: 'up' + 1 });
             requests.updateTable({ id: screen.id, table: 'screens', volume: newVol });
         }
     }
@@ -24,15 +23,13 @@ class Events {
             if (screen.volume !== 0) {
                 if (screen.volume - 1 >= 0) {
                     newVol = screen.volume - 1;
-                    requests.sendIfttt({ device: screen.id, key: 'volume', value: 'down' + 1 });
                     requests.updateTable({ id: screen.id, table: 'screens', volume: newVol });
                 } else {
-                    requests.sendIfttt({ device: screen.id, key: 'volume', value: 'down' + 1 });
                     requests.updateTable({ id: screen.id, table: 'screens', volume: '0' });
                 }
-            } else {
-                requests.sendIfttt({ device: screen.id, key: 'volume', value: 'down' + 1 });
             }
+        } else {
+            requests.updateTable({ id: screen.id, table: 'screens', volume: '0', date: new Date().toISOString() });
         }
     }
 }

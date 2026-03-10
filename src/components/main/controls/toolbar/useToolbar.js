@@ -19,7 +19,7 @@ export function useToolbar() {
   const setLizEnabledSt = store(v => v.setLizEnabledSt);
 
   // 2. Derived Values (Selectors)
-  const leaderSt = useLeader();
+  const leader = useLeader();
   const selectionsPlayState = usePlayState();
   const youtubeVideosSelectedId = useYoutubeVideoSelectedId();
 
@@ -49,12 +49,7 @@ export function useToolbar() {
       localStorage.setItem('lizEnabled', nextLiz);
       setLizEnabledSt(nextLiz);
     }
-
-    // 2. Network Fallback (IFTTT)
-    if (wifiNameSt !== 'Noky' && !['play', 'queue', 'liz'].includes(value)) {
-      // requests.sendIfttt({ device, key: 'command', value });
-    }
-  }, [selectionsPlayState, wifiNameSt, setLizEnabledSt]);
+  }, [selectionsPlayState, setLizEnabledSt]);
 
   const onLongClick = useCallback(() => {
     // Hidden logic for play/keyup omitted as per original file
@@ -72,7 +67,7 @@ export function useToolbar() {
         const { normalizedPercentage, end } = utils.checkVideoEnd(video, position);
         setNormalizedPercentageSt(normalizedPercentage);
 
-        if (leaderSt === userNameDeviceSt && end) {
+        if (leader === userNameDeviceSt && end) {
           if (video) {
             requests.updateSelections({ table: 'youtubeVideos', id: '' });
             setTimeout(() => {
@@ -87,7 +82,7 @@ export function useToolbar() {
       }
     };
     handleVideoEnd();
-  }, [leaderSt, userNameDeviceSt, youtubeVideosSt, selectionsSt, youtubeVideosSelected]);
+  }, [leader, userNameDeviceSt, youtubeVideosSt, selectionsSt, youtubeVideosSelected]);
 
   useEffect(() => {
     const performChangePlay = () => {

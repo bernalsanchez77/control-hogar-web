@@ -3,6 +3,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { store } from "../store/store";
 import connection from './connection';
 import { API_CONFIG, CONTENT_TYPES, ROKU_CONFIG, ENDPOINTS } from './constants';
+import timeSync from './timeSync';
 
 const xmlParser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '' });
 
@@ -87,7 +88,7 @@ class Requests {
 
   async updateTable(params) {
     if (params.date === undefined) {
-      params.date = new Date().toISOString();
+      params.date = timeSync.getSyncedIsoString();
     }
     if (params.date === null) {
       delete params.date;
@@ -97,7 +98,7 @@ class Requests {
 
   async upsertTable(params) {
     if (params.date === undefined) {
-      params.date = new Date().toISOString();
+      params.date = timeSync.getSyncedIsoString();
     }
     if (params.date === null) {
       delete params.date;
@@ -106,7 +107,12 @@ class Requests {
   }
 
   async updateSelections(params) {
-    params.date = params.date || new Date().toISOString();
+    if (params.date === undefined) {
+      params.date = timeSync.getSyncedIsoString();
+    }
+    if (params.date === null) {
+      delete params.date;
+    }
     return this._genericRequest(ENDPOINTS.UPDATE_SELECTIONS, params, 'patch', 'json');
   }
 

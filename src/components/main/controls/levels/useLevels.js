@@ -26,7 +26,6 @@ export function useLevels() {
                 utils.triggerVibrate();
                 const device = screenSelectedSt;
                 const value = screen.mute === 'on' ? 'off' : 'on';
-                // requests.sendIfttt({ device, key, value });
                 requests.updateTable({ id: device, table: 'screens', mute: value });
             }
         }
@@ -46,7 +45,6 @@ export function useLevels() {
     const onChannelShortClick = useCallback((value) => {
         utils.triggerVibrate();
         let newChannel = {};
-        const device = 'channelsSala';
         let newChannelOrder = 0;
         const cableChannelsSelectedId = selectionsSt.find(el => el.table === 'cableChannels').id;
         const channelSelected = cableChannelsSt.find(ch => ch.id === cableChannelsSelectedId);
@@ -66,7 +64,6 @@ export function useLevels() {
                 newChannel = cableChannelsSt[cableChannelsSt.length - 1];
             }
         }
-        requests.sendIfttt({ device: device + newChannel.ifttt, key: 'selected', value: newChannel.id });
         requests.updateSelections({ table: 'cableChannels', id: newChannel.id });
     }, [cableChannelsSt, selectionsSt]);
 
@@ -75,19 +72,16 @@ export function useLevels() {
         let newVol = 0;
         if (button === 'up') {
             newVol = screen.volume + vol;
-            requests.sendIfttt({ device, key: 'volume', value: button + vol });
             requests.updateTable({ id: device, table: 'screens', volume: newVol });
         } else if (screen.volume !== 0) {
             if (screen.volume - vol >= 0) {
                 newVol = screen.volume - vol;
-                requests.sendIfttt({ device, key: 'volume', value: button + vol });
                 requests.updateTable({ id: device, table: 'screens', volume: newVol });
             } else {
-                requests.sendIfttt({ device, key: 'volume', value: button + vol });
                 requests.updateTable({ id: device, table: 'screens', volume: '0' });
             }
         } else {
-            requests.sendIfttt({ device, key: 'volume', value: button + vol });
+            requests.updateTable({ id: device, table: 'screens', volume: '0', date: new Date().toISOString() });
         }
     }, [screenSelectedSt, screen]);
 

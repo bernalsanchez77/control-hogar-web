@@ -8,11 +8,9 @@ export function useLuzCuarto(element) {
         utils.triggerVibrate();
         const device = element.id;
         if (element.state === 'off') {
-            requests.sendIfttt({ device, key: 'state', value: 'on' });
             requests.updateTable({ id: device, table: 'devices', state: 'on' });
         }
         setTimeout(() => {
-            requests.sendIfttt({ device, key: 'color', value: value });
             requests.updateTable({ id: device, table: 'devices', color: value });
         }, 1000);
     }, [element]);

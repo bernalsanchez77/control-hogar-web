@@ -3,9 +3,9 @@ import requests from '../requests';
 import youtube from '../youtube';
 import CordovaPlugins from '../cordova-plugins';
 
-export const handleRokuAppsChange = async (oldItem, newItem, eventType, userName, leader) => {
+export const handleRokuAppsChange = async (oldItem, newItem, eventType, userNameDevice, leader) => {
     store.getState().setRokuSearchModeSt('roku');
-    if (userName === leader) {
+    if (userNameDevice === leader) {
         if (store.getState().wifiNameSt === 'Noky') {
             requests.fetchRoku({ key: 'launch', value: newItem.id });
         } else {

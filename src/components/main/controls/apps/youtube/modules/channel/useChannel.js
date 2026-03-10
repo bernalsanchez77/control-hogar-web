@@ -9,7 +9,7 @@ import { useLeader, useYoutubeVideoSelectedId } from '../../../../../../../hooks
 export function useChannel(setVideoToSave) {
     // 1. Store / Global State
     const youtubeVideosSt = store(v => v.youtubeVideosSt);
-    const leaderSt = useLeader();
+    const leader = useLeader();
     const youtubeVideosSelectedId = useYoutubeVideoSelectedId();
 
     // 2. States
@@ -21,7 +21,7 @@ export function useChannel(setVideoToSave) {
     // 4. Callbacks / Functions
     const handleShortPress = async (e, type, video) => {
         if (type === 'video') {
-            if (leaderSt) {
+            if (leader) {
                 utils.triggerVibrate();
                 setAnimatingVideoId(video.id);
                 await youtube.onVideoShortClick(video);

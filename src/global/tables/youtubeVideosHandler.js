@@ -2,12 +2,12 @@ import { store } from '../../store/store';
 import roku from '../roku';
 import requests from '../requests';
 
-export const handleYoutubeVideosChange = async (oldItem, newItem, eventType, userName, leader) => {
+export const handleYoutubeVideosChange = async (oldItem, newItem, eventType, userNameDevice, leader) => {
     if (newItem.id) {
         if (roku.playStateInterval) {
             roku.stopPlayStateListener();
         }
-        if (userName === leader) {
+        if (userNameDevice === leader) {
             const rokuId = store.getState().rokuAppsSt.find(app => app.label === 'Youtube').rokuId;
             if (!store.getState().simulatePlayStateSt) {
                 requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: newItem.id } });
@@ -23,7 +23,7 @@ export const handleYoutubeVideosChange = async (oldItem, newItem, eventType, use
         if (roku.playStateInterval) {
             roku.stopPlayStateListener();
         }
-        if (userName === leader) {
+        if (userNameDevice === leader) {
             requests.fetchRoku({ key: 'keypress', value: 'Stop' });
             requests.updateSelections({ table: 'playState', id: 'stop' });
             requests.updateSelections({ table: 'playPosition', id: '0' });

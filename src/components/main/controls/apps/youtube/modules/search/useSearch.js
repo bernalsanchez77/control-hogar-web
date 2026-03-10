@@ -10,7 +10,7 @@ export function useSearch(setVideoToSave) {
     // 1. Store / Global State
     const youtubeSearchVideosSt = store(v => v.youtubeSearchVideosSt);
     const youtubeVideosSt = store(v => v.youtubeVideosSt);
-    const leaderSt = useLeader();
+    const leader = useLeader();
     const youtubeVideosSelectedId = useYoutubeVideoSelectedId();
 
     // 2. States
@@ -19,7 +19,7 @@ export function useSearch(setVideoToSave) {
     // 2. Callbacks / Functions
     const handleShortPress = async (e, type, video) => {
         if (type === 'video') {
-            if (leaderSt) {
+            if (leader) {
                 utils.triggerVibrate();
                 setAnimatingVideoId(video.id);
                 // setTimeout(() => setAnimatingVideoId(null), 5000);

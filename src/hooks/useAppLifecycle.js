@@ -1,8 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { store } from '../store/store';
 import requests from '../global/requests';
-import connection from '../global/connection';
-import { useLeader } from './useSelectors';
 
 /**
  * useAppLifecycle Hook
@@ -13,39 +11,49 @@ export function useAppLifecycle() {
     // 1. Store / Global State
     const setIsInForegroundSt = store(v => v.setIsInForegroundSt);
     const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
+    const setIsLoadingSt = store(v => v.setIsLoadingSt);
     const isAppSt = store(v => v.isAppSt);
-    const leaderSt = useLeader();
     const userNameDeviceSt = store(v => v.userNameDeviceSt);
 
     // 2. Callbacks / Functions
     const onResume = useCallback(async () => {
-        console.log('To Foreground, the leader is:', leaderSt);
-        connection.updateConnection();
+        console.log('To Foreground');
         setIsInForegroundSt(true);
         if (isConnectedToInternetSt && userNameDeviceSt) {
+            setIsLoadingSt(true);
+            await new Promise((resolve) => {
+                const unsubscribe = store.subscribe((state) => {
+                    if (!state.isLoadingSt) {
+                        if (unsubscribe) unsubscribe();
+                        resolve();
+                    }
+                });
+            });
             requests.updateTable({
                 id: userNameDeviceSt,
                 table: 'userDevices',
+                date: store.getState().userDevicesSt.find(el => el.id === userNameDeviceSt)?.date,
                 isInForeground: true,
                 isConnectedToNoky: store.getState().isConnectedToNokySt,
                 isConnectedToInternet: store.getState().isConnectedToInternetSt
             });
         }
-    }, [setIsInForegroundSt, leaderSt, isConnectedToInternetSt, userNameDeviceSt]);
+    }, [setIsInForegroundSt, isConnectedToInternetSt, userNameDeviceSt, setIsLoadingSt]);
 
     const onPause = useCallback(async () => {
-        console.log('To Background, the leader is:', leaderSt);
+        console.log('To Background');
         setIsInForegroundSt(false);
         if (isConnectedToInternetSt && userNameDeviceSt) {
             requests.updateTable({
                 id: userNameDeviceSt,
                 table: 'userDevices',
+                date: store.getState().userDevicesSt.find(el => el.id === userNameDeviceSt)?.date,
                 isInForeground: false,
                 isConnectedToNoky: store.getState().isConnectedToNokySt,
                 isConnectedToInternet: store.getState().isConnectedToInternetSt
             });
         }
-    }, [isConnectedToInternetSt, setIsInForegroundSt, leaderSt, userNameDeviceSt]);
+    }, [isConnectedToInternetSt, setIsInForegroundSt, userNameDeviceSt]);
 
     const onVisibilityChange = useCallback(() => {
         if (document.visibilityState === 'visible') {

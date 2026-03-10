@@ -58,7 +58,7 @@ function Controls() {
           <button
             className={`controls-top-button`}
             onTouchStart={() => changeInput()}>
-            {screen.inputLabel1}
+            {screen.input === 'hdmi1' ? screen.inputLabel1 : screen.inputLabel2}
           </button>
         </div>
       </div>
