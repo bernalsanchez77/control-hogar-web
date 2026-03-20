@@ -7,7 +7,7 @@ export function useCredentials() {
     // 1. Store / Global State
     const setUserTypeSt = store(v => v.setUserTypeSt);
     const setUserNameSt = store(v => v.setUserNameSt);
-    const setUserDeviceSt = store(v => v.setUserDeviceSt);
+    const setUserDevices2St = store(v => v.setUserDevices2St);
     const setSendEnabledSt = store(v => v.setSendEnabledSt);
 
     // 2. React State
@@ -35,7 +35,7 @@ export function useCredentials() {
                     localStorage.setItem('user-name', userValueRef.current);
                     localStorage.setItem('user-device', deviceValueRef.current);
                     setUserNameSt(userValueRef.current);
-                    setUserDeviceSt(deviceValueRef.current);
+                    setUserDevices2St(deviceValueRef.current);
                     setUserTypeSt(userType);
                 }
             } else {
@@ -52,13 +52,13 @@ export function useCredentials() {
                         localStorage.setItem('user-name', userValueRef.current);
                         localStorage.setItem('user-device', deviceValueRef.current);
                         setUserNameSt(userValueRef.current);
-                        setUserDeviceSt(deviceValueRef.current);
+                        setUserDevices2St(deviceValueRef.current);
                         setUserTypeSt(data.dev || 'owner');
                     }
                 }
             }
         }
-    }, [setUserNameSt, setUserDeviceSt, setUserTypeSt, setSendEnabledSt]);
+    }, [setUserNameSt, setUserDevices2St, setUserTypeSt, setSendEnabledSt]);
 
     const setGuestCredential = useCallback(() => {
         setCredentials('guest');

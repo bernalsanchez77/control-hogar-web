@@ -7,7 +7,7 @@ import { useLeader } from '../../../../hooks/useSelectors';
 
 export function useArrows() {
     const leader = useLeader();
-    const userNameDeviceSt = store(v => v.userNameDeviceSt);
+    const userNameDevicesSt = store(v => v.userNameDevicesSt);
 
     // 2. Callbacks / Functions
     const onShortClick = useCallback((e, value) => {
@@ -26,7 +26,7 @@ export function useArrows() {
 
     return {
         leader,
-        userNameDeviceSt,
+        userNameDevicesSt,
         onTouchStart,
         onTouchMove,
         onTouchEnd

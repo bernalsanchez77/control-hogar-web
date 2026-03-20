@@ -11,6 +11,8 @@ import { handleSearchChange } from './tables/searchHandler';
 import { handleCableChannelsChange } from './tables/cableChannelsHandler';
 import { handleDevicesChange } from './tables/devicesHandler';
 import { handleLeaderChange } from './tables/leaderHandler';
+import requests from './requests';
+import timeSync from './timeSync';
 
 
 class Tables {
@@ -24,9 +26,9 @@ class Tables {
 
   async onScreensTableChange(oldItem, newItem, eventType) {
     if (!this.userNameDevice) {
-      this.userNameDevice = store.getState().userNameDeviceSt;
+      this.userNameDevice = store.getState().userNameDevicesSt;
     }
-    const leader = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
+    const leader = store.getState().selectionsSt.find(el => el.table === 'leader2')?.id;
     await handleScreensChange(oldItem, newItem, eventType, this.userNameDevice, leader);
   }
 
@@ -36,25 +38,25 @@ class Tables {
 
   async onDevicesTableChange(oldItem, newItem, eventType) {
     if (!this.userNameDevice) {
-      this.userNameDevice = store.getState().userNameDeviceSt;
+      this.userNameDevice = store.getState().userNameDevicesSt;
     }
-    const leader = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
+    const leader = store.getState().selectionsSt.find(el => el.table === 'leader2')?.id;
     await handleDevicesChange(oldItem, newItem, eventType, this.userNameDevice, leader);
   }
 
   async onUserDevicesTableChange(oldItem, newItem, eventType) {
     if (!this.userNameDevice) {
-      this.userNameDevice = store.getState().userNameDeviceSt;
+      this.userNameDevice = store.getState().userNameDevicesSt;
     }
-    const leader = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
+    const leader = store.getState().selectionsSt.find(el => el.table === 'leader2')?.id;
     await handleUserDevicesChange(oldItem, newItem, eventType, this.userNameDevice, leader);
   }
 
   async onSelectionsTableChange(oldItem, newItem, eventType) {
     if (!this.userNameDevice) {
-      this.userNameDevice = store.getState().userNameDeviceSt;
+      this.userNameDevice = store.getState().userNameDevicesSt;
     }
-    const leader = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
+    const leader = store.getState().selectionsSt.find(el => el.table === 'leader2')?.id;
 
     switch (newItem.table) {
       case 'youtubeVideos':
@@ -89,13 +91,22 @@ class Tables {
       case 'input':
         await handleSearchChange(oldItem, newItem, eventType, this.userNameDevice, leader);
         break;
-      case 'leader':
+      case 'leader2':
         await handleLeaderChange(oldItem, newItem, eventType, this.userNameDevice, leader);
         break;
       default:
         // Other tables in selections if needed
         break;
     }
+  }
+  updateUserDevicesTable(newDate) {
+    requests.updateTable({
+      id: store.getState().userNameDevicesSt,
+      table: 'userDevices2',
+      date: newDate ? timeSync.getSyncedIsoString() : store.getState().userDevices2St.find(el => el.id === store.getState().userNameDevicesSt).date,
+      isInForeground: store.getState().isInForegroundSt,
+      isConnectedToNoky: store.getState().isConnectedToNokySt
+    });
   }
 }
 

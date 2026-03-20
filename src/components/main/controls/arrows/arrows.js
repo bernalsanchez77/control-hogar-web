@@ -4,13 +4,13 @@ import './arrows.css';
 function Arrows() {
   const {
     leader,
-    userNameDeviceSt,
+    userNameDevicesSt,
     onTouchStart,
     onTouchMove,
     onTouchEnd
   } = useArrows();
 
-  const isLeader = leader === userNameDeviceSt;
+  const isLeader = leader === userNameDevicesSt;
 
   return (
     <div className='controls-arrows'>

@@ -27,7 +27,7 @@ class SupabaseChannels {
     if (!this.youtubeChannelsCallback && tableName === 'youtubeChannels') this.youtubeChannelsCallback = callback;
     if (!this.youtubeChannelsImagesCallback && tableName === 'youtubeChannelsImages') this.youtubeChannelsImagesCallback = callback;
     if (!this.cableChannelsCallback && tableName === 'cableChannels') this.cableChannelsCallback = callback;
-    if (!this.userDevicesCallback && tableName === 'userDevices') this.userDevicesCallback = callback;
+    if (!this.userDevicesCallback && tableName === 'userDevices2') this.userDevicesCallback = callback;
     if (!this.supabaseChannels[tableName]) {
       this.supabaseChannels[tableName] = {};
     }
@@ -57,7 +57,7 @@ class SupabaseChannels {
           switch (status) {
             case 'SUBSCRIBED':
               if (first && tableName === 'hdmiSala') {
-                // console.log('Subscribed to:', tableName);
+                console.log('Subscribed to:', tableName);
               }
               resolve({ success: true, msg: status });
               break;
@@ -87,7 +87,7 @@ class SupabaseChannels {
       this.supabaseChannels[tableName].errorType = type;
       this.supabaseChannels[tableName].errorHandled = true;
       if (tableName === 'hdmiSala') {
-        console.warn('Channel ' + tableName + ' failed, type: ' + type);
+        console.log('Channel ' + tableName + ' failed, type: ' + type);
       }
       await this.unsubscribeFromSupabaseChannel(tableName);
       setTimeout(async () => {
@@ -141,31 +141,7 @@ class SupabaseChannels {
     await this.unsubscribeFromSupabaseChannel('youtubeChannels');
     await this.unsubscribeFromSupabaseChannel('youtubeChannelsImages');
     await this.unsubscribeFromSupabaseChannel('cableChannels');
-    await this.unsubscribeFromSupabaseChannel('userDevices');
-  }
-
-  async subscribeToAllSupabaseChannels() {
-    const tableNames = ['hdmiSala', 'rokuApps', 'devices', 'screens', 'youtubeVideos', 'selections', 'youtubeChannels', 'youtubeChannelsImages', 'cableChannels', 'userDevices'];
-    for (const tableName of tableNames) {
-      await this.subscribeToSupabaseChannel(tableName, this[tableName + 'Callback'], true).then((res) => {
-        if (res.success) {
-          // console.log('Re-subscribed to:', tableName, ' after internet restored');
-        } else {
-          console.warn('not re-subscribed, subscription status:', res.msg);
-          switch (res.msg) {
-            case 'TIMED_OUT':
-              break;
-            case 'CHANNEL_ERROR':
-              break;
-            case 'CLOSED':
-              break;
-            default:
-          }
-        }
-      }).catch((res) => {
-        console.error('Error re-subscribing to ' + tableName + ' after internet restored: ', res);
-      });
-    }
+    await this.unsubscribeFromSupabaseChannel('userDevices2');
   }
 
   async unsubscribeFromSupabaseChannel(tableName) {

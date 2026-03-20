@@ -17,7 +17,7 @@ export function useLoad() {
     const setIsLoadingMessageShowingSt = store(v => v.setIsLoadingMessageShowingSt);
     const userTypeSt = store(v => v.userTypeSt);
     const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
-    const userNameDeviceSt = store(v => v.userNameDeviceSt);
+    const userNameDevicesSt = store(v => v.userNameDevicesSt);
     const wifiNameSt = store(v => v.wifiNameSt);
     const supabaseTimeoutSt = store(v => v.supabaseTimeoutSt);
     const setSupabaseTimeoutSt = store(v => v.supabaseSetTimeoutSt);
@@ -144,7 +144,7 @@ export function useLoad() {
             await setData('youtubeChannels');
             await setData('youtubeChannelsImages');
             await setData('cableChannels');
-            await setData('userDevices', true, (oldItem, newItem, eventType) => {
+            await setData('userDevices2', true, (oldItem, newItem, eventType) => {
                 Tables.onUserDevicesTableChange(oldItem, newItem, eventType);
             });
             await setData('youtubeVideos', true, (oldItem, newItem, eventType) => {
@@ -157,52 +157,46 @@ export function useLoad() {
         if (wifiNameSt === 'Noky') {
             Roku.setRoku();
         }
-        if (supabasePeers.peersChannel?.state !== 'joined') {
-            await supabasePeers.subscribeToPeersChannel();
-        } else {
-            const presence = supabasePeers.peersChannel.presenceState();
-            if (!presence[userNameDeviceSt]) {
-                console.log("Channel is open but I'm missing from Presence. Re-tracking...");
-                await supabasePeers.trackPeers(store.getState().userDevicesSt.find(el => el.id === userNameDeviceSt)?.date);
-            }
-        }
         setIsLoadingMessageShowingSt(false);
         store.getState().setIsLoadingSt(false);
-    }, [setData, setIsLoadingMessageShowingSt, wifiNameSt, isAppSt, updateNotificationBar, userNameDeviceSt]);
+    }, [setData, setIsLoadingMessageShowingSt, wifiNameSt, isAppSt, updateNotificationBar]);
 
     const onSupabaseTimeout = async () => {
         await load();
     };
 
     const init = useCallback(async () => {
+        if (localStorage.getItem('user-type') !== 'guest' && localStorage.getItem('user-type') !== 'owner') {
+            eruda.init();
+        }
         await load(true);
+        await supabasePeers.subscribeToPeersChannel();
         const youtubeVideosSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
         if (youtubeVideosSelectedId) {
-            if (userNameDeviceSt === leader && !Roku.playStateInterval) {
+            if (userNameDevicesSt === leader && !Roku.playStateInterval) {
                 const youtubeVideosSelected = store.getState().youtubeVideosSt.find(el => el.id === youtubeVideosSelectedId) || {};
                 if (youtubeVideosSelected) {
                     Roku.startPlayStateListener(youtubeVideosSelected);
                 }
             }
         }
+        // if (store.getState().isConnectedToNokySt) {
+        //     requests.updateSelections({ table: 'leader', id: userNameDevicesSt });
+        // }
         isReadyRef.current = true;
-        if (localStorage.getItem('user-type') !== 'guest' && localStorage.getItem('user-type') !== 'owner') {
-            eruda.init();
-        }
-    }, [load, userNameDeviceSt, leader]);
+    }, [load, userNameDevicesSt, leader]);
 
     // 4. Effects
     useEffect(() => {
         const unsub = store.subscribe(
             async (newState, oldState) => {
                 if (newState.isLoadingSt && !oldState.isLoadingSt) {
-                    console.log('isLoadingSt changed to true, running load');
                     await load();
                 }
             }
         );
         return unsub;
-    }, [userNameDeviceSt, load]);
+    }, [userNameDevicesSt, load]);
 
     useEffect(() => {
         if (isAppSt) {

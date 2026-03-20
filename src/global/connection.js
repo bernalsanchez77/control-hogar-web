@@ -2,6 +2,7 @@
 import { store } from '../store/store';
 import CordovaPlugins from './cordova-plugins';
 import requests from './requests';
+import tables from './tables';
 
 class Connection {
   constructor() {
@@ -42,31 +43,32 @@ class Connection {
       this.isConnectedToInternetInterval = setInterval(async () => {
         const isConnectedToInternet = await this.getIsConnectedToInternet();
         if (isConnectedToInternet) {
-          console.log('Internet connected by interval');
-          clearInterval(this.isConnectedToInternetInterval);
-          this.isConnectedToInternetInterval = null;
-          const isAppSt = store.getState().isAppSt;
-          if (isAppSt) {
-            wifiName = await CordovaPlugins.getWifiName();
-            networkType = await CordovaPlugins.getNetworkType();
-          }
-          const isPcSt = store.getState().isPcSt;
-          store.getState().setWifiNameSt(isPcSt ? 'Noky' : wifiName);
-          store.getState().setNetworkTypeSt(isPcSt ? 'wifi' : networkType);
-          store.getState().setIsConnectedToInternetSt(true);
-          store.getState().setIsConnectedToNokySt(isPcSt ? true : wifiName === 'Noky' && networkType === 'wifi');
-          setTimeout(async () => {
-            store.getState().setIsLoadingSt(true);
-            await new Promise((resolve) => {
-              const unsubscribe = store.subscribe((state) => {
-                if (!state.isLoadingSt) {
-                  if (unsubscribe) unsubscribe();
-                  resolve();
-                }
-              });
-            });
-            this.updateTable(true);
-          }, 1000);
+          window.location.reload();
+          // console.log('Internet connected by interval');
+          // clearInterval(this.isConnectedToInternetInterval);
+          // this.isConnectedToInternetInterval = null;
+          // const isAppSt = store.getState().isAppSt;
+          // if (isAppSt) {
+          //   wifiName = await CordovaPlugins.getWifiName();
+          //   networkType = await CordovaPlugins.getNetworkType();
+          // }
+          // const isPcSt = store.getState().isPcSt;
+          // store.getState().setWifiNameSt(isPcSt ? 'Noky' : wifiName);
+          // store.getState().setNetworkTypeSt(isPcSt ? 'wifi' : networkType);
+          // store.getState().setIsConnectedToInternetSt(true);
+          // store.getState().setIsConnectedToNokySt(isPcSt ? true : wifiName === 'Noky' && networkType === 'wifi');
+          // setTimeout(async () => {
+          //   store.getState().setIsLoadingSt(true);
+          //   await new Promise((resolve) => {
+          //     const unsubscribe = store.subscribe((state) => {
+          //       if (!state.isLoadingSt) {
+          //         if (unsubscribe) unsubscribe();
+          //         resolve();
+          //       }
+          //     });
+          //   });
+          //   tables.updateUserDevicesTable(true);
+          // }, 1000);
         } else {
           console.log('No internet by interval');
         }
@@ -93,7 +95,7 @@ class Connection {
             }
           });
         });
-        this.updateTable();
+        tables.updateUserDevicesTable(true);
       }
       this.networkTypeChangeRunning = false;
     }, 2000);
@@ -135,7 +137,7 @@ class Connection {
               }
             });
           });
-          this.updateTable();
+          tables.updateUserDevicesTable(true);
         }
       } else {
         const rokuData = await requests.getRokuData('active-app');
@@ -153,58 +155,30 @@ class Connection {
                 }
               });
             });
-            this.updateTable();
+            tables.updateUserDevicesTable(true);
           }
         } else {
-          store.getState().setWifiNameSt('');
-          store.getState().setNetworkTypeSt(this.temporalNetworkType);
-          store.getState().setIsConnectedToNokySt(false);
-          if (this.wifiNameChangeRunning !== this.networkTypeChangeRunning && store.getState().isConnectedToInternetSt) {
-            store.getState().setIsLoadingSt(true);
-            await new Promise((resolve) => {
-              const unsubscribe = store.subscribe((state) => {
-                if (!state.isLoadingSt) {
-                  if (unsubscribe) unsubscribe();
-                  resolve();
-                }
-              });
-            });
-            this.updateTable();
-          }
           setTimeout(async () => {
             const rokuData = await requests.getRokuData('active-app');
+            store.getState().setNetworkTypeSt(this.temporalNetworkType);
             if (rokuData) {
               store.getState().setWifiNameSt('Noky');
-              store.getState().setNetworkTypeSt(this.temporalNetworkType);
               store.getState().setIsConnectedToNokySt(true);
-              if (this.wifiNameChangeRunning !== this.networkTypeChangeRunning && store.getState().isConnectedToInternetSt) {
-                store.getState().setIsLoadingSt(true);
-                await new Promise((resolve) => {
-                  const unsubscribe = store.subscribe((state) => {
-                    if (!state.isLoadingSt) {
-                      if (unsubscribe) unsubscribe();
-                      resolve();
-                    }
-                  });
-                });
-                this.updateTable();
-              }
             } else {
-              store.getState().setWifiNameSt('');
-              store.getState().setNetworkTypeSt(this.temporalNetworkType);
+              store.getState().setWifiNameSt('unknown-wifi');
               store.getState().setIsConnectedToNokySt(false);
-              if (this.wifiNameChangeRunning !== this.networkTypeChangeRunning && store.getState().isConnectedToInternetSt) {
-                store.getState().setIsLoadingSt(true);
-                await new Promise((resolve) => {
-                  const unsubscribe = store.subscribe((state) => {
-                    if (!state.isLoadingSt) {
-                      if (unsubscribe) unsubscribe();
-                      resolve();
-                    }
-                  });
+            }
+            if (this.wifiNameChangeRunning !== this.networkTypeChangeRunning && store.getState().isConnectedToInternetSt) {
+              store.getState().setIsLoadingSt(true);
+              await new Promise((resolve) => {
+                const unsubscribe = store.subscribe((state) => {
+                  if (!state.isLoadingSt) {
+                    if (unsubscribe) unsubscribe();
+                    resolve();
+                  }
                 });
-                this.updateTable();
-              }
+              });
+              tables.updateUserDevicesTable(true);
             }
           }, 2000);
         }
@@ -239,17 +213,6 @@ class Connection {
     store.getState().setNetworkTypeSt(isPcSt ? localStorage.getItem('network-type') : networkType);
     store.getState().setIsConnectedToNokySt(isPcSt ? localStorage.getItem('wifi-name') === 'Noky' && localStorage.getItem('network-type') === 'wifi' : wifiName === 'Noky' && networkType === 'wifi');
     store.getState().setIsConnectedToInternetSt(isConnectedToInternet);
-  }
-
-  updateTable(newDate) {
-    requests.updateTable({
-      id: store.getState().userNameDeviceSt,
-      table: 'userDevices',
-      date: newDate ? new Date().toISOString() : store.getState().userDevicesSt.find(el => el.id === store.getState().userNameDeviceSt)?.date,
-      isInForeground: store.getState().isInForegroundSt,
-      isConnectedToNoky: store.getState().isConnectedToNokySt,
-      isConnectedToInternet: store.getState().isConnectedToInternetSt
-    });
   }
 }
 const connection = new Connection();

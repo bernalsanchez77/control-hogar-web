@@ -3,7 +3,6 @@ import { store } from '../../store/store';
 import connection from '../../global/connection';
 import CordovaPlugins from '../../global/cordova-plugins';
 import { useAppLifecycle } from '../../hooks/useAppLifecycle';
-import requests from '../../global/requests';
 import timeSync from '../../global/timeSync';
 
 export function useMain() {
@@ -13,7 +12,7 @@ export function useMain() {
     const userTypeSt = store(v => v.userTypeSt);
     const setUserTypeSt = store(v => v.setUserTypeSt);
     const setUserNameSt = store(v => v.setUserNameSt);
-    const setUserDeviceSt = store(v => v.setUserDeviceSt);
+    const setUserDevices2St = store(v => v.setUserDevices2St);
     const setScreenSelectedSt = store(v => v.setScreenSelectedSt);
     const setSendEnabledSt = store(v => v.setSendEnabledSt);
     const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
@@ -57,19 +56,18 @@ export function useMain() {
         setScreenSelectedSt(screenId);
         setUserTypeSt(localStorage.getItem('user-type'));
         setUserNameSt(userName);
-        setUserDeviceSt(userDevice);
+        setUserDevices2St(userDevice);
         setLizEnabledSt(localStorage.getItem('lizEnabled') === 'true' ? true : false);
         setSendEnabledSt((localStorage.getItem('send-enabled') === 'true' || localStorage.getItem('user-type') !== 'dev') ? true : false);
         await connection.updateConnection();
-        const date = timeSync.getSyncedIsoString();
-        requests.updateTable({
-            id: userName + '-' + userDevice,
-            table: 'userDevices',
-            date: date,
-            isInForeground: true,
-            isConnectedToNoky: store.getState().isConnectedToNokySt,
-            isConnectedToInternet: store.getState().isConnectedToInternetSt
-        });
+        // const date = timeSync.getSyncedIsoString();
+        // requests.updateTable({
+        //     id: userName + '-' + userDevice,
+        //     table: 'userDevices2',
+        //     date: date,
+        //     isInForeground: true,
+        //     isConnectedToNoky: store.getState().isConnectedToNokySt
+        // });
 
         if (store.getState().isConnectedToInternetSt) {
             //requests.sendLogs('entro', user);
@@ -80,7 +78,7 @@ export function useMain() {
         setTimeout(() => {
             setIsReadySt(true);
         }, 0);
-    }, [setSendEnabledSt, setLizEnabledSt, setUserNameSt, setUserDeviceSt, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt]);
+    }, [setSendEnabledSt, setLizEnabledSt, setUserNameSt, setUserDevices2St, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt]);
 
     // 6. Initialisation logic (ran once during first render pass)
     if (!initializedRef.current) {

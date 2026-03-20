@@ -227,6 +227,36 @@ class Utils {
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
+  getExpectedLeader(usersInTable, usersInPresence, leftUser = null) {
+    // users without leftUser
+    if (leftUser) {
+      usersInTable = usersInTable.filter(d => d.id !== leftUser);
+    }
+
+    // if only one user in presence, return it
+    if (usersInPresence.length === 1) {
+      return usersInTable.find(user => user.id === usersInPresence[0].id).id;
+    } else {
+      // if more than one user in presence, return the one from the usersInTable with the newest date and isConnectedToNoky true and isInPresence true
+      const usersInTableSortedByDate = [...usersInTable].sort((a, b) => new Date(b.date) - new Date(a.date));
+      const leaderInPresenceAndConnectedToNoky = usersInTableSortedByDate.find(user => user.isConnectedToNoky && user.isInPresence);
+      if (leaderInPresenceAndConnectedToNoky) {
+        return leaderInPresenceAndConnectedToNoky.id;
+      } else {
+        // if no leader in presence and connected to noky, return the one from the usersInTable with the newest date and isInPresence true
+        const leaderInPresence = usersInTableSortedByDate.find(user => user.isInPresence);
+        if (leaderInPresence) {
+          return leaderInPresence.id;
+        } else {
+          // if no leader in presence, return the first user in the usersInTableSortedByDate
+          const leaderInTable = usersInTableSortedByDate[0];
+          if (leaderInTable) {
+            return leaderInTable.id;
+          }
+        }
+      }
+    }
+  }
 }
 const utils = new Utils();
 export default utils;

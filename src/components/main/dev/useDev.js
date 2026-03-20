@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 import { store } from "../../../store/store";
 import connection from '../../../global/connection';
 import { useLeader } from '../../../hooks/useSelectors';
-import supabasePeers from '../../../global/supabase/supabase-peers';
 
 export function useDev() {
   // 1. Store / Global State
@@ -12,7 +11,7 @@ export function useDev() {
   const networkTypeSt = store(v => v.networkTypeSt);
   const isPcSt = store(v => v.isPcSt);
   const leader = useLeader();
-  const userNameDeviceSt = store(v => v.userNameDeviceSt);
+  const userNameDevicesSt = store(v => v.userNameDevicesSt);
 
   // 2. Callbacks / Functions
   const onEnableSend = useCallback(() => {
@@ -62,10 +61,10 @@ export function useDev() {
   }, [networkTypeSt, isPcSt]);
 
   const onLeaderChange = useCallback(async () => {
-    if (wifiNameSt === 'Noky' && leader !== userNameDeviceSt) {
-      await supabasePeers.trackPeers(new Date().toISOString());
+    if (wifiNameSt === 'Noky' && leader !== userNameDevicesSt) {
+      // await supabasePeers.trackPeers(new Date().toISOString());
     }
-  }, [leader, userNameDeviceSt, wifiNameSt]);
+  }, [leader, userNameDevicesSt, wifiNameSt]);
 
   return {
     sendEnabledSt,

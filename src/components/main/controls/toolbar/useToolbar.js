@@ -14,7 +14,7 @@ export function useToolbar() {
   const selectionsSt = store(v => v.selectionsSt);
   const viewSt = store(v => v.viewSt);
   const userTypeSt = store(v => v.userTypeSt);
-  const userNameDeviceSt = store(v => v.userNameDeviceSt);
+  const userNameDevicesSt = store(v => v.userNameDevicesSt);
   const lizEnabledSt = store(v => v.lizEnabledSt);
   const setLizEnabledSt = store(v => v.setLizEnabledSt);
 
@@ -67,7 +67,7 @@ export function useToolbar() {
         const { normalizedPercentage, end } = utils.checkVideoEnd(video, position);
         setNormalizedPercentageSt(normalizedPercentage);
 
-        if (leader === userNameDeviceSt && end) {
+        if (leader === userNameDevicesSt && end) {
           if (video) {
             requests.updateSelections({ table: 'youtubeVideos', id: '' });
             setTimeout(() => {
@@ -82,7 +82,7 @@ export function useToolbar() {
       }
     };
     handleVideoEnd();
-  }, [leader, userNameDeviceSt, youtubeVideosSt, selectionsSt, youtubeVideosSelected]);
+  }, [leader, userNameDevicesSt, youtubeVideosSt, selectionsSt, youtubeVideosSelected]);
 
   useEffect(() => {
     const performChangePlay = () => {
