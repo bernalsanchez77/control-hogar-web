@@ -58,6 +58,15 @@ class CordovaPlugins {
       (err) => console.error('ssid listener error:', err)
     );
   }
+  async stopWifiNameListener() {
+    return new Promise((resolve) => {
+      if (window.cordova.plugins.netinfo.stopSSIDListener) {
+        window.cordova.plugins.netinfo.stopSSIDListener(resolve, resolve);
+      } else {
+        resolve();
+      }
+    });
+  }
 
   async startNetworkTypeListener(onNetworkTypeChange) {
     window.cordova.plugins.networkinfo.startNetworkTypeListener(
@@ -72,6 +81,15 @@ class CordovaPlugins {
       },
       (err) => console.error('SSID listener error:', err)
     );
+  }
+  async stopNetworkTypeListener() {
+    return new Promise((resolve) => {
+      if (window.cordova.plugins.networkinfo.stopNetworkTypeListener) {
+        window.cordova.plugins.networkinfo.stopNetworkTypeListener(resolve, resolve);
+      } else {
+        resolve();
+      }
+    });
   }
 
   async updatePlayState(isPlaying) {

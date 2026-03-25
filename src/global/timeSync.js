@@ -27,7 +27,7 @@ class TimeSync {
         }
     }
 
-    // This guarantees the time is correct AND formatted exactly for Costa Rica (-06:00)
+    // This guarantees the time is correct AND formatted exactly for Costa Rica
     getSyncedIsoString() {
         const correctTime = new Date(Date.now() + this.offset);
 
@@ -37,8 +37,8 @@ class TimeSync {
         // Shift time by -6 hours so the UTC string components match Costa Rica's local wall-clock time
         const crTime = new Date(correctTime.getTime() + costaRicaOffsetMs);
 
-        // Convert to ISO string, strip the "Z", and append the accurate Costa Rica offset
-        return crTime.toISOString().replace('Z', '-06:00');
+        // Format to match Supabase: trims trailing zeros from milliseconds
+        return crTime.toISOString().replace('Z', '').replace(/(\.\d*?[1-9])0+$/, '$1').replace(/\.0+$/, '');
     }
 }
 

@@ -1,27 +1,31 @@
 import { store } from '../../store/store';
 import requests from '../requests';
-import roku from '../roku';
+// import roku from '../roku';
 import utils from '../utils';
 
 export const handleUserDevicesChange = async (userBefore, userNow, eventType, userNameDevice, leader) => {
+    console.log('userBefore', userBefore);
+    console.log('userNow', userNow);
+
     const userDevices = store.getState().userDevices2St;
     const expectedLeader = utils.getExpectedLeader(userDevices, store.getState().peersSt);
+
     console.log('the leader should be: ', expectedLeader);
     if (userNow.date !== userBefore.date) {
-        console.log('date changed');
         if (userNameDevice === userNow.id) {
             console.log('I have the latest date now');
         } else {
             console.log(userNow.id + ' has the latest date now');
         }
         if (expectedLeader === userNameDevice) {
-            console.log('I updated the leader to myself because there was a change in date and I have the condition to be leader');
-            requests.updateSelections({ table: 'leader2', id: userNameDevice });
-        } else {
-            console.log('I don\'t update the leader to myself because I don\'t have the condition to be leader');
+            if (leader === userNameDevice) {
+                console.log('I am the expected leader, but I am the leader, so no need to update the leader');
+            } else {
+                console.log('I update the leader to myself');
+                requests.updateSelections({ table: 'leader2', id: userNameDevice });
+            }
         }
     } else if (userNow.isInPresence !== userBefore.isInPresence) {
-        console.log('isInPresence changed');
         if (userNow.isInPresence) {
             if (userNameDevice === userNow.id) {
                 console.log('I am in presence now');
@@ -36,13 +40,14 @@ export const handleUserDevicesChange = async (userBefore, userNow, eventType, us
             }
         }
         if (expectedLeader === userNameDevice) {
-            console.log('I updated the leader to myself because there was a change in isInPresence and I have the condition to be leader');
-            requests.updateSelections({ table: 'leader2', id: userNameDevice });
-        } else {
-            console.log('I don\'t update the leader to myself because I don\'t have the condition to be leader');
+            if (leader === userNameDevice) {
+                console.log('I am the expected leader, but I am the leader, so no need to update the leader');
+            } else {
+                console.log('I update the leader to myself');
+                requests.updateSelections({ table: 'leader2', id: userNameDevice });
+            }
         }
     } else if (userNow.isConnectedToNoky !== userBefore.isConnectedToNoky) {
-        console.log('isConnectedToNoky changed');
         if (userNow.isConnectedToNoky) {
             if (userNameDevice === userNow.id) {
                 console.log('I am connected to Noky now');
@@ -51,25 +56,39 @@ export const handleUserDevicesChange = async (userBefore, userNow, eventType, us
             }
         } else {
             if (userNameDevice === userNow.id) {
-                console.warn('I am not connected to Noky anymore');
+                console.log('I am not connected to Noky anymore');
             } else {
                 console.log(userNow.id + ' is not connected to Noky anymore');
             }
         }
         if (expectedLeader === userNameDevice) {
-            console.log('I updated the leader to myself because there was a change in isConnectedToNoky and I have the condition to be leader');
-            requests.updateSelections({ table: 'leader2', id: userNameDevice });
-        } else {
-            console.log('I don\'t update the leader to myself because I don\'t have the condition to be leader');
+            if (leader === userNameDevice) {
+                console.log('I am the expected leader, but I am the leader, so no need to update the leader');
+            } else {
+                console.log('I update the leader to myself');
+                requests.updateSelections({ table: 'leader2', id: userNameDevice });
+            }
         }
     } else if (userNow.isInForeground !== userBefore.isInForeground) {
-        console.log('isInForeground changed');
+        if (userNow.isInForeground) {
+            if (userNameDevice === userNow.id) {
+                console.log('I am in foreground now');
+            } else {
+                console.log(userNow.id + ' is in foreground now');
+            }
+        } else {
+            if (userNameDevice === userNow.id) {
+                console.log('I am not in foreground anymore');
+            } else {
+                console.log(userNow.id + ' is not in foreground anymore');
+            }
+        }
     }
 
     if (userNow.isInForeground && !userBefore.isInForeground && userNameDevice === leader) {
-        const rokuPlayState = await roku.getPlayState('state');
-        if (rokuPlayState !== store.getState().selectionsSt.find(el => el.table === 'playState')?.id) {
-            requests.updateSelections({ table: 'playState', id: rokuPlayState });
-        }
+        // const rokuPlayState = await roku.getPlayState('state');
+        // if (rokuPlayState !== store.getState().selectionsSt.find(el => el.table === 'playState')?.id) {
+        //     requests.updateSelections({ table: 'playState', id: rokuPlayState });
+        // }
     }
 };

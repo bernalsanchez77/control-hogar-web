@@ -77,7 +77,9 @@ export function useLoad() {
             const tableChannel = supabaseChannels.getSupabaseChannelState(tableName);
             if (tableChannel?.channel) {
                 const state = tableChannel.channel.state;
-                if (state !== 'joined') {
+                if (state === 'joined') {
+                    subscriptionResponse = 'SUBSCRIBED';
+                } else {
                     if (tableChannel.subscribed) {
                         await supabaseChannels.unsubscribeFromSupabaseChannel(tableName);
                     }
@@ -125,6 +127,9 @@ export function useLoad() {
         });
 
         if (hdmiSalaTable.table && hdmiSalaTable.subscriptionResponse === 'SUBSCRIBED') {
+            await setData('userDevices2', true, (oldItem, newItem, eventType) => {
+                Tables.onUserDevicesTableChange(oldItem, newItem, eventType);
+            });
             await setData('screens', false, async (oldItem, newItem, eventType) => {
                 Tables.onScreensTableChange(oldItem, newItem, eventType);
             });
@@ -144,9 +149,6 @@ export function useLoad() {
             await setData('youtubeChannels');
             await setData('youtubeChannelsImages');
             await setData('cableChannels');
-            await setData('userDevices2', true, (oldItem, newItem, eventType) => {
-                Tables.onUserDevicesTableChange(oldItem, newItem, eventType);
-            });
             await setData('youtubeVideos', true, (oldItem, newItem, eventType) => {
                 Tables.onYoutubeVideosTableChange(oldItem, newItem, eventType);
             });

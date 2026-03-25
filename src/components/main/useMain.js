@@ -4,6 +4,7 @@ import connection from '../../global/connection';
 import CordovaPlugins from '../../global/cordova-plugins';
 import { useAppLifecycle } from '../../hooks/useAppLifecycle';
 import timeSync from '../../global/timeSync';
+import requests from '../../global/requests';
 
 export function useMain() {
     // 1. Store / Global State
@@ -21,11 +22,11 @@ export function useMain() {
     const setIsAppSt = store(v => v.setIsAppSt);
     const setLizEnabledSt = store(v => v.setLizEnabledSt);
 
-    // 2. Lifecycle management
-    useAppLifecycle();
-
-    // 3. Local State
+    // 2. Local State
     const [isReadySt, setIsReadySt] = useState(false);
+
+    // 3. Lifecycle management
+    useAppLifecycle(isReadySt);
 
     // 4. Refs
     const initializedRef = useRef(false);
@@ -60,14 +61,13 @@ export function useMain() {
         setLizEnabledSt(localStorage.getItem('lizEnabled') === 'true' ? true : false);
         setSendEnabledSt((localStorage.getItem('send-enabled') === 'true' || localStorage.getItem('user-type') !== 'dev') ? true : false);
         await connection.updateConnection();
-        // const date = timeSync.getSyncedIsoString();
-        // requests.updateTable({
-        //     id: userName + '-' + userDevice,
-        //     table: 'userDevices2',
-        //     date: date,
-        //     isInForeground: true,
-        //     isConnectedToNoky: store.getState().isConnectedToNokySt
-        // });
+        requests.updateTable({
+            id: userName + '-' + userDevice,
+            table: 'userDevices2',
+            date: timeSync.getSyncedIsoString(),
+            isInForeground: document.visibilityState === 'visible',
+            isConnectedToNoky: store.getState().isConnectedToNokySt
+        });
 
         if (store.getState().isConnectedToInternetSt) {
             //requests.sendLogs('entro', user);

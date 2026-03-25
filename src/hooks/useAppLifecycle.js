@@ -2,19 +2,27 @@ import { useEffect, useCallback } from 'react';
 import { store } from '../store/store';
 import connection from '../global/connection';
 import tables from '../global/tables';
+import requests from '../global/requests';
 
 /**
  * useAppLifecycle Hook
  * Handles the application lifecycle events (Resume, Pause, Visibility Change)
  * across both Cordova (app) and Browser environments.
  */
-export function useAppLifecycle() {
+export function useAppLifecycle(isReady) {
     // 1. Store / Global State
     const isAppSt = store(v => v.isAppSt);
 
     // 2. Callbacks / Functions
     const onResume = useCallback(async () => {
         console.log('To Foreground');
+        const userDevices2Table = await requests.getTable('userDevices2');
+        const user = store.getState().userNameDevicesSt;
+        const userDevice = userDevices2Table.data.find(el => el.id === user);
+        if (!userDevice.isInPresence) {
+            await connection.stopListeners();
+            window.location.reload();
+        }
         store.getState().setIsInForegroundSt(true);
 
         if (store.getState().networkTypeSt === 'wifi' && (store.getState().wifiNameSt === 'unknown-wifi' || store.getState().wifiNameSt === '')) {
@@ -56,20 +64,22 @@ export function useAppLifecycle() {
 
     // 3. Effects
     useEffect(() => {
-        if (isAppSt) {
-            document.addEventListener("pause", onPause);
-            document.addEventListener("resume", onResume);
-        } else {
-            document.addEventListener('visibilitychange', onVisibilityChange);
-        }
-
-        return () => {
+        if (isReady) {
             if (isAppSt) {
-                document.removeEventListener("pause", onPause);
-                document.removeEventListener("resume", onResume);
+                document.addEventListener("pause", onPause);
+                document.addEventListener("resume", onResume);
             } else {
-                document.removeEventListener('visibilitychange', onVisibilityChange);
+                document.addEventListener('visibilitychange', onVisibilityChange);
             }
-        };
-    }, [isAppSt, onPause, onResume, onVisibilityChange]);
+
+            return () => {
+                if (isAppSt) {
+                    document.removeEventListener("pause", onPause);
+                    document.removeEventListener("resume", onResume);
+                } else {
+                    document.removeEventListener('visibilitychange', onVisibilityChange);
+                }
+            };
+        }
+    }, [isAppSt, onPause, onResume, onVisibilityChange, isReady]);
 }
