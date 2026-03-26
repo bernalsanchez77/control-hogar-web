@@ -2,7 +2,6 @@
 import { store } from '../store/store';
 import CordovaPlugins from './cordova-plugins';
 import requests from './requests';
-import tables from './tables';
 import PeersChannel from './supabase/supabase-peers';
 import SupabaseChannels from './supabase/supabase-channels';
 import supabase from './supabase/supabase-client';
@@ -25,18 +24,19 @@ class Connection {
   async handleRestart() {
     if (this.restartRunning) return;
     this.restartRunning = true;
-
     if (this.isConnectedToInternetInterval) {
       clearInterval(this.isConnectedToInternetInterval);
       this.isConnectedToInternetInterval = null;
     }
-
     await this.stopListeners();
     PeersChannel.killPeersChannel();
     await SupabaseChannels.unsubscribeFromAllSupabaseChannels();
     supabase.realtime.disconnect();
     const bgFlag = !store.getState().isInForegroundSt ? '?isInBackground=true' : '';
-    window.location.href = window.location.pathname + bgFlag;
+    store.getState().setIsRestartingSt(true);
+    setTimeout(() => {
+      window.location.href = window.location.pathname + bgFlag;
+    }, 5000);
   }
   async getIsConnectedToInternet() {
     try {
@@ -68,6 +68,7 @@ class Connection {
       this.isConnectedToInternetInterval = setInterval(async () => {
         const isConnectedToInternet = await this.getIsConnectedToInternet();
         if (isConnectedToInternet) {
+          store.getState().setIsConnectedToInternetSt(true);
           await this.handleRestart();
         } else {
           console.log('No internet by interval');
@@ -77,15 +78,11 @@ class Connection {
   }
   async onNetworkTypeChange(netType) {
     console.log('changed in network type: ', netType);
-    setTimeout(async () => {
-      await this.handleRestart();
-    }, 5000);
+    await this.handleRestart();
   }
   async onWifiNameChange(wifiName) {
     console.log('changed in ssid: ', wifiName);
-    setTimeout(async () => {
-      await this.handleRestart();
-    }, 5000);
+    await this.handleRestart();
   }
   async updateConnection() {
     const isAppSt = store.getState().isAppSt;

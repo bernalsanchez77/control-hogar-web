@@ -20,8 +20,7 @@ export function useAppLifecycle(isReady) {
         const user = store.getState().userNameDevicesSt;
         const userDevice = userDevices2Table.data.find(el => el.id === user);
         if (!userDevice.isInPresence) {
-            await connection.stopListeners();
-            window.location.reload();
+            await connection.handleRestart();
         }
         store.getState().setIsInForegroundSt(true);
 
@@ -35,8 +34,8 @@ export function useAppLifecycle(isReady) {
             }
             store.getState().setIsLoadingSt(true);
             await new Promise((resolve) => {
-                const unsubscribe = store.subscribe((currState) => {
-                    if (!currState.isLoadingSt) {
+                const unsubscribe = store.subscribe((currentState) => {
+                    if (!currentState.isLoadingSt) {
                         if (unsubscribe) unsubscribe();
                         resolve();
                     }

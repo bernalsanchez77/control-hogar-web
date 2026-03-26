@@ -30,6 +30,7 @@ export function useLoad() {
     const screenSelectedSt = store(v => v.screenSelectedSt);
     const isLoadInitializedSt = store(v => v.isLoadInitializedSt);
     const setIsLoadInitializedSt = store(v => v.setIsLoadInitializedSt);
+    const isRestartingSt = store(v => v.isRestartingSt);
 
     const leader = useLeader();
 
@@ -133,11 +134,10 @@ export function useLoad() {
             await setData('screens', false, async (oldItem, newItem, eventType) => {
                 Tables.onScreensTableChange(oldItem, newItem, eventType);
             });
-
-            setIsLoadingMessageShowingSt(false);
             await setData('selections', true, (oldItem, newItem, eventType) => {
                 Tables.onSelectionsTableChange(oldItem, newItem, eventType);
             });
+            setIsLoadingMessageShowingSt(false);
             const hdmiSelectionId = store.getState().selectionsSt.find(el => el.table === 'hdmiSala')?.id;
             if (hdmiSelectionId) {
                 await viewRouter.onHdmiSalaTableChange(hdmiSelectionId);
@@ -233,6 +233,7 @@ export function useLoad() {
         supabaseTimeoutSt,
         screensSt,
         devicesSt,
+        isRestartingSt,
         onSupabaseTimeout
     };
 }

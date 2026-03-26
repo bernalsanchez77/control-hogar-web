@@ -4,6 +4,7 @@ import Devices from '../devices/devices';
 import Options from '../options/options';
 import Controls from '../controls/controls';
 import Loading from '../views/loading/loading';
+import Restarting from '../views/restarting/restarting';
 import SupabaseTimeout from '../views/supabaseTimeout/supabaseTimeout';
 import Dev from '../dev/dev';
 import { useLoad } from './useLoad';
@@ -19,12 +20,13 @@ function Load() {
         supabaseTimeoutSt,
         screensSt,
         devicesSt,
+        isRestartingSt,
         onSupabaseTimeout
     } = useLoad();
 
     return (
         <div className='load'>
-            {viewSt && !isLoadingMessageShowingSt && (userTypeSt !== 'guest' || (userTypeSt === 'guest' && wifiNameSt === 'Noky')) && !supabaseTimeoutSt ?
+            {viewSt && !isRestartingSt && !isLoadingMessageShowingSt && (userTypeSt !== 'guest' || (userTypeSt === 'guest' && wifiNameSt === 'Noky')) && !supabaseTimeoutSt ?
                 <div className='load-components'>
                     {/* <Notifications></Notifications> */}
                     {screensSt.length > 0 &&
@@ -42,6 +44,9 @@ function Load() {
                     }
                 </div> :
                 <div>
+                    {isRestartingSt &&
+                        <div><Restarting></Restarting></div>
+                    }
                     {isLoadingMessageShowingSt &&
                         <div><Loading></Loading></div>
                     }
