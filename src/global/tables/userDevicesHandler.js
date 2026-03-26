@@ -78,9 +78,9 @@ export const handleUserDevicesChange = async (userBefore, userNow, eventType, us
             }
         } else {
             if (userNameDevice === userNow.id) {
-                console.log('I am not in foreground anymore');
+                console.log('I am in background now');
             } else {
-                console.log(userNow.id + ' is not in foreground anymore');
+                console.log(userNow.id + ' is in background now');
             }
         }
     }

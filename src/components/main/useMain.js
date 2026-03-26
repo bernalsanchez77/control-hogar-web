@@ -21,6 +21,7 @@ export function useMain() {
     const setIsPcSt = store(v => v.setIsPcSt);
     const setIsAppSt = store(v => v.setIsAppSt);
     const setLizEnabledSt = store(v => v.setLizEnabledSt);
+    const setIsInForegroundSt = store(v => v.setIsInForegroundSt);
 
     // 2. Local State
     const [isReadySt, setIsReadySt] = useState(false);
@@ -42,11 +43,16 @@ export function useMain() {
             await CordovaPlugins.startNetworkTypeListener((netType) => connection.onNetworkTypeChange(netType));
         }
 
+        const urlParams = new URLSearchParams(window.location.search);
+        setIsInForegroundSt(urlParams.get('isInBackground') !== 'true');
+        urlParams.delete('isInBackground');
+        const newSearch = urlParams.toString() ? '?' + urlParams.toString() : '';
+
         if (document.readyState === 'complete') {
-            window.history.replaceState(null, "", window.location.pathname + window.location.search);
+            window.history.replaceState(null, "", window.location.pathname + newSearch);
         } else {
             window.addEventListener('load', async () => {
-                window.history.replaceState(null, "", window.location.pathname + window.location.search);
+                window.history.replaceState(null, "", window.location.pathname + newSearch);
             });
         }
         const screenId = localStorage.getItem('screen-id') || 'teleSala';
@@ -61,11 +67,13 @@ export function useMain() {
         setLizEnabledSt(localStorage.getItem('lizEnabled') === 'true' ? true : false);
         setSendEnabledSt((localStorage.getItem('send-enabled') === 'true' || localStorage.getItem('user-type') !== 'dev') ? true : false);
         await connection.updateConnection();
+
+
         requests.updateTable({
             id: userName + '-' + userDevice,
             table: 'userDevices2',
             date: timeSync.getSyncedIsoString(),
-            isInForeground: document.visibilityState === 'visible',
+            isInForeground: store.getState().isInForegroundSt,
             isConnectedToNoky: store.getState().isConnectedToNokySt
         });
 
@@ -78,7 +86,7 @@ export function useMain() {
         setTimeout(() => {
             setIsReadySt(true);
         }, 0);
-    }, [setSendEnabledSt, setLizEnabledSt, setUserNameSt, setUserDevices2St, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt]);
+    }, [setSendEnabledSt, setLizEnabledSt, setUserNameSt, setUserDevices2St, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt, setIsInForegroundSt]);
 
     // 6. Initialisation logic (ran once during first render pass)
     if (!initializedRef.current) {
