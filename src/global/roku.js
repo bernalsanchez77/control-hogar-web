@@ -2,7 +2,7 @@
 import { store } from "../store/store";
 import requests from './requests';
 
-import utils from './utils';
+import utils from './utils/utils';
 let position = 0;
 let playState = {};
 let testCount = 0;
@@ -113,37 +113,44 @@ class Roku {
     }
   }
 
-  async updateState() {
-    const playState = await this.getPlayState();
-    if (playState) {
-      const selectedVideoId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
-      if (playState.state !== 'play' && playState.state !== 'pause' && selectedVideoId) {
-        requests.updateSelections({ table: 'youtubeVideos', id: '' });
-      }
+  async updatePlayStateInSelections(simulate = false) {
+    const rokuPlayState = await this.getPlayState('state');
+    if (rokuPlayState && rokuPlayState !== store.getState().selectionsSt.find(el => el.table === 'playState').id) {
+      console.log('playState changed');
+      requests.updateSelections({ table: 'playState', id: rokuPlayState });
     }
   }
 
-  async updatePlayState(timeout) {
-    if (timeout) {
-      setTimeout(async () => {
-        this.updateState();
-      }, timeout);
-    } else {
-      this.updateState();
-    }
-  }
-
-  async setRoku() {
+  async updateActiveAppInSelections(simulate = false) {
     let rokuActiveApp;
-    if (store.getState().simulatePlayStateSt) {
+    if (simulate) {
       rokuActiveApp = '837';
     } else {
       rokuActiveApp = await this.getActiveApp();
     }
-    if (rokuActiveApp) {
-      const selectionId = store.getState().selectionsSt.find(el => el.table === 'rokuApps')?.id;
-      if (rokuActiveApp !== selectionId) {
-        requests.updateSelections({ table: 'rokuApps', id: rokuActiveApp });
+    if (rokuActiveApp && rokuActiveApp !== store.getState().selectionsSt.find(el => el.table === 'rokuApps').id) {
+      console.log('activeApp changed');
+      requests.updateSelections({ table: 'rokuApps', id: rokuActiveApp });
+    }
+  }
+
+  async updateDataInSelections() {
+    if (store.getState().simulatePlayStateSt) {
+      await this.updatePlayStateInSelections(true);
+      await this.updateActiveAppInSelections(true);
+    } else {
+      await this.updatePlayStateInSelections(false);
+      await this.updateActiveAppInSelections(false);
+    }
+  }
+
+  async activatePlayStateListener() {
+    this.stopPlayStateListener();
+    const youtubeVideosSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
+    if (youtubeVideosSelectedId) {
+      const youtubeVideosSelected = store.getState().youtubeVideosSt.find(el => el.id === youtubeVideosSelectedId) || {};
+      if (youtubeVideosSelected) {
+        this.startPlayStateListener(youtubeVideosSelected);
       }
     }
   }

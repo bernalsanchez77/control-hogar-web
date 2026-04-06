@@ -9,6 +9,7 @@ export function useCredentials() {
     const setUserNameSt = store(v => v.setUserNameSt);
     const setUserDevices2St = store(v => v.setUserDevices2St);
     const setSendEnabledSt = store(v => v.setSendEnabledSt);
+    const setSimulatePlayStateSt = store(v => v.setSimulatePlayStateSt);
 
     // 2. React State
     const [userValue, setUserValue] = useState('');
@@ -46,6 +47,7 @@ export function useCredentials() {
                         if (data.dev) {
                             localStorage.setItem('user-type', data.dev);
                             setSendEnabledSt(false);
+                            setSimulatePlayStateSt(true);
                         } else {
                             localStorage.setItem('user-type', 'owner');
                         }
@@ -58,7 +60,7 @@ export function useCredentials() {
                 }
             }
         }
-    }, [setUserNameSt, setUserDevices2St, setUserTypeSt, setSendEnabledSt]);
+    }, [setUserNameSt, setUserDevices2St, setUserTypeSt, setSendEnabledSt, setSimulatePlayStateSt]);
 
     const setGuestCredential = useCallback(() => {
         setCredentials('guest');

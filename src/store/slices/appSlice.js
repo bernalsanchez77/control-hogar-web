@@ -15,9 +15,11 @@ export const createAppSlice = (set) => ({
     lizEnabledSt: false,
     isLoadingSt: false,
     isRestartingSt: false,
+    showDevViewSt: false,
     viewSt: { selected: '', cable: { channels: { category: [] } }, roku: { apps: { selected: '', youtube: { mode: '', channel: '' } } }, devices: { device: '' } },
 
     // --- Actions ---
+    setShowDevViewSt: (v) => set({ showDevViewSt: v }),
     setSendEnabledSt: (v) => set({ sendEnabledSt: v }),
     setSimulatePlayStateSt: (v) => set({ simulatePlayStateSt: v }),
     setIsLoadingMessageShowingSt: (v) => set({ isLoadingMessageShowingSt: v }),

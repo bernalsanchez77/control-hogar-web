@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { store } from '../../../../../store/store';
 import requests from '../../../../../global/requests';
-import utils from '../../../../../global/utils';
-import { useTouch } from '../../../../../hooks/useTouch';
+import utils from '../../../../../global/utils/utils';
+import { useTouch } from '../../../../hooks/useTouch';
 
 export function useCategory() {
     // 1. Store / Global State

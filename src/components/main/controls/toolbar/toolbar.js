@@ -17,56 +17,58 @@ function Toolbar() {
 
   return (
     <div className='controls-toolbar'>
-      <div className='controls-toolbar-row'>
-        <div className='controls-toolbar-element controls-toolbar-element--left'>
-          <button
-            className={`controls-toolbar-button ${wifiNameSt === 'Noky' ? 'controls-toolbar-button--connected' : ''}`}
-            onTouchStart={(e) => onTouchStart(e)}
-            onTouchMove={(e) => onTouchMove(e)}
-            onTouchEnd={(e) => onTouchEnd(e, 'rev')}>
-            <img
-              className='controls-toolbar-img controls-toolbar-img--button'
-              src="/imgs/rewind-50.png"
-              alt="icono">
-            </img>
-          </button>
-        </div>
-        <div className='controls-toolbar-element'>
-          <button
-            className={`controls-toolbar-button ${wifiNameSt === 'Noky' ? 'controls-toolbar-button--connected' : ''}`}
-            onTouchStart={(e) => onTouchStart(e)}
-            onTouchMove={(e) => onTouchMove(e)}
-            onTouchEnd={(e) => onTouchEnd(e, 'play')}>
-            {selectionsPlayState === 'play' &&
+      {selectionsPlayState && (selectionsPlayState !== 'stop' && selectionsPlayState !== 'close') &&
+        <div className='controls-toolbar-row'>
+          <div className='controls-toolbar-element controls-toolbar-element--left'>
+            <button
+              className={`controls-toolbar-button ${wifiNameSt === 'Noky' ? 'controls-toolbar-button--connected' : ''}`}
+              onTouchStart={(e) => onTouchStart(e)}
+              onTouchMove={(e) => onTouchMove(e)}
+              onTouchEnd={(e) => onTouchEnd(e, 'rev')}>
               <img
                 className='controls-toolbar-img controls-toolbar-img--button'
-                src="/imgs/pause-50.png"
+                src="/imgs/rewind-50.png"
                 alt="icono">
               </img>
-            }
-            {selectionsPlayState === 'pause' &&
+            </button>
+          </div>
+          <div className='controls-toolbar-element'>
+            <button
+              className={`controls-toolbar-button ${wifiNameSt === 'Noky' ? 'controls-toolbar-button--connected' : ''}`}
+              onTouchStart={(e) => onTouchStart(e)}
+              onTouchMove={(e) => onTouchMove(e)}
+              onTouchEnd={(e) => onTouchEnd(e, 'play')}>
+              {selectionsPlayState === 'play' &&
+                <img
+                  className='controls-toolbar-img controls-toolbar-img--button'
+                  src="/imgs/pause-50.png"
+                  alt="icono">
+                </img>
+              }
+              {selectionsPlayState === 'pause' &&
+                <img
+                  className='controls-toolbar-img controls-toolbar-img--button'
+                  src="/imgs/play-50.png"
+                  alt="icono">
+                </img>
+              }
+            </button>
+          </div>
+          <div className='controls-toolbar-element controls-toolbar-element--right'>
+            <button
+              className={`controls-toolbar-button ${wifiNameSt === 'Noky' ? 'controls-toolbar-button--connected' : ''}`}
+              onTouchStart={(e) => onTouchStart(e)}
+              onTouchMove={(e) => onTouchMove(e)}
+              onTouchEnd={(e) => onTouchEnd(e, 'fwd')}>
               <img
                 className='controls-toolbar-img controls-toolbar-img--button'
-                src="/imgs/play-50.png"
+                src="/imgs/forward-50.png"
                 alt="icono">
               </img>
-            }
-          </button>
+            </button>
+          </div>
         </div>
-        <div className='controls-toolbar-element controls-toolbar-element--right'>
-          <button
-            className={`controls-toolbar-button ${wifiNameSt === 'Noky' ? 'controls-toolbar-button--connected' : ''}`}
-            onTouchStart={(e) => onTouchStart(e)}
-            onTouchMove={(e) => onTouchMove(e)}
-            onTouchEnd={(e) => onTouchEnd(e, 'fwd')}>
-            <img
-              className='controls-toolbar-img controls-toolbar-img--button'
-              src="/imgs/forward-50.png"
-              alt="icono">
-            </img>
-          </button>
-        </div>
-      </div>
+      }
       <div className='controls-toolbar-row'>
         <div className='controls-toolbar-row-wrapper'>
           <div className="controls-toolbar-progress-bar-container">

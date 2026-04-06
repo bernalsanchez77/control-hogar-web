@@ -1,7 +1,7 @@
 
-import viewRouter from './view-router';
-import { store } from '../store/store';
-import requests from './requests';
+import viewRouter from '../../../../global/view-router';
+import { store } from '../../../../store/store';
+import requests from '../../../../global/requests';
 
 class Events {
     async onNavigationBack(e) {

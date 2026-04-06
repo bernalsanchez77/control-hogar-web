@@ -1,6 +1,6 @@
 import requests from './requests';
 import { store } from '../store/store';
-import utils from './utils';
+import utils from './utils/utils';
 
 class Youtube {
   clearQueue() {

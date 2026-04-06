@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { store } from '../../../store/store';
-import utils from '../../../global/utils';
+import utils from '../../../global/utils/utils';
 import CordovaPlugins from '../../../global/cordova-plugins';
 
 export function useScreens() {

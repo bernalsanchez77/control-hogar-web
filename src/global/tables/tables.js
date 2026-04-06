@@ -1,18 +1,18 @@
-import { store } from '../store/store';
-import { handleScreensChange } from './tables/screensHandler';
-import { handleYoutubeVideosChange } from './tables/youtubeVideosHandler';
-import { handleRokuAppsChange } from './tables/rokuAppsHandler';
-import { handleHdmiSalaChange } from './tables/hdmiSalaHandler';
-import { handleArrowsChange } from './tables/arrowsHandler';
-import { handleUserDevicesChange } from './tables/userDevicesHandler';
-import { handleLevelsChange } from './tables/levelsHandler';
-import { handleToolbarChange } from './tables/toolbarHandler';
-import { handleSearchChange } from './tables/searchHandler';
-import { handleCableChannelsChange } from './tables/cableChannelsHandler';
-import { handleDevicesChange } from './tables/devicesHandler';
-import { handleLeaderChange } from './tables/leaderHandler';
-import requests from './requests';
-import timeSync from './timeSync';
+import { store } from '../../store/store';
+import { handleScreensChange } from './screensHandler';
+import { handleYoutubeVideosChange } from './youtubeVideosHandler';
+import { handleRokuAppsChange } from './rokuAppsHandler';
+import { handleHdmiSalaChange } from './hdmiSalaHandler';
+import { handleArrowsChange } from './arrowsHandler';
+import { handleUserDevicesChange } from './userDevicesHandler';
+import { handleLevelsChange } from './levelsHandler';
+import { handleToolbarChange } from './toolbarHandler';
+import { handleSearchChange } from './searchHandler';
+import { handleCableChannelsChange } from './cableChannelsHandler';
+import { handleDevicesChange } from './devicesHandler';
+import { handleLeaderChange } from './leaderHandler';
+import requests from '../requests';
+import timeSync from '../utils/timeSync';
 
 
 class Tables {

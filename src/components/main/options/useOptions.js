@@ -5,6 +5,9 @@ export function useOptions() {
     // 1. Store / Global State
     const themeSt = store(v => v.themeSt);
     const setThemeSt = store(v => v.setThemeSt);
+    const showDevViewSt = store(v => v.showDevViewSt);
+    const setShowDevViewSt = store(v => v.setShowDevViewSt);
+    const userTypeSt = store(v => v.userTypeSt);
 
     // 2. React State
     const [optionView, setOptionView] = useState('default');
@@ -32,10 +35,17 @@ export function useOptions() {
         }, 10000);
     }, [setThemeSt]);
 
+    const onEnableSend = useCallback(() => {
+        setShowDevViewSt(!showDevViewSt);
+    }, [showDevViewSt, setShowDevViewSt]);
+
     return {
         themeSt,
         optionView,
         changeOptionView,
-        changeTheme
+        changeTheme,
+        onEnableSend,
+        userTypeSt,
+        showDevViewSt
     };
 }

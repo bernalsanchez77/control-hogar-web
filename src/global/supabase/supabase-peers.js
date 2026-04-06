@@ -1,8 +1,8 @@
 import supabase from './supabase-client';
 import requests from '../requests';
 import { store } from '../../store/store';
-import timeSync from '../timeSync';
-import utils from '../utils';
+import timeSync from '../utils/timeSync';
+import utils from '../utils/utils';
 
 class PeersChannel {
   constructor() {
@@ -57,9 +57,6 @@ class PeersChannel {
         const tableLeader = store.getState().selectionsSt.find(el => el.table === 'leader2').id;
         const currentUser = store.getState().userNameDevicesSt;
         let usersInPresence = this.getRealPeers(this.peersChannel.presenceState());
-        // temporal, erase later
-        usersInPresence = usersInPresence.filter(d => d.name !== 'amanda-celular');
-        // end temporal
         store.getState().setPeersSt(usersInPresence);
         console.log('Users in presence:', usersInPresence);
         const tableLeaderIsInPresence = usersInPresence.some(user => user.id === tableLeader);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEdit } from './useEdit';
-import utils from '../../../../../../../global/utils';
+import utils from '../../../../../../../global/utils/utils';
 import './edit.css';
 
 function Edit({ videoToSave }) {

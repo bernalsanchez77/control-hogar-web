@@ -9,22 +9,22 @@ export const handleToolbarChange = async (oldItem, newItem, eventType, userNameD
     }
     if (userNameDevice === leader) {
         if (newItem.table === 'playState') {
-            const rokuPlayState = await roku.getPlayState('state');
-            if (rokuPlayState !== newItem.id) {
-                if (store.getState().wifiNameSt === 'Noky') {
+            if (store.getState().isConnectedToNokySt) {
+                const rokuPlayState = await roku.getPlayState('state');
+                if (rokuPlayState && rokuPlayState !== newItem.id) {
                     const rokuValue = newItem.id.charAt(0).toUpperCase() + newItem.id.slice(1);
                     requests.fetchRoku({ key: 'keypress', value: rokuValue });
-                } else {
-                    requests.sendIfttt({ device: 'rokuSala', key: 'command', value: newItem.id });
                 }
-            }
-        }
-        if (newItem.table === 'rev' || newItem.table === 'fwd') {
-            const rokuValue = newItem.table.charAt(0).toUpperCase() + newItem.table.slice(1);
-            if (store.getState().wifiNameSt === 'Noky') {
-                requests.fetchRoku({ key: 'keydown', value: rokuValue });
             } else {
-                requests.sendIfttt({ device: 'rokuSala', key: 'command', value: newItem.table });
+                requests.sendIfttt({ device: 'rokuSala', key: 'command', value: newItem.id });
+            }
+            if (newItem.table === 'rev' || newItem.table === 'fwd') {
+                const rokuValue = newItem.table.charAt(0).toUpperCase() + newItem.table.slice(1);
+                if (store.getState().wifiNameSt === 'Noky') {
+                    requests.fetchRoku({ key: 'keydown', value: rokuValue });
+                } else {
+                    requests.sendIfttt({ device: 'rokuSala', key: 'command', value: newItem.table });
+                }
             }
         }
     }

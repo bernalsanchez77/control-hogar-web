@@ -1,5 +1,5 @@
 import { useLevels } from './useLevels';
-import utils from '../../../../global/utils';
+import utils from '../../../../global/utils/utils';
 import './levels.css';
 
 function Levels() {

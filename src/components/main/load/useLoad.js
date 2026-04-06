@@ -6,10 +6,9 @@ import viewRouter from '../../../global/view-router';
 import requests from '../../../global/requests';
 import Roku from '../../../global/roku';
 import CordovaPlugins from '../../../global/cordova-plugins';
-import Tables from '../../../global/tables';
-import events from '../../../global/events';
+import Tables from '../../../global/tables/tables';
+import events from './events/events';
 import { store } from '../../../store/store';
-import { useLeader } from '../../../hooks/useSelectors';
 
 export function useLoad() {
     // 1. Store / Global State
@@ -31,8 +30,7 @@ export function useLoad() {
     const isLoadInitializedSt = store(v => v.isLoadInitializedSt);
     const setIsLoadInitializedSt = store(v => v.setIsLoadInitializedSt);
     const isRestartingSt = store(v => v.isRestartingSt);
-
-    const leader = useLeader();
+    const showDevViewSt = store(v => v.showDevViewSt);
 
     // 2. Refs
     const isReadyRef = useRef(false);
@@ -157,7 +155,7 @@ export function useLoad() {
             updateNotificationBar();
         }
         if (wifiNameSt === 'Noky') {
-            Roku.setRoku();
+            Roku.updateDataInSelections();
         }
         setIsLoadingMessageShowingSt(false);
         store.getState().setIsLoadingSt(false);
@@ -173,20 +171,12 @@ export function useLoad() {
         }
         await load(true);
         await supabasePeers.subscribeToPeersChannel();
-        const youtubeVideosSelectedId = store.getState().selectionsSt.find(el => el.table === 'youtubeVideos')?.id;
-        if (youtubeVideosSelectedId) {
-            if (userNameDevicesSt === leader && !Roku.playStateInterval) {
-                const youtubeVideosSelected = store.getState().youtubeVideosSt.find(el => el.id === youtubeVideosSelectedId) || {};
-                if (youtubeVideosSelected) {
-                    Roku.startPlayStateListener(youtubeVideosSelected);
-                }
-            }
+        const leader = store.getState().selectionsSt.find(el => el.table === 'leader2')?.id;
+        if (store.getState().isConnectedToNokySt && userNameDevicesSt === leader) {
+            Roku.activatePlayStateListener();
         }
-        // if (store.getState().isConnectedToNokySt) {
-        //     requests.updateSelections({ table: 'leader', id: userNameDevicesSt });
-        // }
         isReadyRef.current = true;
-    }, [load, userNameDevicesSt, leader]);
+    }, [load, userNameDevicesSt]);
 
     // 4. Effects
     useEffect(() => {
@@ -234,6 +224,7 @@ export function useLoad() {
         screensSt,
         devicesSt,
         isRestartingSt,
+        showDevViewSt,
         onSupabaseTimeout
     };
 }

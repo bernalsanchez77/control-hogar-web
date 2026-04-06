@@ -3,7 +3,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { store } from "../store/store";
 import connection from './connection';
 import { API_CONFIG, CONTENT_TYPES, ROKU_CONFIG, ENDPOINTS } from './constants';
-import timeSync from './timeSync';
+import timeSync from './utils/timeSync';
 
 const xmlParser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '' });
 

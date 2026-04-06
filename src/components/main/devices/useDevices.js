@@ -2,7 +2,7 @@ import { useEffect, useCallback, useMemo } from 'react';
 import { store } from '../../../store/store';
 import viewRouter from '../../../global/view-router';
 import requests from '../../../global/requests';
-import { useTouch } from '../../../hooks/useTouch';
+import { useTouch } from '../../hooks/useTouch';
 
 export function useDevices() {
     // 1. Store / Global State

@@ -12,8 +12,7 @@ export const handleYoutubeVideosChange = async (oldItem, newItem, eventType, use
             if (!store.getState().simulatePlayStateSt) {
                 requests.fetchRoku({ key: 'launch', value: rokuId, params: { contentID: newItem.id } });
             }
-            const currentVideo = store.getState().youtubeVideosSt.find(video => video.id === newItem.id) || store.getState().currentYoutubeVideoSt;
-            roku.startPlayStateListener(currentVideo);
+            roku.activatePlayStateListener();
             setTimeout(() => {
                 requests.updateSelections({ table: 'playState', id: 'play' });
                 requests.updateTable({ id: newItem.id, table: 'youtubeVideos' });

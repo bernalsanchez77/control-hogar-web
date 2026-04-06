@@ -7,7 +7,9 @@ function Options() {
     themeSt,
     optionView,
     changeOptionView,
-    changeTheme
+    changeTheme,
+    onEnableSend,
+    userTypeSt
   } = useOptions();
 
   return (
@@ -41,6 +43,19 @@ function Options() {
               <option value="velvet">Velvet</option>
               <option value="burnedred">Rojo Quemado</option>
             </select>
+          </div>
+        }
+        {userTypeSt === 'dev' &&
+          <div className='options-element options-element--options'>
+            <button
+              className={`options-button`}
+              onTouchStart={() => onEnableSend()}>
+              <img
+                className='options-img options-img--button'
+                src="/imgs/options.png"
+                alt="icono">
+              </img>
+            </button>
           </div>
         }
       </div>

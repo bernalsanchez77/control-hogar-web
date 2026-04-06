@@ -1,11 +1,11 @@
 import { useEffect, useCallback, useState, useMemo } from 'react';
 import { store } from '../../../../store/store';
 import requests from '../../../../global/requests';
-import utils from '../../../../global/utils';
+import utils from '../../../../global/utils/utils';
 import youtube from '../../../../global/youtube';
 import viewRouter from '../../../../global/view-router';
-import { useTouch } from '../../../../hooks/useTouch';
-import { useLeader, usePlayState, useYoutubeVideoSelectedId } from '../../../../hooks/useSelectors';
+import { useTouch } from '../../../hooks/useTouch';
+import { useLeader, usePlayState, useYoutubeVideoSelectedId } from '../../../hooks/useSelectors';
 
 export function useToolbar() {
   // 1. Store / Global State
@@ -44,9 +44,9 @@ export function useToolbar() {
     } else if (value === 'queue') {
       viewRouter.navigateToYoutubeQueue();
     } else if (value === 'liz') {
-      const currentLiz = localStorage.getItem('lizEnabled') === 'true';
+      const currentLiz = localStorage.getItem('liz-enabled') === 'true';
       const nextLiz = !currentLiz;
-      localStorage.setItem('lizEnabled', nextLiz);
+      localStorage.setItem('liz-enabled', nextLiz);
       setLizEnabledSt(nextLiz);
     }
   }, [selectionsPlayState, setLizEnabledSt]);

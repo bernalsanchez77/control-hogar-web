@@ -1,8 +1,8 @@
 import { useEffect, useCallback } from 'react';
-import { store } from '../store/store';
-import connection from '../global/connection';
-import tables from '../global/tables';
-import requests from '../global/requests';
+import { store } from '../../store/store';
+import connection from '../../global/connection';
+import tables from '../../global/tables/tables';
+import requests from '../../global/requests';
 
 /**
  * useAppLifecycle Hook

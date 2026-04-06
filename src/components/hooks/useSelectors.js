@@ -1,4 +1,4 @@
-import { store } from '../store/store';
+import { store } from '../../store/store';
 
 // 1. Selection Selectors (derived from selectionsSt)
 export const useLeader = () => store(v => v.selectionsSt.find(el => el.table === 'leader2')?.id);

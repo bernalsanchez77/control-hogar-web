@@ -6,7 +6,7 @@ import Controls from '../controls/controls';
 import Loading from '../views/loading/loading';
 import Restarting from '../views/restarting/restarting';
 import SupabaseTimeout from '../views/supabaseTimeout/supabaseTimeout';
-import Dev from '../dev/dev';
+import DevView from '../views/dev/dev';
 import { useLoad } from './useLoad';
 import './load.css';
 
@@ -21,12 +21,13 @@ function Load() {
         screensSt,
         devicesSt,
         isRestartingSt,
+        showDevViewSt,
         onSupabaseTimeout
     } = useLoad();
 
     return (
         <div className='load'>
-            {viewSt && !isRestartingSt && !isLoadingMessageShowingSt && (userTypeSt !== 'guest' || (userTypeSt === 'guest' && wifiNameSt === 'Noky')) && !supabaseTimeoutSt ?
+            {viewSt && !showDevViewSt && !isRestartingSt && !isLoadingMessageShowingSt && (userTypeSt !== 'guest' || (userTypeSt === 'guest' && wifiNameSt === 'Noky')) && !supabaseTimeoutSt ?
                 <div className='load-components'>
                     {/* <Notifications></Notifications> */}
                     {screensSt.length > 0 &&
@@ -39,11 +40,11 @@ function Load() {
                     {!viewSt.roku.apps.selected && !viewSt.devices.device &&
                         <Options></Options>
                     }
-                    {userTypeSt === 'dev' &&
-                        <Dev></Dev>
-                    }
                 </div> :
                 <div>
+                    {showDevViewSt &&
+                        <DevView></DevView>
+                    }
                     {isRestartingSt &&
                         <div><Restarting></Restarting></div>
                     }

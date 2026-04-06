@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { store } from "../../../../../../../store/store";
 import viewRouter from '../../../../../../../global/view-router';
-import utils from '../../../../../../../global/utils';
-import { useTouch } from '../../../../../../../hooks/useTouch';
+import utils from '../../../../../../../global/utils/utils';
+import { useTouch } from '../../../../../../hooks/useTouch';
 
 export function useHome() {
     // 1. Store / Global State
@@ -13,7 +13,7 @@ export function useHome() {
     // 2. Callbacks / Functions
     const onChannelShortClick = (channelId) => {
         utils.triggerVibrate();
-        localStorage.setItem('channelSelected', channelId);
+        localStorage.setItem('channel-selected', channelId);
         viewRouter.navigateToYoutubeChannel(channelId);
     };
 

@@ -1,8 +1,8 @@
 import { store } from "../../../../../store/store";
-import utils from '../../../../../global/utils';
+import utils from '../../../../../global/utils/utils';
 import requests from '../../../../../global/requests';
 import viewRouter from '../../../../../global/view-router';
-import { useTouch } from '../../../../../hooks/useTouch';
+import { useTouch } from '../../../../hooks/useTouch';
 
 export function useAllApps() {
     // 1. Store / Global State

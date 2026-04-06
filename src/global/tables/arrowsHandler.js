@@ -12,9 +12,8 @@ export const handleArrowsChange = async (oldItem, newItem, eventType, userNameDe
         }
         if (newItem.table === 'select') {
             setTimeout(async () => {
-                const rokuPlayState = await roku.getPlayState('state');
-                if (rokuPlayState !== store.getState().selectionsSt.find(el => el.table === 'playState')?.id) {
-                    requests.updateSelections({ table: 'playState', id: rokuPlayState });
+                if (store.getState().isConnectedToNokySt) {
+                    roku.updatePlayStateInSelections();
                 }
             }, 2000);
         }

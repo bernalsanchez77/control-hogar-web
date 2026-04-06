@@ -2,8 +2,8 @@ import { useState, useCallback, useRef } from 'react';
 import { store } from '../../store/store';
 import connection from '../../global/connection';
 import CordovaPlugins from '../../global/cordova-plugins';
-import { useAppLifecycle } from '../../hooks/useAppLifecycle';
-import timeSync from '../../global/timeSync';
+import { useAppLifecycle } from '../hooks/useAppLifecycle';
+import timeSync from '../../global/utils/timeSync';
 import requests from '../../global/requests';
 
 export function useMain() {
@@ -16,6 +16,7 @@ export function useMain() {
     const setUserDevices2St = store(v => v.setUserDevices2St);
     const setScreenSelectedSt = store(v => v.setScreenSelectedSt);
     const setSendEnabledSt = store(v => v.setSendEnabledSt);
+    const setSimulatePlayStateSt = store(v => v.setSimulatePlayStateSt);
     const isConnectedToInternetSt = store(v => v.isConnectedToInternetSt);
     const wifiNameSt = store(v => v.wifiNameSt);
     const setIsPcSt = store(v => v.setIsPcSt);
@@ -64,8 +65,9 @@ export function useMain() {
         setUserTypeSt(localStorage.getItem('user-type'));
         setUserNameSt(userName);
         setUserDevices2St(userDevice);
-        setLizEnabledSt(localStorage.getItem('lizEnabled') === 'true' ? true : false);
+        setLizEnabledSt(localStorage.getItem('liz-enabled') === 'true' ? true : false);
         setSendEnabledSt((localStorage.getItem('send-enabled') === 'true' || localStorage.getItem('user-type') !== 'dev') ? true : false);
+        setSimulatePlayStateSt((localStorage.getItem('simulate-playstate') === 'false' || localStorage.getItem('user-type') !== 'dev') ? false : true);
         await connection.updateConnection();
 
 
@@ -86,7 +88,7 @@ export function useMain() {
         setTimeout(() => {
             setIsReadySt(true);
         }, 0);
-    }, [setSendEnabledSt, setLizEnabledSt, setUserNameSt, setUserDevices2St, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt, setIsInForegroundSt]);
+    }, [setSendEnabledSt, setSimulatePlayStateSt, setLizEnabledSt, setUserNameSt, setUserDevices2St, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt, setIsInForegroundSt]);
 
     // 6. Initialisation logic (ran once during first render pass)
     if (!initializedRef.current) {

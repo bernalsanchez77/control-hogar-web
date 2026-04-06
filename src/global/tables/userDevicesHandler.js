@@ -1,7 +1,7 @@
 import { store } from '../../store/store';
 import requests from '../requests';
-// import roku from '../roku';
-import utils from '../utils';
+import roku from '../roku';
+import utils from '../utils/utils';
 
 export const handleUserDevicesChange = async (userBefore, userNow, eventType, userNameDevice, leader) => {
     console.log('userBefore', userBefore);
@@ -76,6 +76,9 @@ export const handleUserDevicesChange = async (userBefore, userNow, eventType, us
             } else {
                 console.log(userNow.id + ' is in foreground now');
             }
+            if (userNameDevice === leader && store.getState().isConnectedToNokySt) {
+                await roku.updateDataInSelections();
+            }
         } else {
             if (userNameDevice === userNow.id) {
                 console.log('I am in background now');
@@ -83,12 +86,5 @@ export const handleUserDevicesChange = async (userBefore, userNow, eventType, us
                 console.log(userNow.id + ' is in background now');
             }
         }
-    }
-
-    if (userNow.isInForeground && !userBefore.isInForeground && userNameDevice === leader) {
-        // const rokuPlayState = await roku.getPlayState('state');
-        // if (rokuPlayState !== store.getState().selectionsSt.find(el => el.table === 'playState')?.id) {
-        //     requests.updateSelections({ table: 'playState', id: rokuPlayState });
-        // }
     }
 };

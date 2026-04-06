@@ -2,8 +2,8 @@ import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { store } from '../../../../store/store';
 import requests from '../../../../global/requests';
 import viewRouter from '../../../../global/view-router';
-import utils from '../../../../global/utils';
-import { useTouch } from '../../../../hooks/useTouch';
+import utils from '../../../../global/utils/utils';
+import { useTouch } from '../../../hooks/useTouch';
 
 export function useSearch() {
     // 1. Store / Global State

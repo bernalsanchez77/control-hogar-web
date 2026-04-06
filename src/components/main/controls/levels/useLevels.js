@@ -1,6 +1,6 @@
 import { useRef, useEffect, useCallback, useMemo } from 'react';
 import { store } from '../../../../store/store';
-import utils from '../../../../global/utils';
+import utils from '../../../../global/utils/utils';
 import requests from '../../../../global/requests';
 
 export function useLevels() {
@@ -21,14 +21,14 @@ export function useLevels() {
 
     // 4. Callbacks / Functions
     const onMuteShortClick = useCallback(async (keyup, key) => {
-        if (screen.state === 'on') {
-            if (keyup) {
-                utils.triggerVibrate();
-                const device = screenSelectedSt;
-                const value = screen.mute === 'on' ? 'off' : 'on';
-                requests.updateTable({ id: device, table: 'screens', mute: value });
-            }
+        //if (screen.state === 'on') {
+        if (keyup) {
+            utils.triggerVibrate();
+            const device = screenSelectedSt;
+            const value = screen.mute === 'on' ? 'off' : 'on';
+            requests.updateTable({ id: device, table: 'screens', mute: value });
         }
+        //}
     }, [screenSelectedSt, screen]);
 
     const onMuteLongClick = useCallback(() => {
@@ -87,33 +87,33 @@ export function useLevels() {
 
     const changeVolumeStart = useCallback((e, button) => {
         e.preventDefault();
-        if (screen.state === 'on') {
-            volumeChange.current = 1;
-            timeout3s.current = setTimeout(() => {
-                volumeChange.current = 5;
-                utils.triggerVibrate(200);
-            }, 1000);
-            timeout6s.current = setTimeout(() => {
-                volumeChange.current = 10;
-                utils.triggerVibrate(400);
-            }, 2000);
-        }
-    }, [screen]);
+        //if (screen.state === 'on') {
+        volumeChange.current = 1;
+        timeout3s.current = setTimeout(() => {
+            volumeChange.current = 5;
+            utils.triggerVibrate(200);
+        }, 1000);
+        timeout6s.current = setTimeout(() => {
+            volumeChange.current = 10;
+            utils.triggerVibrate(400);
+        }, 2000);
+        //}
+    }, []);
 
     const changeVolumeEnd = useCallback((e, button) => {
         e.preventDefault();
-        if (screen.state === 'on') {
-            clearTimeout(timeout3s.current);
-            clearTimeout(timeout6s.current);
-            if (volumeChange.current === 1) {
-                utils.triggerVibrate(200);
-                onVolumeClick(volumeChange.current, button);
-            } else {
-                utils.triggerVibrate(200);
-                onVolumeClick(volumeChange.current, button, false);
-            }
+        //if (screen.state === 'on') {
+        clearTimeout(timeout3s.current);
+        clearTimeout(timeout6s.current);
+        if (volumeChange.current === 1) {
+            utils.triggerVibrate(200);
+            onVolumeClick(volumeChange.current, button);
+        } else {
+            utils.triggerVibrate(200);
+            onVolumeClick(volumeChange.current, button, false);
         }
-    }, [screen, onVolumeClick]);
+        // }
+    }, [onVolumeClick]);
 
     // 5. Effects
     useEffect(() => {
