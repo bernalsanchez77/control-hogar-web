@@ -16,9 +16,9 @@ export function useAppLifecycle(isReady) {
     // 2. Callbacks / Functions
     const onResume = useCallback(async () => {
         console.log('To Foreground');
-        const userDevices2Table = await requests.getTable('userDevices2');
+        const userDevicesTable = await requests.getTable('userDevices');
         const user = store.getState().userNameDevicesSt;
-        const userDevice = userDevices2Table.data.find(el => el.id === user);
+        const userDevice = userDevicesTable.data.find(el => el.id === user);
         if (!userDevice.isInPresence) {
             await connection.handleRestart();
         }

@@ -27,7 +27,7 @@ class SupabaseChannels {
     if (!this.youtubeChannelsCallback && tableName === 'youtubeChannels') this.youtubeChannelsCallback = callback;
     if (!this.youtubeChannelsImagesCallback && tableName === 'youtubeChannelsImages') this.youtubeChannelsImagesCallback = callback;
     if (!this.cableChannelsCallback && tableName === 'cableChannels') this.cableChannelsCallback = callback;
-    if (!this.userDevicesCallback && tableName === 'userDevices2') this.userDevicesCallback = callback;
+    if (!this.userDevicesCallback && tableName === 'userDevices') this.userDevicesCallback = callback;
     if (!this.supabaseChannels[tableName]) {
       this.supabaseChannels[tableName] = {};
     }
@@ -141,7 +141,7 @@ class SupabaseChannels {
     await this.unsubscribeFromSupabaseChannel('youtubeChannels');
     await this.unsubscribeFromSupabaseChannel('youtubeChannelsImages');
     await this.unsubscribeFromSupabaseChannel('cableChannels');
-    await this.unsubscribeFromSupabaseChannel('userDevices2');
+    await this.unsubscribeFromSupabaseChannel('userDevices');
   }
 
   async unsubscribeFromSupabaseChannel(tableName) {

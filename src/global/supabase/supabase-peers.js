@@ -54,13 +54,13 @@ class PeersChannel {
       this.syncTimeout = setTimeout(() => {
         this.syncTimeout = null;
         let expectedLeader;
-        const tableLeader = store.getState().selectionsSt.find(el => el.table === 'leader2').id;
+        const tableLeader = store.getState().selectionsSt.find(el => el.table === 'leader').id;
         const currentUser = store.getState().userNameDevicesSt;
         let usersInPresence = this.getRealPeers(this.peersChannel.presenceState());
         store.getState().setPeersSt(usersInPresence);
         console.log('Users in presence:', usersInPresence);
         const tableLeaderIsInPresence = usersInPresence.some(user => user.id === tableLeader);
-        const usersInTable = store.getState().userDevices2St;
+        const usersInTable = store.getState().userDevicesSt;
         console.log('Users in table:', usersInTable);
         let leaderIsMe = false;
         const usersToSetInPresenceFalse = usersInTable.filter(user =>
@@ -98,7 +98,7 @@ class PeersChannel {
             usersToSetInPresenceFalse.forEach(user => {
               requests.updateTable({
                 id: user.id,
-                table: 'userDevices2',
+                table: 'userDevices',
                 date: user.date,
                 isInForeground: false,
                 isConnectedToNoky: false,
@@ -110,7 +110,7 @@ class PeersChannel {
               if (user.id === currentUser) {
                 requests.updateTable({
                   id: currentUser,
-                  table: 'userDevices2',
+                  table: 'userDevices',
                   date: presenceData.date,
                   isInForeground: store.getState().isInForegroundSt,
                   isConnectedToNoky: store.getState().isConnectedToNokySt,
@@ -119,7 +119,7 @@ class PeersChannel {
               } else {
                 requests.updateTable({
                   id: user.id,
-                  table: 'userDevices2',
+                  table: 'userDevices',
                   date: presenceData.date,
                   isInForeground: user.isInForeground,
                   isConnectedToNoky: user.isConnectedToNoky,
@@ -128,12 +128,12 @@ class PeersChannel {
               }
             });
           } else {
-            console.log('No users to update in userDevices2 table, checking if selected leader is correct, and if not update correspoding table');
+            console.log('No users to update in userDevices table, checking if selected leader is correct, and if not update correspoding table');
             if (tableLeader === currentUser) {
               console.log('Selected leader is correct.');
             } else {
               console.log(`Table leader (${tableLeader}) is incorrect. I am updating it to myself: ${currentUser}`);
-              requests.updateSelections({ table: 'leader2', id: currentUser });
+              requests.updateSelections({ table: 'leader', id: currentUser });
             }
           }
         }
@@ -178,7 +178,7 @@ class PeersChannel {
         date,
         isConnectedToNoky: store.getState().isConnectedToNokySt,
         isInForeground: store.getState().isInForegroundSt,
-        isLeader: store.getState().selectionsSt.find(el => el.table === 'leader2')?.id === store.getState().userNameDevicesSt,
+        isLeader: store.getState().selectionsSt.find(el => el.table === 'leader')?.id === store.getState().userNameDevicesSt,
         updatedAt: timeSync.getSyncedIsoString()
       });
     }

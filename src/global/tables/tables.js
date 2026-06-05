@@ -28,7 +28,7 @@ class Tables {
     if (!this.userNameDevice) {
       this.userNameDevice = store.getState().userNameDevicesSt;
     }
-    const leader = store.getState().selectionsSt.find(el => el.table === 'leader2')?.id;
+    const leader = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
     await handleScreensChange(oldItem, newItem, eventType, this.userNameDevice, leader);
   }
 
@@ -40,7 +40,7 @@ class Tables {
     if (!this.userNameDevice) {
       this.userNameDevice = store.getState().userNameDevicesSt;
     }
-    const leader = store.getState().selectionsSt.find(el => el.table === 'leader2')?.id;
+    const leader = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
     await handleDevicesChange(oldItem, newItem, eventType, this.userNameDevice, leader);
   }
 
@@ -48,7 +48,7 @@ class Tables {
     if (!this.userNameDevice) {
       this.userNameDevice = store.getState().userNameDevicesSt;
     }
-    const leader = store.getState().selectionsSt.find(el => el.table === 'leader2')?.id;
+    const leader = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
     await handleUserDevicesChange(oldItem, newItem, eventType, this.userNameDevice, leader);
   }
 
@@ -56,7 +56,7 @@ class Tables {
     if (!this.userNameDevice) {
       this.userNameDevice = store.getState().userNameDevicesSt;
     }
-    const leader = store.getState().selectionsSt.find(el => el.table === 'leader2')?.id;
+    const leader = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
 
     switch (newItem.table) {
       case 'youtubeVideos':
@@ -91,7 +91,7 @@ class Tables {
       case 'input':
         await handleSearchChange(oldItem, newItem, eventType, this.userNameDevice, leader);
         break;
-      case 'leader2':
+      case 'leader':
         await handleLeaderChange(oldItem, newItem, eventType, this.userNameDevice, leader);
         break;
       default:
@@ -102,8 +102,8 @@ class Tables {
   updateUserDevicesTable(newDate) {
     requests.updateTable({
       id: store.getState().userNameDevicesSt,
-      table: 'userDevices2',
-      date: newDate ? timeSync.getSyncedIsoString() : store.getState().userDevices2St.find(el => el.id === store.getState().userNameDevicesSt).date,
+      table: 'userDevices',
+      date: newDate ? timeSync.getSyncedIsoString() : store.getState().userDevicesSt.find(el => el.id === store.getState().userNameDevicesSt).date,
       isInForeground: store.getState().isInForegroundSt,
       isConnectedToNoky: store.getState().isConnectedToNokySt
     });

@@ -126,7 +126,7 @@ export function useLoad() {
         });
 
         if (hdmiSalaTable.table && hdmiSalaTable.subscriptionResponse === 'SUBSCRIBED') {
-            await setData('userDevices2', true, (oldItem, newItem, eventType) => {
+            await setData('userDevices', true, (oldItem, newItem, eventType) => {
                 Tables.onUserDevicesTableChange(oldItem, newItem, eventType);
             });
             await setData('screens', false, async (oldItem, newItem, eventType) => {
@@ -171,7 +171,7 @@ export function useLoad() {
         }
         await load(true);
         await supabasePeers.subscribeToPeersChannel();
-        const leader = store.getState().selectionsSt.find(el => el.table === 'leader2')?.id;
+        const leader = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
         if (store.getState().isConnectedToNokySt && userNameDevicesSt === leader) {
             Roku.activatePlayStateListener();
         }

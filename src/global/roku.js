@@ -113,11 +113,15 @@ class Roku {
     }
   }
 
-  async updatePlayStateInSelections(simulate = false) {
+  async updatePlayStateInSelections() {
     const rokuPlayState = await this.getPlayState('state');
-    if (rokuPlayState && rokuPlayState !== store.getState().selectionsSt.find(el => el.table === 'playState').id) {
-      console.log('playState changed');
-      requests.updateSelections({ table: 'playState', id: rokuPlayState });
+    if (rokuPlayState) {
+      if (rokuPlayState !== store.getState().selectionsSt.find(el => el.table === 'playState').id) {
+        requests.updateSelections({ table: 'playState', id: rokuPlayState });
+      }
+      if (rokuPlayState !== 'pause' && rokuPlayState !== 'play' && store.getState().selectionsSt.find(el => el.table === 'youtubeVideos').id) {
+        requests.updateSelections({ table: 'youtubeVideos', id: '' });
+      }
     }
   }
 
@@ -136,10 +140,10 @@ class Roku {
 
   async updateDataInSelections() {
     if (store.getState().simulatePlayStateSt) {
-      await this.updatePlayStateInSelections(true);
+      await this.updatePlayStateInSelections();
       await this.updateActiveAppInSelections(true);
     } else {
-      await this.updatePlayStateInSelections(false);
+      await this.updatePlayStateInSelections();
       await this.updateActiveAppInSelections(false);
     }
   }

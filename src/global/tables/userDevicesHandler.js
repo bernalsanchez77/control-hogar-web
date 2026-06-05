@@ -7,7 +7,7 @@ export const handleUserDevicesChange = async (userBefore, userNow, eventType, us
     console.log('userBefore', userBefore);
     console.log('userNow', userNow);
 
-    const userDevices = store.getState().userDevices2St;
+    const userDevices = store.getState().userDevicesSt;
     const expectedLeader = utils.getExpectedLeader(userDevices, store.getState().peersSt);
 
     console.log('the leader should be: ', expectedLeader);
@@ -22,7 +22,7 @@ export const handleUserDevicesChange = async (userBefore, userNow, eventType, us
                 console.log('I am the expected leader, but I am the leader, so no need to update the leader');
             } else {
                 console.log('I update the leader to myself');
-                requests.updateSelections({ table: 'leader2', id: userNameDevice });
+                requests.updateSelections({ table: 'leader', id: userNameDevice });
             }
         }
     } else if (userNow.isInPresence !== userBefore.isInPresence) {
@@ -44,7 +44,7 @@ export const handleUserDevicesChange = async (userBefore, userNow, eventType, us
                 console.log('I am the expected leader, but I am the leader, so no need to update the leader');
             } else {
                 console.log('I update the leader to myself');
-                requests.updateSelections({ table: 'leader2', id: userNameDevice });
+                requests.updateSelections({ table: 'leader', id: userNameDevice });
             }
         }
     } else if (userNow.isConnectedToNoky !== userBefore.isConnectedToNoky) {
@@ -66,7 +66,7 @@ export const handleUserDevicesChange = async (userBefore, userNow, eventType, us
                 console.log('I am the expected leader, but I am the leader, so no need to update the leader');
             } else {
                 console.log('I update the leader to myself');
-                requests.updateSelections({ table: 'leader2', id: userNameDevice });
+                requests.updateSelections({ table: 'leader', id: userNameDevice });
             }
         }
     } else if (userNow.isInForeground !== userBefore.isInForeground) {

@@ -13,7 +13,7 @@ export function useMain() {
     const userTypeSt = store(v => v.userTypeSt);
     const setUserTypeSt = store(v => v.setUserTypeSt);
     const setUserNameSt = store(v => v.setUserNameSt);
-    const setUserDevices2St = store(v => v.setUserDevices2St);
+    const setUserDevicesSt = store(v => v.setUserDevicesSt);
     const setScreenSelectedSt = store(v => v.setScreenSelectedSt);
     const setSendEnabledSt = store(v => v.setSendEnabledSt);
     const setSimulatePlayStateSt = store(v => v.setSimulatePlayStateSt);
@@ -64,16 +64,20 @@ export function useMain() {
         setScreenSelectedSt(screenId);
         setUserTypeSt(localStorage.getItem('user-type'));
         setUserNameSt(userName);
-        setUserDevices2St(userDevice);
+        setUserDevicesSt(userDevice);
         setLizEnabledSt(localStorage.getItem('liz-enabled') === 'true' ? true : false);
-        setSendEnabledSt((localStorage.getItem('send-enabled') === 'true' || localStorage.getItem('user-type') !== 'dev') ? true : false);
-        setSimulatePlayStateSt((localStorage.getItem('simulate-playstate') === 'false' || localStorage.getItem('user-type') !== 'dev') ? false : true);
+        if (localStorage.getItem('send-enabled') && localStorage.getItem('send-enabled') === 'false' && localStorage.getItem('user-type') === 'dev') {
+            setSendEnabledSt(false);
+        }
+        if (localStorage.getItem('simulate-playstate') && localStorage.getItem('simulate-playstate') === 'true' && localStorage.getItem('user-type') === 'dev') {
+            setSimulatePlayStateSt(true);
+        }
         await connection.updateConnection();
 
 
         requests.updateTable({
             id: userName + '-' + userDevice,
-            table: 'userDevices2',
+            table: 'userDevices',
             date: timeSync.getSyncedIsoString(),
             isInForeground: store.getState().isInForegroundSt,
             isConnectedToNoky: store.getState().isConnectedToNokySt
@@ -88,7 +92,7 @@ export function useMain() {
         setTimeout(() => {
             setIsReadySt(true);
         }, 0);
-    }, [setSendEnabledSt, setSimulatePlayStateSt, setLizEnabledSt, setUserNameSt, setUserDevices2St, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt, setIsInForegroundSt]);
+    }, [setSendEnabledSt, setSimulatePlayStateSt, setLizEnabledSt, setUserNameSt, setUserDevicesSt, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt, setIsInForegroundSt]);
 
     // 6. Initialisation logic (ran once during first render pass)
     if (!initializedRef.current) {
