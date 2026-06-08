@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   const { data, error } = await supabase
     .from('selections')
-    .update({ id, date })
+    .update({ id, date, triggerUser })
     .eq('table', table);
 
   if (error) {
