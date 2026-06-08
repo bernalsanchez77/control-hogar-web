@@ -1,7 +1,7 @@
 import { supabase } from './_lib/supabase';
 
 export default async function handler(req, res) {
-  const { table, id, date } = req.body || {};
+  const { table, id, date, triggerUser } = req.body || {};
 
   const { data, error } = await supabase
     .from('selections')
