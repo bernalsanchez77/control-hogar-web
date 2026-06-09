@@ -135,7 +135,6 @@ export function useLoad() {
             await setData('selections', true, (oldItem, newItem, eventType) => {
                 Tables.onSelectionsTableChange(oldItem, newItem, eventType);
             });
-            setIsLoadingMessageShowingSt(false);
             const hdmiSelectionId = store.getState().selectionsSt.find(el => el.table === 'hdmiSala')?.id;
             if (hdmiSelectionId) {
                 await viewRouter.onHdmiSalaTableChange(hdmiSelectionId);
@@ -150,6 +149,7 @@ export function useLoad() {
             await setData('youtubeVideos', true, (oldItem, newItem, eventType) => {
                 Tables.onYoutubeVideosTableChange(oldItem, newItem, eventType);
             });
+            setIsLoadingMessageShowingSt(false);
         }
         if (isAppSt) {
             updateNotificationBar();

@@ -16,6 +16,8 @@ export function useDev() {
     const setShowDevViewSt = store(v => v.setShowDevViewSt);
     const simulatePlayStateSt = store(v => v.simulatePlayStateSt);
     const setSimulatePlayStateSt = store(v => v.setSimulatePlayStateSt);
+    const skipLeaderSt = store(v => v.skipLeaderSt);
+    const setSkipLeaderSt = store(v => v.setSkipLeaderSt);
 
     // 2. Callbacks / Functions
     const onEnableSend = useCallback(() => {
@@ -75,6 +77,11 @@ export function useDev() {
         setSimulatePlayStateSt(!simulatePlayStateSt);
     }, [simulatePlayStateSt, setSimulatePlayStateSt]);
 
+    const onSkipLeaderChange = useCallback(() => {
+        window.localStorage.setItem('skip-leader', !skipLeaderSt);
+        setSkipLeaderSt(!skipLeaderSt);
+    }, [skipLeaderSt, setSkipLeaderSt]);
+
     const onClose = useCallback(() => {
         setShowDevViewSt(false);
     }, [setShowDevViewSt]);
@@ -85,11 +92,13 @@ export function useDev() {
         networkTypeSt,
         leader,
         simulatePlayStateSt,
+        skipLeaderSt,
         onEnableSend,
         onWifiChange,
         onNetworkChange,
         onLeaderChange,
         onClose,
-        onSimulatePlaystateChange
+        onSimulatePlaystateChange,
+        onSkipLeaderChange
     };
 }

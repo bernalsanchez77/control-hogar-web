@@ -93,10 +93,8 @@ class Requests {
     if (params.date === null) {
       delete params.date;
     }
-    if (params.table === 'screens') {
-      const userName = store.getState().userNameSt;
-      params.triggerUser = userName || 'guest';
-    }
+    const userNameDevice = store.getState().userNameDevicesSt;
+    params.triggerUser = userNameDevice || 'guest';
     return this._genericRequest(ENDPOINTS.UPDATE_TABLE, params, 'patch', 'json');
   }
 
@@ -117,6 +115,8 @@ class Requests {
     if (params.date === null) {
       delete params.date;
     }
+    const userNameDevice = store.getState().userNameDevicesSt;
+    params.triggerUser = userNameDevice || 'guest';
     return this._genericRequest(ENDPOINTS.UPDATE_SELECTIONS, params, 'patch', 'json');
   }
 

@@ -23,6 +23,7 @@ export function useMain() {
     const setIsAppSt = store(v => v.setIsAppSt);
     const setLizEnabledSt = store(v => v.setLizEnabledSt);
     const setIsInForegroundSt = store(v => v.setIsInForegroundSt);
+    const setSkipLeaderSt = store(v => v.setSkipLeaderSt);
 
     // 2. Local State
     const [isReadySt, setIsReadySt] = useState(false);
@@ -72,6 +73,9 @@ export function useMain() {
         if (localStorage.getItem('simulate-playstate') && localStorage.getItem('simulate-playstate') === 'true' && localStorage.getItem('user-type') === 'dev') {
             setSimulatePlayStateSt(true);
         }
+        if (localStorage.getItem('skip-leader') && localStorage.getItem('skip-leader') === 'false' && localStorage.getItem('user-type') === 'dev') {
+            setSkipLeaderSt(false);
+        }
         await connection.updateConnection();
 
 
@@ -92,7 +96,7 @@ export function useMain() {
         setTimeout(() => {
             setIsReadySt(true);
         }, 0);
-    }, [setSendEnabledSt, setSimulatePlayStateSt, setLizEnabledSt, setUserNameSt, setUserDevicesSt, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt, setIsInForegroundSt]);
+    }, [setSendEnabledSt, setSimulatePlayStateSt, setLizEnabledSt, setSkipLeaderSt, setUserNameSt, setUserDevicesSt, setIsAppSt, setThemeSt, setUserTypeSt, setScreenSelectedSt, setIsPcSt, setIsInForegroundSt]);
 
     // 6. Initialisation logic (ran once during first render pass)
     if (!initializedRef.current) {

@@ -9,12 +9,14 @@ function Dev() {
         networkTypeSt,
         leader,
         simulatePlayStateSt,
+        skipLeaderSt,
         onEnableSend,
         onWifiChange,
         onNetworkChange,
         onLeaderChange,
         onClose,
-        onSimulatePlaystateChange
+        onSimulatePlaystateChange,
+        onSkipLeaderChange,
     } = useDev();
 
     return (
@@ -42,6 +44,14 @@ function Dev() {
                         className={`dev-button`}
                         onClick={onSimulatePlaystateChange}>
                         Simulate Playstate: {simulatePlayStateSt ? 'On' : 'Off'}
+                    </button>
+                </div>
+                <div className='dev-element dev-element--skip-leader'>
+                    <button
+                        onContextMenu={(e) => e.preventDefault()}
+                        className={`dev-button`}
+                        onClick={onSkipLeaderChange}>
+                        Skip Leader: {skipLeaderSt ? 'On' : 'Off'}
                     </button>
                 </div>
                 <div className='dev-element dev-element--leader'>

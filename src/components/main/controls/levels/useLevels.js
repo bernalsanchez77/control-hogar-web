@@ -21,14 +21,14 @@ export function useLevels() {
 
     // 4. Callbacks / Functions
     const onMuteShortClick = useCallback(async (keyup, key) => {
-        //if (screen.state === 'on') {
-        if (keyup) {
-            utils.triggerVibrate();
-            const device = screenSelectedSt;
-            const value = screen.mute === 'on' ? 'off' : 'on';
-            requests.updateTable({ id: device, table: 'screens', mute: value });
+        if (screen.state === 'on') {
+            if (keyup) {
+                utils.triggerVibrate();
+                const device = screenSelectedSt;
+                const value = screen.mute === 'on' ? 'off' : 'on';
+                requests.updateTable({ id: device, table: 'screens', mute: value });
+            }
         }
-        //}
     }, [screenSelectedSt, screen]);
 
     const onMuteLongClick = useCallback(() => {
@@ -102,17 +102,17 @@ export function useLevels() {
 
     const changeVolumeEnd = useCallback((e, button) => {
         e.preventDefault();
-        //if (screen.state === 'on') {
-        clearTimeout(timeout3s.current);
-        clearTimeout(timeout6s.current);
-        if (volumeChange.current === 1) {
-            utils.triggerVibrate(200);
-            onVolumeClick(volumeChange.current, button);
-        } else {
-            utils.triggerVibrate(200);
-            onVolumeClick(volumeChange.current, button, false);
+        if (screen.state === 'on') {
+            clearTimeout(timeout3s.current);
+            clearTimeout(timeout6s.current);
+            if (volumeChange.current === 1) {
+                utils.triggerVibrate(200);
+                onVolumeClick(volumeChange.current, button);
+            } else {
+                utils.triggerVibrate(200);
+                onVolumeClick(volumeChange.current, button, false);
+            }
         }
-        // }
     }, [onVolumeClick]);
 
     // 5. Effects

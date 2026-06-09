@@ -3,7 +3,7 @@ import requests from '../requests';
 import roku from '../roku';
 import utils from '../utils/utils';
 
-export const handleUserDevicesChange = async (userBefore, userNow, eventType, userNameDevice, leader) => {
+const handleUserDevices = async (userBefore, userNow, eventType, userNameDevice, leader) => {
     console.log('userBefore', userBefore);
     console.log('userNow', userNow);
 
@@ -88,3 +88,5 @@ export const handleUserDevicesChange = async (userBefore, userNow, eventType, us
         }
     }
 };
+
+export default handleUserDevices;

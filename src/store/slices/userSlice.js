@@ -5,7 +5,7 @@ export const createUserSlice = (set, get) => ({
     userNameDevicesSt: '',
     screenSelectedSt: '',
     peersSt: [],
-    skipUser: 'amanda',
+    skipLeaderSt: true,
 
     setUserTypeSt: (v) => set({ userTypeSt: v }),
     setUserNameSt: (v) => set({
@@ -16,6 +16,7 @@ export const createUserSlice = (set, get) => ({
         userDevicesSt: v,
         userNameDevicesSt: get().userNameSt && v ? `${get().userNameSt}-${v}` : ''
     }),
+    setSkipLeaderSt: (v) => set({ skipLeaderSt: v }),
     setScreenSelectedSt: (v) => set({ screenSelectedSt: v }),
     setPeersSt: (v) => set({ peersSt: v }),
 });

@@ -24,13 +24,26 @@ export function useTop() {
             if (screen.state === 'on') {
                 requests.updateTable({ id: screenSelectedSt, table: 'screens', state: newState });
                 setTimeout(() => {
-                    requests.updateTable({ id: 'proyectorSwitchSala', table: 'devices', state: newState });
+                    requests.updateTable({ id: 'proyectorSalaSwitch', table: 'devices', state: newState });
                 }, 30000);
             } else {
-                requests.updateTable({ id: 'proyectorSwitchSala', table: 'devices', state: newState });
+                requests.updateTable({ id: 'proyectorSalaSwitch', table: 'devices', state: newState });
                 setTimeout(() => {
                     requests.updateTable({ id: screenSelectedSt, table: 'screens', state: newState });
                 }, 5000);
+            }
+        } else if (screenSelectedSt === 'teleCocina' || screenSelectedSt === 'teleSala' || screenSelectedSt === 'teleCuarto') {
+            const id = screen.id + 'Switch';
+            if (screen.state === 'on') {
+                requests.updateTable({ id: screenSelectedSt, table: 'screens', state: newState });
+                setTimeout(() => {
+                    requests.updateTable({ id, table: 'devices', state: newState });
+                }, 3000);
+            } else {
+                requests.updateTable({ id, table: 'devices', state: newState });
+                setTimeout(() => {
+                    requests.updateTable({ id: screenSelectedSt, table: 'screens', state: newState });
+                }, 3000);
             }
         } else {
             requests.updateTable({ id: screenSelectedSt, table: 'screens', state: newState });
