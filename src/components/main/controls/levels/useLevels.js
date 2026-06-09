@@ -113,7 +113,7 @@ export function useLevels() {
                 onVolumeClick(volumeChange.current, button, false);
             }
         }
-    }, [onVolumeClick]);
+    }, [onVolumeClick, screen]);
 
     // 5. Effects
     useEffect(() => {

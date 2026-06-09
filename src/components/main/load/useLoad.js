@@ -113,6 +113,27 @@ export function useLoad() {
         }
     }, [screenSelectedSt]);
 
+    const saveTableDataInLocalStorage = useCallback(async (tableName) => {
+        const tableData = await setData(tableName, true);
+        if (Array.isArray(tableData)) {
+            localStorage.setItem(tableName, JSON.stringify(tableData));
+        }
+    }, [setData]);
+
+    const handleData = useCallback(async (selectionsTable, tableName) => {
+        if (selectionsTable.table.data.find((sl) => sl.table === 'cache').id === 'on') {
+            const tableData = localStorage.getItem(tableName);
+            if (tableData) {
+                const table = { table: { data: JSON.parse(tableData) } };
+                setTableSt(tableName + 'St', table.table.data);
+            } else {
+                await saveTableDataInLocalStorage(tableName);
+            }
+        } else {
+            await saveTableDataInLocalStorage(tableName);
+        }
+    }, [setTableSt, saveTableDataInLocalStorage]);
+
     const load = useCallback(async (firstLoad = false) => {
         // if (store.getState().isLoadingSt) return;
 
@@ -121,32 +142,35 @@ export function useLoad() {
         if (firstLoad) {
             setIsLoadingMessageShowingSt(true);
         }
-        const hdmiSalaTable = await setData('hdmiSala', false, async (oldItem, newItem, eventType) => {
-            Tables.onHdmiSalaTableChange(oldItem, newItem, eventType);
+
+
+        const selectionsTable = await setData('selections', false, (oldItem, newItem, eventType) => {
+            Tables.onSelectionsTableChange(oldItem, newItem, eventType);
         });
 
-        if (hdmiSalaTable.table && hdmiSalaTable.subscriptionResponse === 'SUBSCRIBED') {
-            await setData('userDevices', true, (oldItem, newItem, eventType) => {
+        if (selectionsTable.table && selectionsTable.subscriptionResponse === 'SUBSCRIBED') {
+            await setData('hdmiSala', false, async (oldItem, newItem, eventType) => {
+                Tables.onHdmiSalaTableChange(oldItem, newItem, eventType);
+            });
+            await setData('userDevices', false, (oldItem, newItem, eventType) => {
                 Tables.onUserDevicesTableChange(oldItem, newItem, eventType);
             });
             await setData('screens', false, async (oldItem, newItem, eventType) => {
                 Tables.onScreensTableChange(oldItem, newItem, eventType);
             });
-            await setData('selections', true, (oldItem, newItem, eventType) => {
-                Tables.onSelectionsTableChange(oldItem, newItem, eventType);
-            });
+
             const hdmiSelectionId = store.getState().selectionsSt.find(el => el.table === 'hdmiSala')?.id;
             if (hdmiSelectionId) {
                 await viewRouter.onHdmiSalaTableChange(hdmiSelectionId);
             }
-            await setData('rokuApps');
-            await setData('devices', true, (oldItem, newItem, eventType) => {
+            await handleData(selectionsTable, 'rokuApps');
+            await setData('devices', false, (oldItem, newItem, eventType) => {
                 Tables.onDevicesTableChange(oldItem, newItem, eventType);
             });
             await setData('youtubeChannels');
             await setData('youtubeChannelsImages');
-            await setData('cableChannels');
-            await setData('youtubeVideos', true, (oldItem, newItem, eventType) => {
+            await handleData(selectionsTable, 'cableChannels');
+            await setData('youtubeVideos', false, (oldItem, newItem, eventType) => {
                 Tables.onYoutubeVideosTableChange(oldItem, newItem, eventType);
             });
             setIsLoadingMessageShowingSt(false);
@@ -159,7 +183,7 @@ export function useLoad() {
         }
         setIsLoadingMessageShowingSt(false);
         store.getState().setIsLoadingSt(false);
-    }, [setData, setIsLoadingMessageShowingSt, wifiNameSt, isAppSt, updateNotificationBar]);
+    }, [setData, setIsLoadingMessageShowingSt, wifiNameSt, isAppSt, updateNotificationBar, handleData]);
 
     const onSupabaseTimeout = async () => {
         await load();
