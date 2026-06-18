@@ -2,8 +2,9 @@ export const createAppSlice = (set) => ({
     // --- Global states ---
     sendEnabledSt: true,
     simulatePlayStateSt: false,
-    isLoadingMessageShowingSt: false,
+    isLoadingMessageShowingSt: true,
     isLoadInitializedSt: false,
+    isConnectedToInternetIntervalSt: null,
     themeSt: 'dark',
     isInForegroundSt: true,
     isConnectedToInternetSt: true,
@@ -23,6 +24,7 @@ export const createAppSlice = (set) => ({
     setSendEnabledSt: (v) => set({ sendEnabledSt: v }),
     setSimulatePlayStateSt: (v) => set({ simulatePlayStateSt: v }),
     setIsLoadingMessageShowingSt: (v) => set({ isLoadingMessageShowingSt: v }),
+    setIsConnectedToInternetIntervalSt: (v) => set({ isConnectedToInternetIntervalSt: v }),
     setThemeSt: (v) => set({ themeSt: v }),
     setIsInForegroundSt: (v) => set({ isInForegroundSt: v }),
     setIsConnectedToInternetSt: (v) => set({ isConnectedToInternetSt: v }),

@@ -1,6 +1,6 @@
-import { store } from '../../store/store';
-import roku from '../roku';
-import requests from '../requests';
+import { store } from '../../../store/store';
+import roku from '../../global/roku';
+import requests from '../../global/requests';
 
 const external = async (oldItem, newItem, eventType) => {
     const rokuValue = newItem.table.charAt(0).toUpperCase() + newItem.table.slice(1);

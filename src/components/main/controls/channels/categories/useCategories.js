@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { store } from '../../../../../store/store';
-import CableChannelCategories from '../../../../../global/cable-channel-categories';
-import utils from '../../../../../global/utils/utils';
+import CableChannelCategories from './cable-channel-categories';
+import utils from '../../../../../utils/utils';
 import viewRouter from '../../../../../global/view-router';
 import { useTouch } from '../../../../hooks/useTouch';
 

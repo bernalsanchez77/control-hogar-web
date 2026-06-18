@@ -1,8 +1,8 @@
 import { useEffect, useCallback, useState, useMemo } from 'react';
 import { store } from '../../../../store/store';
-import requests from '../../../../global/requests';
-import utils from '../../../../global/utils/utils';
-import youtube from '../../../../global/youtube';
+import requests from '../../../global/requests';
+import utils from '../../../../utils/utils';
+import youtube from '../../../global/youtube';
 import viewRouter from '../../../../global/view-router';
 import { useTouch } from '../../../hooks/useTouch';
 import { useLeader, usePlayState, useYoutubeVideoSelectedId } from '../../../hooks/useSelectors';

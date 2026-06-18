@@ -1,10 +1,9 @@
 import { useState, useCallback, useRef } from 'react';
 import { store } from '../../store/store';
-import connection from '../../global/connection';
-import CordovaPlugins from '../../global/cordova-plugins';
 import { useAppLifecycle } from '../hooks/useAppLifecycle';
-import timeSync from '../../global/utils/timeSync';
-import requests from '../../global/requests';
+import timeSync from '../../utils/timeSync';
+import requests from '../global/requests';
+import lifecycle from '../global/lifecycle';
 
 export function useMain() {
     // 1. Store / Global State
@@ -37,14 +36,9 @@ export function useMain() {
     // 5. Callbacks / Functions
     const init = useCallback(async (isApp) => {
         await timeSync.init();
+        localStorage.removeItem('userDevices');
         const userName = localStorage.getItem('user-name');
         const userDevice = localStorage.getItem('user-device');
-        if (isApp) {
-            await CordovaPlugins.getPermissions();
-            await CordovaPlugins.startWifiNameListener((wifiName) => connection.onWifiNameChange(wifiName));
-            await CordovaPlugins.startNetworkTypeListener((netType) => connection.onNetworkTypeChange(netType));
-        }
-
         const urlParams = new URLSearchParams(window.location.search);
         setIsInForegroundSt(urlParams.get('isInBackground') !== 'true');
         urlParams.delete('isInBackground');
@@ -76,22 +70,23 @@ export function useMain() {
         if (localStorage.getItem('skip-leader') && localStorage.getItem('skip-leader') === 'false' && localStorage.getItem('user-type') === 'dev') {
             setSkipLeaderSt(false);
         }
-        await connection.updateConnection();
+        await lifecycle.updateConnection();
 
-
+        const isInForeground = store.getState().isInForegroundSt;
         requests.updateTable({
             id: userName + '-' + userDevice,
             table: 'userDevices',
             date: timeSync.getSyncedIsoString(),
-            isInForeground: store.getState().isInForegroundSt,
-            isConnectedToNoky: store.getState().isConnectedToNokySt
+            isInForeground: isInForeground,
+            isConnectedToNoky: store.getState().isConnectedToNokySt,
+            screenSelected: screenId,
         });
 
         if (store.getState().isConnectedToInternetSt) {
             //requests.sendLogs('entro', user);
             // requests.updateTable({ id: userName, table: 'users', state: 'foreground' });
         } else {
-            connection.onNoInternet();
+            lifecycle.onNoInternet();
         }
         setTimeout(() => {
             setIsReadySt(true);

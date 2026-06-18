@@ -1,6 +1,6 @@
-import requests from './requests';
-import { store } from '../store/store';
-import utils from './utils/utils';
+import requests from '../../components/global/requests';
+import { store } from '../../store/store';
+import utils from '../../utils/utils';
 
 class Youtube {
   clearQueue() {
@@ -74,7 +74,6 @@ class Youtube {
     }
     this.clearQueue();
   }
-
   getQueueConsecutiveNumber(video) {
     let sortedQueue = [...store.getState().youtubeVideosSt].sort((a, b) => {
       return Number(a.queue) - Number(b.queue);

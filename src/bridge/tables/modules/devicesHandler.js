@@ -1,4 +1,4 @@
-import requests from '../requests';
+import requests from '../../global/requests';
 
 const external = async (oldItem, newItem, eventType) => {
     requests.sendIfttt({ device: newItem.id, key: 'state', value: newItem.state });

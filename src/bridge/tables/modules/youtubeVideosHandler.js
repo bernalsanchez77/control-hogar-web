@@ -1,6 +1,6 @@
-import { store } from '../../store/store';
-import roku from '../roku';
-import requests from '../requests';
+import { store } from '../../../store/store';
+import roku from '../../global/roku';
+import requests from '../../global/requests';
 
 const external = async (oldItem, newItem, eventType) => {
     if (newItem.id) {
@@ -11,7 +11,7 @@ const external = async (oldItem, newItem, eventType) => {
         roku.activatePlayStateListener();
         setTimeout(() => {
             requests.updateSelections({ table: 'playState', id: 'play' });
-            requests.updateTable({ id: newItem.id, table: 'youtubeVideos' });
+            requests.updateTable({ table: 'youtubeVideos', id: newItem.id });
         }, 1000);
     } else {
         requests.fetchRoku({ key: 'keypress', value: 'Stop' });

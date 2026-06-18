@@ -1,18 +1,18 @@
 import { store } from '../../store/store';
-import handleScreens from './screensHandler';
-import handleDevices from './devicesHandler';
-import handleUserDevices from './userDevicesHandler';
-import handleYoutubeVideos from './youtubeVideosHandler';
-import handleRokuApps from './rokuAppsHandler';
-import toolbarHandler from './toolbarHandler';
-import handleHdmiSala from './hdmiSalaHandler';
-import handleCableChannels from './cableChannelsHandler';
-import handleArrows from './arrowsHandler';
-import handleLevels from './levelsHandler';
-import handleSearch from './searchHandler';
+import handleScreens from './modules/screensHandler';
+import handleDevices from './modules/devicesHandler';
+import handleUserDevices from './modules/userDevicesHandler';
+import handleYoutubeVideos from './modules/youtubeVideosHandler';
+import handleRokuApps from './modules/rokuAppsHandler';
+import toolbarHandler from './modules/toolbarHandler';
+import handleHdmiSala from './modules/hdmiSalaHandler';
+import handleCableChannels from './modules/cableChannelsHandler';
+import handleArrows from './modules/arrowsHandler';
+import handleLevels from './modules/levelsHandler';
+import handleSearch from './modules/searchHandler';
 // import { handleLeaderChange } from './leaderHandler';
-import requests from '../requests';
-import timeSync from '../utils/timeSync';
+import requests from '../global/requests';
+import timeSync from '../../utils/timeSync';
 
 class Tables {
   constructor() {
@@ -92,7 +92,8 @@ class Tables {
       table: 'userDevices',
       date: newDate ? timeSync.getSyncedIsoString() : store.getState().userDevicesSt.find(el => el.id === store.getState().userNameDevicesSt).date,
       isInForeground: store.getState().isInForegroundSt,
-      isConnectedToNoky: store.getState().isConnectedToNokySt
+      isConnectedToNoky: store.getState().isConnectedToNokySt,
+      screenSelected: store.getState().screenSelectedSt,
     });
   }
 

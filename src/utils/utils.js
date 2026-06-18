@@ -257,6 +257,24 @@ class Utils {
       }
     }
   }
+  async getIsConnectedToInternet() {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+
+      // Use a small, reliable file
+      await fetch('https://www.google.com/favicon.ico', {
+        mode: 'no-cors',
+        cache: "no-cache",
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeout);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
 }
 const utils = new Utils();
 export default utils;

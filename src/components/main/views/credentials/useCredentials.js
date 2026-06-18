@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { store } from '../../../../store/store';
-import connection from '../../../../global/connection';
-import requests from '../../../../global/requests';
+import requests from '../../../global/requests';
+import utils from '../../../../utils/utils';
 
 export function useCredentials() {
     // 1. Store / Global State
@@ -27,7 +27,7 @@ export function useCredentials() {
             return;
         }
 
-        const isConnectedToInternet = await connection.getIsConnectedToInternet();
+        const isConnectedToInternet = await utils.getIsConnectedToInternet();
         if (isConnectedToInternet) {
             if (userType === 'guest') {
                 const users = await requests.getTable('users');

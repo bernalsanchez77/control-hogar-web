@@ -1,11 +1,9 @@
 import axios from 'axios';
-import { XMLParser } from 'fast-xml-parser';
-import { store } from "../store/store";
-import connection from './connection';
-import { API_CONFIG, CONTENT_TYPES, ROKU_CONFIG, ENDPOINTS } from './constants';
-import timeSync from './utils/timeSync';
+import { store } from "../../store/store";
+import { API_CONFIG, CONTENT_TYPES, ENDPOINTS } from '../../global/constants';
+import timeSync from '../../utils/timeSync';
+import utils from '../../utils/utils';
 
-const xmlParser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '' });
 
 class Requests {
   constructor(isPc) {
@@ -13,9 +11,9 @@ class Requests {
   }
 
   async requestErrorHandler() {
-    const isConnectedToInternet = await connection.getIsConnectedToInternet();
+    const isConnectedToInternet = await utils.getIsConnectedToInternet();
     if (!isConnectedToInternet) {
-      connection.onNoInternet();
+      // connection.onNoInternet();
     }
   }
 
@@ -139,14 +137,6 @@ class Requests {
     return response && response.status === 200 && response.data.validUser ? response.data : '';
   }
 
-  async sendIfttt(params, sendEnabled) {
-    params.key = params.key || 'state';
-    const isEnabled = sendEnabled !== undefined ? sendEnabled : store.getState().sendEnabledSt;
-    if (isEnabled) {
-      return this._genericRequest(ENDPOINTS.SEND_IFTTT, params, 'get');
-    }
-  }
-
   async _genericRequest(api, params, method, serializer) {
     if (window.cordova && window.cordova.plugin?.http) {
       try {
@@ -157,75 +147,6 @@ class Requests {
       }
     }
     return this.normalApiRequest(api, params, method);
-  }
-
-  async getRokuData(param) {
-    const getRequestPromise = new Promise((resolve, reject) => {
-      if (window.cordova?.plugin?.http) {
-        window.cordova.plugin.http.sendRequest(
-          `${ROKU_CONFIG.IP}query/${param}`,
-          { method: 'get', headers: {}, params: {} },
-          (response) => resolve(response),
-          (error) => reject(error)
-        );
-      } else {
-        axios.get(`${ROKU_CONFIG.IP_PC}query/${param}`)
-          .then(resolve)
-          .catch(reject);
-      }
-    });
-
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('Roku not responding')), ROKU_CONFIG.TIMEOUT)
-    );
-
-    try {
-      const response = await Promise.race([getRequestPromise, timeoutPromise]);
-      return {
-        status: response.status,
-        data: xmlParser.parse(response.data)
-      };
-    } catch (error) {
-      console.log("Roku Data Request Error:", error.message || error);
-      return null;
-    }
-  }
-
-  async fetchRoku(params) {
-    const { sendEnabledSt } = store.getState();
-    if (!sendEnabledSt) return;
-
-    const query = params.params ? `?${new URLSearchParams(params.params).toString()}` : '';
-    const baseUrl = window.cordova ? ROKU_CONFIG.IP : ROKU_CONFIG.IP_PC;
-    const url = `${baseUrl}${params.key}/${params.value}${query}`;
-
-    const sendRequestPromise = new Promise((resolve, reject) => {
-      if (window.cordova?.plugin?.http) {
-        window.cordova.plugin.http.sendRequest(
-          url,
-          { method: 'post', headers: CONTENT_TYPES.X_WWW_FORM_URLENCODED, data: {}, serializer: 'urlencoded' },
-          resolve,
-          reject
-        );
-      } else {
-        axios.post(url, {}, { headers: CONTENT_TYPES.X_WWW_FORM_URLENCODED })
-          .then(resolve)
-          .catch(reject);
-      }
-    });
-
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Roku not responding")), ROKU_CONFIG.POST_TIMEOUT)
-    );
-
-    try {
-      await Promise.race([sendRequestPromise, timeoutPromise]);
-    } catch (error) {
-      console.log("Roku Fetch Error (Switching to IFTTT):", error.message);
-      if (window.cordova && window.cordova.plugin?.http) {
-        await this.cordovaApiRequest(ENDPOINTS.SEND_IFTTT, params, 'get');
-      }
-    }
   }
 }
 

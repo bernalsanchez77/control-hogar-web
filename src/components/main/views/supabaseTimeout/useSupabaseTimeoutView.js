@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import utils from '../../../../global/utils/utils';
+import utils from '../../../../utils/utils';
 
 export function useSupabaseTimeoutView(onSupabaseTimeoutParent) {
     // 1. Callbacks / Functions

@@ -1,4 +1,4 @@
-import { store } from '../../store/store';
+import { store } from '../../../store/store';
 import Roku from '../roku';
 
 export const handleLeaderChange = async (oldItem, newItem, eventType, userNameDevice, leader) => {

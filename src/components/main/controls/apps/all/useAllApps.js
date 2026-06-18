@@ -1,6 +1,6 @@
 import { store } from "../../../../../store/store";
-import utils from '../../../../../global/utils/utils';
-import requests from '../../../../../global/requests';
+import utils from '../../../../../utils/utils';
+import requests from '../../../../global/requests';
 import viewRouter from '../../../../../global/view-router';
 import { useTouch } from '../../../../hooks/useTouch';
 

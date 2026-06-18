@@ -11,6 +11,8 @@ export const createDataSlice = (set) => ({
     hdmiSalaSt: [],
     devicesSt: [],
     selectionsSt: [],
+    supabaseChannelsSt: null,
+    supabasePeersSt: null,
 
     supabaseSetTimeoutSt: (v) => set({ supabaseTimeoutSt: v }),
     setRokuSearchModeSt: (v) => set({ rokuSearchModeSt: v }),
@@ -24,7 +26,8 @@ export const createDataSlice = (set) => ({
     setHdmiSalaSt: (v) => set({ hdmiSalaSt: v }),
     setDevicesSt: (v) => set({ devicesSt: v }),
     setSelectionsSt: (v) => set({ selectionsSt: v }),
-
+    setSupabaseChannelsSt: (v) => set({ supabaseChannelsSt: v }),
+    setSupabasePeersSt: (v) => set({ supabasePeersSt: v }),
     updateTablesSt: (tableName, newItem) => {
         set((state) => {
             const currentList = state[tableName];

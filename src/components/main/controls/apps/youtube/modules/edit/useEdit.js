@@ -1,7 +1,7 @@
 import { useRef, useState, useMemo } from 'react';
 import { store } from "../../../../../../../store/store";
-import requests from '../../../../../../../global/requests';
-import utils from '../../../../../../../global/utils/utils';
+import requests from '../../../../../../global/requests';
+import utils from '../../../../../../../utils/utils';
 import { useTouch } from '../../../../../../hooks/useTouch';
 
 export function useEdit(videoToSave) {

@@ -1,9 +1,8 @@
 import { useEffect, useCallback } from 'react';
 import { store } from '../../store/store';
-import connection from '../../global/connection';
-import tables from '../../global/tables/tables';
-import requests from '../../global/requests';
-
+import tables from '../../bridge/tables/tables';
+import requests from '../../components/global/requests';
+import lifecycle from '../global/lifecycle';
 /**
  * useAppLifecycle Hook
  * Handles the application lifecycle events (Resume, Pause, Visibility Change)
@@ -17,37 +16,39 @@ export function useAppLifecycle(isReady) {
     const onResume = useCallback(async () => {
         console.log('To Foreground');
         const userDevicesTable = await requests.getTable('userDevices');
+        localStorage.setItem('userDevices', JSON.stringify(userDevicesTable));
         const user = store.getState().userNameDevicesSt;
         const userDevice = userDevicesTable.data.find(el => el.id === user);
         if (!userDevice.isInPresence) {
-            await connection.handleRestart();
-        }
-        store.getState().setIsInForegroundSt(true);
-
-        if (store.getState().networkTypeSt === 'wifi' && (store.getState().wifiNameSt === 'unknown-wifi' || store.getState().wifiNameSt === '')) {
-            console.log('unknown-wifi, updating connection');
-            await connection.updateConnection();
-        }
-        if (store.getState().isConnectedToInternetSt && store.getState().userNameDevicesSt) {
-            if (store.getState().isLoadingSt) {
-                store.getState().setIsLoadingSt(false);
+            await lifecycle.handleRestart();
+        } else {
+            store.getState().setIsInForegroundSt(true);
+            if (store.getState().networkTypeSt === 'wifi' && (store.getState().wifiNameSt === 'unknown-wifi' || store.getState().wifiNameSt === '')) {
+                console.log('unknown-wifi, updating connection');
+                await lifecycle.updateConnection();
             }
-            store.getState().setIsLoadingSt(true);
-            await new Promise((resolve) => {
-                const unsubscribe = store.subscribe((currentState) => {
-                    if (!currentState.isLoadingSt) {
-                        if (unsubscribe) unsubscribe();
-                        resolve();
-                    }
+            if (store.getState().isConnectedToInternetSt && store.getState().userNameDevicesSt) {
+                if (store.getState().isLoadingSt) {
+                    store.getState().setIsLoadingSt(false);
+                }
+                store.getState().setIsLoadingSt(true);
+                await new Promise((resolve) => {
+                    const unsubscribe = store.subscribe((currentState) => {
+                        if (!currentState.isLoadingSt) {
+                            if (unsubscribe) unsubscribe();
+                            resolve();
+                        }
+                    });
                 });
-            });
-            tables.updateUserDevicesTable();
+                tables.updateUserDevicesTable();
+            }
         }
     }, []);
 
     const onPause = useCallback(async () => {
         console.log('To Background');
         store.getState().setIsInForegroundSt(false);
+        store.getState().setIsLoadingMessageShowingSt(true);
         if (store.getState().isConnectedToInternetSt && store.getState().userNameDevicesSt) {
             tables.updateUserDevicesTable();
         }

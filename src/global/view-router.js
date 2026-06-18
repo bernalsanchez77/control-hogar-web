@@ -1,6 +1,5 @@
 
 import supabaseChannels from './supabase/supabase-channels';
-import requests from './requests';
 import { store } from '../store/store';
 
 class ViewRouter {
@@ -33,21 +32,18 @@ class ViewRouter {
       }
       if (currentView.selected === 'roku') {
         // was in roku
-        const channelsTable = await requests.getTable('cableChannels');
-        if (channelsTable) {
-          store.getState().setRokuSearchModeSt('default');
-          if (currentView.roku.apps.selected) {
-            // was in an app
-            if (currentView.roku.apps.selected === 'youtube') {
-              // app was Youtube
-              if (currentView.roku.apps.youtube.channel) {
-              } else {
-                store.getState().setRokuSearchModeSt('roku');
-              }
+        store.getState().setRokuSearchModeSt('default');
+        if (currentView.roku.apps.selected) {
+          // was in an app
+          if (currentView.roku.apps.selected === 'youtube') {
+            // app was Youtube
+            if (currentView.roku.apps.youtube.channel) {
+            } else {
+              store.getState().setRokuSearchModeSt('roku');
             }
-          } else {
-            // was in home
           }
+        } else {
+          // was in home
         }
       }
       if (currentView.selected === '') {
@@ -73,11 +69,7 @@ class ViewRouter {
                     // was in no mode (youtube home)
                     const youtubeChannel = newView.roku.apps.youtube.channel;
                     window.history.pushState({ page: youtubeChannel }, youtubeChannel, '#' + youtubeChannel);
-                    const videos = await requests.getTable('youtubeVideos');
-                    if (videos) {
-                      store.getState().setYoutubeVideosSt(videos.data);
-                      store.getState().setRokuSearchModeSt('default');
-                    }
+                    store.getState().setRokuSearchModeSt('default');
                   }
                 }
                 if (newView.roku.apps.youtube.mode === 'search') {
@@ -112,21 +104,13 @@ class ViewRouter {
           // no app selected
           if (currentView.roku.apps.selected) {
             // was in an app
-            const apps = await requests.getTable('rokuApps');
-            if (apps) {
-              store.getState().setRokuAppsSt(apps.data);
-              store.getState().setRokuSearchModeSt('roku');
-            }
+            store.getState().setRokuSearchModeSt('roku');
           }
         }
       }
       if (currentView.selected === 'cable') {
         //was in cable
-        const apps = await requests.getTable('rokuApps');
-        if (apps) {
-          store.getState().setRokuAppsSt(apps.data);
-          store.getState().setRokuSearchModeSt('roku');
-        }
+        store.getState().setRokuSearchModeSt('roku');
       }
       if (currentView.selected === '') {
         store.getState().setRokuSearchModeSt('roku');

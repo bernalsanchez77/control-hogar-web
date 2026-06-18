@@ -1,12 +1,12 @@
 import supabase from './supabase-client';
-import requests from '../requests';
+import requests from '../requests2';
 import { store } from '../../store/store';
-import timeSync from '../utils/timeSync';
-import utils from '../utils/utils';
+import timeSync from '../../utils/timeSync';
+import utils from '../../utils/utils';
 
 class PeersChannel {
   constructor() {
-    this.peersChannel = {};
+    this.peersChannel = null;
     this.reconnectTimeout = null;
     this.syncTimeout = null;
   }
@@ -34,8 +34,10 @@ class PeersChannel {
   }
 
   killPeersChannel() {
-    supabase.removeChannel(this.peersChannel);
-    this.peersChannel = {};
+    if (this.peersChannel) {
+      supabase.removeChannel(this.peersChannel);
+      this.peersChannel = null;
+    }
   }
 
   subscribeToPeersChannel() {
@@ -102,7 +104,8 @@ class PeersChannel {
                 date: user.date,
                 isInForeground: false,
                 isConnectedToNoky: false,
-                isInPresence: false
+                isInPresence: false,
+                screenSelected: user.screenSelected,
               });
             });
             usersToSetInPresenceTrue.forEach(user => {
@@ -114,7 +117,8 @@ class PeersChannel {
                   date: presenceData.date,
                   isInForeground: store.getState().isInForegroundSt,
                   isConnectedToNoky: store.getState().isConnectedToNokySt,
-                  isInPresence: true
+                  isInPresence: true,
+                  screenSelected: store.getState().screenSelectedSt,
                 });
               } else {
                 requests.updateTable({
@@ -123,7 +127,8 @@ class PeersChannel {
                   date: presenceData.date,
                   isInForeground: user.isInForeground,
                   isConnectedToNoky: user.isConnectedToNoky,
-                  isInPresence: true
+                  isInPresence: true,
+                  screenSelected: user.screenSelected,
                 });
               }
             });

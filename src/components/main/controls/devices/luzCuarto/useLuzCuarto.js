@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import requests from '../../../../../global/requests';
-import utils from '../../../../../global/utils/utils';
+import requests from '../../../../global/requests';
+import utils from '../../../../../utils/utils';
 import { useTouch } from '../../../../hooks/useTouch';
 
 export function useLuzCuarto(element) {

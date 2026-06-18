@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { store } from "../../../../../../../store/store";
-import utils from '../../../../../../../global/utils/utils';
-import youtube from '../../../../../../../global/youtube';
+import utils from '../../../../../../../utils/utils';
+import youtube from '../../../../../../global/youtube';
 import viewRouter from '../../../../../../../global/view-router';
 import { useTouch } from '../../../../../../hooks/useTouch';
 import { useLeader, useYoutubeVideoSelectedId } from '../../../../../../hooks/useSelectors';

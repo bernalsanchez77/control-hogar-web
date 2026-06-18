@@ -1,5 +1,6 @@
 import supabase from './supabase-client';
-import connection from '../connection';
+import utils from '../../utils/utils';
+
 let handlingNoInternet = false;
 
 class SupabaseChannels {
@@ -91,7 +92,7 @@ class SupabaseChannels {
       }
       await this.unsubscribeFromSupabaseChannel(tableName);
       setTimeout(async () => {
-        const isConnectedToInternet = await connection.getIsConnectedToInternet();
+        const isConnectedToInternet = await utils.getIsConnectedToInternet();
         if (isConnectedToInternet) {
           await this.subscribeToSupabaseChannel(tableName, callback).then((res) => {
             if (res.success) {
@@ -114,7 +115,7 @@ class SupabaseChannels {
         } else {
           if (!handlingNoInternet) {
             handlingNoInternet = true;
-            connection.onNoInternet();
+            // connection.onNoInternet();
             supabase.realtime.disconnect();
           }
         }
@@ -147,7 +148,8 @@ class SupabaseChannels {
   async unsubscribeFromSupabaseChannel(tableName) {
     if (this.supabaseChannels[tableName] && this.supabaseChannels[tableName].channel) {
       this.supabaseChannels[tableName].subscribed = false;
-      await this.supabaseChannels[tableName].channel.unsubscribe();
+      await supabase.removeChannel(this.supabaseChannels[tableName].channel);
+      this.supabaseChannels[tableName].channel = null;
     }
   }
 }

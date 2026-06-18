@@ -1,7 +1,7 @@
-import { store } from '../../store/store';
-import requests from '../requests';
-import roku from '../roku';
-import CordovaPlugins from '../cordova-plugins';
+import { store } from '../../../store/store';
+import requests from '../../global/requests';
+import roku from '../../global/roku';
+import Statusbar from '../../global/statusbar';
 
 const external = async (oldItem, newItem, eventType) => {
     if (newItem.table === 'playState') {
@@ -27,7 +27,7 @@ const external = async (oldItem, newItem, eventType) => {
 
 const internal = (oldItem, newItem, eventType) => {
     if (store.getState().isAppSt) {
-        CordovaPlugins.updatePlayState(newItem.id === 'play');
+        Statusbar.updatePlayState(newItem.id === 'play');
     }
 };
 

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { store } from "../../../../../../../store/store";
 import viewRouter from '../../../../../../../global/view-router';
-import utils from '../../../../../../../global/utils/utils';
+import utils from '../../../../../../../utils/utils';
 import { useTouch } from '../../../../../../hooks/useTouch';
 
 export function useHome() {

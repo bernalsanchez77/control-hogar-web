@@ -1,16 +1,18 @@
 import { useCallback, useMemo } from 'react';
 import { store } from '../../../store/store';
-import utils from '../../../global/utils/utils';
-import CordovaPlugins from '../../../global/cordova-plugins';
+import utils from '../../../utils/utils';
+import requests from '../../global/requests';
 
 export function useScreens() {
     // 1. Store / Global State
     const isInForegroundSt = store(v => v.isInForegroundSt);
+    const isConnectedToNokySt = store(v => v.isConnectedToNokySt);
     const userTypeSt = store(v => v.userTypeSt);
     const screenSelectedSt = store(v => v.screenSelectedSt);
     const setScreenSelectedSt = store(v => v.setScreenSelectedSt);
     const screensSt = store(v => v.screensSt);
-    const isAppSt = store(v => v.isAppSt);
+    const userDevicesSt = store(v => v.userDevicesSt);
+    const userNameDevicesSt = store(v => v.userNameDevicesSt);
 
     // 2. Derived Values
     const teleSalaScreen = useMemo(() => screensSt.find(screen => screen.id === 'teleSala'), [screensSt]);
@@ -24,13 +26,16 @@ export function useScreens() {
             utils.triggerVibrate();
             setScreenSelectedSt(screen.id);
             localStorage.setItem('screen-id', screen.id);
-            if (isAppSt) {
-                CordovaPlugins.updateScreenSelected(screen.label + ' ' + screen.state.toUpperCase());
-                CordovaPlugins.updateScreenState(screen.state);
-                CordovaPlugins.updateMuteState(screen.mute);
-            }
+            requests.updateTable({
+                id: userNameDevicesSt,
+                table: 'userDevices',
+                date: userDevicesSt.find(el => el.id === userNameDevicesSt).date,
+                isInForeground: isInForegroundSt,
+                isConnectedToNoky: isConnectedToNokySt,
+                screenSelected: screen.id,
+            });
         }
-    }, [screenSelectedSt, setScreenSelectedSt, isAppSt]);
+    }, [screenSelectedSt, setScreenSelectedSt, isInForegroundSt, isConnectedToNokySt, userDevicesSt, userNameDevicesSt]);
 
     // 4. Return
     return {

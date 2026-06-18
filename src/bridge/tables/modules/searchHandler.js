@@ -1,5 +1,5 @@
-import { store } from '../../store/store';
-import requests from '../requests';
+import { store } from '../../../store/store';
+import requests from '../../global/requests';
 
 const external = async (oldItem, newItem, eventType) => {
     if (store.getState().wifiNameSt === 'Noky') {

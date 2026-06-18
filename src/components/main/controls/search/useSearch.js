@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { store } from '../../../../store/store';
-import requests from '../../../../global/requests';
+import requests from '../../../global/requests';
 import viewRouter from '../../../../global/view-router';
-import utils from '../../../../global/utils/utils';
+import utils from '../../../../utils/utils';
 import { useTouch } from '../../../hooks/useTouch';
 
 export function useSearch() {
@@ -102,7 +102,6 @@ export function useSearch() {
                 const addedText = newValue.slice(oldValue.length);
                 for (const char of addedText) {
                     const value = char === ' ' ? 'Lit_%20' : `Lit_${encodeURIComponent(char)}`;
-                    // requests.fetchRoku({ key: 'keypress', value });
                     requests.updateSelections({ table: 'input', id: value });
                 }
             } else if (newValue.length < oldValue.length) {

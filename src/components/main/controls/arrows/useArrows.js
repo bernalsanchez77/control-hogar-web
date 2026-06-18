@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import requests from '../../../../global/requests';
-import utils from '../../../../global/utils/utils';
+import requests from '../../../global/requests';
+import utils from '../../../../utils/utils';
 import { store } from '../../../../store/store';
 import { useTouch } from '../../../hooks/useTouch';
 import { useLeader } from '../../../hooks/useSelectors';

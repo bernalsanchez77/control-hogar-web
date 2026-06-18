@@ -1,8 +1,8 @@
 
-import { store } from "../store/store";
+import { store } from "../../store/store";
 import requests from './requests';
 
-import utils from './utils/utils';
+import utils from '../../utils/utils';
 let position = 0;
 let playState = {};
 let testCount = 0;
@@ -139,11 +139,10 @@ class Roku {
   }
 
   async updateDataInSelections() {
+    await this.updatePlayStateInSelections();
     if (store.getState().simulatePlayStateSt) {
-      await this.updatePlayStateInSelections();
       await this.updateActiveAppInSelections(true);
     } else {
-      await this.updatePlayStateInSelections();
       await this.updateActiveAppInSelections(false);
     }
   }

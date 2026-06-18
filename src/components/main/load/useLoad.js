@@ -3,10 +3,8 @@ import eruda from 'eruda';
 import supabaseChannels from '../../../global/supabase/supabase-channels';
 import supabasePeers from '../../../global/supabase/supabase-peers';
 import viewRouter from '../../../global/view-router';
-import requests from '../../../global/requests';
-import Roku from '../../../global/roku';
-import CordovaPlugins from '../../../global/cordova-plugins';
-import Tables from '../../../global/tables/tables';
+import requests from '../../global/requests';
+import Tables from '../../../bridge/tables/tables';
 import events from './events/events';
 import { store } from '../../../store/store';
 
@@ -26,7 +24,6 @@ export function useLoad() {
     const devicesSt = store(v => v.devicesSt);
     const viewSt = store(v => v.viewSt);
     const isAppSt = store(v => v.isAppSt);
-    const screenSelectedSt = store(v => v.screenSelectedSt);
     const isLoadInitializedSt = store(v => v.isLoadInitializedSt);
     const setIsLoadInitializedSt = store(v => v.setIsLoadInitializedSt);
     const isRestartingSt = store(v => v.isRestartingSt);
@@ -68,9 +65,9 @@ export function useLoad() {
         return response;
     }, [setSupabaseTimeoutSt, updateTablesSt]);
 
-    const setData = useCallback(async (tableName, data, callback) => {
+    const setData = useCallback(async (tableName, data, returnTable, callback) => {
         let subscriptionResponse = '';
-        let table = await requests.getTable(tableName);
+        let table = data || await requests.getTable(tableName);
         if (table && table.status === 200 && table.data) {
             setTableSt(tableName + 'St', table.data);
             const tableChannel = supabaseChannels.getSupabaseChannelState(tableName);
@@ -87,7 +84,7 @@ export function useLoad() {
             } else {
                 subscriptionResponse = await subscribeToSupabaseChannel(tableName, callback);
             }
-            if (data) {
+            if (returnTable) {
                 return table.data;
             } else {
                 return { table, subscriptionResponse };
@@ -97,24 +94,8 @@ export function useLoad() {
         }
     }, [subscribeToSupabaseChannel, setTableSt]);
 
-    const updateNotificationBar = useCallback(async () => {
-        const isPlaying = store.getState().selectionsSt.find(el => el.table === 'playState')?.id === 'play';
-        CordovaPlugins.updatePlayState(isPlaying);
-        const screenSelected = store.getState().screensSt.find(el => el.id === screenSelectedSt);
-        if (screenSelected) {
-            CordovaPlugins.updateScreenSelected(screenSelected.label + ' ' + screenSelected.state.toUpperCase());
-            CordovaPlugins.updateScreenState(screenSelected.state);
-            CordovaPlugins.updateMuteState(screenSelected.mute);
-        }
-        const rokuAppsSelectedRokuId = store.getState().selectionsSt.find(el => el.table === 'rokuApps')?.id;
-        const appSelected = store.getState().rokuAppsSt.find(el => el.rokuId === rokuAppsSelectedRokuId);
-        if (appSelected) {
-            CordovaPlugins.updateAppSelected(appSelected.label);
-        }
-    }, [screenSelectedSt]);
-
     const saveTableDataInLocalStorage = useCallback(async (tableName) => {
-        const tableData = await setData(tableName, true);
+        const tableData = await setData(tableName, null, true);
         if (Array.isArray(tableData)) {
             localStorage.setItem(tableName, JSON.stringify(tableData));
         }
@@ -124,38 +105,39 @@ export function useLoad() {
         if (selectionsTable.table.data.find((sl) => sl.table === 'cache').id === 'on') {
             const tableData = localStorage.getItem(tableName);
             if (tableData) {
-                const table = { table: { data: JSON.parse(tableData) } };
-                setTableSt(tableName + 'St', table.table.data);
+                const table = { data: JSON.parse(tableData), status: 200 };
+                await setData(tableName, table, false);
             } else {
                 await saveTableDataInLocalStorage(tableName);
             }
         } else {
             await saveTableDataInLocalStorage(tableName);
         }
-    }, [setTableSt, saveTableDataInLocalStorage]);
+    }, [saveTableDataInLocalStorage, setData]);
 
     const load = useCallback(async (firstLoad = false) => {
         // if (store.getState().isLoadingSt) return;
 
         console.log('load');
         store.getState().setIsLoadingSt(true);
-        if (firstLoad) {
-            setIsLoadingMessageShowingSt(true);
-        }
+        // if (firstLoad) {
+        //     setIsLoadingMessageShowingSt(true);
+        // }
 
-
-        const selectionsTable = await setData('selections', false, (oldItem, newItem, eventType) => {
+        const selectionsTable = await setData('selections', null, false, (oldItem, newItem, eventType) => {
             Tables.onSelectionsTableChange(oldItem, newItem, eventType);
         });
 
         if (selectionsTable.table && selectionsTable.subscriptionResponse === 'SUBSCRIBED') {
-            await setData('hdmiSala', false, async (oldItem, newItem, eventType) => {
+            await setData('hdmiSala', null, false, async (oldItem, newItem, eventType) => {
                 Tables.onHdmiSalaTableChange(oldItem, newItem, eventType);
             });
-            await setData('userDevices', false, (oldItem, newItem, eventType) => {
+            const userDevicesTable = localStorage.getItem('userDevices');
+            const userDevices = userDevicesTable ? JSON.parse(userDevicesTable) : null;
+            await setData('userDevices', userDevices, false, (oldItem, newItem, eventType) => {
                 Tables.onUserDevicesTableChange(oldItem, newItem, eventType);
             });
-            await setData('screens', false, async (oldItem, newItem, eventType) => {
+            await setData('screens', null, false, async (oldItem, newItem, eventType) => {
                 Tables.onScreensTableChange(oldItem, newItem, eventType);
             });
 
@@ -164,26 +146,20 @@ export function useLoad() {
                 await viewRouter.onHdmiSalaTableChange(hdmiSelectionId);
             }
             await handleData(selectionsTable, 'rokuApps');
-            await setData('devices', false, (oldItem, newItem, eventType) => {
+            await setData('devices', null, false, (oldItem, newItem, eventType) => {
                 Tables.onDevicesTableChange(oldItem, newItem, eventType);
             });
-            await setData('youtubeChannels');
-            await setData('youtubeChannelsImages');
+            await handleData(selectionsTable, 'youtubeChannels');
+            await handleData(selectionsTable, 'youtubeChannelsImages');
             await handleData(selectionsTable, 'cableChannels');
-            await setData('youtubeVideos', false, (oldItem, newItem, eventType) => {
+            await setData('youtubeVideos', null, false, (oldItem, newItem, eventType) => {
                 Tables.onYoutubeVideosTableChange(oldItem, newItem, eventType);
             });
             setIsLoadingMessageShowingSt(false);
         }
-        if (isAppSt) {
-            updateNotificationBar();
-        }
-        if (wifiNameSt === 'Noky') {
-            Roku.updateDataInSelections();
-        }
         setIsLoadingMessageShowingSt(false);
         store.getState().setIsLoadingSt(false);
-    }, [setData, setIsLoadingMessageShowingSt, wifiNameSt, isAppSt, updateNotificationBar, handleData]);
+    }, [setData, setIsLoadingMessageShowingSt, handleData]);
 
     const onSupabaseTimeout = async () => {
         await load();
@@ -195,12 +171,8 @@ export function useLoad() {
         }
         await load(true);
         await supabasePeers.subscribeToPeersChannel();
-        const leader = store.getState().selectionsSt.find(el => el.table === 'leader')?.id;
-        if (store.getState().isConnectedToNokySt && userNameDevicesSt === leader) {
-            Roku.activatePlayStateListener();
-        }
         isReadyRef.current = true;
-    }, [load, userNameDevicesSt]);
+    }, [load]);
 
     // 4. Effects
     useEffect(() => {

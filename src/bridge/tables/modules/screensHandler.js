@@ -1,6 +1,6 @@
-import { store } from '../../store/store';
-import CordovaPlugins from '../cordova-plugins';
-import requests from '../requests';
+import { store } from '../../../store/store';
+import requests from '../../global/requests';
+import Statusbar from '../../global/statusbar';
 
 const external = async (oldItem, newItem, eventType) => {
     if (newItem.mute !== oldItem.mute) {
@@ -22,8 +22,8 @@ const external = async (oldItem, newItem, eventType) => {
 
 const internal = (oldItem, newItem, eventType) => {
     if (store.getState().isAppSt) {
-        CordovaPlugins.updateScreenState(newItem.state);
-        CordovaPlugins.updateMuteState(newItem.mute);
+        Statusbar.updateScreenState(newItem.state);
+        Statusbar.updateMuteState(newItem.mute);
     }
 };
 

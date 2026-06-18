@@ -1,6 +1,6 @@
-import { store } from '../../store/store';
-import viewRouter from '../view-router';
-import requests from '../requests';
+import { store } from '../../../store/store';
+import viewRouter from '../../../global/view-router';
+import requests from '../../global/requests';
 
 const external = async (oldItem, newItem, eventType) => {
     if (store.getState().viewSt.selected !== newItem.id) {
