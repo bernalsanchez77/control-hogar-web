@@ -1,0 +1,27 @@
+import { useCallback } from 'react';
+import requests from '../../../../global/initRequests';
+import utils from '../../../../../utils/utils';
+import { useTouch } from '../../../../hooks/useTouch';
+
+export function useLuzCuarto(element) {
+    const onShortClick = useCallback((e, value) => {
+        utils.triggerVibrate();
+        const device = element.id;
+        if (element.state === 'off') {
+            requests.updateTable({ id: device, table: 'devices', state: 'on' });
+        }
+        setTimeout(() => {
+            requests.updateTable({ id: device, table: 'devices', color: value });
+        }, 1000);
+    }, [element]);
+
+    const onLongClick = useCallback(() => { }, []);
+
+    const { onTouchStart, onTouchMove, onTouchEnd } = useTouch(onShortClick, onLongClick);
+
+    return {
+        onTouchStart,
+        onTouchMove,
+        onTouchEnd
+    };
+}

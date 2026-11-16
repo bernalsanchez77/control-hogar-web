@@ -1,0 +1,87 @@
+import requests from '../../init/global/initRequests';
+import { store } from '../../store/store';
+import utils from '../../utils/utils';
+
+class Youtube {
+  clearQueue() {
+    const queueElements = store.getState().youtubeVideosSt.filter(video => video.queue > 0);
+    if (queueElements.length > 0) {
+      queueElements.forEach(video => {
+        requests.updateTable({ id: video.id, table: 'youtubeVideos', queue: 0 });
+      });
+    }
+  }
+  getLastQueue() {
+    return store.getState().youtubeVideosSt.reduce((maxObject, currentObject) => {
+      const maxVal = maxObject['queue'];
+      const currentVal = currentObject['queue'];
+      if (currentVal > maxVal) {
+        return currentObject;
+      } else {
+        return maxObject;
+      }
+    });
+  }
+  getNextQueue(currentQueue) {
+    const higherQueueVideos = store.getState().youtubeVideosSt.filter(obj => {
+      const propValue = Number(obj['queue']);
+      return propValue > currentQueue;
+    });
+    if (higherQueueVideos.length === 0) {
+      return null;
+    }
+    higherQueueVideos.sort((a, b) => {
+      return Number(a.queue) - Number(b.queue);
+    });
+    return higherQueueVideos[0];
+  }
+  async handleQueue(video) {
+    const videoFromLiz = store.getState().youtubeVideosSt.find(v => v.id === video.id);
+    if (videoFromLiz.queue) {
+      requests.updateTable({ id: video.id, table: 'youtubeVideos', queue: 0, date: video.date });
+    } else {
+      const lastQueue = this.getLastQueue().queue;
+      requests.updateTable({ id: video.id, table: 'youtubeVideos', queue: lastQueue + 1, date: video.date });
+    }
+  }
+  onVideoShortClick(video) {
+    let delay = 1000;
+    const currentVideoId = store.getState().hdmiSalaSt.find(el => el.id === 'roku')?.videoId;
+    if (currentVideoId !== video.id) {
+      const rokuAppsSelectedId = store.getState().selectionsSt.find(el => el.table === 'rokuApps')?.id;
+      const youtubeAppId = store.getState().rokuAppsSt.find(app => app.id === 'youtube').rokuId;
+      if (rokuAppsSelectedId !== youtubeAppId) {
+        requests.updateSelections({ table: 'rokuApps', id: youtubeAppId });
+        delay = 10000;
+      }
+      const existingVideo = store.getState().youtubeVideosSt.find(v => v.id === video.id);
+      if (existingVideo) {
+        setTimeout(() => {
+          requests.updateSelections({ table: 'youtubeVideos', id: '' });
+          setTimeout(() => {
+            requests.updateSelections({ table: 'youtubeVideos', id: video.id });
+          }, 2000);
+        }, delay);
+      } else {
+        requests.upsertTable({ id: video.id, table: 'youtubeVideos', title: utils.decodeYoutubeTitle(video.title), duration: video.duration, channelId: 'zz-channel' });
+        setTimeout(async () => {
+          requests.updateSelections({ table: 'youtubeVideos', id: '' });
+          setTimeout(() => {
+            requests.updateSelections({ table: 'youtubeVideos', id: video.id });
+          }, 2000);
+        }, delay);
+      }
+    }
+    this.clearQueue();
+  }
+  getQueueConsecutiveNumber(video) {
+    let sortedQueue = [...store.getState().youtubeVideosSt].sort((a, b) => {
+      return Number(a.queue) - Number(b.queue);
+    });
+    sortedQueue = sortedQueue.filter(obj => Number(obj.queue) !== 0);
+    const index = sortedQueue.findIndex(obj => obj.id === video.id);
+    return index !== -1 ? index + 1 : 0;
+  };
+}
+const youtube = new Youtube();
+export default youtube;

@@ -1,0 +1,37 @@
+
+import viewRouter from '../../../global/view-router';
+import { store } from '../../../../store/store';
+import requests from '../../../global/initRequests';
+
+class Events {
+    async onNavigationBack(e) {
+        e.preventDefault();
+        await viewRouter.onNavigationBack();
+    }
+    onVolumeUp(e) {
+        const screen = store.getState().screensSt.find(screen => screen.id === store.getState().screenSelectedSt);
+        if (screen.state === 'on') {
+            let newVol = 0;
+            newVol = screen.volume + 1;
+            requests.updateTable({ id: screen.id, table: 'screens', volume: newVol });
+        }
+    }
+    onVolumeDown(e) {
+        const screen = store.getState().screensSt.find(screen => screen.id === store.getState().screenSelectedSt);
+        if (screen.state === 'on') {
+            let newVol = 0;
+            if (screen.volume !== 0) {
+                if (screen.volume - 1 >= 0) {
+                    newVol = screen.volume - 1;
+                    requests.updateTable({ id: screen.id, table: 'screens', volume: newVol });
+                } else {
+                    requests.updateTable({ id: screen.id, table: 'screens', volume: '0' });
+                }
+            }
+        } else {
+            requests.updateTable({ id: screen.id, table: 'screens', volume: '0', date: new Date().toISOString() });
+        }
+    }
+}
+const events = new Events();
+export default events;

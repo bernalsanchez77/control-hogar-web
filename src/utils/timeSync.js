@@ -20,7 +20,7 @@ class TimeSync {
 
             // Calculate how wrong this device's clock is in milliseconds
             this.offset = trueServerTime - localDeviceTime;
-            console.log('Device time synced to Costa Rica. Offset is:', this.offset, 'ms.');
+            // console.log('Device time synced to Costa Rica. Offset is:', this.offset, 'ms.');
         } catch (error) {
             console.error('Failed to sync true time:', error);
             this.offset = 0; // Fallback to device time if offline

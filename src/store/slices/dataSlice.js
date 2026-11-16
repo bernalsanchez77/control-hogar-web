@@ -11,9 +11,26 @@ export const createDataSlice = (set) => ({
     hdmiSalaSt: [],
     devicesSt: [],
     selectionsSt: [],
-    supabaseChannelsSt: null,
+    supabaseChannelsSt: {},
     supabasePeersSt: null,
 
+    setSupabaseChannelsSt: (v) => set({ supabaseChannelsSt: v }),
+    setSupabaseChannelsStObj: (v) => set((state) => ({
+        supabaseChannelsSt: {
+            ...state.supabaseChannelsSt,
+            [v]: {}
+        }
+    })),
+    setSupabaseChannelsStProp: (v, name, data) => set((state) => ({
+        supabaseChannelsSt: {
+            ...state.supabaseChannelsSt,
+            [v]: {
+                ...state.supabaseChannelsSt?.[v],
+                [name]: data
+            }
+        }
+    })),
+    setSupabasePeersSt: (v) => set({ supabasePeersSt: v }),
     supabaseSetTimeoutSt: (v) => set({ supabaseTimeoutSt: v }),
     setRokuSearchModeSt: (v) => set({ rokuSearchModeSt: v }),
     setScreensSt: (v) => set({ screensSt: v }),
@@ -26,8 +43,6 @@ export const createDataSlice = (set) => ({
     setHdmiSalaSt: (v) => set({ hdmiSalaSt: v }),
     setDevicesSt: (v) => set({ devicesSt: v }),
     setSelectionsSt: (v) => set({ selectionsSt: v }),
-    setSupabaseChannelsSt: (v) => set({ supabaseChannelsSt: v }),
-    setSupabasePeersSt: (v) => set({ supabasePeersSt: v }),
     updateTablesSt: (tableName, newItem) => {
         set((state) => {
             const currentList = state[tableName];

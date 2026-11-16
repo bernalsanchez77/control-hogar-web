@@ -16,6 +16,7 @@ export const createAppSlice = (set) => ({
     lizEnabledSt: false,
     isLoadingSt: false,
     isRestartingSt: false,
+    restartOnResume: false,
     showDevViewSt: false,
     viewSt: { selected: '', cable: { channels: { category: [] } }, roku: { apps: { selected: '', youtube: { mode: '', channel: '' } } }, devices: { device: '' } },
 
@@ -38,4 +39,5 @@ export const createAppSlice = (set) => ({
     setIsLoadInitializedSt: (v) => set({ isLoadInitializedSt: v }),
     setIsLoadingSt: (v) => set({ isLoadingSt: v }),
     setIsRestartingSt: (v) => set({ isRestartingSt: v }),
+    setRestartOnResume: (v) => set({ restartOnResume: v }),
 });

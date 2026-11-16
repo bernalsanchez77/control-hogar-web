@@ -1,0 +1,20 @@
+.notifications {
+  position: fixed;
+  top: 0;
+  height: 5vh;
+  width: 100%;
+}
+.notifications-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  opacity: 1;
+}
+.notifications-row--disconnected {
+  opacity: 1;
+}
+.notifications-row span{
+  color: white;
+  font-size: 12px;
+}

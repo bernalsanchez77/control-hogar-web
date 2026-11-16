@@ -23,7 +23,8 @@
     "eject": "react-scripts eject",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "test": "react-app-rewired test"
+    "test": "react-app-rewired test",
+    "code-dump": "node ../scripts/code_dump.js"
   },
   "eslintConfig": {
     "extends": [
