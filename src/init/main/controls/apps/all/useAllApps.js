@@ -1,7 +1,7 @@
 import { store } from "../../../../../store/store";
 import utils from '../../../../../utils/utils';
 import requests from '../../../../global/initRequests';
-import viewRouter from '../../../../global/view-router';
+import viewRouter from '../../../../global/viewRouter';
 import { useTouch } from '../../../../hooks/useTouch';
 
 export function useAllApps() {

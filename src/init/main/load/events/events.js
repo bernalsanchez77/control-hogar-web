@@ -1,5 +1,5 @@
 
-import viewRouter from '../../../global/view-router';
+import viewRouter from '../../../global/viewRouter';
 import { store } from '../../../../store/store';
 import requests from '../../../global/initRequests';
 

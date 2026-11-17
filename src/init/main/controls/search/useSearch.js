@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { store } from '../../../../store/store';
 import requests from '../../../global/initRequests';
-import viewRouter from '../../../global/view-router';
+import viewRouter from '../../../global/viewRouter';
 import utils from '../../../../utils/utils';
 import { useTouch } from '../../../hooks/useTouch';
 

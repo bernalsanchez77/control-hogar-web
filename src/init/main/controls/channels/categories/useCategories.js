@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { store } from '../../../../../store/store';
-import CableChannelCategories from './cable-channel-categories';
+import CableChannelCategories from './cableChannelCategories';
 import utils from '../../../../../utils/utils';
-import viewRouter from '../../../../global/view-router';
+import viewRouter from '../../../../global/viewRouter';
 import { useTouch } from '../../../../hooks/useTouch';
 
 export function useCategories() {

@@ -2,7 +2,7 @@ import { useEffect, useCallback, useMemo } from 'react';
 import { store } from '../../../../store/store';
 import requests from '../../../global/initRequests';
 import utils from '../../../../utils/utils';
-import viewRouter from '../../../global/view-router';
+import viewRouter from '../../../global/viewRouter';
 
 export function useTop() {
     // 1. Store / Global State

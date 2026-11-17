@@ -3,7 +3,7 @@ import { store } from '../../../../store/store';
 import requests from '../../../global/initRequests';
 import utils from '../../../../utils/utils';
 import youtube from '../../../global/youtube';
-import viewRouter from '../../../global/view-router';
+import viewRouter from '../../../global/viewRouter';
 import { useTouch } from '../../../hooks/useTouch';
 import { useLeader, usePlayState, useYoutubeVideoSelectedId } from '../../../hooks/useSelectors';
 

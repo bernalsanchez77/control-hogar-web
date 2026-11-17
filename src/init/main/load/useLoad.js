@@ -1,7 +1,7 @@
 import { useEffect, useCallback, useRef } from 'react';
 import eruda from 'eruda';
 import supabaseChannels from '../../global/supabaseChannels';
-import viewRouter from '../../global/view-router';
+import viewRouter from '../../global/viewRouter';
 import requests from '../../global/initRequests';
 import Tables from '../../../runtime/tables/tables';
 import events from './events/events';
