@@ -59,18 +59,22 @@ class Utils {
   }
   async getGeolocationPosition() {
     let inRange = false;
-    const position = await this.getPosition3();
-    if (position) {
-      const { latitude, longitude } = position.coords;
-      if (this.isHome(latitude, longitude)) {
-        inRange = true;
-      } else {
-        inRange = false;
-      }
+    try {
+      const position = await this.getPosition();
+      if (position) {
+        const { latitude, longitude } = position.coords;
+        if (this.isHome(latitude, longitude)) {
+          inRange = true;
+        } else {
+          inRange = false;
+        }
+        return inRange;
+      };
+      inRange = false;
       return inRange;
-    };
-    inRange = false;
-    return inRange;
+    } catch (error) {
+      return false;
+    }
   }
   async getInRange() {
     let inRange = false;
