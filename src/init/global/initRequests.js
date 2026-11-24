@@ -13,7 +13,7 @@ class Requests {
     if (params.date === null) {
       delete params.date;
     }
-    return requests._genericRequest('upsertTableInSupabase', params, 'patch', 'json');
+    return request._genericRequest('upsertTableInSupabase', params, 'patch', 'json');
   }
 
   async getTable(table) {
