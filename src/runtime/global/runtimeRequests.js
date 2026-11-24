@@ -74,13 +74,13 @@ class Requests {
     const getRequestPromise = new Promise((resolve, reject) => {
       if (window.cordova?.plugin?.http) {
         window.cordova.plugin.http.sendRequest(
-          `${'http://192.168.86.174:8060/'}query/${param}`,
+          `${ROKU_CONFIG.IP}query/${param}`,
           { method: 'get', headers: {}, params: {} },
           (response) => resolve(response),
           (error) => reject(error)
         );
       } else {
-        axios.get(`${'/roku/'}query/${param}`)
+        axios.get(`${ROKU_CONFIG.IP_PC}query/${param}`)
           .then(resolve)
           .catch(reject);
       }
